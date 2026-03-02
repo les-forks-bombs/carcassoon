@@ -13,11 +13,11 @@ Ce document présente les règles générales communes aux deux sujets du projet
 
 Les deux projets visent à développer une application de jeu en langage C avec :
 
-- une architecture modulaire et maintenable ;
+- Une architecture modulaire et maintenable ;
 - une logique de jeu correctement implémentée ;
 - un mode d’exécution en ligne de commande entièrement dans le terminal (TUI - Text-based user interface) ; 
 - un mode d’exécution graphique utilisant la librairie libSDL (https://www.libsdl.org/) ;
-- des tests unitaires testant a minima le coeur de votre programme (il n'est pas attendu de tests de bout en bout depuis les interfaces utilisateurs) ; 
+- des tests unitaires testant a minima le cœur de votre programme (il n'est pas attendu de tests de bout en bout depuis les interfaces utilisateurs) ; 
 - une documentation technique claire.
 
 
@@ -115,10 +115,10 @@ Par tricher, nous entendons notamment :
 - Récupérer du code et ne changer que les noms de variables et fonctions ou leur ordre avant de les présenter sous votre nom 
 - Autoriser consciemment ou inconsciemment un collègue à s'approprier votre travail personnel. Assurez-vous notamment que votre projet et ses différentes copies locales ne soient lisibles que par vous et les membres de votre groupe.
 
-Nous encourageons les séances de *brainstorming* et de discussion entre les élèves sur le projet. C’est une démarche naturelle et saine comme vous la rencontrerez dans votre vie professionnelle. Si les réflexions communes sont fortement recommandées, vous ne pouvez rendre que du code et des documents écrits par vous-même. Vous indiquerez notamment dans votre rapport toutes vos sources (comme les sites internet que vous auriez consultés), en indiquant brièvement ce que vous en avez retenu.
+Nous encourageons les séances de *brainstorming* et de discussion entre les élèves sur le projet. C’est une démarche naturelle et saine comme vous la rencontrerez dans votre vie professionnelle. Si les réflexions communes sont fortement recommandées, vous ne pouvez rendre que du code et des documents écrits par vous-même. Vous indiquerez, en particulier, dans votre rapport toutes vos sources (comme les sites internet que vous auriez consultés), en indiquant brièvement ce que vous en avez retenu.
 Il est quasi certain que nous détections les tricheries. En effet, les rapports et les codes sont systématiquement soumis à des outils de détection de plagiat et de copie. Il existe notamment des outils de détection de manipulation de code extraordinaire mis à disposition par l’Université de Stanford, tels que `MOSS` (https://theory.stanford.edu/~aiken/moss/) ou `compare50` (https://cs50.readthedocs.io/projects/compare50/). De plus, chacun a son propre style de programmation et personne ne développe la même chose de la même manière.
 
-Puisqu'il s'agit d'un projet réalisé dans le cadre de cours avancés de programmation, nous nous attendons à ce que vous soyez capable d'apprendre à débogguer des programmes par vous-même. Par exemple, demander à un autre élève de regarder directement votre code et de donner des suggestions d'amélioration commence à devenir un peu délicat au niveau éthique.
+Puisqu'il s'agit d'un projet réalisé dans le cadre de cours avancés de programmation, nous nous attendons à ce que vous soyez capable d'apprendre à déboguer des programmes par vous-même. Par exemple, demander à un autre élève de regarder directement votre code et de donner des suggestions d'amélioration commence à devenir un peu délicat au niveau éthique.
 
 
 Dans le cadre du présent projet, l’utilisation d’outils d’intelligence artificielle générative (dont les modèles de langage de type LLM, assistants de programmation, générateurs de code, de tests, de documentation ou de rapports) est strictement encadrée. 
