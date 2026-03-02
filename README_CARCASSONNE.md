@@ -3,6 +3,8 @@
 *Par Mathurin M. & Sylvain W.*
 *Pour le projet PPII2 de 1A (promo 2028).*
 
+*Relu par Théo COURTADE*
+
 # Développement d'une application de jeu **Carcassonne** avec IA
 
 [[_TOC_]]
