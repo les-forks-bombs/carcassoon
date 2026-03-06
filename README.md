@@ -7,6 +7,10 @@ Ce document présente les règles générales communes aux deux sujets du projet
 - Sujet 1 — Civilization : [README_CIV.md](README_CIV.md)
 - Sujet 2 — Carcassonne : [README_CARCASSONNE.md](README_CARCASSONNE.md)
 
+## Questions 
+
+Un salon Discord a été créé pour y poser vos questions sur le/les sujets : [https://discord.gg/YpqZ3ESC]
+
 ---
 
 ## Cadre du module
