@@ -561,13 +561,3 @@ Concevez dès le départ une couche logique totalement indépendante de l’affi
 Une génération de carte aléatoire même simple (attribution de terrain par probabilité par tuile) est suffisante pour une version initiale du jeu.
 
 ---
-
-## Date de rendu et Soutenance
-
-*(à compléter par l’encadrant)*
-
----
-
-## Fraude, tricherie et plagiat
-
-*(à compléter par l’encadrant selon le règlement de l’école)*
