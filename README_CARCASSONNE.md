@@ -41,7 +41,7 @@ Les élèves devront réaliser une application complète en langage C, comprenan
 
 ### Fonctionnalités obligatoires
 
-- **Partie en mode graphique** : lancer une partie jouable en SDL, avec au moins 2 joueurs locaux.
+- **Partie en mode graphique** : lancer une partie jouable en SDL, avec au moins deux joueurs locaux.
 - **Partie en mode texte** : fournir un mode CLI jouable pour les tests et le débogage.
 - **Joueur virtuel (IA)** : permettre le lancement d’une partie avec au moins un joueur virtuel.
 - **Règles de base de Carcassonne** : placement de tuiles, pose de meeples, décompte de points en cours de partie et calcul de score final (voir [Règles](#Règles)).
@@ -99,27 +99,29 @@ Exemples :
 
 ## Étapes du projet
 
-### 1) Étude préalable
+### 1. Étude préalable
 
 - Étudier les règles de Carcassonne, surtout les placements et connexions de zones (voir [Règles](#règles)).
 - Réaliser un état des lieux des variantes/extensions potentielles (voir [Extensions & Mini-extensions](#extensions--mini-extensions)).
 - Produire un **état de l’art** des algorithmes d’IA utilisables (Minimax, Alpha-Beta, heuristiques, etc.).
 
-### 2) Conception de l’application
+### 2. Conception de l’application
 
 - Définir les structures de données du jeu de base.
-- Prévoir la séparation entre logique de jeu et affichage.
+- Prévoir la séparation entre logique de jeu et affichage. Le moteur principal du jeu (dont les structures de données et l'implémentation des règles de jeu) doit être partagé entre la version CLI et la version graphique.
 - Concevoir dès le départ une API interne compatible avec un joueur IA.
 
-### 3) Développement
+### 3. Développement
 
-- **Core** : règles du jeu, validation des coups, scoring.
-- **IA** : stratégie de sélection des coups et réglage de difficulté/temps de calcul.
-- **UI** : affichage du plateau, des scores, des informations de tour et des interactions.
+- **Core** : règles du jeu, validation des coups, scoring. Il est possible d'imaginer que le moteur de jeu indique ou non (cela peut être une option de jeu) quelles sont les tuiles qu'il peut placer (ou non).
+- **IA** : stratégie de sélection des coups et réglage de difficulté/temps de calcul. Vous pouvez proposer plusieurs moteurs d'intelligence articielle et comparer leur performance/précision respective.
+- **UI** : affichage du plateau, des scores, des informations de tour et des interactions. Libre à vous de choisir l'interface graphique la plus adéquate (vue du plateau du dessus sans ou avec défilement (*scrolling*) / zoom, vue 3D isométrique, moteur 3D), interaction uniquement au clavier ou via la souris.
 
-### 4) Documentation et tests
+### 4. Documentation et tests
 
-- Documenter les choix d’architecture et d’algorithmes.
+- Documenter les choix d’architecture et d’algorithmes. Pour les algorithmes d'I.A., il est attendu que vous réalisiez un état de l'art.
+> Un état de l'art est une synthèse des méthodes, techniques et avancées les plus récentes et performantes utilisées pour concevoir des intelligences artificielles dans les jeux, en analysant leurs forces, limites et tendances futures. Cette analyse critique est réalisée en regard de votre contexte d'utilisation et de vos capactiés à mettre en oeuvre ces algorithmes.
+
 - Produire des tests unitaires et des tests fonctionnels sur les cas critiques.
 
 ---
@@ -131,8 +133,8 @@ Les critères d’évaluation principaux seront les suivants :
 - Qualité de la **modélisation** et des **structures de données**.
 - Respect des **règles du jeu** et cohérence des validations.
 - Qualité de l’**IA** (pertinence, robustesse, performance).
-- Qualité de l’**interface utilisateur** (CLI et/ou SDL selon mode lancé) .
-- Respect des **bonnes pratiques** (compilation séparée, organisation, Makefile, lisibilité) (voir [Cibles Makefile minimales](#cibles-makefile-minimales)).
+- Qualité de l’**interface utilisateur** (CLI et/ou SDL selon mode lancé).
+- Respect des **bonnes pratiques** de développement (compilation séparée, organisation, Makefile, lisibilité) (voir [Cibles Makefile minimales](#cibles-makefile-minimales)).
 - **Tests** et gestion des erreurs (robustesse).
 
 ---
@@ -168,25 +170,9 @@ Le dépôt GitLab devra contenir au minimum :
 
 ---
 
-## Date de rendu et soutenance
-
-- La date de rendu, le format de soutenance et la durée de passage sont communiqués par l’équipe encadrante.
-- Le dépôt GitLab doit être à jour à la date de rendu.
-
----
-
-## Fraude, tricherie et plagiat
-
-- Le travail doit être original et traçable dans l’historique Git.
-- Toute reprise de code externe doit être explicitement signalée et justifiée.
-- Les cas de fraude/plagiat relèvent du règlement pédagogique de l’établissement.
-
----
-
 ## Règles
 
-Les règles présentées ici sont un résumé des règles complètes :
-<https://wikicarpedia.com/car/Base_game/fr>
+Les règles présentées ici sont un résumé des règles complètes : <https://wikicarpedia.com/car/Base_game/fr>
 
 ### 0. But du jeu
 
@@ -244,7 +230,7 @@ et les meeples concernés sont récupérés.
 
 La partie s’arrête lorsque la dernière tuile est posée. On compte alors :
 
-* **Villes inachevées :** 1 point par tuile et 1 par blason (moitié moins que si elle était terminée).
+* **Villes inachevées :** 1 point par tuile et 1 point par blason (moitié moins que si elle était terminée).
 * **Chemins, Abbayes inachevés :** 1 point par tuile (comme si elles étaient terminées).
 * **Paysans (Prés) :** Chaque pré rapporte **3 points par ville terminée** qu'il touche. Comme pour les villes, c'est la majorité de meeples dans le pré qui détermine qui marque.
 
@@ -265,11 +251,11 @@ Ces boîtes contiennent généralement une douzaine de tuiles, de nouveaux meepl
 
 * La Tour (Ext. 4) : Permet de construire des tours en hauteur pour capturer les meeples adverses.
 
-* Maires et Abbayes (Ext. 5) : (Souvent confondue avec la 3) Elle introduit des tuiles spéciales pour boucher les trous impossibles.
+* Maires et Abbayes (Ext. 5) : (Souvent confondue avec la 3). Elle introduit des tuiles spéciales pour boucher les trous impossibles.
 
 * Le Comte, le Roi et le Consort (Ext. 6) : Regroupe plusieurs mini-extensions dont la grande cité de Carcassonne.
 
-* La Catapulte (Ext. 7) : Note : C'est l'extension la moins aimée car elle utilise un accessoire physique pour lancer des jetons.
+* La Catapulte (Ext. 7) : Note : C'est l'extension la moins aimée, car elle utilise un accessoire physique pour lancer des jetons.
 
 * Bazar, Ponts et Châteaux (Ext. 8) : Ajoute des enchères de tuiles et des ponts pour enjamber les prés.
 
