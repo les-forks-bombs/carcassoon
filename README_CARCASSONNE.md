@@ -44,7 +44,8 @@ Les élèves devront réaliser une application complète en langage C, comprenan
 - **Partie en mode graphique** : lancer une partie jouable en SDL, avec au moins deux joueurs locaux.
 - **Partie en mode texte** : fournir un mode CLI jouable pour les tests et le débogage.
 - **Joueur virtuel (IA)** : permettre le lancement d’une partie avec au moins un joueur virtuel.
-- **Règles de base de Carcassonne** : placement de tuiles, pose de meeples, décompte de points en cours de partie et calcul de score final (voir [Règles](#Règles)).
+- **Règles de base de Carcassonne** : placement de tuiles, pose de meeples, décompte de points en cours de partie et calcul de score final (voir [Règles](#règles)).
+- **Socle commun de règles** : routes, villes et monastères/abbayes font partie du périmètre obligatoire ; les paysans peuvent rester optionnels si ce choix est clairement documenté.
 
 ### Fonctionnalités optionnelles
 
@@ -95,6 +96,14 @@ Exemples :
 ./carcassonne -m cli -p 3 -a 1
 ```
 
+Contraintes minimales attendues :
+
+- `2 <= players <= 5` ;
+- `0 <= ai <= players` ;
+- la même graine doit reproduire le même ordre de pioche et donc la même partie, à règles égales ;
+- les versions CLI et SDL doivent utiliser le **même moteur de jeu**.
+- un joueur IA doit au minimum être capable de produire un **coup légal** dans un temps raisonnable ; sa sophistication est un critère d’évaluation, pas un prérequis bloquant pour le socle.
+
 ---
 
 ## Étapes du projet
@@ -114,13 +123,13 @@ Exemples :
 ### 3. Développement
 
 - **Core** : règles du jeu, validation des coups, scoring. Il est possible d'imaginer que le moteur de jeu indique ou non (cela peut être une option de jeu) quelles sont les tuiles qu'il peut placer (ou non).
-- **IA** : stratégie de sélection des coups et réglage de difficulté/temps de calcul. Vous pouvez proposer plusieurs moteurs d'intelligence articielle et comparer leur performance/précision respective.
+- **IA** : stratégie de sélection des coups et réglage de difficulté/temps de calcul. Vous pouvez proposer plusieurs moteurs d'intelligence artificielle et comparer leur performance/précision respective.
 - **UI** : affichage du plateau, des scores, des informations de tour et des interactions. Libre à vous de choisir l'interface graphique la plus adéquate (vue du plateau du dessus sans ou avec défilement (*scrolling*) / zoom, vue 3D isométrique, moteur 3D), interaction uniquement au clavier ou via la souris.
 
 ### 4. Documentation et tests
 
-- Documenter les choix d’architecture et d’algorithmes. Pour les algorithmes d'I.A., il est attendu que vous réalisiez un état de l'art.
-> Un état de l'art est une synthèse des méthodes, techniques et avancées les plus récentes et performantes utilisées pour concevoir des intelligences artificielles dans les jeux, en analysant leurs forces, limites et tendances futures. Cette analyse critique est réalisée en regard de votre contexte d'utilisation et de vos capactiés à mettre en oeuvre ces algorithmes.
+- Documenter les choix d’architecture et d’algorithmes. Pour les algorithmes d’IA, il est attendu que vous réalisiez un état de l’art **ciblé et utile au projet**.
+> Un état de l’art est ici une synthèse comparative des méthodes réellement pertinentes pour votre contexte (par exemple heuristiques, recherche locale, Minimax limité, Monte-Carlo, etc.), en explicitant leurs forces, leurs limites et les raisons de votre choix au regard de vos capacités de mise en œuvre.
 
 - Produire des tests unitaires et des tests fonctionnels sur les cas critiques.
 
@@ -136,6 +145,7 @@ Les critères d’évaluation principaux seront les suivants :
 - Qualité de l’**interface utilisateur** (CLI et/ou SDL selon mode lancé).
 - Respect des **bonnes pratiques** de développement (compilation séparée, organisation, Makefile, lisibilité) (voir [Cibles Makefile minimales](#cibles-makefile-minimales)).
 - **Tests** et gestion des erreurs (robustesse).
+- Clarté du périmètre choisi : variantes activées, simplifications assumées, limites connues.
 
 ---
 
@@ -167,6 +177,7 @@ Le dépôt GitLab devra contenir au minimum :
 - **Documentation technique** (structures, modules, architecture, arbitrages).
 - **Tests unitaires** intégrés au dépôt et exécutables via `make test` (voir [Cibles Makefile minimales](#cibles-makefile-minimales)).
 - **Documents de gestion de projet** : planification, comptes-rendus, répartition, post-mortem.
+- **Limites connues** : règles simplifiées, variantes non prises en charge, comportements IA encore rudimentaires.
 
 ---
 
@@ -188,6 +199,8 @@ Le joueur avec le score le plus élevé remporte la partie.
 
 **Installation** : placer la tuile de départ au centre, mélanger les autres tuiles et former une pioche face cachée.
 
+Pour l’implémentation, vous pouvez considérer le plateau comme **non borné logiquement**. En pratique, l’affichage peut utiliser une fenêtre, un défilement ou un zoom, tant que toutes les positions légales restent accessibles.
+
 ### 2. Déroulement d’un tour
 
 En commençant par un premier joueur choisi aléatoirement, chaque joueur effectue :
@@ -195,7 +208,8 @@ En commençant par un premier joueur choisi aléatoirement, chaque joueur effect
 #### Étape 1 : piocher et placer une tuile
 
 Le joueur **doit** piocher puis poser une tuile adjacente à une tuile déjà placée, en respectant la compatibilité des paysages (pré/pré, chemin/chemin, ville/ville).
-Si aucune pose n’est possible, la tuile est replacée sous la pioche et une nouvelle tuile est piochée.
+La tuile peut être tournée avant la pose.
+Si aucune pose n’est possible, la tuile est retirée de la partie et le tour du joueur s’arrête.
 
 #### Étape 2 : poser un meeple (optionnel)
 
@@ -203,11 +217,14 @@ Le joueur **peut** placer un meeple de sa réserve sur la tuile qu’il vient de
 
 - **Emplacements** : chemin (voleur), ville (chevalier), abbaye (moine), pré (paysan).
 - **Exclusion** : impossible de placer un meeple sur une zone déjà reliée à une zone occupée.
+- Le meeple, s’il est posé, doit obligatoirement être placé sur **la tuile qui vient d’être jouée**.
 
 #### Étape 3 : évaluer les zones complétées
 
 Si le placement termine une construction (route, ville, abbaye), les points sont attribués immédiatement,
 et les meeples concernés sont récupérés.
+
+En cas de majorité partagée, tous les joueurs à égalité marquent la totalité des points correspondants.
 
 ### 3. Décompte des points (en cours de partie)
 
@@ -217,22 +234,25 @@ et les meeples concernés sont récupérés.
 | **Ville** | Entièrement fermée | **2 points** par tuile + **2 points** par blason |
 | **Abbaye** | Entourée de 8 tuiles | **9 points** |
 
-> **Majorité** : en cas fermeture d'une ville avec plusieurs joueurs (en reliant 2 villes plus petites par exemple), seul le joueur majoritaire marque.
+> **Majorité** : lorsqu’une zone complétée comporte des meeples de plusieurs joueurs, seul le ou les joueurs majoritaires marquent.
 > En cas d’égalité de majorité, tous les joueurs concernés marquent la totalité des points.
 
 ### 4. Les paysans (règle optionnelle)
 
+Cette règle peut être laissée **optionnelle** dans le cadre du socle minimal.
+
 - Placés allongés dans les prés.
 - Non récupérés durant la partie.
 - Comptabilisés uniquement au score final.
+- Si vous décidez de ne pas l’implémenter, votre interface et votre documentation doivent l’indiquer explicitement.
 
 ### 5. Fin de partie et score final
 
-La partie s’arrête lorsque la dernière tuile est posée. On compte alors :
+La partie s’arrête lorsque la dernière tuile est posée, ou plus tôt si une limite `--max-turns` a été fixée et atteinte. On compte alors :
 
 * **Villes inachevées :** 1 point par tuile et 1 point par blason (moitié moins que si elle était terminée).
 * **Chemins, Abbayes inachevés :** 1 point par tuile (comme si elles étaient terminées).
-* **Paysans (Prés) :** Chaque pré rapporte **3 points par ville terminée** qu'il touche. Comme pour les villes, c'est la majorité de meeples dans le pré qui détermine qui marque.
+* **Paysans (Prés) :** si cette règle optionnelle est activée, chaque pré rapporte **3 points par ville terminée** qu'il touche. Comme pour les villes, c'est la majorité de meeples dans le pré qui détermine qui marque.
 
 
 ---
