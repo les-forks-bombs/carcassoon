@@ -9,7 +9,8 @@ Ce document présente les règles générales communes aux deux sujets du projet
 
 ## Questions 
 
-Un salon Discord a été créé pour y poser vos questions sur le/les sujets : [https://discord.gg/YpqZ3ESC]
+- Un salon Discord a été créé pour y poser vos questions sur le/les sujets : [https://discord.gg/YpqZ3ESC]
+- Ces sujets sont suceptibles d'être remis à jour, en particulier sur les livrables de gestion de projets. Voici [le lien du dépôt sujet](https://gibson.telecomnancy.univ-lorraine.fr/projets/2526/PPII/ppii-s6/template/sujet). Une notification Discord sera envoyée à chaque modification.
 
 ---
 
