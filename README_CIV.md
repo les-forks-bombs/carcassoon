@@ -107,6 +107,13 @@ Exemples d’utilisation :
 ./civ -m cli -t 150 -b 5
 ```
 
+### Clarifications d'implémentation attendues
+
+- La version CLI et la version SDL doivent partager le **même moteur de jeu** et les **mêmes règles**.
+- Les valeurs numériques de ce sujet peuvent être adaptées, mais l’**ordre des phases**, les **mécaniques principales** et les **conditions de victoire/défaite** doivent rester reconnaissables.
+- Toute simplification importante (par exemple combat, génération de carte, comportement des Barbares) doit être explicitement documentée dans la spécification technique.
+- Le programme doit afficher ou journaliser en début de partie la **graine** effectivement utilisée.
+
 ---
 
 ## Points d'évaluation
@@ -119,6 +126,7 @@ Exemples d’utilisation :
 - **Architecture du code** : organisation en modules indépendants (carte, ville, unité, technologie, interface), séparation **stricte** entre la logique de jeu et l’affichage.
 - **Tests unitaires** et robustesse (gestion des cas limites et des erreurs d’entrée).
 - **Gestion de projet** : fiche de projet, comptes rendus de réunion, planification et répartition des tâches, utilisation correcte de Git.
+- **Qualité de la démonstration** : capacité à lancer rapidement une partie, expliquer une situation de jeu et montrer les choix d’architecture.
 
 ---
 
@@ -131,6 +139,7 @@ Le rendu final devra comporter au minimum les éléments suivants, déposés sur
 - **État de l’art** : rapport sur les algorithmes de génération de carte procédurale étudiés ou implémentés.
 - **Tests unitaires** : jeu de tests unitaires accompagnant le code source, exécutables via `make test`.
 - **Documents de gestion de projet** : comptes rendus de réunion, planification, répartition des tâches, analyse post-mortem.
+- **Limites connues** : bugs résiduels, fonctionnalités partielles, simplifications assumées.
 
 ---
 
@@ -192,7 +201,8 @@ Ces valeurs sont données à titre d'exemple ; vous pouvez en ajouter d'autres 
 - La carte est générée **aléatoirement** au début de chaque partie à partir d’une graine (*seed*) entière.
 - La graine peut être fixée par l’utilisateur pour rejouer la même carte.
 - La distribution des terrains doit former des **zones** suffisamment grandes.
-- Le joueur commence avec une **ville de départ** révélée et un guerrier placé dessus. La ville de départ est toujours placée sur une Plaine.
+- Le joueur commence avec une **ville de départ** révélée et un **Guerrier** placé dessus. La ville de départ est toujours placée sur une Plaine.
+- Les paramètres initiaux de la ville de départ doivent être explicités dans la documentation si vous les faites différer des villes fondées en cours de partie.
 
 ---
 
@@ -311,8 +321,9 @@ Comme pour les tableaux précédents, ces valeurs sont des exemples.
 #### 5.3 Déplacement
 
 - Chaque tour, une unité dispose d’un nombre de PM dépendant de son type.
-- Pénetrer sur une tuile coûte un nombre de PM correspondant au type de la tuile (voir [§2.2 : Types de terrain](#22-types-de-terrain)).
+- Pénétrer sur une tuile coûte un nombre de PM correspondant au type de la tuile (voir [§2.2 : Types de terrain](#22-types-de-terrain)).
 - Une unité ne peut pas se déplacer sur une tuile d’Eau.
+- Une unité ne peut pas terminer son déplacement sur une tuile occupée par une autre unité alliée.
 - Une unité n'est pas obligée de consommer tous ses PM.
 - Les PM non utilisés **ne se cumulent pas** d’un tour à l’autre.
 
@@ -322,12 +333,12 @@ Le combat est **automatique** et se résout en une seule passe lorsqu’une unit
 
 ```
 Dommages infligés à la cible = max(1, Attaque_attaquant − Défense_cible)
-Dommages en retour sur l'attaquant = max(0, Attaque_cible − Attaque_attaquant)
+Dommages infligés en retour à l'attaquant = max(0, Attaque_cible − Défense_attaquant)
 ```
 
 - Une unité dont la Force d’Attaque est de 0 **ne peut pas infliger de dégâts**.
 - Une unité dont les PV tombent à 0 est **détruite** et retirée de la carte.
-- Quand une unité attaque une ville : la ville se défend avec une **Force de bâtiment** égale à `20` (`30` si muraille) qui compte pour à la fois l'attaque et la défense. Si la ville tombe à 0 PV, elle est **rasée** et détruite. Les PV d’une ville sont égaux à `10 × population` (doublés avec une Muraille). Un campement Barbare ne se défend pas.
+- Quand une unité attaque une ville, celle-ci se défend avec une **Force de bâtiment** égale à `20` (`30` si muraille) utilisée à la fois comme attaque et comme défense. Si la ville tombe à 0 PV, elle est **rasée** et détruite. Les PV d’une ville sont égaux à `10 × population` (doublés avec une Muraille). Un campement barbare ne se défend pas.
 
 ---
 
@@ -403,6 +414,7 @@ Les Barbares sont des **unités ennemies autonomes** présentes sur la carte dè
 
 - Au début de la partie, **N campements barbares** (paramétrable, voir la section [Paramètres de lancement](#param%C3%A8tres-de-lancement)) sont placés aléatoirement sur la carte, à au moins 5 tuiles (distance de Tchebychev) de la ville de départ.
 - Chaque campement est une **structure fixe**. Si un Guerrier du joueur entre sur sa tuile, le campement est détruit et le joueur reçoit un bonus d’Or égal à 5 fois le nombre de campements détruits jusque-là (y compris celui-ci).
+- Un campement ne peut pas apparaître sur une tuile occupée, ni sur une tuile d’Eau.
 
 #### 8.2 Unités barbares
 
@@ -414,6 +426,7 @@ Les Barbares sont des **unités ennemies autonomes** présentes sur la carte dè
 - Chaque tour, chaque unité barbare se déplace vers l’unité ou la ville du joueur la plus proche (à portée de ses PM).
 - Si une unité ou ville du joueur est adjacente, le Barbare l’attaque automatiquement.
 - Les Barbares ne fondent pas de villes et n’accumulent pas de ressources.
+- En cas de plusieurs cibles équidistantes, vous devez appliquer une règle de départage **déterministe** et la documenter.
 
 ---
 
@@ -439,7 +452,7 @@ Ajoute la **technologie Bateaux** à l'arbre technologique, permettant la naviga
 **Génération de carte avancée :**
 - La carte doit présenter des **continents** cohérents avec des côtes, des chaînes de montagnes et des zones de désert/toundra.
 - Paramètres configurables : taille de la carte, humidité (influence forêts/déserts), altitude (influence montagnes).
-- Les algorithmes utilisés doivent être décrit dans la documentation technique.
+- Les algorithmes utilisés doivent être décrits dans la documentation technique.
 
 ---
 
@@ -467,10 +480,10 @@ Introduit des **bâtiments uniques** (un seul exemplaire possible dans toute la 
 | Ressource   | Terrain possible | Bonus (si ville à portée et technologie acquise) |
 |-------------|-----------------|--------------------------------------------------|
 | Blé         | Plaine          | +3 Nourriture/tour (nécessite Agriculture) |
-| Fer         | Montagne        | +3 Production/tour et débloque l'unité Légionnaire (nécessite Métallurgie) |
+| Fer         | Montagne        | +3 Production/tour (nécessite Artisanat) |
 | Épices      | Forêt, Désert   | +4 Or/tour (nécessite Commerce) |
 | Spécimens   | Toundra         | +3 Science/tour (nécessite Écriture) |
-| Chevaux     | Plaine, Toundra | Réduit de 20 le coût de production des Cavaliers (nécessite Équitation) |
+| Chevaux     | Plaine, Toundra | +1 PM pour les unités terrestres produites dans la ville exploitante (nécessite Équitation) |
 
 - Les ressources spéciales sont visibles sur la carte uniquement si la technologie correspondante est débloquée.
 
@@ -494,7 +507,8 @@ Exemples d'événements :
 - **Révolution !** : La production de toutes les ressources est divisée par 2 pour ce tour-ci.
 
 **Politiques et Gouvernement :**
-- Le joueur peut adopter une forme de gouvernement parmi les suivantes (nécessite la technologie Philosophie, voir [§6 : L'Arbre Technologique](#6-larbre-technologique)) :
+- Cette extension ajoute la technologie **Philosophie** à l’arbre technologique : coût suggéré `120 Science`, prérequis `Écriture`.
+- Le joueur peut adopter une forme de gouvernement parmi les suivantes une fois **Philosophie** recherchée :
 
 | Gouvernement    | Bonus | Malus |
 |-----------------|-------|-------|
@@ -523,7 +537,7 @@ Ajoute la personnalisation de la difficulté et l’ajout d’unités militaires
 **Modes de difficulté personnalisables** :
 - L'application doit mettre à disposition des possibilités de paramétrage détaillées des règles via ses arguments au lancement (production de ressources, seuil de croissance, fréquence et puissance des Barbares (voir [§8 : Les Barbares](#8-les-barbares)) ou activation/désactivation de certaines mécaniques par exemple.)
 - L'application doit également mettre à disposition un paramètre de niveau de difficulté (Facile / Normal / Difficile) par argument au démarrage.
-- Les paramètres associés à un niveau de difficulté doivent être enregistrés dans un fichier de configuration (`config.txt` par exemple) lu au lancement, et utiliser ces options de configuration détaillées. (Il doit être possible de recréer un niveau de difficulté donné uniquement avec des paramètres de lancement).
+- Les paramètres associés à un niveau de difficulté peuvent être stockés dans un fichier de configuration (`config.txt` par exemple) lu au lancement, ou être reconstruits uniquement via des paramètres de ligne de commande. Dans tous les cas, le mécanisme retenu doit être documenté.
 - Exemples :
   - **Difficile** : production de ressources réduite de 25 %, seuil de croissance augmenté de 25 %, Barbares plus nombreux et agressifs.
   - **Facile** : production de ressources augmentée de 25 %, famine désactivée.
