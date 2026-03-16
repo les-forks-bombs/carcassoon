@@ -6,8 +6,8 @@ skinparam classFontStyle Bold
 hide empty members
 
 class model.Position {
-    - x : Integer
-    - y : Integer
+    - x : int
+    - y : int
 }
 
 class model.Tile {
@@ -23,9 +23,9 @@ class model.Meeple {
 }
 
 class model.Player {
-    - id : Integer
-    - name : String
-    - score : Integer
+    - id : int
+    - name : char*
+    - score : int
 }
 
 enum model.Type <<enum>>{
@@ -50,23 +50,43 @@ enum model.PlayerType <<enum>>{
 }
 
 class Game {
-    - current_player_id : Integer
+    - current_player_id : int
+    - max_turns : int
+    - turns_count : int
+    - seed : int
+    - human_player_count : int
+    - total_player_count : int
+    + make_turn()
+}
+
+class Engine {
+    create_game(max_turns : int, turns_count : int, seed : int, human_player_count : int, total_player_count : int) : Game*
+    start_game(game : Game*) : void
+    destroy_game(game : Game*) : void
+}
+
+enum Mode {
+    CLI
+    SDL
 }
 
 model.Tile o-r-> "1 \n -position" model.Position : Se trouve à >
-model.Tile o--> "5 \n -faces[]" model.Face : Possède >
-model.Tile o--> "0..n \n -meeples[]" model.Meeple : Contient >
+model.Tile o--> "5 \n -faces**" model.Face : Possède >
+model.Tile o--> "0..n \n -meeples**" model.Meeple : Contient >
 
 model.Face o-r-> "1 \n -orientation" model.Orientation : Possède >
 model.Face o-d-> "1 \n -type" model.Type : Est un >
 
-model.Meeple o-u-> "0..1 \n -position" model.Position : Se trouve à >
+model.Meeple o-u--> "0..1 \n -position" model.Position : Se trouve à >
 model.Meeple o--> "0..1 \n -face" model.Face : Se trouve sur >
 
-model.Player "1 \n -player" o-d-> "8 \n -meeples" model.Meeple : Possède >
-model.Player  o-r-> "1 \n -type" model.PlayerType : Est un >
+model.Player "1 \n -player" o-d-> "8 \n -meeples**" model.Meeple : Possède >
+model.Player  o-d-> "1 \n -type" model.PlayerType : Est un >
 
-Game *--> "2..5 \n -players" Player : Contient >
-Game *--> "n \n -players" Tile : Contient >
+Game *--> "2..5 \n -players**" Player : Contient >
+Game *--> "n \n -tiles**" Tile : Contient >
+
+Engine *--> "1 \n -game*" Game : Joue >
+Engine o--> "1 \n -mode" Mode : Utilise >
 
 @enduml
