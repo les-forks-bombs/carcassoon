@@ -5,30 +5,30 @@ skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 hide empty members
 
-class model.Position {
+class carcassonne.Position {
     - x : int
     - y : int
 }
 
-class model.Tile {
+class carcassonne.Tile {
     
 }
 
-class model.Face {
+class carcassonne.Face {
     
 }
 
-class model.Meeple {
+class carcassonne.Meeple {
 
 }
 
-class model.Player {
+class carcassonne.Player {
     - id : int
     - name : char*
     - score : int
 }
 
-enum model.Type <<enum>>{
+enum carcassonne.Type <<enum>>{
     VILLAGE
     TOWN
     TOWNWITHSHIELD
@@ -36,7 +36,7 @@ enum model.Type <<enum>>{
     ROAD
 }
 
-enum model.Orientation <<enum>>{
+enum carcassonne.Orientation <<enum>>{
     NORTH
     SOUTH
     WEST
@@ -44,12 +44,12 @@ enum model.Orientation <<enum>>{
     CENTER
 }
 
-enum model.PlayerType <<enum>>{
+enum carcassonne.PlayerType <<enum>>{
     IA
     HUMAN
 }
 
-class Game {
+class carcassonne.Game {
     - current_player_id : int
     - max_turns : int
     - turns_count : int
@@ -57,36 +57,60 @@ class Game {
     - human_player_count : int
     - total_player_count : int
     + make_turn()
+    + ask_player_action()
+    + place_tile()
+    + place_meeple()
+    + get_current_player() : Player*
 }
 
-class Engine {
+class EngineSDL {
     create_game(max_turns : int, turns_count : int, seed : int, human_player_count : int, total_player_count : int) : Game*
     start_game(game : Game*) : void
     destroy_game(game : Game*) : void
 }
 
-enum Mode {
-    CLI
-    SDL
+class EngineCLI {
+    create_game(max_turns : int, turns_count : int, seed : int, human_player_count : int, total_player_count : int) : Game*
+    start_game(game : Game*) : void
+    destroy_game(game : Game*) : void
 }
 
-model.Tile o-r-> "1 \n -position" model.Position : Se trouve à >
-model.Tile o--> "5 \n -faces**" model.Face : Possède >
-model.Tile o--> "0..n \n -meeples**" model.Meeple : Contient >
+class ai.AIEngine {
+    + makeDecision(game : Game*)
+}
 
-model.Face o-r-> "1 \n -orientation" model.Orientation : Possède >
-model.Face o-d-> "1 \n -type" model.Type : Est un >
+class AIState {}
 
-model.Meeple o-u--> "0..1 \n -position" model.Position : Se trouve à >
-model.Meeple o--> "0..1 \n -face" model.Face : Se trouve sur >
+class MainCLI {}
+class MainSDL {}
 
-model.Player "1 \n -player" o-d-> "8 \n -meeples**" model.Meeple : Possède >
-model.Player  o-d-> "1 \n -type" model.PlayerType : Est un >
+Tile o-r-> "1 \n -position" Position : Se trouve à >
+Tile o--> "5 \n -faces**" Face : Possède >
+Tile o--> "0..n \n -meeples**" Meeple : Contient >
+
+Face o-r-> "1 \n -orientation" Orientation : Possède >
+Face o-d-> "1 \n -type" Type : Est un >
+
+Meeple o-u--> "0..1 \n -position" Position : Se trouve à >
+Meeple o--> "0..1 \n -face" Face : Se trouve sur >
+
+Player "1 \n -player" o-d-> "8 \n -meeples**" Meeple : Possède >
+Player  o-d-> "1 \n -type" PlayerType : Est un >
 
 Game *--> "2..5 \n -players**" Player : Contient >
-Game *--> "n \n -tiles**" Tile : Contient >
+Game *--> "n \n -tiles***" Tile : Contient >
 
-Engine *--> "1 \n -game*" Game : Joue >
-Engine o--> "1 \n -mode" Mode : Utilise >
+EngineSDL *--> "1 \n -game*" Game : Joue >
+
+EngineCLI *--> AIEngine : "Fait jouer" >
+EngineSDL *--> AIEngine : "Fait jouer" >
+
+MainSDL ..> EngineSDL  : "<<uses>>"
+
+EngineCLI *--> "1 \n -game*" Game : Joue >
+MainCLI ..> EngineCLI  : "<<uses>>
+
+Player *--> AIState : Utilise >
+AIEngine o--> AIState : Utilise >
 
 @enduml
