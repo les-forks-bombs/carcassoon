@@ -16,26 +16,29 @@ LIBARIES := $(shell find lib -mindepth 1 -maxdepth 1 -type d -exec basename {} \
 BINARIES := $(shell find bin -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 TARGETS  := $(LIBARIES) $(BINARIES)
 
-LIBS := -L$(LIBS_DIR) -Wl,--start-group $(addprefix -l,$(LIBARIES:lib%=%)) -Wl,--end-group
 
 
 CFLAGS := --target=$(TARGET)
 ifeq "$(PROFILE)" "debug"
 	ifneq ($(TARGET),x86_64-w64-windows-gnu)
 	    CFLAGS += -fsanitize=address
-	    LDFLAGS += -fsanitize=address
+	    LFLAGS += -fsanitize=address
 	endif
 endif
 
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
 CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic  # General building flags
+LFLAGS += -L$(LIBS_DIR)
+LDLIBS += -Wl,--start-group $(addprefix -l,$(LIBARIES:lib%=%)) -Wl,--end-group
 
-
-export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR LIBS CFLAGS TARGET
+export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS LDLIBS TARGET
 
 build: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@
 	@$(MAKE) -C bin -f build.mk $@
+
+cli sdl: build
+	$(BINS_DIR)/$@
 
 out/$(PROFILE)/$(TARGET):
 	@mkdir -p out/$(PROFILE)/
@@ -48,5 +51,12 @@ clean:
 
 test: build
 	@$(MAKE) -C $(BINS_DIR)/tests -f test.mk $@ || true
+
+req:
+	@echo "/!\ Attention !"
+	@echo ""
+	@echo "Ce projet utilise les libraries système pour compiler avec sdl"
+	@echo "Merci de l'installer pour le target $(TARGET) afin que pkg-config"
+	@echo "Puisse trouver la librarie !"
 
 .PHONY: clean build test
