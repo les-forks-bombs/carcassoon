@@ -5,17 +5,9 @@ skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 hide empty members
 
-class carcassonne.Position {
+class carcassonne.Vector2D {
     - x : int
     - y : int
-}
-
-class carcassonne.Tile {
-    
-}
-
-class carcassonne.Face {
-    
 }
 
 class carcassonne.Meeple {
@@ -34,14 +26,8 @@ enum carcassonne.Type <<enum>>{
     TOWNWITHSHIELD
     ABBEY
     ROAD
-}
-
-enum carcassonne.Orientation <<enum>>{
-    NORTH
-    SOUTH
-    WEST
-    EAST
-    CENTER
+    FIELD
+    WALL
 }
 
 enum carcassonne.PlayerType <<enum>>{
@@ -49,13 +35,24 @@ enum carcassonne.PlayerType <<enum>>{
     HUMAN
 }
 
+class carcassonne.Block {
+    - type : int
+    - group_id : int
+}
+
+class carcassonne.Group {
+    - group_id : int
+}
+
 class carcassonne.Game {
+    - seed : int
     - current_player_id : int
     - max_turns : int
     - turns_count : int
     - seed : int
     - human_player_count : int
     - total_player_count : int
+    - map : int**
     + make_turn()
     + ask_player_action()
     + place_tile()
@@ -63,13 +60,13 @@ class carcassonne.Game {
     + get_current_player() : Player*
 }
 
-class EngineSDL {
+class gui.SDLFrontEnd {
     create_game(max_turns : int, turns_count : int, seed : int, human_player_count : int, total_player_count : int) : Game*
     start_game(game : Game*) : void
     destroy_game(game : Game*) : void
 }
 
-class EngineCLI {
+class cli.CLIFrontEnd {
     create_game(max_turns : int, turns_count : int, seed : int, human_player_count : int, total_player_count : int) : Game*
     start_game(game : Game*) : void
     destroy_game(game : Game*) : void
@@ -79,36 +76,33 @@ class ai.AIEngine {
     + makeDecision(game : Game*)
 }
 
-class AIState {}
+class carcassonne.AIState {}
 
 class MainCLI {}
 class MainSDL {}
 
-Tile o-r-> "1 \n -position" Position : Se trouve à >
-Tile o--> "5 \n -faces**" Face : Possède >
-Tile o--> "0..n \n -meeples**" Meeple : Contient >
-
-Face o-r-> "1 \n -orientation" Orientation : Possède >
-Face o-d-> "1 \n -type" Type : Est un >
-
-Meeple o-u--> "0..1 \n -position" Position : Se trouve à >
-Meeple o--> "0..1 \n -face" Face : Se trouve sur >
+Block o--> "1 \n -position" Vector2D
+Meeple o--> "1 \n -position" Vector2D
 
 Player "1 \n -player" o-d-> "8 \n -meeples**" Meeple : Possède >
 Player  o-d-> "1 \n -type" PlayerType : Est un >
 
 Game *--> "2..5 \n -players**" Player : Contient >
-Game *--> "n \n -tiles***" Tile : Contient >
+Game *--> "n \n -groups**" Group : Contient >
+Game *--> "n \n map**" Block : Contient >
+Group o--> "n \n blocks**" Block : Contient >
 
-EngineSDL *--> "1 \n -game*" Game : Joue >
+Block o--> "1 \n -type" Type
 
-EngineCLI *--> AIEngine : "Fait jouer" >
-EngineSDL *--> AIEngine : "Fait jouer" >
+SDLFrontEnd *--> "1 \n -game*" Game : Joue >
 
-MainSDL ..> EngineSDL  : "<<uses>>"
+CLIFrontEnd *--> AIEngine : "Fait jouer" >
+SDLFrontEnd *--> AIEngine : "Fait jouer" >
 
-EngineCLI *--> "1 \n -game*" Game : Joue >
-MainCLI ..> EngineCLI  : "<<uses>>
+MainSDL ..> SDLFrontEnd  : "<<uses>>"
+
+CLIFrontEnd *--> "1 \n -game*" Game : Joue >
+MainCLI ..> CLIFrontEnd  : "<<uses>>
 
 Player *--> AIState : Utilise >
 AIEngine o--> AIState : Utilise >
