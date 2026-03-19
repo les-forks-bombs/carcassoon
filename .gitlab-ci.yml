@@ -13,8 +13,8 @@ stages:
         PROFILE: [debug, release]
   
   script:
-    - make build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
-    - make test TARGET=$TARGET PROFILE=$PROFILE
+    - make -s build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make -s test TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always
