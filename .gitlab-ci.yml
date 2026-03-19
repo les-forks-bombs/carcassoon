@@ -21,7 +21,7 @@ stages:
     paths:
       - ./out/$PROFILE/$TARGET/bin/tests/*.xml
       - ./out/$PROFILE/$TARGET/bin/cli*
-      - ./out/$PROFILE/$TARGET/bin/gui*
+      - ./out/$PROFILE/$TARGET/bin/sdl*
     reports:
       junit: ./out/$PROFILE/$TARGET/bin/tests/*.xml
 
