@@ -3,7 +3,6 @@ SRCS = $(wildcard *.c)
 OBJS = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 $(PROG): $(OBJS)
-	echo $(OBJ_DIR)
 	@$(CC) $(LFLAGS) -o $@ $^ $(LDLIBS)
 	@echo "    LD    $(notdir $@)"
 

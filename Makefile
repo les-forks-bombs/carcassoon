@@ -19,6 +19,7 @@ TARGETS  := $(LIBARIES) $(BINARIES)
 
 
 CFLAGS := --target=$(TARGET)
+LFLAGS := --target=$(TARGET)
 ifeq "$(PROFILE)" "debug"
 	ifneq ($(TARGET),x86_64-w64-windows-gnu)
 	    CFLAGS += -fsanitize=address
