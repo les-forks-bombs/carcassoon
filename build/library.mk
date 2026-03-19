@@ -1,13 +1,13 @@
-override OBJ_DIR := $(OBJ_DIR)/$(shell realpath -s --relative-to="$(MAKE_DIR)" "$(PWD)")
+OUT_OBJ_DIR := $(OBJ_DIR)/$(shell realpath -s --relative-to="$(MAKE_DIR)" "$(shell pwd)")
 SRCS := $(wildcard *.c)
-OBJS := $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
+OBJS := $(patsubst %.c, $(OUT_OBJ_DIR)/%.o, $(SRCS))
 
 $(LIB): $(OBJS)
 	@$(AR) cr $@ $^
 	@echo "    AR    $(notdir $@)"
 
-$(OBJS): $(OBJ_DIR)/%.o: %.c
-	@mkdir -p $(OBJ_DIR)
+$(OBJS): $(OUT_OBJ_DIR)/%.o: %.c
+	@mkdir -p $(OUT_OBJ_DIR)
 	@$(CC) $(CFLAGS) -c $^ -o $@
 	@echo "    CC    $^"
 
