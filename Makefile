@@ -16,8 +16,6 @@ LIBARIES := $(shell find lib -mindepth 1 -maxdepth 1 -type d -exec basename {} \
 BINARIES := $(shell find bin -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 TARGETS  := $(LIBARIES) $(BINARIES)
 
-
-
 CFLAGS := --target=$(TARGET)
 LFLAGS := --target=$(TARGET)
 ifeq "$(PROFILE)" "debug"
@@ -59,5 +57,8 @@ req:
 	@echo "Ce projet utilise les libraries système pour compiler avec sdl"
 	@echo "Merci de l'installer pour le target $(TARGET) afin que pkg-config"
 	@echo "Puisse trouver la librarie !"
+	@echo
+	@echo "RHEL/Fedora: dnf install SDL3-devel (ou mingw64-SDL3 pour windows)"
+	@echo "Debian: apt-get install libsdl3-dev"
 
 .PHONY: clean build test
