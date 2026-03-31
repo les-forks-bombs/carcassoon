@@ -32,6 +32,9 @@ int main(void) {
     int running = 1;
     SDL_Event event;
 
+    Uint64 framerate = 0;
+
+
     while (running)
     {
         while (SDL_PollEvent(&event))
@@ -48,11 +51,17 @@ int main(void) {
             }
         }
 
+        framerate = SDL_GetTicks();
+        
+
         SDL_RenderClear(r);
         SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
         SDL_RenderDebugText(r, 50, 50, "omg carcassonne");
         SDL_SetRenderDrawColor(r, 0, 0, 0, 0);
         SDL_RenderPresent(r);
+
+
+
     }
     
 
