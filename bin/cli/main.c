@@ -1,5 +1,5 @@
 #include <libcarcassonne/libcarcassonne.h>
 
 int main(void) {
-    hello();
+    deck_t deck = create_deck(0);
 }
