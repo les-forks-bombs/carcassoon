@@ -35,7 +35,7 @@ enum carcassonne.PlayerType <<enum>>{
     HUMAN
 }
 
-class carcassonne.Block {
+class carcassonne.Tile {
     - type : int
     - group_id : int
 }
@@ -45,19 +45,24 @@ class carcassonne.Group {
 }
 
 class carcassonne.Game {
-    - seed : int
     - current_player_id : int
     - max_turns : int
     - turns_count : int
-    - seed : int
     - human_player_count : int
     - total_player_count : int
     - map : int**
     + make_turn()
-    + ask_player_action()
     + place_tile()
     + place_meeple()
     + get_current_player() : Player*
+}
+
+class carcassonne.Engine{
+    + apply_action(action : Action)
+}
+
+class carcassonne.Action {
+    place_meeple : bool
 }
 
 class gui.SDLFrontEnd {
@@ -78,10 +83,14 @@ class ai.AIEngine {
 
 class carcassonne.AIState {}
 
+class carcassonne.Deck {
+    - seed : int
+}
+
 class MainCLI {}
 class MainSDL {}
 
-Block o--> "1 \n -position" Vector2D
+Tile o--> "1 \n -position" Vector2D
 Meeple o--> "1 \n -position" Vector2D
 
 Player "1 \n -player" o-d-> "8 \n -meeples**" Meeple : Possède >
@@ -89,22 +98,32 @@ Player  o-d-> "1 \n -type" PlayerType : Est un >
 
 Game *--> "2..5 \n -players**" Player : Contient >
 Game *--> "n \n -groups**" Group : Contient >
-Game *--> "n \n map**" Block : Contient >
-Group o--> "n \n blocks**" Block : Contient >
+Game o--> "n \n map**" Tile : Contient >
+Game *--> "1\n-deck" Deck : Utilise >
+Group o--> "n \n Tiles**" Tile : Contient >
 
-Block o--> "1 \n -type" Type
+Tile o--> "1 \n -type" Type
+Tile o--> "1 \n -meeple" Meeple
 
-SDLFrontEnd *--> "1 \n -game*" Game : Joue >
-
-CLIFrontEnd *--> AIEngine : "Fait jouer" >
-SDLFrontEnd *--> AIEngine : "Fait jouer" >
+Engine *--> AIEngine : "Fait jouer" >
+Engine *--> "1\n-game*" Game : Joue >
 
 MainSDL ..> SDLFrontEnd  : "<<uses>>"
 
-CLIFrontEnd *--> "1 \n -game*" Game : Joue >
+SDLFrontEnd *--> "1 \n -engine*" Engine : commande >
+CLIFrontEnd *--> "1 \n -engine*" Engine : commande >
+
+SDLFrontEnd *--> "1 \n -action*" Action : commande >
+CLIFrontEnd *--> "1 \n -action*" Action : commande >
+
+
 MainCLI ..> CLIFrontEnd  : "<<uses>>
 
 Player *--> AIState : Utilise >
 AIEngine o--> AIState : Utilise >
+
+Action *--> "1\n-position" Vector2D : >
+
+Deck *--> "1\n-tiles" Tile : Gère >
 
 @enduml
