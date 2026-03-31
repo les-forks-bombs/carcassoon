@@ -1,0 +1,22 @@
+OUT_OBJ_DIR := $(OBJ_DIR)/$(shell realpath -s --relative-to="$(MAKE_DIR)" "$(shell pwd)")
+SRCS := $(wildcard *.c)
+OBJS := $(patsubst %.c, $(OUT_OBJ_DIR)/%.o, $(SRCS))
+
+$(LIB): $(OBJS)
+	@$(AR) cr $@ $^
+	@echo "    AR    $(notdir $@)"
+
+$(OBJS): $(OUT_OBJ_DIR)/%.o: %.c
+	@mkdir -p $(OUT_OBJ_DIR)
+	@$(CC) $(CFLAGS) -c $^ -o $@
+	@echo "    CC    $^"
+
+build: $(LIB)
+	@$(MAKE) -C tests -f build.mk build
+
+.PHONY: clean
+clean:
+	@$(RM) -f $(LIB) $(OBJS)
+	@echo "    CL    $(notdir $(OBJS))"
+	@echo "    CL    $(notdir $(PROG))"
+	@$(MAKE) -C tests -f build.mk clean
