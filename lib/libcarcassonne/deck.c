@@ -23,7 +23,7 @@ deck_t create_deck(
             j < element.remaining;
             j++
         ) {
-            // printf("Instanciating (%d): %s %d/%d\n", deck.size++, element.tile.name, j + 1, element.remaining);
+            printf("Instanciating (%d): %s %d/%d\n", deck.size++, element.tile.name, j + 1, element.remaining);
         }
     }
 
