@@ -189,7 +189,7 @@ static deck_tile_t tiles[] = {
             },
             .blason = 0
         },
-        .remaining = 1
+        .remaining = 3
     },
 
     // CFFF
@@ -341,7 +341,7 @@ static deck_tile_t tiles[] = {
 
     {
         .tile = {
-            .name = "FRRR",
+            .name = "RRRR",
             .parts = {
                 CHAMP , ROUTE  , CHAMP,
                 ROUTE , VILLAGE, ROUTE,
