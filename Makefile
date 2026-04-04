@@ -61,4 +61,7 @@ req:
 	@echo "RHEL/Fedora: dnf install SDL3-devel (ou mingw64-SDL3 pour windows)"
 	@echo "Debian: apt-get install libsdl3-dev"
 
-.PHONY: clean build test
+docs:
+	doxygen
+
+.PHONY: clean build test docs
