@@ -10,7 +10,13 @@
 #define ABBEY   LIBCARCASSONNE_TILE_PART_ABBEY
 #define TOWN    LIBCARCASSONNE_TILE_PART_TOWN
 
-static deck_tile_t tiles[] = {
+typedef struct deck_tile_prototype
+{
+    tile_t tile;
+    int remaining;
+} deck_tile_prototype_t;
+
+static deck_tile_prototype_t tiles[] = {
 
     // CCCC
     {
@@ -353,19 +359,17 @@ static deck_tile_t tiles[] = {
     },
 };
 
-static deck_tile_t start_tiles[] = {
-    {
-        .tile = {
-            .name = "CRFR",
-            .parts = {
-                TOWN  , TOWN , TOWN,
-                ROUTE , ROUTE, ROUTE,
-                CHAMP , CHAMP, CHAMP,
-            },
-            .blason = 0
+static deck_tile_prototype_t start_tile = {
+    .tile = {
+        .name = "CRFR",
+        .parts = {
+            TOWN  , TOWN , TOWN,
+            ROUTE , ROUTE, ROUTE,
+            CHAMP , CHAMP, CHAMP,
         },
-        .remaining = 1
+        .blason = 0
     },
+    .remaining = 1
 };
 
-#endif H_LIBCARCASSONNE_DECK_COMPOSITION
+#endif
