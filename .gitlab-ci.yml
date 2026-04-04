@@ -31,7 +31,6 @@ stages:
   stage: docs
   script:
     - make docs
-    - cp -r out/docs public/
   pages: true
   rules:
     - if: $CI_JOB_MANUAL
