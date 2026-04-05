@@ -20,8 +20,7 @@ stages:
   artifacts:
     when: always
     paths:
-      - ./out/$PROFILE/$TARGET/bin/cli*
-      - ./out/$PROFILE/$TARGET/bin/sdl*
+      - ./out/$PROFILE/$TARGET
 
 'Test':
   stage: test
@@ -32,7 +31,6 @@ stages:
         PROFILE: [debug, release]
   
   script:
-    - make -s build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
     - make -s test TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
