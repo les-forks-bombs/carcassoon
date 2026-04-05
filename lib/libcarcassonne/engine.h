@@ -9,8 +9,6 @@ typedef struct engine
 {
     /// @brief La statut du plateau de jeu
     game_t game;
-    /// @brief Le deck de cartes initialisé
-    deck_t deck;
 } engine_t;
 
 #endif

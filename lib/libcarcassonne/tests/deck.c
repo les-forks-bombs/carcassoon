@@ -22,13 +22,12 @@ void deck_seed_consistent(void **state)
     deck_t deck2 = create_deck(0);
     deck_t deck3 = create_deck(100);
 
-    // we skip the first pick because it's always the starting one
-    
+    // on skip le premier car c'est toujours le meme (tile de départ)
     tile_t *r = deck_pick(&deck1);
     assert_string_equal(deck_pick(&deck2)->name, r->name);
     assert_string_equal(deck_pick(&deck3)->name, r->name);
 
-    int i = 1; // set to one because we skipped the first one
+    int i = 1; // on mets le compteur a 1 car on a fait un premier appel
     while (deck1.list.head != NULL)
     {
         r = deck_pick(&deck1);
@@ -47,6 +46,7 @@ void deck_seed_consistent(void **state)
     assert_ptr_equal(r, deck_pick(&deck2));
     assert_null(r);
 
+    // on vérifie qu'on a bien les 72 tiles
     assert_int_equal(i, 72);
 
     free_deck(deck1);
