@@ -13,6 +13,7 @@ deck_t create_deck(
             .tail = NULL,
             .size = 0,
         },
+        .state = create_prng_mersenne_twister_state(seed)
     };
 
     // On crée une queue (linked-list) qui sera utilisée pour
@@ -41,10 +42,9 @@ deck_t create_deck(
         }
     }
 
-    srand(seed);
     while (queue.size != 0)
     {
-        int index = rand() % queue.size;
+        int index = prng_mersenne_twister_random(&deck.state) % queue.size;
 
         // Récupérer l'élément a l'index n (O(n))
         deck_element_t *element = deck_list_nth(&queue, index);
@@ -80,8 +80,7 @@ tile_t *deck_pick(deck_t *deck)
 
 void deck_defausser(deck_t *deck, tile_t *tile)
 {
-    srand(0);
-    int index = rand() % deck->list.size;
+    int index = prng_mersenne_twister_random(&deck->state) % deck->list.size;
     deck_list_insert(&deck->list, index, tile);
 }
 

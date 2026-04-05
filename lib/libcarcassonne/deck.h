@@ -4,6 +4,7 @@
 #include <libcarcassonne/tile.h>
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/deck_composition.h>
+#include <libcarcassonne/prng_mersenne_twister.h>
 
 /// @brief Element dans la pile deck_list_t, double chainé (next, prev)
 typedef struct deck_element
@@ -31,8 +32,10 @@ typedef struct deck_list
 /// @brief Le deck permet de piocher et défausser des tiles
 typedef struct deck
 {
-    // todo: développer un prng qui gère son état dans une struct
+    /// @brief La liste des tiles dans un ordre aléatoire
     deck_list_t list;
+    /// @brief State du générateur de nombres pseudo-aléatoire
+    prng_mersenne_twister_state_t state;
 } deck_t;
 
 /// @brief Permet de créer une instance de deck
