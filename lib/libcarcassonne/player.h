@@ -9,8 +9,9 @@ typedef char player_type;
 typedef struct player
 {
     player_type player_type;
-    char* name;
     int score;
 } player_t;
+
+player_t create_player(player_type type);
 
 #endif
