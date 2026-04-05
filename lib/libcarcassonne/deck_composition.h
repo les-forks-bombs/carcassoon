@@ -4,9 +4,9 @@
 #include <libcarcassonne/deck.h>
 
 #define VILLAGE LIBCARCASSONNE_TILE_PART_VILLAGE
-#define CHAMP   LIBCARCASSONNE_TILE_PART_CHAMP
-#define ROUTE   LIBCARCASSONNE_TILE_PART_ROUTE
-#define MURS    LIBCARCASSONNE_TILE_PART_MURS
+#define FIELD   LIBCARCASSONNE_TILE_PART_FIELD
+#define ROAD    LIBCARCASSONNE_TILE_PART_ROAD 
+#define WALL    LIBCARCASSONNE_TILE_PART_WALL
 #define ABBEY   LIBCARCASSONNE_TILE_PART_ABBEY
 #define TOWN    LIBCARCASSONNE_TILE_PART_TOWN
 
@@ -40,7 +40,7 @@ static deck_tile_prototype_t tiles[] = {
             .parts = {
                 TOWN , TOWN , TOWN ,
                 TOWN , TOWN , TOWN ,
-                CHAMP, CHAMP, CHAMP,
+                FIELD, FIELD, FIELD,
             },
             .blason = 1
         },
@@ -53,7 +53,7 @@ static deck_tile_prototype_t tiles[] = {
             .parts = {
                 TOWN , TOWN , TOWN ,
                 TOWN , TOWN , TOWN ,
-                CHAMP, CHAMP, CHAMP,
+                FIELD, FIELD, FIELD,
             },
             .blason = 0
         },
@@ -68,7 +68,7 @@ static deck_tile_prototype_t tiles[] = {
             .parts = {
                 TOWN , TOWN , TOWN ,
                 TOWN , TOWN , TOWN ,
-                CHAMP, ROUTE, CHAMP,
+                FIELD, ROAD , FIELD,
             },
             .blason = 1
         },
@@ -81,7 +81,7 @@ static deck_tile_prototype_t tiles[] = {
             .parts = {
                 TOWN , TOWN , TOWN ,
                 TOWN , TOWN , TOWN ,
-                CHAMP, ROUTE, CHAMP,
+                FIELD, ROAD , FIELD,
             },
             .blason = 0
         },
@@ -95,9 +95,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "CCFF",
             .parts = {
-                TOWN , TOWN , MURS ,
-                CHAMP, CHAMP, TOWN ,
-                CHAMP, CHAMP, MURS,
+                TOWN , TOWN , WALL ,
+                FIELD, FIELD, TOWN ,
+                FIELD, FIELD, WALL,
             },
             .blason = 0
         },
@@ -109,8 +109,8 @@ static deck_tile_prototype_t tiles[] = {
             .name = "CCFF",
             .parts = {
                 TOWN , TOWN , TOWN,
-                CHAMP, TOWN,  TOWN,
-                CHAMP, CHAMP, TOWN,
+                FIELD, TOWN,  TOWN,
+                FIELD, FIELD, TOWN,
             },
             .blason = 1
         },
@@ -122,8 +122,8 @@ static deck_tile_prototype_t tiles[] = {
             .name = "CCFF",
             .parts = {
                 TOWN , TOWN , TOWN,
-                CHAMP, TOWN,  TOWN,
-                CHAMP, CHAMP, TOWN,
+                FIELD, TOWN,  TOWN,
+                FIELD, FIELD, TOWN,
             },
             .blason = 0
         },
@@ -136,8 +136,8 @@ static deck_tile_prototype_t tiles[] = {
             .name = "CCRR",
             .parts = {
                 TOWN , TOWN , TOWN,
-                TOWN , TOWN,  ROUTE,
-                ROUTE, ROUTE, ROUTE,
+                TOWN , TOWN,  ROAD ,
+                ROAD , ROAD , ROAD ,
             },
             .blason = 1
         },
@@ -149,8 +149,8 @@ static deck_tile_prototype_t tiles[] = {
             .name = "CCRR",
             .parts = {
                 TOWN , TOWN , TOWN,
-                TOWN , TOWN,  ROUTE,
-                ROUTE, ROUTE, ROUTE,
+                TOWN , TOWN,  ROAD ,
+                ROAD , ROAD , ROAD ,
             },
             .blason = 0
         },
@@ -163,9 +163,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "CFCF",
             .parts = {
-                TOWN , CHAMP, TOWN,
+                TOWN , FIELD, TOWN,
                 TOWN , TOWN,  TOWN,
-                TOWN,  CHAMP, TOWN,
+                TOWN,  FIELD, TOWN,
             },
             .blason = 1
         },
@@ -176,9 +176,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "CFCF",
             .parts = {
-                TOWN , CHAMP, TOWN,
+                TOWN , FIELD, TOWN,
                 TOWN , TOWN,  TOWN,
-                TOWN,  CHAMP, TOWN,
+                TOWN,  FIELD, TOWN,
             },
             .blason = 0
         },
@@ -189,9 +189,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "CFCF",
             .parts = {
-                TOWN , CHAMP, TOWN,
-                TOWN , CHAMP, TOWN,
-                TOWN,  CHAMP, TOWN,
+                TOWN , FIELD, TOWN,
+                TOWN , FIELD, TOWN,
+                TOWN,  FIELD, TOWN,
             },
             .blason = 0
         },
@@ -205,8 +205,8 @@ static deck_tile_prototype_t tiles[] = {
             .name = "CFFF",
             .parts = {
                 TOWN  , TOWN , TOWN,
-                CHAMP , CHAMP, CHAMP,
-                CHAMP , CHAMP, CHAMP,
+                FIELD , FIELD, FIELD,
+                FIELD , FIELD, FIELD,
             },
             .blason = 0
         },
@@ -220,8 +220,8 @@ static deck_tile_prototype_t tiles[] = {
             .name = "CFRR",
             .parts = {
                 TOWN  , TOWN , TOWN,
-                ROUTE , ROUTE, CHAMP,
-                CHAMP , ROUTE, CHAMP,
+                ROAD  , ROAD , FIELD,
+                FIELD , ROAD , FIELD,
             },
             .blason = 0
         },
@@ -235,8 +235,8 @@ static deck_tile_prototype_t tiles[] = {
             .name = "CRFR",
             .parts = {
                 TOWN  , TOWN , TOWN,
-                ROUTE , ROUTE, ROUTE,
-                CHAMP , CHAMP, CHAMP,
+                ROAD  , ROAD , ROAD ,
+                FIELD , FIELD, FIELD,
             },
             .blason = 0
         },
@@ -249,8 +249,8 @@ static deck_tile_prototype_t tiles[] = {
             .name = "CRRF",
             .parts = {
                 TOWN  , TOWN , TOWN,
-                CHAMP , ROUTE, ROUTE,
-                CHAMP , ROUTE, CHAMP,
+                FIELD , ROAD , ROAD ,
+                FIELD , ROAD , FIELD,
             },
             .blason = 0
         },
@@ -263,8 +263,8 @@ static deck_tile_prototype_t tiles[] = {
             .name = "CRRR",
             .parts = {
                 TOWN  , TOWN   , TOWN,
-                ROUTE , VILLAGE, ROUTE,
-                CHAMP , ROUTE  , CHAMP,
+                ROAD  , VILLAGE, ROAD ,
+                FIELD , ROAD   , FIELD,
             },
             .blason = 0
         },
@@ -276,9 +276,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "FFFF",
             .parts = {
-                CHAMP , CHAMP , CHAMP,
-                CHAMP , ABBEY , CHAMP,
-                CHAMP , CHAMP , CHAMP,
+                FIELD , FIELD , FIELD,
+                FIELD , ABBEY , FIELD,
+                FIELD , FIELD , FIELD,
             },
             .blason = 0
         },
@@ -290,9 +290,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "FFFR",
             .parts = {
-                CHAMP , CHAMP , CHAMP,
-                CHAMP , ABBEY , CHAMP,
-                CHAMP , ROUTE , CHAMP,
+                FIELD , FIELD , FIELD,
+                FIELD , ABBEY , FIELD,
+                FIELD , ROAD  , FIELD,
             },
             .blason = 0
         },
@@ -305,9 +305,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "FFRR",
             .parts = {
-                CHAMP , CHAMP , CHAMP,
-                ROUTE , ROUTE , CHAMP,
-                CHAMP , ROUTE , CHAMP,
+                FIELD , FIELD , FIELD,
+                ROAD  , ROAD  , FIELD,
+                FIELD , ROAD  , FIELD,
             },
             .blason = 0
         },
@@ -319,9 +319,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "FRFR",
             .parts = {
-                CHAMP , ROUTE , CHAMP,
-                CHAMP , ROUTE , CHAMP,
-                CHAMP , ROUTE , CHAMP,
+                FIELD , ROAD  , FIELD,
+                FIELD , ROAD  , FIELD,
+                FIELD , ROAD  , FIELD,
             },
             .blason = 0
         },
@@ -334,9 +334,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "FRRR",
             .parts = {
-                CHAMP , CHAMP  , CHAMP,
-                ROUTE , VILLAGE, ROUTE,
-                CHAMP , ROUTE  , CHAMP,
+                FIELD , FIELD  , FIELD,
+                ROAD  , VILLAGE, ROAD ,
+                FIELD , ROAD   , FIELD,
             },
             .blason = 0
         },
@@ -349,9 +349,9 @@ static deck_tile_prototype_t tiles[] = {
         .tile = {
             .name = "RRRR",
             .parts = {
-                CHAMP , ROUTE  , CHAMP,
-                ROUTE , VILLAGE, ROUTE,
-                CHAMP , ROUTE  , CHAMP,
+                FIELD , ROAD   , FIELD,
+                ROAD  , VILLAGE, ROAD ,
+                FIELD , ROAD   , FIELD,
             },
             .blason = 0
         },
@@ -364,12 +364,21 @@ static deck_tile_prototype_t start_tile = {
         .name = "CRFR",
         .parts = {
             TOWN  , TOWN , TOWN,
-            ROUTE , ROUTE, ROUTE,
-            CHAMP , CHAMP, CHAMP,
+            ROAD  , ROAD , ROAD ,
+            FIELD , FIELD, FIELD,
         },
         .blason = 0
     },
     .remaining = 1
 };
+
+// On supprime les macros qu'on a utilisé
+
+#undef VILLAGE
+#undef FIELD  
+#undef ROAD   
+#undef WALL   
+#undef ABBEY  
+#undef TOWN   
 
 #endif
