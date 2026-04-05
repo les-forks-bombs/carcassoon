@@ -25,7 +25,7 @@ typedef struct deck_list
     /// @brief Queue du tableau
     deck_element_t *tail;
     /// @brief Nombre d'éléments dans la liste
-    int size;
+    unsigned int size;
 } deck_list_t;
 
 /// @brief Le deck permet de piocher et défausser des tiles
@@ -48,13 +48,13 @@ void free_deck(deck_t);
 /// @brief Permet de piocher une tile dans le deck
 /// @param deck Le deck qui sera utilisé pour piocher la tile
 /// @return La tile piochée
-tile_t *pick(deck_t *);
+tile_t *deck_pick(deck_t *);
 
 /// @brief Permet de remettre une tile dans le deck
 /// @details Est utilisé dans le cas ou la tile proposée n'est pas utilisable
 /// @param deck Le deck ciblé
 /// @param tile La tile a remettre dans la pile
-void defausser(deck_t *, tile_t *);
+void deck_defausser(deck_t *, tile_t *);
 
 /// @brief Ajoute un éléments a la queue de la liste
 /// @param deck_list La liste chainée
@@ -73,7 +73,7 @@ deck_list_t *deck_list_prepend(deck_list_t *, tile_t *);
 /// @param index L'index ou insérer l'élément
 /// @param tile La tile a insérer
 /// @returns La nouvelle liste chainée
-deck_list_t *deck_list_insert(deck_list_t *, int, tile_t *);
+deck_list_t *deck_list_insert(deck_list_t *, unsigned int, tile_t *);
 
 /// @brief Supprime un élément de la liste chainée
 /// @param element L'élément a supprimer
@@ -83,7 +83,7 @@ void deck_list_remove(deck_list_t *, deck_element_t *);
 /// @param deck_list La liste chainée
 /// @param index L'index de l'élément a récupérer
 /// @return L'élément, peut être NULL si l'index est out-of-bounds
-deck_element_t *deck_list_nth(deck_list_t *, int);
+deck_element_t *deck_list_nth(deck_list_t *, unsigned int);
 
 /// @brief Nettoie la mémoire d'une liste chainée
 /// @param deck_list La liste chainée a nettoyer

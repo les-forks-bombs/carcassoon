@@ -26,7 +26,7 @@ deck_t create_deck(
     // A partir d'une composition de deck,
     // on ajoute les éléments a la queue
     for (
-        int i = 0;
+        unsigned int i = 0;
         i < sizeof(tiles) / sizeof(tiles[0]);
         i++)
     {
@@ -67,7 +67,7 @@ void free_deck(
     deck_list_free(&deck.list);
 }
 
-tile_t *pick(deck_t *deck)
+tile_t *deck_pick(deck_t *deck)
 {
     if (deck->list.head == NULL)
         return NULL;
@@ -78,7 +78,7 @@ tile_t *pick(deck_t *deck)
     return el;
 }
 
-void defausser(deck_t *deck, tile_t *tile)
+void deck_defausser(deck_t *deck, tile_t *tile)
 {
     srand(0);
     int index = rand() % deck->list.size;
@@ -147,7 +147,7 @@ deck_list_t *deck_list_prepend(
 
 deck_list_t *deck_list_insert(
     deck_list_t *l,
-    int index,
+    unsigned int index,
     tile_t *tile)
 {
     if (l == NULL)
@@ -201,13 +201,13 @@ void deck_list_remove(
 
 deck_element_t *deck_list_nth(
     deck_list_t *l,
-    int index)
+    unsigned int index)
 {
     if (index < 0 || index > l->size)
         return NULL;
 
     deck_element_t *current = l->head;
-    for (int i = 0; i != index; i++)
+    for (unsigned int i = 0; i != index; i++)
         current = current->next;
 
     return current;
