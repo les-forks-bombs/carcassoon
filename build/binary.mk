@@ -17,5 +17,5 @@ build: $(PROG)
 clean:
 	@$(RM) -f $(OBJS) $(PROG)
 	@$(RM) -rf $(PROG){,.exe}
-	@echo "    CL    $(notdir $(OBJS))"
-	@echo "    CL    $(notdir $(PROG))"
+	@echo "    RM    $(notdir $(OBJS))"
+	@echo "    RM    $(notdir $(PROG))"
