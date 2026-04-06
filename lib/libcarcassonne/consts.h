@@ -1,2 +1,11 @@
+#ifndef H_LIBCARCASSONNE_CONSTS
+#define H_LIBCARCASSONNE_CONSTS
 #define LIBCARCASSONNE_MAX_PLAYERS 5
 #define LIBCARCASSONNE_TILES_COUNT 72
+
+#define SUCCESS 0
+#define ERROR 1
+
+typedef char return_code_t;
+
+#endif
