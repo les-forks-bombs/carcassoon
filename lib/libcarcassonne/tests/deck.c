@@ -24,8 +24,8 @@ void deck_seed_consistent(void **state)
 
     // on skip le premier car c'est toujours le meme (tile de départ)
     tile_t *r = deck_pick(&deck1);
-    assert_string_equal(deck_pick(&deck2)->name, r->name);
-    assert_string_equal(deck_pick(&deck3)->name, r->name);
+    assert_ptr_equal(deck_pick(&deck2), r);
+    assert_ptr_equal(deck_pick(&deck3), r);
 
     int i = 1; // on mets le compteur a 1 car on a fait un premier appel
     while (deck1.list.head != NULL)
@@ -33,11 +33,11 @@ void deck_seed_consistent(void **state)
         r = deck_pick(&deck1);
 
         // on vérifie que deux générateurs doivent être égals
-        assert_string_equal(r->name, deck_pick(&deck2)->name);
+        assert_ptr_equal(r, deck_pick(&deck2));
 
         // au début, on vérifie que nos générateurs diffèrent bien
         if (i < 1)
-            assert_string_not_equal(r->name, deck_pick(&deck3)->name);
+            assert_ptr_equal(r, deck_pick(&deck3));
 
         i++;
     }

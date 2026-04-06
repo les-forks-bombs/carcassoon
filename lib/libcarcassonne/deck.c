@@ -31,14 +31,14 @@ deck_t create_deck(
         i < sizeof(tiles) / sizeof(tiles[0]);
         i++)
     {
-        deck_tile_prototype_t *element = &tiles[i];
+        tile_t *element = &tiles[i];
 
         for (
-            int j = 0;
-            j < element->remaining;
+            unsigned int j = 0;
+            j < element->amount;
             j++)
         {
-            deck_list_append(&queue, &element->tile);
+            deck_list_append(&queue, element);
         }
     }
 
@@ -56,7 +56,7 @@ deck_t create_deck(
         deck_list_remove(&queue, element);
     }
 
-    deck_list_prepend(&deck.list, &start_tile.tile);
+    deck_list_prepend(&deck.list, &start_tile);
 
     return deck;
 }
