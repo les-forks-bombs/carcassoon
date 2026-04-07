@@ -19,7 +19,15 @@
 #define LIBCARCASSONNE_TILE_PART_F 1 << 5
 #define LIBCARCASSONNE_TILE_PART_G 1 << 6
 #define LIBCARCASSONNE_TILE_PART_H 1 << 7
-#define LIBCARCASSONNE_TILE_PART_I 1 << 8
+
+#define LIBCARCASSONNE_TILE_PART_WILDCARD LIBCARCASSONNE_TILE_PART_A \
+    | LIBCARCASSONNE_TILE_PART_B \
+    | LIBCARCASSONNE_TILE_PART_C \
+    | LIBCARCASSONNE_TILE_PART_D \
+    | LIBCARCASSONNE_TILE_PART_E \
+    | LIBCARCASSONNE_TILE_PART_F \
+    | LIBCARCASSONNE_TILE_PART_G \
+    | LIBCARCASSONNE_TILE_PART_H
 
 #define LIBCARCASSONNE_TILE_ORIENTATION_NORTH 0
 #define LIBCARCASSONNE_TILE_ORIENTATION_SOUTH 1
@@ -48,7 +56,7 @@ typedef struct tile
 typedef struct placed_tile
 {
     tile_t *parent;
-    meeple_t *meeple;
+    meeple_t* meeple[9];
     tile_orientation_t orientation;
 } placed_tile_t;
 

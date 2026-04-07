@@ -113,15 +113,39 @@ return_code_t game_place_tile(
         placed_tile_t *placed_tile = calloc(1, sizeof(placed_tile_t));
         placed_tile->parent = tile;
 
-        // todo: implémenter les meeple
-        placed_tile->meeple = NULL;
-
         *tile_ref = placed_tile;
         return SUCCESS; // Placed
     }
     else
     {
         return NOT_FREE; // not Free
+    }
+}
+
+return_code_t game_place_meeple(
+    game_t *game,
+    int x,
+    int y,
+    int tile_part
+)
+{
+    if (game == NULL)
+    {
+        return ERROR;
+    }
+    
+    placed_tile_t **tile_ref = game_tile_at(game, x, y);
+
+    if (tile_ref == NULL)
+    {
+        return OUT_OF_BOUNDS; // Out of bounds
+    }
+
+    if (*tile_ref != NULL) {
+        (*tile_ref)->meeple[tile_part] = calloc(1, sizeof(meeple_t));
+        (*tile_ref)->meeple[tile_part]->player = game->current_player;
+    } else {
+        return NO_TILE;
     }
 }
 
