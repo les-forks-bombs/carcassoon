@@ -96,7 +96,7 @@ return_code_t game_place_tile(
     int y,
     tile_orientation_t orientation)
 {
-    if (game == NULL)
+    if (game == NULL || tile == NULL)
     {
         return ERROR;
     }
@@ -110,8 +110,13 @@ return_code_t game_place_tile(
 
     if (*tile_ref == NULL)
     {
+
+        if (!game_is_tile_placeable(game, tile, x, y, orientation))
+            return INVALID_PLACEMENT;
+
         placed_tile_t *placed_tile = calloc(1, sizeof(placed_tile_t));
         placed_tile->parent = tile;
+        placed_tile->orientation = orientation;
 
         *tile_ref = placed_tile;
         return SUCCESS; // Placed
@@ -170,6 +175,12 @@ void game_print_map(game_t *game)
 
 bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y, tile_orientation_t orientation)
 {
+    if (game == NULL || tile == NULL)
+        return false;
+
+    if (x == 0 && y == 0)
+        return true;
+
     placed_tile_t **up_tile = game_tile_at(game, x - 1, y);
     placed_tile_t **down_tile = game_tile_at(game, x + 1, y);
     placed_tile_t **left_tile = game_tile_at(game, x, y - 1);
@@ -178,17 +189,25 @@ bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y, tile_orien
     if (*up_tile == NULL && *down_tile == NULL && *left_tile == NULL && *right_tile == NULL)
         return false;
 
-    if (*up_tile != NULL && tile_get_family_face(tile, orientation) != tile_get_family_face((*up_tile)->parent, (*up_tile)->orientation))
+    if (*up_tile != NULL && tile_get_family_face(tile, orientation, LIBCARCASSONNE_TILE_ORIENTATION_NORTH) != tile_get_family_face((*up_tile)->parent, (*up_tile)->orientation, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH))
+    {
         return false;
+    }
 
-    if (*down_tile != NULL && tile_get_family_face(tile, orientation) != tile_get_family_face((*down_tile)->parent, (*down_tile)->orientation))
+    if (*down_tile != NULL && tile_get_family_face(tile, orientation, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH) != tile_get_family_face((*down_tile)->parent, (*down_tile)->orientation, LIBCARCASSONNE_TILE_ORIENTATION_NORTH))
+    {
         return false;
+    }
 
-    if (*left_tile != NULL && tile_get_family_face(tile, orientation) != tile_get_family_face((*left_tile)->parent, (*left_tile)->orientation))
+    if (*left_tile != NULL && tile_get_family_face(tile, orientation, LIBCARCASSONNE_TILE_ORIENTATION_WEST) != tile_get_family_face((*left_tile)->parent, (*left_tile)->orientation, LIBCARCASSONNE_TILE_ORIENTATION_EAST))
+    {
         return false;
+    }
 
-    if (*right_tile != NULL && tile_get_family_face(tile, orientation) != tile_get_family_face((*right_tile)->parent, (*right_tile)->orientation))
+    if (*right_tile != NULL && tile_get_family_face(tile, orientation, LIBCARCASSONNE_TILE_ORIENTATION_EAST) != tile_get_family_face((*right_tile)->parent, (*right_tile)->orientation, LIBCARCASSONNE_TILE_ORIENTATION_WEST))
+    {
         return false;
+    }
 
     return true;
 }
