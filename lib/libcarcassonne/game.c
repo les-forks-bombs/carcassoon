@@ -73,6 +73,14 @@ placed_tile_t **game_tile_at(
     int colonne,
     int ligne)
 {
+    if (colonne <= -LIBCARCASSONNE_TILES_COUNT ||
+        ligne <= -LIBCARCASSONNE_TILES_COUNT ||
+        colonne >= LIBCARCASSONNE_TILES_COUNT ||
+        ligne >= LIBCARCASSONNE_TILES_COUNT)
+    {
+        return NULL; // Out of bounds
+    }
+
     int zero = LIBCARCASSONNE_TILES_COUNT - 1;
     int size = LIBCARCASSONNE_TILES_COUNT * 2 - 1;
 
