@@ -1,11 +1,11 @@
 #include <libcarcassonne/game.h>
 
 #include <assert.h>
+#include <libcarcassonne/consts.h>
+#include <memory.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <memory.h>
-#include <libcarcassonne/consts.h>
 
 return_code_t create_game(
     game_t *game,
@@ -82,7 +82,7 @@ return_code_t game_place_tile(
         x >= LIBCARCASSONNE_TILES_COUNT ||
         y >= LIBCARCASSONNE_TILES_COUNT)
     {
-        return -2; // Out of bounds
+        return OUT_OF_BOUNDS; // Out of bounds
     }
 
     placed_tile_t **tile_ref = game_tile_at(game, x, y);
@@ -96,11 +96,11 @@ return_code_t game_place_tile(
         placed_tile->meeple = NULL;
 
         *tile_ref = placed_tile;
-        return 1; // Placed
+        return SUCCESS; // Placed
     }
     else
     {
-        return -1; // not Free
+        return NOT_FREE; // not Free
     }
 }
 
