@@ -126,14 +126,13 @@ return_code_t game_place_meeple(
     game_t *game,
     int x,
     int y,
-    int tile_part
-)
+    int tile_part)
 {
     if (game == NULL)
     {
         return ERROR;
     }
-    
+
     placed_tile_t **tile_ref = game_tile_at(game, x, y);
 
     if (tile_ref == NULL)
@@ -141,10 +140,13 @@ return_code_t game_place_meeple(
         return OUT_OF_BOUNDS; // Out of bounds
     }
 
-    if (*tile_ref != NULL) {
+    if (*tile_ref != NULL)
+    {
         (*tile_ref)->meeple[tile_part] = calloc(1, sizeof(meeple_t));
         (*tile_ref)->meeple[tile_part]->player = game->current_player;
-    } else {
+    }
+    else
+    {
         return NO_TILE;
     }
 }
@@ -164,4 +166,29 @@ void game_print_map(game_t *game)
         }
         printf("|\n");
     }
+}
+
+bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y, tile_orientation_t orientation)
+{
+    placed_tile_t **up_tile = game_tile_at(game, x - 1, y);
+    placed_tile_t **down_tile = game_tile_at(game, x + 1, y);
+    placed_tile_t **left_tile = game_tile_at(game, x, y - 1);
+    placed_tile_t **right_tile = game_tile_at(game, x, y + 1);
+
+    if (*up_tile == NULL && *down_tile == NULL && *left_tile == NULL && *right_tile == NULL)
+        return false;
+
+    if (*up_tile != NULL && tile_get_family_face(tile, orientation) != tile_get_family_face((*up_tile)->parent, (*up_tile)->orientation))
+        return false;
+
+    if (*down_tile != NULL && tile_get_family_face(tile, orientation) != tile_get_family_face((*down_tile)->parent, (*down_tile)->orientation))
+        return false;
+
+    if (*left_tile != NULL && tile_get_family_face(tile, orientation) != tile_get_family_face((*left_tile)->parent, (*left_tile)->orientation))
+        return false;
+
+    if (*right_tile != NULL && tile_get_family_face(tile, orientation) != tile_get_family_face((*right_tile)->parent, (*right_tile)->orientation))
+        return false;
+
+    return true;
 }
