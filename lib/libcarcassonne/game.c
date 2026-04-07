@@ -95,15 +95,17 @@ return_code_t game_place_tile(
     int x,
     int y)
 {
-    if (x <= -LIBCARCASSONNE_TILES_COUNT ||
-        y <= -LIBCARCASSONNE_TILES_COUNT ||
-        x >= LIBCARCASSONNE_TILES_COUNT ||
-        y >= LIBCARCASSONNE_TILES_COUNT)
+    if (game == NULL)
     {
-        return OUT_OF_BOUNDS; // Out of bounds
+        return ERROR;
     }
 
     placed_tile_t **tile_ref = game_tile_at(game, x, y);
+
+    if (tile_ref == NULL)
+    {
+        return OUT_OF_BOUNDS; // Out of bounds
+    }
 
     if (*tile_ref == NULL)
     {
