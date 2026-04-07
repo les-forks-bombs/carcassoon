@@ -38,3 +38,25 @@ void game_do_not_build_because_nb_ia_too_high(void **state)
     game_t game;
     assert_return_code(create_game(&game, 3, 4, 500, 0), ERROR);
 }
+
+void game_tile_at_works(void **state)
+{
+    game_t game;
+    assert_return_code(create_game(&game, 3, 0, 500, 0), SUCCESS);
+
+    placed_tile_t **tile = game_tile_at(&game, -71, -71);
+    assert_ptr_equal(tile, &game.map[0]);
+
+    destroy_game(&game);
+}
+
+void game_tile_at_out_of_bounds(void **state)
+{
+    game_t game;
+    assert_return_code(create_game(&game, 3, 0, 500, 0), SUCCESS);
+
+    placed_tile_t **tile = game_tile_at(&game, -200, 200);
+    assert_ptr_equal(tile, NULL);
+
+    destroy_game(&game);
+}
