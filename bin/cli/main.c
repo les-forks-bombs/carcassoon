@@ -8,6 +8,7 @@ int main(void)
     create_game(&game, 3, 0, 500, 0);
 
     tile_t *tile = deck_pick(&game.deck);
+    deck_defausser(&game.deck, tile);
 
     game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH);
     game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH);
