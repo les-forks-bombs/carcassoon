@@ -44,7 +44,7 @@ return_code_t create_game(
     unsigned int turns_limit);
 
 /// @brief Détruis & dé-alloue le jeu
-/// @param game Le jeu a dé-allouer
+/// @param game Le jeu à dé-allouer
 /// @related game_t
 void destroy_game(game_t *game);
 
@@ -61,6 +61,14 @@ placed_tile_t **game_tile_at(
 void game_print_map(game_t *);
 return_code_t game_place_tile(game_t *, tile_t *tile, int x, int y, tile_orientation_t orientation);
 
+/// @brief Détermine si une tuile peut être placé à l'emplacement désigné
+/// @param game Le jeu dans lequel placer la tuile
+/// @param tile La tuile à placer
+/// @param x La position en abscisse
+/// @param y La position en ordonnée
+/// @param orientation L'orientation de la tuile
+/// @return Un booléen représentant la capacité à placer la tuile à cet endroit
+/// @related game_t
 bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y, tile_orientation_t orientation);
 
 #endif

@@ -25,8 +25,8 @@
     | LIBCARCASSONNE_TILE_PART_B | LIBCARCASSONNE_TILE_PART_C | LIBCARCASSONNE_TILE_PART_D | LIBCARCASSONNE_TILE_PART_E | LIBCARCASSONNE_TILE_PART_F | LIBCARCASSONNE_TILE_PART_G | LIBCARCASSONNE_TILE_PART_H
 
 #define LIBCARCASSONNE_TILE_ORIENTATION_NORTH 0
-#define LIBCARCASSONNE_TILE_ORIENTATION_SOUTH 1
-#define LIBCARCASSONNE_TILE_ORIENTATION_EAST 2
+#define LIBCARCASSONNE_TILE_ORIENTATION_EAST 1
+#define LIBCARCASSONNE_TILE_ORIENTATION_SOUTH 2
 #define LIBCARCASSONNE_TILE_ORIENTATION_WEST 3
 
 typedef char tile_part_type_t;
@@ -55,6 +55,12 @@ typedef struct placed_tile
     tile_orientation_t orientation;
 } placed_tile_t;
 
-char tile_get_family_face(tile_t *tile, tile_orientation_t orientation);
+/// @brief Récupère une famille de la tuile en fonction de l'orientation et de la face de connexion
+/// @param tile Le modèle de tuile à utiliser
+/// @param orientation L'orientation de la tuile
+/// @param connexion_face La face de connexion
+/// @return La famille de la face de connexion
+/// @related tile_t
+char tile_get_family_face(tile_t *tile, tile_orientation_t orientation, tile_orientation_t connexion_face);
 
 #endif
