@@ -93,7 +93,8 @@ return_code_t game_place_tile(
     game_t *game,
     tile_t *tile,
     int x,
-    int y)
+    int y,
+    tile_orientation_t orientation)
 {
     if (game == NULL)
     {

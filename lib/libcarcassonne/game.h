@@ -59,6 +59,6 @@ placed_tile_t **game_tile_at(
     int y);
 
 void game_print_map(game_t *);
-return_code_t game_place_tile(game_t *, tile_t *, int, int);
+return_code_t game_place_tile(game_t *, tile_t *, int x, int y, tile_orientation_t orientation);
 
 #endif

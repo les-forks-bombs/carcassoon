@@ -75,7 +75,7 @@ void game_place_tile_works(void **state)
     tile_t *tile = deck_pick(&game.deck);
     assert_ptr_not_equal(tile, NULL);
 
-    assert_return_code(game_place_tile(&game, tile, 1, 0), SUCCESS);
+    assert_return_code(game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
 
     destroy_game(&game);
 }
@@ -88,7 +88,7 @@ void game_place_tile_do_not_work_because_game_is_null(void **state)
     tile_t *tile = deck_pick(&game.deck);
     assert_ptr_not_equal(tile, NULL);
 
-    assert_return_code(game_place_tile(NULL, tile, -200, 200), ERROR);
+    assert_return_code(game_place_tile(NULL, tile, -200, 200, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), ERROR);
 
     destroy_game(&game);
 }
@@ -98,7 +98,7 @@ void game_place_tile_do_not_work_because_tile_is_null(void **state)
     game_t game;
     assert_return_code(create_game(&game, 3, 0, 500, 0), SUCCESS);
 
-    assert_return_code(game_place_tile(&game, NULL, 0, 0), ERROR);
+    assert_return_code(game_place_tile(&game, NULL, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), ERROR);
 
     destroy_game(&game);
 }
@@ -111,8 +111,8 @@ void game_place_tile_do_not_work_because_tile_cannot_be_erased(void **state)
     tile_t *tile = deck_pick(&game.deck);
     assert_ptr_not_equal(tile, NULL);
 
-    assert_return_code(game_place_tile(&game, tile, 0, 0), SUCCESS);
-    assert_return_code(game_place_tile(&game, NULL, 0, 0), NOT_FREE);
+    assert_return_code(game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
+    assert_return_code(game_place_tile(&game, NULL, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), NOT_FREE);
 
     destroy_game(&game);
 }
@@ -125,7 +125,7 @@ void game_place_tile_do_not_work_because_position_is_out_of_bounds(void **state)
     tile_t *tile = deck_pick(&game.deck);
     assert_ptr_not_equal(tile, NULL);
 
-    assert_return_code(game_place_tile(&game, tile, -200, 200), OUT_OF_BOUNDS);
+    assert_return_code(game_place_tile(&game, tile, -200, 200, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), OUT_OF_BOUNDS);
 
     destroy_game(&game);
 }
@@ -138,8 +138,8 @@ void game_place_tile_do_not_work_because_position_is_taken(void **state)
     tile_t *tile = deck_pick(&game.deck);
     assert_ptr_not_equal(tile, NULL);
 
-    assert_return_code(game_place_tile(&game, tile, 1, 0), SUCCESS);
-    assert_return_code(game_place_tile(&game, tile, 1, 0), NOT_FREE);
+    assert_return_code(game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
+    assert_return_code(game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), NOT_FREE);
 
     destroy_game(&game);
 }
