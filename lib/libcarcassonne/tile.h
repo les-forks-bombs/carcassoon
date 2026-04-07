@@ -1,15 +1,15 @@
 #ifndef H_LIBCARCASSONNE_TILE
 #define H_LIBCARCASSONNE_TILE
 
-#include <stdbool.h>
 #include <libcarcassonne/meeple.h>
+#include <stdbool.h>
 
 #define LIBCARCASSONNE_TILE_PART_VILLAGE 0
-#define LIBCARCASSONNE_TILE_PART_FIELD   1
-#define LIBCARCASSONNE_TILE_PART_ROAD    2
-#define LIBCARCASSONNE_TILE_PART_WALL    3
-#define LIBCARCASSONNE_TILE_PART_ABBEY   4
-#define LIBCARCASSONNE_TILE_PART_TOWN    5
+#define LIBCARCASSONNE_TILE_PART_FIELD 1
+#define LIBCARCASSONNE_TILE_PART_ROAD 2
+#define LIBCARCASSONNE_TILE_PART_WALL 3
+#define LIBCARCASSONNE_TILE_PART_ABBEY 4
+#define LIBCARCASSONNE_TILE_PART_TOWN 5
 
 #define LIBCARCASSONNE_TILE_PART_A 1 << 0
 #define LIBCARCASSONNE_TILE_PART_B 1 << 1
@@ -21,8 +21,14 @@
 #define LIBCARCASSONNE_TILE_PART_H 1 << 7
 #define LIBCARCASSONNE_TILE_PART_I 1 << 8
 
+#define LIBCARCASSONNE_TILE_ORIENTATION_NORTH 0
+#define LIBCARCASSONNE_TILE_ORIENTATION_SOUTH 1
+#define LIBCARCASSONNE_TILE_ORIENTATION_EAST 2
+#define LIBCARCASSONNE_TILE_ORIENTATION_WEST 3
+
 typedef char tile_part_type_t;
 typedef char tile_part_group_t;
+typedef char tile_orientation_t;
 
 /// @brief Une tile est un élément de jeu de carcassonne
 typedef struct tile
@@ -41,8 +47,9 @@ typedef struct tile
 
 typedef struct placed_tile
 {
-    tile_t* parent;
-    meeple_t* meeple;
+    tile_t *parent;
+    meeple_t *meeple;
+    tile_orientation_t orientation;
 } placed_tile_t;
 
 #endif
