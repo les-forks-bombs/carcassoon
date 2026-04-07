@@ -14,6 +14,11 @@ return_code_t create_game(
     unsigned int seed,
     unsigned int turns_limit)
 {
+    if (game == NULL)
+    {
+        return ERROR;
+    }
+
     // On vérifie que le nombre de joueurs est dans [2, 5]
     // et que le nombre d'IA est inférieur au nombre de joueurs
     if (
@@ -45,6 +50,11 @@ return_code_t create_game(
 
 void destroy_game(game_t *game)
 {
+    if (game == NULL)
+    {
+        return;
+    }
+
     // Cleanup des structures dans la map (les placed_tile_t)
     for (int i = -LIBCARCASSONNE_TILES_COUNT + 1; i < LIBCARCASSONNE_TILES_COUNT; i++)
         for (int j = -LIBCARCASSONNE_TILES_COUNT + 1; j < LIBCARCASSONNE_TILES_COUNT; j++)
