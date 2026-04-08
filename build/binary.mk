@@ -2,8 +2,14 @@ OUT_OBJ_DIR := $(OBJ_DIR)/$(shell realpath -s --relative-to="$(MAKE_DIR)" "$(she
 SRCS := $(wildcard *.c)
 OBJS := $(patsubst %.c, $(OUT_OBJ_DIR)/%.o, $(SRCS))
 
+ifeq ($(TARGET),x86_64-w64-windows-gnu)
+    PROG := $(PROG).exe
+endif
+
 $(PROG): $(OBJS)
 	@$(CC) $(LFLAGS) -o $@ $^ $(LDLIBS)
+	@[ $(TARGET) = x86_64-w64-windows-gnu ]; \
+		$(BUILD_DIR)/copy_dlls.sh $(PROG)
 	@echo "    LD    $(notdir $@)"
 
 $(OBJS): $(OUT_OBJ_DIR)/%.o: %.c
