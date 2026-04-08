@@ -82,6 +82,11 @@ static tile_t tiles[] = {
             TOWN , TOWN , TOWN ,
             FIELD, ROAD , FIELD,
         },
+        .parts_groups = {
+            A, A, A,
+            A, A, A,
+            B, C, B
+        },
         .blason = 1,
         .amount = 2
     },
@@ -96,7 +101,7 @@ static tile_t tiles[] = {
         .parts_groups = {
             A, A, A,
             A, A, A,
-            B, B, B
+            B, C, B
         },
         .blason = 0,
         .amount = 1
@@ -109,14 +114,14 @@ static tile_t tiles[] = {
 
         .family = "CCFF",
         .parts = {
-            TOWN , TOWN , WALL ,
+            FIELD , TOWN , WALL ,
             FIELD, FIELD, TOWN ,
-            FIELD, FIELD, WALL,
+            FIELD, FIELD, FIELD,
         },
         .parts_groups = {
-            A, A, A,
-            A, A, A,
-            B, B, B
+            C, A, 0,
+            C, C, B,
+            C, C, C
         },
         .blason = 0,
         .amount = 2
@@ -125,9 +130,14 @@ static tile_t tiles[] = {
     {
         .family = "CCFF",
         .parts = {
-            TOWN , TOWN , TOWN,
-            FIELD, TOWN,  TOWN,
-            FIELD, FIELD, TOWN,
+            FIELD , TOWN , WALL ,
+            FIELD, FIELD, TOWN ,
+            FIELD, FIELD, FIELD,
+        },
+        .parts_groups = {
+            C, A, 0,
+            C, C, B,
+            C, C, C
         },
         .blason = 1,
         .amount = 2
@@ -136,9 +146,14 @@ static tile_t tiles[] = {
     {
         .family = "CCFF",
         .parts = {
-            TOWN , TOWN , TOWN,
-            FIELD, TOWN,  TOWN,
-            FIELD, FIELD, TOWN,
+            FIELD , TOWN , WALL ,
+            FIELD, FIELD, TOWN ,
+            FIELD, FIELD, FIELD,
+        },
+        .parts_groups = {
+            C, A, 0,
+            C, C, B,
+            C, C, C
         },
         .blason = 0,
         .amount = 3
@@ -150,7 +165,12 @@ static tile_t tiles[] = {
         .parts = {
             TOWN , TOWN , TOWN,
             TOWN , TOWN,  ROAD ,
-            ROAD , ROAD , ROAD ,
+            TOWN , ROAD , FIELD ,
+        },
+        .parts_groups = {
+            A, A, A,
+            A, A, B,
+            A, B, C
         },
         .blason = 1,
         .amount = 2
@@ -161,8 +181,13 @@ static tile_t tiles[] = {
         .parts = {
             TOWN , TOWN , TOWN,
             TOWN , TOWN,  ROAD ,
-            ROAD , ROAD , ROAD ,
+            TOWN , ROAD , FIELD ,
         },
+        .parts_groups = {
+            A, A, A,
+            A, A, B,
+            A, B, C
+        },  
         .blason = 0,
         .amount = 3
     },
@@ -172,10 +197,15 @@ static tile_t tiles[] = {
     {
         .family = "CFCF",
         .parts = {
-            TOWN , FIELD, TOWN,
+            FIELD , FIELD, FIELD,
             TOWN , TOWN,  TOWN,
-            TOWN,  FIELD, TOWN,
+            FIELD,  FIELD, FIELD,
         },
+        .parts_groups = {
+            A, A, A,
+            B, B, B,
+            C, C, C
+        },  
         .blason = 1,
         .amount = 2
     },
@@ -183,10 +213,15 @@ static tile_t tiles[] = {
     {
         .family = "CFCF",
         .parts = {
-            TOWN , FIELD, TOWN,
+            FIELD , FIELD, FIELD,
             TOWN , TOWN,  TOWN,
-            TOWN,  FIELD, TOWN,
+            FIELD,  FIELD, FIELD,
         },
+        .parts_groups = {
+            A, A, A,
+            B, B, B,
+            C, C, C
+        },  
         .blason = 0,
         .amount = 1
     },
@@ -194,10 +229,15 @@ static tile_t tiles[] = {
     {
         .family = "CFCF",
         .parts = {
-            TOWN , FIELD, TOWN,
-            TOWN , FIELD, TOWN,
-            TOWN,  FIELD, TOWN,
+            FIELD , FIELD, FIELD,
+            TOWN , TOWN,  TOWN,
+            FIELD,  FIELD, FIELD,
         },
+        .parts_groups = {
+            A, A, A,
+            B, B, B,
+            C, C, C
+        },  
         .blason = 0,
         .amount = 3
     },
@@ -207,10 +247,15 @@ static tile_t tiles[] = {
     {
         .family = "CFFF",
         .parts = {
-            TOWN  , TOWN , TOWN,
+            FIELD  , TOWN , FIELD,
             FIELD , FIELD, FIELD,
             FIELD , FIELD, FIELD,
         },
+        .parts_groups = {
+            A, B, A,
+            A, A, A,
+            A, A, A
+        },  
         .blason = 0,
         .amount = 5
     },
@@ -220,10 +265,15 @@ static tile_t tiles[] = {
     {
         .family = "CFRR",
         .parts = {
-            TOWN  , TOWN , TOWN,
-            ROAD  , ROAD , FIELD,
-            FIELD , ROAD , FIELD,
+            FIELD  , TOWN , FIELD,
+            ROAD , ROAD, FIELD,
+            FIELD , ROAD, FIELD,
         },
+        .parts_groups = {
+            A, B, A,
+            C, C, A,
+            D, C, A
+        },  
         .blason = 0,
         .amount = 3
     },
@@ -233,10 +283,15 @@ static tile_t tiles[] = {
     {
         .family = "CRFR",
         .parts = {
-            TOWN  , TOWN , TOWN,
+            FIELD  , TOWN , FIELD,
             ROAD  , ROAD , ROAD ,
             FIELD , FIELD, FIELD,
         },
+        .parts_groups = {
+            A, D, A,
+            B, B, B,
+            C, C, C
+        },  
         .blason = 0,
         .amount = 3
     },
@@ -245,10 +300,15 @@ static tile_t tiles[] = {
     {
         .family = "CRRF",
         .parts = {
-            TOWN  , TOWN , TOWN,
+            FIELD  , TOWN , FIELD,
             FIELD , ROAD , ROAD ,
             FIELD , ROAD , FIELD,
         },
+        .parts_groups = {
+            A, D, A,
+            A, B, B,
+            A, B, C
+        },  
         .blason = 0,
         .amount = 3
     },
@@ -257,10 +317,15 @@ static tile_t tiles[] = {
     {
         .family = "CRRR",
         .parts = {
-            TOWN  , TOWN   , TOWN,
+            FIELD  , TOWN   , FIELD,
             ROAD  , VILLAGE, ROAD ,
             FIELD , ROAD   , FIELD,
         },
+        .parts_groups = {
+            G, A, G,
+            B, 0, C,
+            F, D, E
+        },  
         .blason = 0,
         .amount = 3
     },
@@ -273,6 +338,11 @@ static tile_t tiles[] = {
             FIELD , ABBEY , FIELD,
             FIELD , FIELD , FIELD,
         },
+        .parts_groups = {
+            A, A, A,
+            A, B, A,
+            A, A, A
+        },  
         .blason = 0,
         .amount = 4
     },
@@ -285,6 +355,11 @@ static tile_t tiles[] = {
             FIELD , ABBEY , FIELD,
             FIELD , ROAD  , FIELD,
         },
+        .parts_groups = {
+            A, A, A,
+            A, B, A,
+            A, C, A
+        },  
         .blason = 0,
         .amount = 2
     },
@@ -298,6 +373,11 @@ static tile_t tiles[] = {
             ROAD  , ROAD  , FIELD,
             FIELD , ROAD  , FIELD,
         },
+        .parts_groups = {
+            A, A, A,
+            B, B, A,
+            C, B, A
+        },  
         .blason = 0,
         .amount = 9
     },
@@ -310,6 +390,11 @@ static tile_t tiles[] = {
             FIELD , ROAD  , FIELD,
             FIELD , ROAD  , FIELD,
         },
+        .parts_groups = {
+            A, B, C,
+            A, B, C,
+            A, B, C
+        },  
         .blason = 0,
         .amount = 8
     },
@@ -323,6 +408,11 @@ static tile_t tiles[] = {
             ROAD  , VILLAGE, ROAD ,
             FIELD , ROAD   , FIELD,
         },
+        .parts_groups = {
+            A, A, A,
+            B, 0, C,
+            E, D, F
+        },  
         .blason = 0,
         .amount = 4
     },
@@ -336,6 +426,11 @@ static tile_t tiles[] = {
             ROAD  , VILLAGE, ROAD ,
             FIELD , ROAD   , FIELD,
         },
+        .parts_groups = {
+            E, A, F,
+            B, 0, C,
+            G, D, H
+        },  
         .blason = 0,
         .amount = 1
     },
@@ -344,10 +439,15 @@ static tile_t tiles[] = {
 static tile_t start_tile = {
     .family = "CRFR",
     .parts = {
-        TOWN  , TOWN , TOWN,
+        FIELD  , TOWN , FIELD,
         ROAD  , ROAD , ROAD ,
         FIELD , FIELD, FIELD,
     },
+    .parts_groups = {
+            D, A, D,
+            B, B, B,
+            C, C, C
+        },  
     .blason = 0,
     .amount = 1
 };
