@@ -32,7 +32,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A,    A,
+            A, 0, A,
             A, A, A
         },
         .blason = 1,
@@ -50,7 +50,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A,    A,
+            A, 0, A,
             B, B, B
         },
         .blason = 1,
@@ -66,7 +66,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A,    A,
+            A, 0, A,
             B, B, B
         },
         .blason = 0,
@@ -84,7 +84,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A,    A,
+            A, 0, A,
             B, C, D
         },
         .blason = 1,
@@ -100,7 +100,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A,    A,
+            A, 0, A,
             B, C, D
         },
         .blason = 0,
@@ -120,7 +120,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             C, A, 0,
-            C,    B,
+            C, 0, B,
             C, C, C
         },
         .blason = 0,
@@ -136,7 +136,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, B, B,
-            A,    B,
+            A, 0, B,
             A, A, A
         },
         .blason = 1,
@@ -152,7 +152,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, B, B,
-            A,    B,
+            A, 0, B,
             A, A, A
         },
         .blason = 0,
@@ -169,7 +169,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, B,
-            A,    C,
+            A, 0, C,
             B, C, D
         },
         .blason = 1,
@@ -185,7 +185,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, B,
-            A,    C,
+            A, 0, C,
             B, C, D
         },
         .blason = 0,
@@ -203,7 +203,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            B,    B,
+            B, 0, B,
             C, C, C
         },  
         .blason = 1,
@@ -219,7 +219,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            B,    B,
+            B, 0, B,
             C, C, C
         },  
         .blason = 0,
@@ -235,7 +235,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            B,    B,
+            B, 0, B,
             A, A, A
         },  
         .blason = 0,
@@ -253,7 +253,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, B, A,
-            A,    A,
+            A, 0, A,
             A, A, A
         },  
         .blason = 0,
@@ -271,7 +271,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, B, A,
-            C,    A,
+            C, 0, A,
             D, C, A
         },  
         .blason = 0,
@@ -289,7 +289,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, D, A,
-            B,    B,
+            B, 0, B,
             C, C, C
         },  
         .blason = 0,
@@ -306,7 +306,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, D, A,
-            A,    B,
+            A, 0, B,
             A, B, C
         },  
         .blason = 0,
@@ -323,7 +323,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             G, A, G,
-            B,    C,
+            B, 0, C,
             F, D, E
         },  
         .blason = 0,
@@ -340,7 +340,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A,    A,
+            A, 0, A,
             A, A, A
         },  
         .blason = 0,
@@ -357,7 +357,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A,    A,
+            A, 0, A,
             A, B, A
         },  
         .blason = 0,
@@ -375,7 +375,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            B,    A,
+            B, 0, A,
             C, B, A
         },  
         .blason = 0,
@@ -392,7 +392,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, B, C,
-            A,    C,
+            A, 0, C,
             A, B, C
         },  
         .blason = 0,
@@ -410,7 +410,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            B,    C,
+            B, 0, C,
             E, D, F
         },  
         .blason = 0,
@@ -428,7 +428,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             E, A, F,
-            B,    C,
+            B, 0, C,
             G, D, H
         },  
         .blason = 0,
@@ -445,7 +445,7 @@ static tile_t start_tile = {
     },
     .parts_groups = {
             D, A, D,
-            B,    B,
+            B, 0, B,
             C, C, C
         },  
     .blason = 0,
