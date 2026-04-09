@@ -32,7 +32,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A, A, A,
+            A,    A,
             A, A, A
         },
         .blason = 1,
@@ -50,7 +50,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A, A, A,
+            A,    A,
             B, B, B
         },
         .blason = 1,
@@ -66,7 +66,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A, A, A,
+            A,    A,
             B, B, B
         },
         .blason = 0,
@@ -84,8 +84,8 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A, A, A,
-            B, C, B
+            A,    A,
+            B, C, D
         },
         .blason = 1,
         .amount = 2
@@ -100,8 +100,8 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A, A, A,
-            B, C, B
+            A,    A,
+            B, C, D
         },
         .blason = 0,
         .amount = 1
@@ -110,7 +110,7 @@ static tile_t tiles[] = {
     // CCFF
 
     {
-        // deux viles séparées
+        // deux villes séparées
 
         .family = "CCFF",
         .parts = {
@@ -120,7 +120,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             C, A, 0,
-            C, C, B,
+            C,    B,
             C, C, C
         },
         .blason = 0,
@@ -130,14 +130,14 @@ static tile_t tiles[] = {
     {
         .family = "CCFF",
         .parts = {
-            FIELD , TOWN , WALL ,
+            FIELD , TOWN , TOWN,
             FIELD, FIELD, TOWN ,
             FIELD, FIELD, FIELD,
         },
         .parts_groups = {
-            C, A, 0,
-            C, C, B,
-            C, C, C
+            A, B, B,
+            A,    B,
+            A, A, A
         },
         .blason = 1,
         .amount = 2
@@ -151,9 +151,9 @@ static tile_t tiles[] = {
             FIELD, FIELD, FIELD,
         },
         .parts_groups = {
-            C, A, 0,
-            C, C, B,
-            C, C, C
+            A, B, B,
+            A,    B,
+            A, A, A
         },
         .blason = 0,
         .amount = 3
@@ -163,14 +163,14 @@ static tile_t tiles[] = {
     {
         .family = "CCRR",
         .parts = {
-            TOWN , TOWN , TOWN,
-            TOWN , TOWN,  ROAD ,
-            TOWN , ROAD , FIELD ,
+            TOWN , TOWN , FIELD,
+            TOWN , FIELD,  ROAD ,
+            FIELD , ROAD , FIELD ,
         },
         .parts_groups = {
-            A, A, A,
             A, A, B,
-            A, B, C
+            A,    C,
+            B, C, D
         },
         .blason = 1,
         .amount = 2
@@ -179,15 +179,15 @@ static tile_t tiles[] = {
     {
         .family = "CCRR",
         .parts = {
-            TOWN , TOWN , TOWN,
-            TOWN , TOWN,  ROAD ,
-            TOWN , ROAD , FIELD ,
+            TOWN , TOWN , FIELD,
+            TOWN , FIELD,  ROAD ,
+            FIELD , ROAD , FIELD ,
         },
         .parts_groups = {
-            A, A, A,
             A, A, B,
-            A, B, C
-        },  
+            A,    C,
+            B, C, D
+        },
         .blason = 0,
         .amount = 3
     },
@@ -203,7 +203,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            B, B, B,
+            B,    B,
             C, C, C
         },  
         .blason = 1,
@@ -219,7 +219,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            B, B, B,
+            B,    B,
             C, C, C
         },  
         .blason = 0,
@@ -230,13 +230,13 @@ static tile_t tiles[] = {
         .family = "CFCF",
         .parts = {
             FIELD , FIELD, FIELD,
-            TOWN , TOWN,  TOWN,
+            TOWN , FIELD,  TOWN,
             FIELD,  FIELD, FIELD,
         },
         .parts_groups = {
             A, A, A,
-            B, B, B,
-            C, C, C
+            B,    B,
+            A, A, A
         },  
         .blason = 0,
         .amount = 3
@@ -253,7 +253,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, B, A,
-            A, A, A,
+            A,    A,
             A, A, A
         },  
         .blason = 0,
@@ -271,7 +271,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, B, A,
-            C, C, A,
+            C,    A,
             D, C, A
         },  
         .blason = 0,
@@ -289,7 +289,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, D, A,
-            B, B, B,
+            B,    B,
             C, C, C
         },  
         .blason = 0,
@@ -306,7 +306,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, D, A,
-            A, B, B,
+            A,    B,
             A, B, C
         },  
         .blason = 0,
@@ -323,7 +323,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             G, A, G,
-            B, 0, C,
+            B,    C,
             F, D, E
         },  
         .blason = 0,
@@ -340,7 +340,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A, B, A,
+            A,    A,
             A, A, A
         },  
         .blason = 0,
@@ -357,8 +357,8 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            A, B, A,
-            A, C, A
+            A,    A,
+            A, B, A
         },  
         .blason = 0,
         .amount = 2
@@ -375,7 +375,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            B, B, A,
+            B,    A,
             C, B, A
         },  
         .blason = 0,
@@ -392,7 +392,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, B, C,
-            A, B, C,
+            A,    C,
             A, B, C
         },  
         .blason = 0,
@@ -410,7 +410,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             A, A, A,
-            B, 0, C,
+            B,    C,
             E, D, F
         },  
         .blason = 0,
@@ -428,7 +428,7 @@ static tile_t tiles[] = {
         },
         .parts_groups = {
             E, A, F,
-            B, 0, C,
+            B,    C,
             G, D, H
         },  
         .blason = 0,
@@ -445,7 +445,7 @@ static tile_t start_tile = {
     },
     .parts_groups = {
             D, A, D,
-            B, B, B,
+            B,    B,
             C, C, C
         },  
     .blason = 0,
