@@ -1,5 +1,5 @@
 #include <libai/libai.h>
-#include <utils/cmocka.h>
+#include <libutils/cmocka.h>
 
 /* Test that the program does not fail when calling `libai_doing_stuff_works` */
 static void libai_doing_stuff_works(void** state) {
