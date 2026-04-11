@@ -50,7 +50,7 @@ typedef struct game {
   /// @brief Instance de la liste des tuiles
   tile_list_t open_tiles;
 
-  
+  // todo: implémenter une liste de meeples pour garder les noeuds en mémoire
 } game_t;
 
 /// @brief Initialise un objet `game` en mémoire
