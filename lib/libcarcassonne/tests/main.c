@@ -1,9 +1,13 @@
 #include <cmocka.h>
-#include <libcarcassonne/tests/tests.h>
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
+
+#include <cmocka.h>
+#include <libai/libai.h>
+#include <libcarcassonne/tests/tests.h>
+
 
 int main(void) {
   const struct CMUnitTest tests[] = {
