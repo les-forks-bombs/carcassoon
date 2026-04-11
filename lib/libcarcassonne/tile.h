@@ -11,26 +11,24 @@
 #define LIBCARCASSONNE_TILE_PART_ABBEY   4
 #define LIBCARCASSONNE_TILE_PART_TOWN    5
 
-#define LIBCARCASSONNE_TILE_PART_A 1 << 0
-#define LIBCARCASSONNE_TILE_PART_B 1 << 1
-#define LIBCARCASSONNE_TILE_PART_C 1 << 2
-#define LIBCARCASSONNE_TILE_PART_D 1 << 3
-#define LIBCARCASSONNE_TILE_PART_E 1 << 4
-#define LIBCARCASSONNE_TILE_PART_F 1 << 5
-#define LIBCARCASSONNE_TILE_PART_G 1 << 6
-#define LIBCARCASSONNE_TILE_PART_H 1 << 7
-
-#define LIBCARCASSONNE_TILE_PART_WILDCARD                       \
-  LIBCARCASSONNE_TILE_PART_A                                    \
-  | LIBCARCASSONNE_TILE_PART_B | LIBCARCASSONNE_TILE_PART_C |   \
-      LIBCARCASSONNE_TILE_PART_D | LIBCARCASSONNE_TILE_PART_E | \
-      LIBCARCASSONNE_TILE_PART_F | LIBCARCASSONNE_TILE_PART_G | \
-      LIBCARCASSONNE_TILE_PART_H
+#define LIBCARCASSONNE_TILE_PART_A 0
+#define LIBCARCASSONNE_TILE_PART_B 1
+#define LIBCARCASSONNE_TILE_PART_C 2
+#define LIBCARCASSONNE_TILE_PART_D 3
+#define LIBCARCASSONNE_TILE_PART_E 4
+#define LIBCARCASSONNE_TILE_PART_F 5
+#define LIBCARCASSONNE_TILE_PART_G 6
+#define LIBCARCASSONNE_TILE_PART_H 7
 
 #define LIBCARCASSONNE_TILE_ORIENTATION_NORTH 0
 #define LIBCARCASSONNE_TILE_ORIENTATION_EAST  1
 #define LIBCARCASSONNE_TILE_ORIENTATION_SOUTH 2
 #define LIBCARCASSONNE_TILE_ORIENTATION_WEST  3
+
+// note: south = north + 2
+//       west  = east + 2
+//       north = south + 2 % 4
+//       east  = west + 2 % 4
 
 typedef char tile_part_type_t;
 typedef char tile_part_group_t;
@@ -50,10 +48,29 @@ typedef struct tile {
   tile_part_group_t parts_groups[9];
 } tile_t;
 
+
+/// @brief Information des groupes de la sous-tile
+typedef struct placed_tile_group {
+  /// @brief Référence vers le groupe parent du groupe courrant
+  /// @remark si null, alors le groupe actuel est une racine
+  struct placed_tile_group* parent;
+  /// @brief Groupes adjacents qui sont enfants
+  struct placed_tile_group* child[4];
+  /// @brief Référence vers la tile représentant le groupe
+  struct placed_tile* tile;
+  /// @brief Référence vers l'éventuel meeple placé dans le groupe
+  meeple_t* meeple;
+} placed_tile_group_t;
+
+/// @brief Représentation d'une tile qui a été placée
 typedef struct placed_tile {
-  tile_t*            parent;
-  meeple_t*          meeple[9];
-  tile_orientation_t orientation;
+  /// @brief Pointeur vers la définition de la tile
+  tile_t*              parent;
+  /// @brief Groupes présents a l'intérieur de la tile
+  /// @remark On peut au maximum avoir 9 groupes dans une tile
+  placed_tile_group_t* groups[9];
+  /// @brief Orientation de placement de la tile
+  tile_orientation_t   orientation;
 } placed_tile_t;
 
 /// @brief Récupère une famille de la tuile en fonction de l'orientation et de
@@ -65,5 +82,20 @@ typedef struct placed_tile {
 /// @related tile_t
 char tile_get_family_face(tile_t* tile, tile_orientation_t orientation,
                           tile_orientation_t connexion_face);
+
+
+tile_orientation_t tile_orientation_invert(
+  tile_orientation_t orientation
+);
+
+tile_part_type_t tile_orientation_face(
+  placed_tile_t* placed_tile,
+  tile_orientation_t orientation
+);
+
+placed_tile_group_t* tile_orientation_group(
+  placed_tile_t* placed_tile,
+  tile_orientation_t orientation
+);
 
 #endif
