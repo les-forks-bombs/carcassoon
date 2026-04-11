@@ -56,7 +56,10 @@ void destroy_game(game_t* game) {
     for (int j = -LIBCARCASSONNE_TILES_COUNT + 1;
          j < LIBCARCASSONNE_TILES_COUNT; j++) {
       placed_tile_t** tile = game_tile_at(game, i, j);
-      if (*tile != NULL) free(*tile);
+      if (*tile != NULL) {
+        placed_tile_destroy(*tile);
+        free(*tile);
+      }
     }
 
   free(game->map);
@@ -96,8 +99,7 @@ return_code_t game_place_tile(game_t* game, tile_t* tile, int x, int y,
       return INVALID_PLACEMENT;
 
     placed_tile_t* placed_tile = calloc(1, sizeof(placed_tile_t));
-    placed_tile->parent        = tile;
-    placed_tile->orientation   = orientation;
+    placed_tile_create(placed_tile, tile, orientation);
 
     *tile_ref = placed_tile;
 
@@ -116,13 +118,15 @@ return_code_t game_place_tile(game_t* game, tile_t* tile, int x, int y,
     if (!game_is_place_open(game, x, y - 1))  // Tuile de gauche
       game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x, y - 1));
 
+
+
     for (
-      tile_orientation_t orientation = 0; 
-      orientation < 4;
-      orientation++) {
+      tile_orientation_t s = 0; 
+      s < 4;
+      s++) {
         placed_tile_t** neighbor;
 
-        switch (orientation)
+        switch (s)
         {
         case LIBCARCASSONNE_TILE_ORIENTATION_NORTH:
           neighbor = game_tile_at(game, x - 1, y);
@@ -140,17 +144,35 @@ return_code_t game_place_tile(game_t* game, tile_t* tile, int x, int y,
 
         if (neighbor != NULL && *neighbor != NULL) {
           placed_tile_group_t* other_tile_group = tile_orientation_group(
-            neighbor,
-            tile_orientation_invert(orientation)
+            *neighbor,
+            tile_orientation_invert(s)
           );
-          
-          // todo: group merge !
-        } else {
-          // todo: create group
+
+          // pour chaque node sur le chemin vers le parent, on marque le parent comme enfant
+          placed_tile_group_t* new_parent = tile_orientation_group(
+            placed_tile,
+            s
+          );
+
+          // inversion de l'arbre
+          while (other_tile_group != NULL)
+          {
+            placed_tile_group_t* tmp = other_tile_group->parent;
+            other_tile_group->parent = new_parent;
+
+            if (other_tile_group->child[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH])
+              new_parent->child[LIBCARCASSONNE_TILE_ORIENTATION_NORTH] = other_tile_group;
+            if (other_tile_group->child[LIBCARCASSONNE_TILE_ORIENTATION_NORTH])
+              new_parent->child[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH] = other_tile_group;
+            if (other_tile_group->child[LIBCARCASSONNE_TILE_ORIENTATION_EAST])
+              new_parent->child[LIBCARCASSONNE_TILE_ORIENTATION_WEST] = other_tile_group;
+            if (other_tile_group->child[LIBCARCASSONNE_TILE_ORIENTATION_WEST])
+              new_parent->child[LIBCARCASSONNE_TILE_ORIENTATION_EAST] = other_tile_group;
+            
+            new_parent = other_tile_group;
+            other_tile_group = tmp;
+          }
         }
-        
-
-
     }
 
 
@@ -181,6 +203,9 @@ return_code_t game_place_meeple(
     if (group_ref->meeple == NULL) {
       group_ref->meeple = calloc(1, sizeof(meeple_t));
       group_ref->meeple->player = game->current_player;
+      group_ref->meeple->tile_group = group_ref;
+
+      // todo: ajouter au meeple a la liste des meeple
     } else  {
       return ALREADY_ALLOCATED;
     }
