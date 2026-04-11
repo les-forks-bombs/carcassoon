@@ -15,7 +15,7 @@ stages:
         PROFILE: [debug, release]
   
   script:
-    - make -s build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make -s clean build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always
