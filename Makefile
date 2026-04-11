@@ -1,4 +1,5 @@
-TARGET := x86_64-redhat-linux-gnu
+CC 		:= clang
+TARGET 	?= $(shell $(CC) -dumpmachine)
 PROFILE := debug
 
 MAKE_DIR := $(PWD)
@@ -10,14 +11,13 @@ OBJ_DIR  := $(OUT_DIR)/obj
 INCL_DIR := $(MAKE_DIR)/lib
 BUILD_DIR:= $(MAKE_DIR)/build
 
-CC := clang
-
 LIBARIES := $(shell find lib -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 BINARIES := $(shell find bin -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 TARGETS  := $(LIBARIES) $(BINARIES)
 
 CFLAGS := --target=$(TARGET)
 LFLAGS := --target=$(TARGET)
+CC	   := $(CC)
 
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
 CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic  # General building flags

@@ -45,12 +45,12 @@ typedef struct game {
 
   /// @brief Instance du deck pour la partie
   deck_t deck;
-
   /// @brief Pointeur vers le premier élément de la map
   placed_tile_t** map;
-
   /// @brief Instance de la liste des tuiles
   tile_list_t open_tiles;
+
+  
 } game_t;
 
 /// @brief Initialise un objet `game` en mémoire
