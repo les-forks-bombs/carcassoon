@@ -127,6 +127,82 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
     if (!game_is_place_open(game, x, y - 1)) // Tuile de gauche
       game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x, y - 1));
 
+    for (
+      tile_orientation_t orientation = 0; 
+      orientation < 4;
+      orientation++) {
+        placed_tile_t** neighbor;
+
+        switch (orientation)
+        {
+        case LIBCARCASSONNE_TILE_ORIENTATION_NORTH:
+          neighbor = game_tile_at(game, x - 1, y);
+          break;
+        case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH:
+          neighbor = game_tile_at(game, x + 1, y);
+          break;
+        case LIBCARCASSONNE_TILE_ORIENTATION_EAST:
+          neighbor = game_tile_at(game, x, y + 1);
+          break;
+        case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
+          neighbor = game_tile_at(game, x, y - 1);
+          break;
+        }
+
+        if (neighbor != NULL && *neighbor != NULL) {
+          placed_tile_group_t* other_tile_group = tile_orientation_group(
+            neighbor,
+            tile_orientation_invert(orientation)
+          );
+          
+          // todo: group merge !
+        } else {
+          // todo: create group
+        }
+        
+
+
+    }
+
+
+    for (
+      tile_orientation_t orientation = 0; 
+      orientation < 4;
+      orientation++) {
+        placed_tile_t** neighbor;
+
+        switch (orientation)
+        {
+        case LIBCARCASSONNE_TILE_ORIENTATION_NORTH:
+          neighbor = game_tile_at(game, x - 1, y);
+          break;
+        case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH:
+          neighbor = game_tile_at(game, x + 1, y);
+          break;
+        case LIBCARCASSONNE_TILE_ORIENTATION_EAST:
+          neighbor = game_tile_at(game, x, y + 1);
+          break;
+        case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
+          neighbor = game_tile_at(game, x, y - 1);
+          break;
+        }
+
+        if (neighbor != NULL && *neighbor != NULL) {
+          placed_tile_group_t* other_tile_group = tile_orientation_group(
+            neighbor,
+            tile_orientation_invert(orientation)
+          );
+          
+          // todo: group merge !
+        } else {
+          // todo: create group
+        }
+        
+
+
+    }
+
+
     return SUCCESS; // Placed
   }
   else
@@ -135,10 +211,12 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
   }
 }
 
-return_code_t game_place_meeple(game_t *game, int x, int y, int tile_part)
-{
-  if (game == NULL)
-  {
+return_code_t game_place_meeple(
+  game_t* game,
+  int x,
+  int y,
+  int group) {
+  if (game == NULL) {
     return ERROR;
   }
 
@@ -149,10 +227,15 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int tile_part)
     return OUT_OF_BOUNDS; // Out of bounds
   }
 
-  if (*tile_ref != NULL)
-  {
-    (*tile_ref)->meeple[tile_part] = calloc(1, sizeof(meeple_t));
-    (*tile_ref)->meeple[tile_part]->player = game->current_player;
+  if (*tile_ref != NULL) {
+    placed_tile_group_t* group_ref = (*tile_ref)->groups[group];
+
+    if (group_ref->meeple == NULL) {
+      group_ref->meeple = calloc(1, sizeof(meeple_t));
+      group_ref->meeple->player = game->current_player;
+    } else  {
+      return ALREADY_ALLOCATED;
+    }
     return SUCCESS;
   }
   else
