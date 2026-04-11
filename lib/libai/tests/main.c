@@ -1,9 +1,10 @@
-#include <cmocka.h>
 #include <libai/libai.h>
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
+
+#include <cmocka.h>
 
 /* Test that the program does not fail when calling `libai_doing_stuff_works` */
 static void libai_doing_stuff_works(void** state) {
