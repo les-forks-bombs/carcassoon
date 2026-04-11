@@ -3,36 +3,43 @@
 
 #include <libcarcassonne/meeple.h>
 #include <stdbool.h>
+#include <libcarcassonne/consts.h>
 
-#define LIBCARCASSONNE_TILE_PART_VILLAGE 0
-#define LIBCARCASSONNE_TILE_PART_FIELD   1
-#define LIBCARCASSONNE_TILE_PART_ROAD    2
-#define LIBCARCASSONNE_TILE_PART_WALL    3
-#define LIBCARCASSONNE_TILE_PART_ABBEY   4
-#define LIBCARCASSONNE_TILE_PART_TOWN    5
+/// @brief Les différents types de sous-tiles
+enum tile_part_kind {
+  LIBCARCASSONNE_TILE_PART_VILLAGE = 0,
+  LIBCARCASSONNE_TILE_PART_FIELD =   1,
+  LIBCARCASSONNE_TILE_PART_ROAD =    2,
+  LIBCARCASSONNE_TILE_PART_WALL =    3,
+  LIBCARCASSONNE_TILE_PART_ABBEY =   4,
+  LIBCARCASSONNE_TILE_PART_TOWN =    5
+};
 
-#define LIBCARCASSONNE_TILE_PART_A 0
-#define LIBCARCASSONNE_TILE_PART_B 1
-#define LIBCARCASSONNE_TILE_PART_C 2
-#define LIBCARCASSONNE_TILE_PART_D 3
-#define LIBCARCASSONNE_TILE_PART_E 4
-#define LIBCARCASSONNE_TILE_PART_F 5
-#define LIBCARCASSONNE_TILE_PART_G 6
-#define LIBCARCASSONNE_TILE_PART_H 7
+/// @brief Les sous-groupes possibles [0-7]
+enum tile_part_group {
+  LIBCARCASSONNE_TILE_PART_A = 0,
+  LIBCARCASSONNE_TILE_PART_B = 1,
+  LIBCARCASSONNE_TILE_PART_C = 2,
+  LIBCARCASSONNE_TILE_PART_D = 3,
+  LIBCARCASSONNE_TILE_PART_E = 4,
+  LIBCARCASSONNE_TILE_PART_F = 5,
+  LIBCARCASSONNE_TILE_PART_G = 6,
+  LIBCARCASSONNE_TILE_PART_H = 7
+};
 
-#define LIBCARCASSONNE_TILE_ORIENTATION_NORTH 0
-#define LIBCARCASSONNE_TILE_ORIENTATION_EAST  1
-#define LIBCARCASSONNE_TILE_ORIENTATION_SOUTH 2
-#define LIBCARCASSONNE_TILE_ORIENTATION_WEST  3
+/// @brief Les orientations possibles pour les tiles
+/// @remark Pour avoir l'opposé on a (n + 2) % 4
+/// @remark Pour avoir le suivant (sens des aiguilles d'une montre on à) (n + 1) % 4
+enum tile_orientation {
+  LIBCARCASSONNE_TILE_ORIENTATION_NORTH = 0,
+  LIBCARCASSONNE_TILE_ORIENTATION_EAST = 1,
+  LIBCARCASSONNE_TILE_ORIENTATION_SOUTH = 2,
+  LIBCARCASSONNE_TILE_ORIENTATION_WEST = 3
+};
 
-// note: south = north + 2
-//       west  = east + 2
-//       north = south + 2 % 4
-//       east  = west + 2 % 4
-
-typedef char tile_part_type_t;
-typedef char tile_part_group_t;
-typedef char tile_orientation_t;
+typedef enum tile_part_kind tile_part_type_t;
+typedef enum tile_part_group tile_part_group_t;
+typedef enum tile_orientation tile_orientation_t;
 
 /// @brief Une tile est un élément de jeu de carcassonne
 typedef struct tile {
@@ -47,7 +54,6 @@ typedef struct tile {
   /// @brief Définition des groupes a l'intérieur d'une tile
   tile_part_group_t parts_groups[9];
 } tile_t;
-
 
 /// @brief Information des groupes de la sous-tile
 typedef struct placed_tile_group {
@@ -82,6 +88,13 @@ typedef struct placed_tile {
 /// @related tile_t
 char tile_get_family_face(tile_t* tile, tile_orientation_t orientation,
                           tile_orientation_t connexion_face);
+
+return_code_t placed_tile_create(
+  placed_tile_t* placed_tile,
+  tile_t* parent,
+  tile_orientation_t orientation
+);
+void placed_tile_destroy(placed_tile_t*);
 
 
 tile_orientation_t tile_orientation_invert(

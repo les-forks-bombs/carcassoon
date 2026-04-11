@@ -57,11 +57,12 @@ void destroy_game(game_t *game)
   for (int i = -LIBCARCASSONNE_TILES_COUNT + 1; i < LIBCARCASSONNE_TILES_COUNT;
        i++)
     for (int j = -LIBCARCASSONNE_TILES_COUNT + 1;
-         j < LIBCARCASSONNE_TILES_COUNT; j++)
-    {
-      placed_tile_t **tile = game_tile_at(game, i, j);
-      if (*tile != NULL)
+         j < LIBCARCASSONNE_TILES_COUNT; j++) {
+      placed_tile_t** tile = game_tile_at(game, i, j);
+      if (*tile != NULL) {
+        placed_tile_destroy(*tile);
         free(*tile);
+      }
     }
 
   free(game->map);
@@ -106,9 +107,8 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
     if (!game_is_tile_placeable(game, tile, x, y, orientation))
       return INVALID_PLACEMENT;
 
-    placed_tile_t *placed_tile = calloc(1, sizeof(placed_tile_t));
-    placed_tile->parent = tile;
-    placed_tile->orientation = orientation;
+    placed_tile_t* placed_tile = calloc(1, sizeof(placed_tile_t));
+    placed_tile_create(placed_tile, tile, orientation);
 
     *tile_ref = placed_tile;
 
@@ -128,12 +128,12 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
       game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x, y - 1));
 
     for (
-      tile_orientation_t orientation = 0; 
-      orientation < 4;
-      orientation++) {
+      tile_orientation_t s = 0; 
+      s < 4;
+      s++) {
         placed_tile_t** neighbor;
 
-        switch (orientation)
+        switch (s)
         {
         case LIBCARCASSONNE_TILE_ORIENTATION_NORTH:
           neighbor = game_tile_at(game, x - 1, y);
@@ -165,49 +165,9 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
     }
 
 
-    for (
-      tile_orientation_t orientation = 0; 
-      orientation < 4;
-      orientation++) {
-        placed_tile_t** neighbor;
-
-        switch (orientation)
-        {
-        case LIBCARCASSONNE_TILE_ORIENTATION_NORTH:
-          neighbor = game_tile_at(game, x - 1, y);
-          break;
-        case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH:
-          neighbor = game_tile_at(game, x + 1, y);
-          break;
-        case LIBCARCASSONNE_TILE_ORIENTATION_EAST:
-          neighbor = game_tile_at(game, x, y + 1);
-          break;
-        case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
-          neighbor = game_tile_at(game, x, y - 1);
-          break;
-        }
-
-        if (neighbor != NULL && *neighbor != NULL) {
-          placed_tile_group_t* other_tile_group = tile_orientation_group(
-            neighbor,
-            tile_orientation_invert(orientation)
-          );
-          
-          // todo: group merge !
-        } else {
-          // todo: create group
-        }
-        
-
-
-    }
-
-
-    return SUCCESS; // Placed
-  }
-  else
-  {
-    return NOT_FREE; // not Free
+    return SUCCESS;  // Placed
+  } else {
+    return NOT_FREE;  // not Free
   }
 }
 
@@ -233,6 +193,9 @@ return_code_t game_place_meeple(
     if (group_ref->meeple == NULL) {
       group_ref->meeple = calloc(1, sizeof(meeple_t));
       group_ref->meeple->player = game->current_player;
+      group_ref->meeple->tile_group = group_ref;
+
+      // todo: ajouter au meeple a la liste des meeple
     } else  {
       return ALREADY_ALLOCATED;
     }
