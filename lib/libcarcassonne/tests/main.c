@@ -1,6 +1,5 @@
-#include <libutils/cmocka.h>
 #include <libcarcassonne/tests/tests.h>
-
+#include <libutils/cmocka.h>
 
 int main(void) {
   const struct CMUnitTest tests[] = {
