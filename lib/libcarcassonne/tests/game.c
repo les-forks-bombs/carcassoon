@@ -1,6 +1,6 @@
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/tests/tests.h>
-#include <utils/cmocka.h>
+#include <libutils/cmocka.h>
 
 #include <string.h>
 
