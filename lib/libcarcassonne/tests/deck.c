@@ -1,6 +1,6 @@
-#include <libutils/cmocka.h>
 #include <libcarcassonne/deck.h>
 #include <libcarcassonne/tests/tests.h>
+#include <libutils/cmocka.h>
 
 /* Vérifie l'instanciation d'un deck */
 void deck_builds(void** state) {

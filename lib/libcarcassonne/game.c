@@ -118,16 +118,10 @@ return_code_t game_place_tile(game_t* game, tile_t* tile, int x, int y,
     if (!game_is_place_open(game, x, y - 1))  // Tuile de gauche
       game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x, y - 1));
 
+    for (tile_orientation_t s = 0; s < 4; s++) {
+      placed_tile_t** neighbor;
 
-
-    for (
-      tile_orientation_t s = 0; 
-      s < 4;
-      s++) {
-        placed_tile_t** neighbor;
-
-        switch (s)
-        {
+      switch (s) {
         case LIBCARCASSONNE_TILE_ORIENTATION_NORTH:
           neighbor = game_tile_at(game, x - 1, y);
           break;
@@ -140,41 +134,38 @@ return_code_t game_place_tile(game_t* game, tile_t* tile, int x, int y,
         case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
           neighbor = game_tile_at(game, x, y - 1);
           break;
-        }
+      }
 
-        if (neighbor != NULL && *neighbor != NULL) {
-          placed_tile_group_t* other_tile_group = tile_orientation_group(
-            *neighbor,
-            tile_orientation_invert(s)
-          );
+      if (neighbor != NULL && *neighbor != NULL) {
+        placed_tile_group_t* other_tile_group =
+            tile_orientation_group(*neighbor, tile_orientation_invert(s));
 
-          // pour chaque node sur le chemin vers le parent, on marque le parent comme enfant
-          placed_tile_group_t* new_parent = tile_orientation_group(
-            placed_tile,
-            s
-          );
+        // pour chaque node sur le chemin vers le parent, on marque le parent
+        // comme enfant
+        placed_tile_group_t* new_parent =
+            tile_orientation_group(placed_tile, s);
 
-          // inversion de l'arbre
-          while (other_tile_group != NULL)
-          {
-            placed_tile_group_t* tmp = other_tile_group->parent;
-            other_tile_group->parent = new_parent;
+        // inversion de l'arbre
+        while (other_tile_group != NULL) {
+          placed_tile_group_t* tmp = other_tile_group->parent;
+          other_tile_group->parent = new_parent;
 
-            if (other_tile_group->child[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH])
-              new_parent->child[LIBCARCASSONNE_TILE_ORIENTATION_NORTH] = other_tile_group;
-            if (other_tile_group->child[LIBCARCASSONNE_TILE_ORIENTATION_NORTH])
-              new_parent->child[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH] = other_tile_group;
-            if (other_tile_group->child[LIBCARCASSONNE_TILE_ORIENTATION_EAST])
-              new_parent->child[LIBCARCASSONNE_TILE_ORIENTATION_WEST] = other_tile_group;
-            if (other_tile_group->child[LIBCARCASSONNE_TILE_ORIENTATION_WEST])
-              new_parent->child[LIBCARCASSONNE_TILE_ORIENTATION_EAST] = other_tile_group;
-            
-            new_parent = other_tile_group;
-            other_tile_group = tmp;
+          tile_orientation_t found_orientation;
+
+          for (found_orientation = LIBCARCASSONNE_TILE_ORIENTATION_NORTH;
+               found_orientation < 4; found_orientation++) {
+            if (other_tile_group->child[found_orientation] == new_parent) {
+              other_tile_group->child[found_orientation] = NULL;
+              new_parent->child[tile_orientation_invert(found_orientation)] =
+                  other_tile_group;
+            }
           }
-        }
-    }
 
+          new_parent       = other_tile_group;
+          other_tile_group = tmp;
+        }
+      }
+    }
 
     return SUCCESS;  // Placed
   } else {
@@ -182,11 +173,7 @@ return_code_t game_place_tile(game_t* game, tile_t* tile, int x, int y,
   }
 }
 
-return_code_t game_place_meeple(
-  game_t* game,
-  int x,
-  int y,
-  int group) {
+return_code_t game_place_meeple(game_t* game, int x, int y, int group) {
   if (game == NULL) {
     return ERROR;
   }
@@ -201,12 +188,12 @@ return_code_t game_place_meeple(
     placed_tile_group_t* group_ref = (*tile_ref)->groups[group];
 
     if (group_ref->meeple == NULL) {
-      group_ref->meeple = calloc(1, sizeof(meeple_t));
-      group_ref->meeple->player = game->current_player;
+      group_ref->meeple             = calloc(1, sizeof(meeple_t));
+      group_ref->meeple->player     = game->current_player;
       group_ref->meeple->tile_group = group_ref;
 
       // todo: ajouter au meeple a la liste des meeple
-    } else  {
+    } else {
       return ALREADY_ALLOCATED;
     }
     return SUCCESS;

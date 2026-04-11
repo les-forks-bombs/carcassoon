@@ -4,7 +4,7 @@
 #include <libcarcassonne/tile.h>
 
 typedef struct meeple {
-  unsigned int player;
+  unsigned int              player;
   struct placed_tile_group* tile_group;
 } meeple_t;
 
