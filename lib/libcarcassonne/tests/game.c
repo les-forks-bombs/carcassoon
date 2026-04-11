@@ -1,12 +1,8 @@
-#include <cmocka.h>
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/tests/tests.h>
-#include <setjmp.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
+#include <utils/cmocka.h>
 
-#include "string.h"
+#include <string.h>
 
 /** create_game */
 

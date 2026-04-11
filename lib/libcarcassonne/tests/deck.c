@@ -1,10 +1,6 @@
-#include <cmocka.h>
+#include <utils/cmocka.h>
 #include <libcarcassonne/deck.h>
 #include <libcarcassonne/tests/tests.h>
-#include <setjmp.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
 
 /* Vérifie l'instanciation d'un deck */
 void deck_builds(void** state) {
