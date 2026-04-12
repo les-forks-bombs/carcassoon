@@ -15,19 +15,18 @@ int main(void) {
       .blason = 1,
       .family = "FCFC",
       .parts = {
-        5, 1, 5,
-        5, 1, 5,
-        5, 1, 5,
+        5, 5, 5,
+        5, 5, 5,
+        5, 5, 5,
       },
       .parts_groups = {
-        2, 1, 3,
-        2, 1, 3,
-        2, 1, 3,
+        1, 1, 1,
+        1, 1, 1,
+        1, 1, 1,
       }
   };
 
-  int k = game_place_tile(&game,  &t, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST);
-  printf("%d\n", k);
+  game_place_tile(&game,  &t, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST);
   game_place_tile(&game,  &tiles[0], 2, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST);
   game_place_tile(&game,  &t, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_EAST);
   game_place_tile(&game,  &tiles[0], 0, 2, LIBCARCASSONNE_TILE_ORIENTATION_NORTH);
