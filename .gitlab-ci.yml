@@ -1,6 +1,15 @@
 default:
   image: forgejo.puffer.fish/matthieu/base-images/fedora-c-build:latest # Public image with debian & required build tools
 
+.targets: &targets
+  - x86_64-redhat-linux-gnu
+  - x86-redhat-linux-gnu
+  - x86_64-w64-windows-gnu
+
+.profiles: &profiles 
+  - debug
+  - release
+
 stages:
   - build
   - test
@@ -11,8 +20,8 @@ stages:
 
   parallel:
     matrix:
-      - TARGET: [x86_64-redhat-linux-gnu, x86_64-w64-windows-gnu]
-        PROFILE: [debug, release]
+      - TARGET: *targets
+        PROFILE: *profiles
   
   script:
     - make -s clean build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
@@ -27,8 +36,8 @@ stages:
 
   parallel:
     matrix:
-      - TARGET: [x86_64-redhat-linux-gnu, x86_64-w64-windows-gnu]
-        PROFILE: [debug, release]
+      - TARGET: *targets
+        PROFILE: *profiles
   
   script:
     - make -s test TARGET=$TARGET PROFILE=$PROFILE
