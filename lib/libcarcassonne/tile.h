@@ -84,7 +84,7 @@ typedef struct placed_tile {
 /// @param connexion_face La face de connexion
 /// @return La famille de la face de connexion
 /// @related tile_t
-char tile_get_family_face(tile_t* tile, tile_orientation_t orientation,
+tile_part_type_t tile_get_family_face(tile_t* tile, tile_orientation_t orientation,
                           tile_orientation_t connexion_face);
 
 return_code_t placed_tile_create(placed_tile_t* placed_tile, tile_t* parent,
@@ -92,9 +92,6 @@ return_code_t placed_tile_create(placed_tile_t* placed_tile, tile_t* parent,
 void          placed_tile_destroy(placed_tile_t*);
 
 tile_orientation_t tile_orientation_invert(tile_orientation_t orientation);
-
-tile_part_type_t tile_orientation_face(placed_tile_t*     placed_tile,
-                                       tile_orientation_t orientation);
 
 placed_tile_group_t* tile_orientation_group(placed_tile_t*     placed_tile,
                                             tile_orientation_t orientation);

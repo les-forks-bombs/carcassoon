@@ -209,17 +209,11 @@ static tile_t
                 .family = "CFCF",
                 .parts =
                     {
-                        FIELD,
-                        FIELD,
-                        FIELD,
-                        TOWN,
-                        TOWN,
-                        TOWN,
-                        FIELD,
-                        FIELD,
-                        FIELD,
+                        FIELD, TOWN, FIELD,
+                        FIELD, FIELD, FIELD,
+                        FIELD, TOWN, FIELD
                     },
-                .parts_groups = {A, A, A, B, 0, B, C, C, C},
+                .parts_groups = {A, B, A, A, 0, A, A, B, A},
                 .blason       = 1,
                 .amount       = 2},
 
