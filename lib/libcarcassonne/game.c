@@ -147,13 +147,9 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
 
       // on se marque comme étant voisin de notre voisin, et réciproquement
       if (neighbor != NULL && *neighbor != NULL) {
-        tile_part_group_t gi =
-            (*neighbor)->parent->parts_groups[tile_orientation_invert(s)];
-        tile_part_group_t vi = placed_tile->parent->parts_groups[s];
-
         tile_orientation_group(*neighbor, tile_orientation_invert(s))
-            ->neighbors[gi] = tile_orientation_group(placed_tile, s);
-        tile_orientation_group(placed_tile, s)->neighbors[vi] =
+            ->neighbors[s] = tile_orientation_group(placed_tile, s);
+        tile_orientation_group(placed_tile, s)->neighbors[tile_orientation_invert(s)] =
             tile_orientation_group(*neighbor, tile_orientation_invert(s));
       }
     }
