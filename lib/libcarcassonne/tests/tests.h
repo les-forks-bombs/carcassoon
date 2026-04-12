@@ -5,6 +5,9 @@
 void deck_builds(void** state);
 void deck_seed_consistent(void** state);
 
+/** TILE TEST */
+void tile_get_family_face_works(void** state);
+
 /** GAME TEST */
 void game_builds(void** state);
 void game_do_not_build_because_game_is_null(void** state);
