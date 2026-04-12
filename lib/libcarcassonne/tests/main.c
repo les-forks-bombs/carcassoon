@@ -23,6 +23,9 @@ int main(void) {
       cmocka_unit_test(game_place_multiple_tile_works),
       cmocka_unit_test(
           game_place_tile_do_not_work_because_tiles_are_incompatible),
+      cmocka_unit_test(
+        tile_get_family_face_works
+      )
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

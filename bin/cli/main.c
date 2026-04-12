@@ -2,34 +2,29 @@
 #include <stdio.h>
 #include <string.h>
 
+tile_t* find_tile(game_t* game, char* family) {
+  deck_element_t* curr = game->deck.list.head;
+  while (strcmp(curr->tile->family, family) != 0) {
+    curr = curr->next;
+  }
+
+  return curr->tile;
+}
+
 int main(void) {
   game_t game;
-
   create_game(&game, 3, 0, 500, 0);
 
-  // play CCCC at 0,0
-  game_place_tile(&game,  &tiles[0], 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH);
+  tile_t* tile = deck_pick(&game.deck);
+  game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH);
 
-  tile_t t = {
-      .amount = 1,
-      .blason = 1,
-      .family = "FCFC",
-      .parts = {
-        5, 5, 5,
-        5, 5, 5,
-        5, 5, 5,
-      },
-      .parts_groups = {
-        1, 1, 1,
-        1, 1, 1,
-        1, 1, 1,
-      }
-  };
+  tile = find_tile(&game, "CFCF");
 
-  game_place_tile(&game,  &t, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST);
-  game_place_tile(&game,  &tiles[0], 2, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST);
-  game_place_tile(&game,  &t, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_EAST);
-  game_place_tile(&game,  &tiles[0], 0, 2, LIBCARCASSONNE_TILE_ORIENTATION_NORTH);
+  // en bas
+  printf("%d\n", game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST));
+
+  // en haut
+  printf("%d\n", game_place_tile(&game, tile, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH));
 
   game_print_detail(&game, 0, 0, 3);
 
