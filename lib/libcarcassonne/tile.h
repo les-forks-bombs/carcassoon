@@ -66,6 +66,11 @@ typedef struct placed_tile_group {
   meeple_t* meeple;
 } placed_tile_group_t;
 
+typedef struct placed_face_groups
+{
+  placed_tile_group_t* face[3];
+} placed_face_groups_t;
+
 /// @brief Représentation d'une tile qui a été placée
 typedef struct placed_tile {
   /// @brief Pointeur vers la définition de la tile
@@ -76,6 +81,7 @@ typedef struct placed_tile {
   /// @brief Orientation de placement de la tile
   tile_orientation_t orientation;
 } placed_tile_t;
+
 
 /// @brief Récupère une famille de la tuile en fonction de l'orientation et de
 /// la face de connexion
@@ -93,7 +99,8 @@ void          placed_tile_destroy(placed_tile_t*);
 
 tile_orientation_t tile_orientation_invert(tile_orientation_t orientation);
 
-placed_tile_group_t* tile_orientation_group(placed_tile_t*     placed_tile,
-                                            tile_orientation_t orientation);
-
+return_code_t tile_get_face(
+  placed_face_groups_t* ret,
+  placed_tile_t*     tile,
+                                            tile_orientation_t connexion_face);
 #endif
