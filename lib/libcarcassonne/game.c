@@ -48,8 +48,6 @@ void destroy_game(game_t* game) {
     return;
   }
 
-  destroy_tile_list(&game->open_tiles);
-
   // Cleanup des structures dans la map (les placed_tile_t)
   for (int i = -LIBCARCASSONNE_TILES_COUNT + 1; i < LIBCARCASSONNE_TILES_COUNT;
        i++)
@@ -61,6 +59,8 @@ void destroy_game(game_t* game) {
         free(*tile);
       }
     }
+  
+  destroy_tile_list(&game->open_tiles);
 
   free(game->map);
   free_deck(game->deck);
@@ -136,34 +136,13 @@ return_code_t game_place_tile(game_t* game, tile_t* tile, int x, int y,
           break;
       }
 
+      // on se marque comme étant voisin de notre voisin, et réciproquement
       if (neighbor != NULL && *neighbor != NULL) {
-        placed_tile_group_t* other_tile_group =
-            tile_orientation_group(*neighbor, tile_orientation_invert(s));
+        tile_part_group_t gi = (*neighbor)->parent->parts_groups[tile_orientation_invert(s)];
+        tile_part_group_t vi = placed_tile->parent->parts_groups[s];
 
-        // pour chaque node sur le chemin vers le parent, on marque le parent
-        // comme enfant
-        placed_tile_group_t* new_parent =
-            tile_orientation_group(placed_tile, s);
-
-        // inversion de l'arbre
-        while (other_tile_group != NULL) {
-          placed_tile_group_t* tmp = other_tile_group->parent;
-          other_tile_group->parent = new_parent;
-
-          tile_orientation_t found_orientation;
-
-          for (found_orientation = LIBCARCASSONNE_TILE_ORIENTATION_NORTH;
-               found_orientation < 4; found_orientation++) {
-            if (other_tile_group->child[found_orientation] == new_parent) {
-              other_tile_group->child[found_orientation] = NULL;
-              new_parent->child[tile_orientation_invert(found_orientation)] =
-                  other_tile_group;
-            }
-          }
-
-          new_parent       = other_tile_group;
-          other_tile_group = tmp;
-        }
+        tile_orientation_group(*neighbor, tile_orientation_invert(s))->neighbors[gi] = tile_orientation_group(placed_tile, s);
+        tile_orientation_group(placed_tile, s)->neighbors[vi] = tile_orientation_group(*neighbor, tile_orientation_invert(s));
       }
     }
 
@@ -190,7 +169,7 @@ return_code_t game_place_meeple(game_t* game, int x, int y, int group) {
     if (group_ref->meeple == NULL) {
       group_ref->meeple             = calloc(1, sizeof(meeple_t));
       group_ref->meeple->player     = game->current_player;
-      group_ref->meeple->tile_group = group_ref;
+      group_ref->meeple->group_node = group_ref;
 
       // todo: ajouter au meeple a la liste des meeple
     } else {
@@ -321,3 +300,6 @@ void game_remove_open_tile(tile_list_t* tl, placed_tile_t* tile) {
     }
   }
 }
+
+
+void          game_print_detail(game_t*, int x, int y, int zoom) {}
