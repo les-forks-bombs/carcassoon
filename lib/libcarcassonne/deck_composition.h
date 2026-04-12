@@ -172,34 +172,30 @@ static tile_t
             {.family = "CCRR",
              .parts =
                  {
-                     TOWN,
-                     TOWN,
-                     FIELD,
-                     TOWN,
-                     FIELD,
-                     ROAD,
-                     FIELD,
-                     ROAD,
-                     FIELD,
+                     FIELD,TOWN,TOWN,
+                     ROAD,FIELD,TOWN,
+                     FIELD,ROAD,FIELD,
                  },
-             .parts_groups = {A, A, B, A, 0, C, B, C, D},
+             .parts_groups = {
+                A, B, B, 
+                C, 0, B, 
+                D, C, A
+            },
              .blason       = 1,
              .amount       = 2},
 
             {.family = "CCRR",
              .parts =
                  {
-                     TOWN,
-                     TOWN,
-                     FIELD,
-                     TOWN,
-                     FIELD,
-                     ROAD,
-                     FIELD,
-                     ROAD,
-                     FIELD,
+                     FIELD,TOWN,TOWN,
+                     ROAD,FIELD,TOWN,
+                     FIELD,ROAD,FIELD,
                  },
-             .parts_groups = {A, A, B, A, 0, C, B, C, D},
+             .parts_groups = {
+                A, B, B, 
+                C, 0, B, 
+                D, C, A
+            },
              .blason       = 0,
              .amount       = 3},
 
@@ -213,43 +209,43 @@ static tile_t
                         FIELD, FIELD, FIELD,
                         FIELD, TOWN, FIELD
                     },
-                .parts_groups = {A, B, A, A, 0, A, A, B, A},
-                .blason       = 1,
-                .amount       = 2},
+                .parts_groups = {
+                    A, B, A, 
+                    A, 0, A, 
+                    A, B, A
+                },
+                .blason       = 0,
+                .amount       = 3},
 
             {.family = "CFCF",
              .parts =
                  {
-                     FIELD,
-                     FIELD,
-                     FIELD,
-                     TOWN,
-                     TOWN,
-                     TOWN,
-                     FIELD,
-                     FIELD,
-                     FIELD,
+                     FIELD,TOWN,FIELD,
+                     FIELD,TOWN,FIELD,
+                     FIELD,TOWN,FIELD,
                  },
-             .parts_groups = {A, A, A, B, 0, B, C, C, C},
+             .parts_groups = {
+                A, B, C, 
+                A, 0, C, 
+                A, B, C
+            },
              .blason       = 0,
              .amount       = 1},
 
             {.family = "CFCF",
              .parts =
                  {
-                     FIELD,
-                     FIELD,
-                     FIELD,
-                     TOWN,
-                     FIELD,
-                     TOWN,
-                     FIELD,
-                     FIELD,
-                     FIELD,
+                     FIELD,TOWN,FIELD,
+                     FIELD,TOWN,FIELD,
+                     FIELD,TOWN,FIELD,
                  },
-             .parts_groups = {A, A, A, B, 0, B, A, A, A},
-             .blason       = 0,
-             .amount       = 3},
+             .parts_groups = {
+                A, B, C, 
+                A, 0, C, 
+                A, B, C
+            },
+             .blason       = 1,
+             .amount       = 2},
 
             // CFFF
 
@@ -366,17 +362,15 @@ static tile_t
             {.family = "FFFR",
              .parts =
                  {
-                     FIELD,
-                     FIELD,
-                     FIELD,
-                     FIELD,
-                     ABBEY,
-                     FIELD,
-                     FIELD,
-                     ROAD,
-                     FIELD,
+                     FIELD,FIELD,FIELD,
+                     ROAD,ABBEY,FIELD,
+                     FIELD,FIELD,FIELD,
                  },
-             .parts_groups = {A, A, A, A, 0, A, A, B, A},
+             .parts_groups = {
+                A, A, A, 
+                B, 0, A, 
+                A, A, A
+            },
              .blason       = 0,
              .amount       = 2},
 
