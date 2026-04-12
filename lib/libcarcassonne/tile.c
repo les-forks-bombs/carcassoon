@@ -8,19 +8,9 @@ char tile_get_family_face(tile_t* tile, tile_orientation_t orientation,
   if (tile == NULL) return 0;
 
   int index = (connexion_face + orientation) % 4;
+  static int values[4] = { 1, 5, 7, 3 };
 
-  int rindex = -1;
-  if (index == 0) {
-    rindex = 1;
-  } else if (index == 1) {
-    rindex = 5;
-  } else if (index == 2) {
-    rindex = 7;
-  } else if (index == 3) {
-    rindex = 3;
-  }
-
-  return tile->parts[rindex];
+  return tile->parts[values[index]];
 }
 
 tile_orientation_t tile_orientation_invert(tile_orientation_t orientation) {
