@@ -58,11 +58,8 @@ typedef struct tile {
 
 /// @brief Information des groupes de la sous-tile
 typedef struct placed_tile_group {
-  /// @brief Référence vers le groupe parent du groupe courrant
-  /// @remark si null, alors le groupe actuel est une racine
-  struct placed_tile_group* parent;
   /// @brief Groupes adjacents qui sont enfants
-  struct placed_tile_group* child[4];
+  struct placed_tile_group* neighbors[4];
   /// @brief Référence vers la tile représentant le groupe
   struct placed_tile* tile;
   /// @brief Référence vers l'éventuel meeple placé dans le groupe
