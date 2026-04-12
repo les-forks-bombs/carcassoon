@@ -3,7 +3,6 @@ default:
 
 .targets: &targets
   - x86_64-redhat-linux-gnu
-  - x86-redhat-linux-gnu
   - x86_64-w64-windows-gnu
 
 .profiles: &profiles 
