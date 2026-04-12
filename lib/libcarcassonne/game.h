@@ -79,8 +79,10 @@ void destroy_game(game_t *game);
 /// @related game_t
 placed_tile_t **game_tile_at(game_t *game, int x, int y);
 
-void game_print_map(game_t *);
-return_code_t game_place_tile(game_t *, tile_t *tile, int x, int y,
+void          game_print_map(game_t*);
+void          game_print_detail(game_t*, int x, int y, int zoom);
+
+return_code_t game_place_tile(game_t*, tile_t* tile, int x, int y,
                               tile_orientation_t orientation);
 
 /// @brief Détermine si une tuile peut être placé à l'emplacement désigné

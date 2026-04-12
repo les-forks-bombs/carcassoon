@@ -5,7 +5,7 @@
 
 typedef struct meeple {
   unsigned int              player;
-  struct placed_tile_group* tile_group;
+  struct placed_tile_group* group_node;
 } meeple_t;
 
 #endif
