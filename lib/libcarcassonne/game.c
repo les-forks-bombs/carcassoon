@@ -299,10 +299,10 @@ void game_remove_open_tile(tile_list_t* tl, placed_tile_t* tile) {
     if (curr->tile == tile) {
       if (tl->head == curr) tl->head = curr->next;
 
-      if (tl->tail == curr) tl->tail = curr->previous;
+      if (tl->tail == curr) tl->tail = curr->prev;
 
-      curr->previous->next = curr->next;
-      curr->next->previous = curr->previous;
+      curr->prev->next = curr->next;
+      curr->next->prev = curr->prev;
       curr->tile           = NULL;
       free(curr);
 
