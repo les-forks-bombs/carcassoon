@@ -22,7 +22,7 @@ CC	   := $(CC)
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
 CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic  # General building flags
 LFLAGS += -L$(LIBS_DIR)
-LDLIBS += -Wl,--start-group $(addprefix -l,$(LIBARIES:lib%=%)) -Wl,--end-group
+# LFLAGS += -Wl,--start-group $(addprefix -l,$(LIBARIES:lib%=%)) -Wl,--end-group
 
 ifeq "$(PROFILE)" "debug"
 	ifneq ($(TARGET),x86_64-w64-windows-gnu)
@@ -35,7 +35,7 @@ ifeq "$(PROFILE)" "release"
 	CFLAGS += -O3
 endif
 
-export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS LDLIBS TARGET
+export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
 
 build: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@

@@ -1,6 +1,6 @@
 NAME := carcassonne
 PROG = $(BINS_DIR)/tests/$(NAME)_test
 
-LDLIBS = -lcmocka -lcarcassonne
+LLIBS = cmocka carcassonne
 
 include $(BUILD_DIR)/binary.mk
