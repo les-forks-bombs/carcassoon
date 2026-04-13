@@ -8,8 +8,9 @@ endif
 
 $(PROG): $(OBJS)
 	@$(CC) $(LFLAGS) -o $@ $^ $(LDLIBS)
-	@[ $(TARGET) = x86_64-w64-windows-gnu ] && \
-		$(BUILD_DIR)/copy_dlls.sh $(PROG)
+	@if [ $(TARGET) = x86_64-w64-windows-gnu ]; then \
+		$(BUILD_DIR)/copy_dlls.sh $(PROG); \
+	fi
 	@echo "    LD    $(notdir $@)"
 
 $(OBJS): $(OUT_OBJ_DIR)/%.o: %.c
