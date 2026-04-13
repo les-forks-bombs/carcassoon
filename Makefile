@@ -22,10 +22,9 @@ LFLAGS := --target=$(TARGET)
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
 CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic  # General building flags
 LFLAGS += -L$(LIBS_DIR)
-# LFLAGS += -Wl,--start-group $(addprefix -l,$(LIBARIES:lib%=%)) -Wl,--end-group
 
 ifeq "$(PROFILE)" "debug"
-	ifneq ($(TARGET),x86_64-w64-windows-gnu)
+	ifneq ($(TARGET),x86_64-w64-mingw32)
 	    CFLAGS += -fsanitize=address
 	    LFLAGS += -fsanitize=address
 	endif
