@@ -6,7 +6,7 @@ ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
     PROG := $(PROG).exe
 endif
 
-$(PROG): $(OBJS)
+$(PROG): $(OBJS) $(LLIBS:%=$(LIBS_DIR)/lib%.a)
 	@$(CC)  -o $@  $^ $(LFLAGS) $(LLIBS:%=-l%)
 	@case "$(TARGET)" in \
 	        (x86_64-w64-mingw64|x86_64-w64-mingw32) \
