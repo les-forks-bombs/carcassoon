@@ -19,8 +19,10 @@ $(PROG): $(OBJS) $(LLIBS:%=$(LIBS_DIR)/lib%.a)
 
 $(OBJS): $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(OBJ_DIR)
-	@$(CC) $(CFLAGS) -c $^ -o $@
-	@echo "    CC    $^"
+	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+	@echo "    CC    $<"
+
+-include $(OBJS:.o=.d)
 
 build: $(PROG)
 

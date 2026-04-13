@@ -8,8 +8,10 @@ $(LIB): $(OBJS)
 
 $(OBJS): $(OUT_OBJ_DIR)/%.o: %.c
 	@mkdir -p $(OUT_OBJ_DIR)
-	@$(CC) $(CFLAGS) -c $^ -o $@
-	@echo "    CC    $^"
+	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+	@echo "    CC    $<"
+
+-include $(OBJS:.o=.d)
 
 build: $(LIB)
 	@$(MAKE) -C tests -f build.mk build
