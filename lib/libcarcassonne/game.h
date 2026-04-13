@@ -14,7 +14,7 @@ typedef struct tile_list_element {
   /// @brief Le prochain élément de la liste
   struct tile_list_element* next;
   /// @brief L'élément précédent de la liste
-  struct tile_list_element* previous;
+  struct tile_list_element* prev;
 } tile_list_element_t;
 
 /// @brief Structure de liste chainée utilisée pour conserver toutes les tuiles
