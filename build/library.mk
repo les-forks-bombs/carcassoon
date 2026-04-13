@@ -1,3 +1,4 @@
+LIB  := $(LIBS_DIR)/$(NAME).a
 OUT_OBJ_DIR := $(OBJ_DIR)/$(shell realpath -s --relative-to="$(MAKE_DIR)" "$(shell pwd)")
 SRCS := $(wildcard *.c)
 OBJS := $(patsubst %.c, $(OUT_OBJ_DIR)/%.o, $(SRCS))
