@@ -27,7 +27,6 @@ copy_dependencies() {
         if [ -f "$MINGW_BIN/$dll" ]; then
             if [ ! -f "$DEST/$dll" ]; then
                 cp "$MINGW_BIN/$dll" "$DEST/"
-                echo "Copied: $dll -> $DEST/"
                 
                 copy_dependencies "$MINGW_BIN/$dll"
             fi
@@ -38,7 +37,6 @@ copy_dependencies() {
 echo "Analyzing $EXE..."
 if [ -f "$EXE" ]; then
     copy_dependencies "$EXE"
-    echo "Successfully moved dependencies to: $DEST"
 else
     echo "Error: $EXE not found."
     exit 1

@@ -3,7 +3,8 @@ default:
 
 .targets: &targets
   - x86_64-redhat-linux-gnu
-  - x86_64-w64-windows-gnu
+  - x86_64-w64-mingw64
+  - x86_64-w64-mingw32
 
 .profiles: &profiles 
   - debug
