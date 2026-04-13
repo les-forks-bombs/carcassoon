@@ -1,0 +1,129 @@
+@startuml carcassonne
+
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide empty members
+
+class carcassonne.Vector2D {
+    - x : int
+    - y : int
+}
+
+class carcassonne.Meeple {
+
+}
+
+class carcassonne.Player {
+    - id : int
+    - name : char*
+    - score : int
+}
+
+enum carcassonne.Type <<enum>>{
+    VILLAGE
+    TOWN
+    TOWNWITHSHIELD
+    ABBEY
+    ROAD
+    FIELD
+    WALL
+}
+
+enum carcassonne.PlayerType <<enum>>{
+    IA
+    HUMAN
+}
+
+class carcassonne.Tile {
+    - type : int
+    - group_id : int
+}
+
+class carcassonne.Group {
+    - group_id : int
+}
+
+class carcassonne.Game {
+    - current_player_id : int
+    - max_turns : int
+    - turns_count : int
+    - human_player_count : int
+    - total_player_count : int
+    - map : int**
+    + make_turn()
+    + place_tile()
+    + place_meeple()
+    + get_current_player() : Player*
+}
+
+class carcassonne.Engine{
+    + apply_action(action : Action)
+}
+
+class carcassonne.Action {
+    place_meeple : bool
+}
+
+class gui.SDLFrontEnd {
+    create_game(max_turns : int, turns_count : int, seed : int, human_player_count : int, total_player_count : int) : Game*
+    start_game(game : Game*) : void
+    destroy_game(game : Game*) : void
+}
+
+class cli.CLIFrontEnd {
+    create_game(max_turns : int, turns_count : int, seed : int, human_player_count : int, total_player_count : int) : Game*
+    start_game(game : Game*) : void
+    destroy_game(game : Game*) : void
+}
+
+class ai.AIEngine {
+    + makeDecision(game : Game*)
+}
+
+class carcassonne.AIState {}
+
+class carcassonne.Deck {
+    - seed : int
+}
+
+class MainCLI {}
+class MainSDL {}
+
+Tile o--> "1 \n -position" Vector2D
+Meeple o--> "1 \n -position" Vector2D
+
+Player "1 \n -player" o-d-> "8 \n -meeples**" Meeple : Possède >
+Player  o-d-> "1 \n -type" PlayerType : Est un >
+
+Game *--> "2..5 \n -players**" Player : Contient >
+Game *--> "n \n -groups**" Group : Contient >
+Game o--> "n \n map**" Tile : Contient >
+Game *--> "1\n-deck" Deck : Utilise >
+Group o--> "n \n Tiles**" Tile : Contient >
+
+Tile o--> "1 \n -type" Type
+Tile o--> "1 \n -meeple" Meeple
+
+Engine *--> AIEngine : "Fait jouer" >
+Engine *--> "1\n-game*" Game : Joue >
+
+MainSDL ..> SDLFrontEnd  : "<<uses>>"
+
+SDLFrontEnd *--> "1 \n -engine*" Engine : commande >
+CLIFrontEnd *--> "1 \n -engine*" Engine : commande >
+
+SDLFrontEnd *--> "1 \n -action*" Action : commande >
+CLIFrontEnd *--> "1 \n -action*" Action : commande >
+
+
+MainCLI ..> CLIFrontEnd  : "<<uses>>
+
+Player *--> AIState : Utilise >
+AIEngine o--> AIState : Utilise >
+
+Action *--> "1\n-position" Vector2D : >
+
+Deck *--> "1\n-tiles" Tile : Gère >
+
+@enduml

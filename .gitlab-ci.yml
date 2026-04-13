@@ -2,10 +2,12 @@ default:
   image: forgejo.puffer.fish/matthieu/base-images/fedora-c-build:latest # Public image with debian & required build tools
 
 stages:
-  - ci
+  - build
+  - test
+  - docs
 
-'Build & Test':
-  stage: ci
+'Build':
+  stage: build
 
   parallel:
     matrix:
@@ -13,15 +15,36 @@ stages:
         PROFILE: [debug, release]
   
   script:
-    - make -s build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make -s clean build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+
+  artifacts:
+    when: always
+    paths:
+      - ./out/$PROFILE/$TARGET
+
+'Test':
+  stage: test
+
+  parallel:
+    matrix:
+      - TARGET: [x86_64-redhat-linux-gnu, x86_64-w64-windows-gnu]
+        PROFILE: [debug, release]
+  
+  script:
     - make -s test TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always
     paths:
       - ./out/$PROFILE/$TARGET/bin/tests/*.xml
-      - ./out/$PROFILE/$TARGET/bin/cli*
-      - ./out/$PROFILE/$TARGET/bin/sdl*
     reports:
       junit: ./out/$PROFILE/$TARGET/bin/tests/*.xml
 
+'Docs':
+  stage: docs
+  script:
+    - make docs
+  artifacts:
+    when: always
+    paths:
+      - ./public
