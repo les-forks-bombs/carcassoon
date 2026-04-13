@@ -8,14 +8,13 @@
 #include <libcarcassonne/vector2d.h>
 
 /// @brief Élement dans la liste chaîné list_tile_t
-typedef struct tile_list_element
-{
-    /// @brief La tuile placée
-    placed_tile_t *tile;
-    /// @brief Le prochain élément de la liste
-    struct tile_list_element *next;
-    /// @brief L'élément précédent de la liste
-    struct tile_list_element *previous;
+typedef struct tile_list_element {
+  /// @brief La tuile placée
+  placed_tile_t* tile;
+  /// @brief Le prochain élément de la liste
+  struct tile_list_element* next;
+  /// @brief L'élément précédent de la liste
+  struct tile_list_element* prev;
 } tile_list_element_t;
 
 /// @brief Structure de liste chainée utilisée pour conserver toutes les tuiles
