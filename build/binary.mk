@@ -1,19 +1,20 @@
-OUT_OBJ_DIR := $(OBJ_DIR)/$(shell realpath -s --relative-to="$(MAKE_DIR)" "$(shell pwd)")
+OBJ_DIR := $(OBJ_DIR)/$(shell realpath -s --relative-to="$(MAKE_DIR)" "$(shell pwd)")
 SRCS := $(wildcard *.c)
-OBJS := $(patsubst %.c, $(OUT_OBJ_DIR)/%.o, $(SRCS))
+OBJS := $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 ifeq ($(TARGET),x86_64-w64-windows-gnu)
     PROG := $(PROG).exe
 endif
 
 $(PROG): $(OBJS)
-	@$(CC) $(LFLAGS) -o $@ $^ $(LDLIBS)
-	@[ $(TARGET) = x86_64-w64-windows-gnu ] && \
-		$(BUILD_DIR)/copy_dlls.sh $(PROG)
+	@$(CC) $(LFLAGS) -o $@  $^ $(LLIBS:%=-l%)
+	@if [ $(TARGET) = x86_64-w64-windows-gnu ]; then \
+		$(BUILD_DIR)/copy_dlls.sh $(PROG); \
+	fi
 	@echo "    LD    $(notdir $@)"
 
-$(OBJS): $(OUT_OBJ_DIR)/%.o: %.c
-	@mkdir -p $(OUT_OBJ_DIR)
+$(OBJS): $(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -c $^ -o $@
 	@echo "    CC    $^"
 

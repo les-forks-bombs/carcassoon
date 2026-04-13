@@ -1,6 +1,6 @@
 NAME := ai
 PROG = $(BINS_DIR)/tests/$(NAME)_test
 
-LDLIBS = -lcmocka -lai
+LLIBS = cmocka ai
 
 include $(BUILD_DIR)/binary.mk
