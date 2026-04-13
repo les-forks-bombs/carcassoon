@@ -8,7 +8,7 @@ endif
 
 $(PROG): $(OBJS)
 	@$(CC) $(LFLAGS) -o $@ $^ $(LDLIBS)
-	@[ $(TARGET) = x86_64-w64-windows-gnu ]; \
+	@[ $(TARGET) = x86_64-w64-windows-gnu ] && \
 		$(BUILD_DIR)/copy_dlls.sh $(PROG)
 	@echo "    LD    $(notdir $@)"
 
