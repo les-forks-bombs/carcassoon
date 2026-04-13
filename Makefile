@@ -24,7 +24,7 @@ CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic  # General building flags
 LFLAGS += -L$(LIBS_DIR)
 
 ifeq "$(PROFILE)" "debug"
-	ifneq ($(TARGET),x86_64-w64-mingw32)
+	ifeq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
 	    CFLAGS += -fsanitize=address
 	    LFLAGS += -fsanitize=address
 	endif
