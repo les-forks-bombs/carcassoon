@@ -19,7 +19,6 @@ runtime_config_t parse_options(int argc, char* argv[]) {
   while (1) {
     int           option_index = 0;
     char*         endPtr;
-    int           value;
     struct option long_options[] = {{"mode", required_argument, 0, 'm'},
                                     {"players", required_argument, 0, 'p'},
                                     {"ai", required_argument, 0, 'a'},
