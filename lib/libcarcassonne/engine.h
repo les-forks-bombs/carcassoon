@@ -1,0 +1,13 @@
+#ifndef H_LIBCARCASSONNE_ENGINE
+#define H_LIBCARCASSONNE_ENGINE
+
+#include <libcarcassonne/deck.h>
+#include <libcarcassonne/game.h>
+
+/// @brief Représente un moteur pour une partie de carcassonne
+typedef struct engine {
+  /// @brief La statut du plateau de jeu
+  game_t game;
+} engine_t;
+
+#endif

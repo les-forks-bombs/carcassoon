@@ -17,6 +17,6 @@ build: $(LIB)
 .PHONY: clean
 clean:
 	@$(RM) -f $(LIB) $(OBJS)
-	@echo "    CL    $(notdir $(OBJS))"
-	@echo "    CL    $(notdir $(PROG))"
+	@echo "    RM    $(notdir $(OBJS))"
+	@echo "    RM    $(notdir $(LIB))"
 	@$(MAKE) -C tests -f build.mk clean
