@@ -11,8 +11,18 @@ OBJ_DIR  := $(OUT_DIR)/obj
 INCL_DIR := $(MAKE_DIR)/lib
 BUILD_DIR:= $(MAKE_DIR)/build
 
+<<<<<<< HEAD
 CFLAGS += --target=$(TARGET)
 LFLAGS += --target=$(TARGET)
+=======
+LIBARIES := $(shell find lib -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+BINARIES := $(shell find bin -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+TARGETS  := $(LIBARIES) $(BINARIES)
+
+CFLAGS := --target=$(TARGET) -fcolor-diagnostics
+LFLAGS := --target=$(TARGET) -fcolor-diagnostics
+CC	   := $(CC)
+>>>>>>> 693ddc4 (feat: enable more optimizations)
 
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
 CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
@@ -29,8 +39,13 @@ ifeq "$(PROFILE)" "debug"
 endif
 
 ifeq "$(PROFILE)" "release"
+<<<<<<< HEAD
 	CFLAGS += -O3
 	LFLAGS += -s
+=======
+	CFLAGS += -O3 -emit-obj -disable-free -disable-llvm-verifier -vectorize-slp -vectorize-loops
+	LFLAGS += -flto -emit-obj -disable-free -disable-llvm-verifier -vectorize-slp -vectorize-loops
+>>>>>>> 693ddc4 (feat: enable more optimizations)
 endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
