@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         goto Quit;
     }
 
-    tuile_affichage_t *test = create_ta(renderer,"img/tiles_png/tile_00.png");
+    tuile_affichage_t *test = create_ta(renderer,"assets/img/tiles_png/tile_00.png");
     rotate_ta(test,90);
 
     if (maTexture == NULL) {
