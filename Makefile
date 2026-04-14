@@ -15,8 +15,8 @@ LIBARIES := $(shell find lib -mindepth 1 -maxdepth 1 -type d -exec basename {} \
 BINARIES := $(shell find bin -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 TARGETS  := $(LIBARIES) $(BINARIES)
 
-CFLAGS := --target=$(TARGET)
-LFLAGS := --target=$(TARGET)
+CFLAGS := --target=$(TARGET) -fcolor-diagnostics
+LFLAGS := --target=$(TARGET) -fcolor-diagnostics
 CC	   := $(CC)
 
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
@@ -31,7 +31,8 @@ ifeq "$(PROFILE)" "debug"
 endif
 
 ifeq "$(PROFILE)" "release"
-	CFLAGS += -O3
+	CFLAGS += -O3 -emit-obj -disable-free -disable-llvm-verifier -vectorize-slp -vectorize-loops
+	LFLAGS += -flto -emit-obj -disable-free -disable-llvm-verifier -vectorize-slp -vectorize-loops
 endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
