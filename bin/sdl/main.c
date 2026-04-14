@@ -2,6 +2,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "test_affichage.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,29 +17,21 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    if (!SDL_CreateWindowAndRenderer("Ma Fenetre SDL3", 1200, 1200, 0, &window, &renderer))
+    if (!SDL_CreateWindowAndRenderer("Ma Fenetre SDL3", 1000, 800, 0, &window, &renderer))
     {
         SDL_Log("Erreur Window/Renderer : %s", SDL_GetError());
         goto Quit;
     }
 
-    maTexture = IMG_LoadTexture(renderer, "img/carcassonne.jpg");
-
-    SDL_FRect cadreImage;
-    float texW, texH;
-
-    SDL_GetTextureSize(maTexture, &texW, &texH);
-    cadreImage.w=texW;
-    cadreImage.h=texH;
-    cadreImage.x=0;
-    cadreImage.y=0;
+    tuile_affichage_t *test = create_ta(renderer,"img/tiles_png/tile_00.png");
+    rotate_ta(test,90);
 
     if (maTexture == NULL) {
         SDL_Log("Erreur chargement : %s", SDL_GetError());
     }
     else {
       SDL_RenderClear(renderer);
-      SDL_RenderTexture(renderer, maTexture, NULL, &cadreImage);
+      render_ta(renderer,test);
       SDL_RenderPresent(renderer);
     }
 
@@ -52,7 +45,7 @@ int main(int argc, char *argv[])
             }
         }
         SDL_RenderClear(renderer);
-        SDL_RenderTexture(renderer, maTexture, NULL, &cadreImage);
+        render_ta(renderer,test);
         SDL_RenderPresent(renderer);
         SDL_Delay(16); 
     }
@@ -63,6 +56,7 @@ int main(int argc, char *argv[])
     SDL_DestroyTexture(maTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    destroy_ta(test);
 
 Quit:
     SDL_Quit();
