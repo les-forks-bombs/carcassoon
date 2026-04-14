@@ -48,6 +48,8 @@ typedef struct tile {
   unsigned int amount;
   /// @brief Définition des groupes a l'intérieur d'une tile
   tile_part_group_t parts_groups[9];
+  /// @brief nom de l'image correspondante
+  char *file;
 } tile_t;
 
 typedef struct placed_tile {
