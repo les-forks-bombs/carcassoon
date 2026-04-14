@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    if (!SDL_CreateWindowAndRenderer("Ma Fenetre SDL3", 640, 480, 0, &window, &renderer))
+    if (!SDL_CreateWindowAndRenderer("Ma Fenetre SDL3", 1200, 1200, 0, &window, &renderer))
     {
         SDL_Log("Erreur Window/Renderer : %s", SDL_GetError());
         goto Quit;
@@ -24,12 +24,21 @@ int main(int argc, char *argv[])
 
     maTexture = IMG_LoadTexture(renderer, "img/carcassonne.jpg");
 
+    SDL_FRect cadreImage;
+    float texW, texH;
+
+    SDL_GetTextureSize(maTexture, &texW, &texH);
+    cadreImage.w=texW;
+    cadreImage.h=texH;
+    cadreImage.x=0;
+    cadreImage.y=0;
+
     if (maTexture == NULL) {
         SDL_Log("Erreur chargement : %s", SDL_GetError());
     }
     else {
       SDL_RenderClear(renderer);
-      SDL_RenderTexture(renderer, maTexture, NULL, NULL);
+      SDL_RenderTexture(renderer, maTexture, NULL, &cadreImage);
       SDL_RenderPresent(renderer);
     }
 
@@ -43,7 +52,7 @@ int main(int argc, char *argv[])
             }
         }
         SDL_RenderClear(renderer);
-        SDL_RenderTexture(renderer, maTexture, NULL, NULL);
+        SDL_RenderTexture(renderer, maTexture, NULL, &cadreImage);
         SDL_RenderPresent(renderer);
         SDL_Delay(16); 
     }
