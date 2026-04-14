@@ -31,8 +31,8 @@ ifeq "$(PROFILE)" "debug"
 endif
 
 ifeq "$(PROFILE)" "release"
-	CFLAGS += -O3 -emit-obj -disable-free -disable-llvm-verifier -vectorize-slp -vectorize-loops
-	LFLAGS += -flto -emit-obj -disable-free -disable-llvm-verifier -vectorize-slp -vectorize-loops
+	CFLAGS += -O3
+	LFLAGS += -flto
 endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
