@@ -21,7 +21,7 @@ CC	   := $(CC)
 
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
 CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic  # General building flags
-LFLAGS += -L$(LIBS_DIR)
+LFLAGS += -L$(LIBS_DIR) -lm
 
 ifeq "$(PROFILE)" "debug"
 	ifeq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
