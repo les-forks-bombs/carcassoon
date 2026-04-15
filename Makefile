@@ -39,6 +39,7 @@ export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TA
 build: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@
 	@$(MAKE) -C bin -f build.mk $@
+	@cp -r assets/ $(BINS_DIR)
 
 cli sdl: build
 	$(BINS_DIR)/$@
