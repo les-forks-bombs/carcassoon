@@ -4,79 +4,61 @@
 #include <stdlib.h>
 #include "test_affichage.h"
 
-#define WINDOW_WIDTH  800
-#define WINDOW_HEIGHT 500
-#define WINDOW_RESIZABLE 0
-#define STEP_RATE_IN_MILLISECONDS 16
-
-typedef struct
+int main(int argc, char *argv[])
 {
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    Uint64 last_step;
-} AppState;
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
+    SDL_Texture *maTexture = NULL;
+    int statut = EXIT_FAILURE;
 
-static SDL_AppResult handle_key_event_(SDL_Scancode key_code)
-{
-    switch (key_code) {
-    case SDL_SCANCODE_ESCAPE:
-        return SDL_APP_SUCCESS;
-    default:
-        break;
-    }
-    return SDL_APP_CONTINUE;
-}
-
-SDL_AppResult SDL_AppIterate(void *appstate)
-{
-    AppState *as = (AppState *)appstate;
-    const Uint64 now = SDL_GetTicks();
-
-    while ((now - as->last_step) >= STEP_RATE_IN_MILLISECONDS) {
-        as->last_step += STEP_RATE_IN_MILLISECONDS;
-    }
-    SDL_RenderPresent(as->renderer);
-    return SDL_APP_CONTINUE;
-}
-
-SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
-{
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
-        return SDL_APP_FAILURE;
+    if (!SDL_Init(SDL_INIT_VIDEO))
+    {
+        SDL_Log("Erreur SDL_Init : %s", SDL_GetError());
+        return EXIT_FAILURE;
     }
 
-    AppState *as = (AppState *)SDL_malloc(sizeof(AppState));
-    if (!as) {
-        return SDL_APP_FAILURE;
+    if (!SDL_CreateWindowAndRenderer("Ma Fenetre SDL3", 1000, 800, 0, &window, &renderer))
+    {
+        SDL_Log("Erreur Window/Renderer : %s", SDL_GetError());
+        goto Quit;
     }
 
-    *appstate = as;
+    tuile_affichage_t *test = create_ta(renderer,"assets/img/tiles_png/tile_00.png");
+    rotate_ta(test,90);
 
-    if (!SDL_CreateWindowAndRenderer("Test fenêtre Carcassonne", WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_RESIZABLE, &as->window, &as->renderer)) {
-        return SDL_APP_FAILURE;
+    if (maTexture == NULL) {
+        SDL_Log("Erreur chargement : %s", SDL_GetError());
     }
-    return SDL_APP_CONTINUE;
-}
+    else {
+      SDL_RenderClear(renderer);
+      render_ta(renderer,test);
+      SDL_RenderPresent(renderer);
+    }
 
-SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
-{
-    switch (event->type) {
-    case SDL_EVENT_QUIT:
-        return SDL_APP_SUCCESS;
-    case SDL_EVENT_KEY_DOWN:
-        return handle_key_event_(event->key.scancode);
-    default:
-        break;
-    }
-    return SDL_APP_CONTINUE;
-}
+    SDL_Event event;
+    int running = 1;
 
-void SDL_AppQuit(void *appstate, SDL_AppResult result)
-{
-    if (appstate != NULL) {
-        AppState *as = (AppState *)appstate;
-        SDL_DestroyRenderer(as->renderer);
-        SDL_DestroyWindow(as->window);
-        SDL_free(as);
+    while (running) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) {
+                running = 0;
+            }
+        }
+        SDL_RenderClear(renderer);
+        render_ta(renderer,test);
+        SDL_RenderPresent(renderer);
+        SDL_Delay(16); 
     }
+
+
+    statut = EXIT_SUCCESS;
+
+    SDL_DestroyTexture(maTexture);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    destroy_ta(test);
+
+Quit:
+    SDL_Quit();
+    return statut;
 }

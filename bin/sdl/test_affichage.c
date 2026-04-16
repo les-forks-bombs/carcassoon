@@ -23,7 +23,12 @@ tuile_affichage_t *create_ta(SDL_Renderer *renderer, char *chemin){
 }
 
 void rotate_ta(tuile_affichage_t *t,int rot){
-    t->rotation=fmod(t->rotation + rot, 360.0);
+    t->rotation=rot;
+}
+
+void move_ta(tuile_affichage_t *t,float x, float y){
+    t->x+=x;
+    t->y+=y;
 }
 
 void redimensionate_ta(tuile_affichage_t *t,double w, double h){
