@@ -26,6 +26,11 @@ void rotate_ta(tuile_affichage_t *t,int rot){
     t->rotation=fmod(t->rotation + rot, 360.0);
 }
 
+void redimensionate_ta(tuile_affichage_t *t,double w, double h){
+    t->h=h;
+    t->w=w;
+}
+
 void render_ta(SDL_Renderer *renderer, tuile_affichage_t *t) {
     if (!t || !t->texture) return;
     
