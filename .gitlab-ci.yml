@@ -24,12 +24,23 @@ stages:
         PROFILE: *profiles
   
   script:
-    - make -s clean build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make -s clean TARGET=$TARGET PROFILE=$PROFILE
+    - bear --output ./out/$PROFILE/$TARGET/compile_commands.json -- make -s clean build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always
     paths:
       - ./out/$PROFILE/$TARGET
+
+'Tidy':
+  stage: test
+  parallel:
+    matrix:
+      - TARGET: *targets
+        PROFILE: *profiles
+  
+  script:
+    - run-clang-tidy -p out/$PROFILE/$TARGET/
 
 'Test':
   stage: test
