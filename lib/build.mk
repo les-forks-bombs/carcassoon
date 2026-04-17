@@ -1,6 +1,6 @@
 BINS := $(shell find . -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
 
-libcarcassonne: libai liblct
+libcarcassonne: libai
 
 $(BINS): %:
 	@$(MAKE) -C $* -f build.mk build
