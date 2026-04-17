@@ -40,9 +40,9 @@ static tile_t
              .parts_groups = {A, A, A, A, 0, A, A, A, A},
              .blason       = 1,
              .amount       = 1,
-             .texture="tile_11.png"},
+             .texture      = "tile_11.png"},
 
-        // CCCF
+            // CCCF
 
             {.family = "CCFC",
              .parts =
@@ -60,7 +60,7 @@ static tile_t
              .parts_groups = {A, A, A, A, 0, A, B, B, B},
              .blason       = 1,
              .amount       = 1,
-             .texture="tile_13.png"},
+             .texture      = "tile_13.png"},
 
             {.family = "CCFC",
              .parts =
@@ -78,9 +78,9 @@ static tile_t
              .parts_groups = {A, A, A, A, 0, A, B, B, B},
              .blason       = 0,
              .amount       = 3,
-             .texture="tile_12.png"},
+             .texture      = "tile_12.png"},
 
-        // CCCR
+            // CCCR
 
             {.family = "CCRC",
              .parts =
@@ -98,7 +98,7 @@ static tile_t
              .parts_groups = {A, A, A, A, 0, A, B, C, D},
              .blason       = 1,
              .amount       = 2,
-             .texture="tile_15.png"},
+             .texture      = "tile_15.png"},
 
             {.family = "CCRC",
              .parts =
@@ -116,11 +116,11 @@ static tile_t
              .parts_groups = {A, A, A, A, 0, A, B, C, D},
              .blason       = 0,
              .amount       = 1,
-             .texture="tile_14.png"},
+             .texture      = "tile_14.png"},
 
-        // CCFF
+            // CCFF
 
-        {// deux villes séparées
+            {// deux villes séparées
 
              .family = "CCFF",
              .parts =
@@ -138,7 +138,7 @@ static tile_t
              .parts_groups = {C, A, 0, C, 0, B, C, C, C},
              .blason       = 0,
              .amount       = 2,
-             .texture="tile_16.png"},
+             .texture      = "tile_16.png"},
 
             {.family = "CCFF",
              .parts =
@@ -156,7 +156,7 @@ static tile_t
              .parts_groups = {A, B, B, A, 0, B, A, A, A},
              .blason       = 1,
              .amount       = 2,
-             .texture = "tile_02.png"},
+             .texture      = "tile_02.png"},
 
             {.family = "CCFF",
              .parts =
@@ -174,7 +174,7 @@ static tile_t
              .parts_groups = {A, B, B, A, 0, B, A, A, A},
              .blason       = 0,
              .amount       = 3,
-             .texture = "tile_01.png"},
+             .texture      = "tile_01.png"},
 
             // CCRR
             {.family = "CCRR",
@@ -193,7 +193,7 @@ static tile_t
              .parts_groups = {A, A, B, A, 0, C, B, C, D},
              .blason       = 1,
              .amount       = 2,
-             .texture="tile_24.png"},
+             .texture      = "tile_24.png"},
 
             {.family = "CCRR",
              .parts =
@@ -211,28 +211,27 @@ static tile_t
              .parts_groups = {A, A, B, A, 0, C, B, C, D},
              .blason       = 0,
              .amount       = 3,
-             .texture="tile_23.png"},
+             .texture      = "tile_23.png"},
 
-        // CFCF
+            // CFCF
 
-            {
-                .family = "FCFC",
-                .parts =
-                    {
-                        FIELD,
-                        FIELD,
-                        FIELD,
-                        TOWN,
-                        TOWN,
-                        TOWN,
-                        FIELD,
-                        FIELD,
-                        FIELD,
-                    },
-                .parts_groups = {A, A, A, B, 0, B, C, C, C},
-                .blason       = 1,
-                .amount       = 2,
-                .texture="tile_22.png"},
+            {.family = "FCFC",
+             .parts =
+                 {
+                     FIELD,
+                     FIELD,
+                     FIELD,
+                     TOWN,
+                     TOWN,
+                     TOWN,
+                     FIELD,
+                     FIELD,
+                     FIELD,
+                 },
+             .parts_groups = {A, A, A, B, 0, B, C, C, C},
+             .blason       = 1,
+             .amount       = 2,
+             .texture      = "tile_22.png"},
 
             {.family = "FCFC",
              .parts =
@@ -250,7 +249,7 @@ static tile_t
              .parts_groups = {A, A, A, B, 0, B, C, C, C},
              .blason       = 0,
              .amount       = 1,
-             .texture="tile_21.png"},
+             .texture      = "tile_21.png"},
 
             {.family = "CFCF",
              .parts =
@@ -268,9 +267,9 @@ static tile_t
              .parts_groups = {A, A, A, B, 0, B, A, A, A},
              .blason       = 0,
              .amount       = 3,
-             .texture = "tile_04.png"},
+             .texture      = "tile_04.png"},
 
-        // CFFF
+            // CFFF
 
             {.family = "CFFF",
              .parts =
@@ -288,9 +287,9 @@ static tile_t
              .parts_groups = {A, B, A, A, 0, A, A, A, A},
              .blason       = 0,
              .amount       = 5,
-             .texture="tile_17.png"},
+             .texture      = "tile_17.png"},
 
-        // CFRR
+            // CFRR
 
             {.family = "CFRR",
              .parts =
@@ -308,9 +307,9 @@ static tile_t
              .parts_groups = {A, B, A, C, 0, A, D, C, A},
              .blason       = 0,
              .amount       = 3,
-             .texture="tile_20.png"},
+             .texture      = "tile_20.png"},
 
-        // CRFR
+            // CRFR
 
             {.family = "CRFR",
              .parts =
@@ -328,7 +327,7 @@ static tile_t
              .parts_groups = {A, D, A, B, 0, B, C, C, C},
              .blason       = 0,
              .amount       = 3,
-             .texture="tile_18.png"},
+             .texture      = "tile_18.png"},
 
             // CRRF
             {.family = "CRRF",
@@ -347,7 +346,7 @@ static tile_t
              .parts_groups = {A, D, A, A, 0, B, A, B, C},
              .blason       = 0,
              .amount       = 3,
-             .texture="tile_19.png"},
+             .texture      = "tile_19.png"},
 
             // CRRR
             {.family = "CRRR",
@@ -366,7 +365,7 @@ static tile_t
              .parts_groups = {G, A, G, B, 0, C, F, D, E},
              .blason       = 0,
              .amount       = 3,
-             .texture = "tile_03.png"},
+             .texture      = "tile_03.png"},
 
             // FFFF
             {.family = "FFFF",
@@ -385,7 +384,7 @@ static tile_t
              .parts_groups = {A, A, A, A, 0, A, A, A, A},
              .blason       = 0,
              .amount       = 4,
-             .texture = "tile_00.png"},
+             .texture      = "tile_00.png"},
 
             // FFFR
             {.family = "FFFR",
@@ -404,9 +403,9 @@ static tile_t
              .parts_groups = {A, A, A, A, 0, A, A, B, A},
              .blason       = 0,
              .amount       = 2,
-             .texture ="tile_06.png"},
+             .texture      = "tile_06.png"},
 
-        // FFRR
+            // FFRR
 
             {.family = "FFRR",
              .parts =
@@ -424,7 +423,7 @@ static tile_t
              .parts_groups = {A, A, A, B, 0, A, C, B, A},
              .blason       = 0,
              .amount       = 9,
-             .texture ="tile_08.png"},
+             .texture      = "tile_08.png"},
 
             // FRFR
             {.family = "FRFR",
@@ -443,9 +442,9 @@ static tile_t
              .parts_groups = {A, B, C, A, 0, C, A, B, C},
              .blason       = 0,
              .amount       = 8,
-             .texture="tile_09.png"},
+             .texture      = "tile_09.png"},
 
-        // FRRR
+            // FRRR
 
             {.family = "FRRR",
              .parts =
@@ -463,9 +462,9 @@ static tile_t
              .parts_groups = {A, A, A, B, 0, C, E, D, F},
              .blason       = 0,
              .amount       = 4,
-             .texture="tile_10.png"},
+             .texture      = "tile_10.png"},
 
-        // RRRR
+            // RRRR
 
             {.family = "RRRR",
              .parts =
@@ -483,7 +482,7 @@ static tile_t
              .parts_groups = {E, A, F, B, 0, C, G, D, H},
              .blason       = 0,
              .amount       = 1,
-             .texture = "tile_07.png"},
+             .texture      = "tile_07.png"},
 };
 
 static tile_t start_tile = {.family = "CRFR",
@@ -502,7 +501,7 @@ static tile_t start_tile = {.family = "CRFR",
                             .parts_groups = {D, A, D, B, 0, B, C, C, C},
                             .blason       = 0,
                             .amount       = 1,
-                            .texture = "tile_18.png"};
+                            .texture      = "tile_18.png"};
 
 // On supprime les macros qu'on a utilisé
 
