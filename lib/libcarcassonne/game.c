@@ -8,25 +8,22 @@
 
 return_code_t create_game(game_t *game, unsigned int players_count,
                           unsigned int ai_count, unsigned int seed,
-                          unsigned int turns_limit)
-{
-  if (game == NULL)
-  {
+                          unsigned int turns_limit) {
+  if (game == NULL) {
     return ERROR;
   }
 
   // On vérifie que le nombre de joueurs est dans [2, 5]
   // et que le nombre d'IA est inférieur au nombre de joueurs
-  if (players_count < 2 || players_count > 5 || ai_count > players_count)
-  {
+  if (players_count < 2 || players_count > 5 || ai_count > players_count) {
     return ERROR;
   }
 
   game->current_player = 0;
-  game->deck = create_deck(seed);
-  game->players_count = players_count;
-  game->turn = 0;
-  game->turns_limit = turns_limit;
+  game->deck           = create_deck(seed);
+  game->players_count  = players_count;
+  game->turn           = 0;
+  game->turns_limit    = turns_limit;
 
   game->open_tiles = create_open_tiles_list();
 
@@ -44,10 +41,8 @@ return_code_t create_game(game_t *game, unsigned int players_count,
   return SUCCESS;
 }
 
-void destroy_game(game_t *game)
-{
-  if (game == NULL)
-  {
+void destroy_game(game_t *game) {
+  if (game == NULL) {
     return;
   }
 
@@ -68,14 +63,12 @@ void destroy_game(game_t *game)
   free_deck(game->deck);
 }
 
-placed_tile_t **game_tile_at(game_t *game, int colonne, int ligne)
-{
+placed_tile_t **game_tile_at(game_t *game, int colonne, int ligne) {
   if (colonne <= -LIBCARCASSONNE_TILES_COUNT ||
       ligne <= -LIBCARCASSONNE_TILES_COUNT ||
       colonne >= LIBCARCASSONNE_TILES_COUNT ||
-      ligne >= LIBCARCASSONNE_TILES_COUNT)
-  {
-    return NULL; // Out of bounds
+      ligne >= LIBCARCASSONNE_TILES_COUNT) {
+    return NULL;  // Out of bounds
   }
 
   int zero = LIBCARCASSONNE_TILES_COUNT - 1;
@@ -87,22 +80,18 @@ placed_tile_t **game_tile_at(game_t *game, int colonne, int ligne)
 }
 
 return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
-                              tile_orientation_t orientation)
-{
-  if (game == NULL || tile == NULL)
-  {
+                              tile_orientation_t orientation) {
+  if (game == NULL || tile == NULL) {
     return ERROR;
   }
 
   placed_tile_t **tile_ref = game_tile_at(game, x, y);
 
-  if (tile_ref == NULL)
-  {
-    return OUT_OF_BOUNDS; // Out of bounds
+  if (tile_ref == NULL) {
+    return OUT_OF_BOUNDS;  // Out of bounds
   }
 
-  if (*tile_ref == NULL)
-  {
+  if (*tile_ref == NULL) {
     if (!game_is_tile_placeable(game, tile, x, y, orientation))
       return INVALID_PLACEMENT;
 
@@ -115,16 +104,16 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
     if (game_is_place_open(game, x, y))
       game_add_open_tile(&game->open_tiles, placed_tile);
 
-    if (!game_is_place_open(game, x + 1, y)) // Tuile du bas
+    if (!game_is_place_open(game, x + 1, y))  // Tuile du bas
       game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x + 1, y));
 
-    if (!game_is_place_open(game, x - 1, y)) // Tuile du haut
+    if (!game_is_place_open(game, x - 1, y))  // Tuile du haut
       game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x - 1, y));
 
-    if (!game_is_place_open(game, x, y + 1)) // Tuile de droite
+    if (!game_is_place_open(game, x, y + 1))  // Tuile de droite
       game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x, y + 1));
 
-    if (!game_is_place_open(game, x, y - 1)) // Tuile de gauche
+    if (!game_is_place_open(game, x, y - 1))  // Tuile de gauche
       game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x, y - 1));
 
     return SUCCESS; // Placed
@@ -144,9 +133,8 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int tile_part)
 
   placed_tile_t **tile_ref = game_tile_at(game, x, y);
 
-  if (tile_ref == NULL)
-  {
-    return OUT_OF_BOUNDS; // Out of bounds
+  if (tile_ref == NULL) {
+    return OUT_OF_BOUNDS;  // Out of bounds
   }
 
   if (*tile_ref != NULL)
@@ -154,22 +142,17 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int tile_part)
     (*tile_ref)->meeple[tile_part] = calloc(1, sizeof(meeple_t));
     (*tile_ref)->meeple[tile_part]->player = game->current_player;
     return SUCCESS;
-  }
-  else
-  {
+  } else {
     return NO_TILE;
   }
 }
 
-void game_print_map(game_t *game)
-{
+void game_print_map(game_t *game) {
   for (int i = -LIBCARCASSONNE_TILES_COUNT + 1; i < LIBCARCASSONNE_TILES_COUNT;
-       i++)
-  {
+       i++) {
     printf("|");
     for (int j = -LIBCARCASSONNE_TILES_COUNT + 1;
-         j < LIBCARCASSONNE_TILES_COUNT; j++)
-    {
+         j < LIBCARCASSONNE_TILES_COUNT; j++) {
       placed_tile_t **tile = game_tile_at(game, i, j);
       if (*tile == NULL)
         printf(".");
@@ -181,17 +164,14 @@ void game_print_map(game_t *game)
 }
 
 bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y,
-                            tile_orientation_t orientation)
-{
-  if (game == NULL || tile == NULL)
-    return false;
+                            tile_orientation_t orientation) {
+  if (game == NULL || tile == NULL) return false;
 
-  if (x == 0 && y == 0)
-    return true;
+  if (x == 0 && y == 0) return true;
 
-  placed_tile_t **up_tile = game_tile_at(game, x - 1, y);
-  placed_tile_t **down_tile = game_tile_at(game, x + 1, y);
-  placed_tile_t **left_tile = game_tile_at(game, x, y - 1);
+  placed_tile_t **up_tile    = game_tile_at(game, x - 1, y);
+  placed_tile_t **down_tile  = game_tile_at(game, x + 1, y);
+  placed_tile_t **left_tile  = game_tile_at(game, x, y - 1);
   placed_tile_t **right_tile = game_tile_at(game, x, y + 1);
 
   if (*up_tile == NULL && *down_tile == NULL && *left_tile == NULL &&
@@ -202,8 +182,7 @@ bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y,
       tile_get_family_face(tile, orientation,
                            LIBCARCASSONNE_TILE_ORIENTATION_NORTH) !=
           tile_get_family_face((*up_tile)->parent, (*up_tile)->orientation,
-                               LIBCARCASSONNE_TILE_ORIENTATION_SOUTH))
-  {
+                               LIBCARCASSONNE_TILE_ORIENTATION_SOUTH)) {
     return false;
   }
 
@@ -211,8 +190,7 @@ bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y,
       tile_get_family_face(tile, orientation,
                            LIBCARCASSONNE_TILE_ORIENTATION_SOUTH) !=
           tile_get_family_face((*down_tile)->parent, (*down_tile)->orientation,
-                               LIBCARCASSONNE_TILE_ORIENTATION_NORTH))
-  {
+                               LIBCARCASSONNE_TILE_ORIENTATION_NORTH)) {
     return false;
   }
 
@@ -220,8 +198,7 @@ bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y,
       tile_get_family_face(tile, orientation,
                            LIBCARCASSONNE_TILE_ORIENTATION_WEST) !=
           tile_get_family_face((*left_tile)->parent, (*left_tile)->orientation,
-                               LIBCARCASSONNE_TILE_ORIENTATION_EAST))
-  {
+                               LIBCARCASSONNE_TILE_ORIENTATION_EAST)) {
     return false;
   }
 
@@ -230,20 +207,17 @@ bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y,
                            LIBCARCASSONNE_TILE_ORIENTATION_EAST) !=
           tile_get_family_face((*right_tile)->parent,
                                (*right_tile)->orientation,
-                               LIBCARCASSONNE_TILE_ORIENTATION_WEST))
-  {
+                               LIBCARCASSONNE_TILE_ORIENTATION_WEST)) {
     return false;
   }
 
   return true;
 }
 
-void destroy_tile_list(tile_list_t *tl)
-{
+void destroy_tile_list(tile_list_t *tl) {
   tile_list_element_t *next = tl->head;
-  while (tl->head != NULL)
-  {
-    next = tl->head;
+  while (tl->head != NULL) {
+    next           = tl->head;
     tl->head->next = NULL;
     tl->head->tile = NULL;
 
@@ -253,8 +227,7 @@ void destroy_tile_list(tile_list_t *tl)
   }
 }
 
-bool game_is_place_open(game_t *game, int x, int y)
-{
+bool game_is_place_open(game_t *game, int x, int y) {
   if (game_tile_at(game, x + 1, y) != NULL &&
       game_tile_at(game, x - 1, y) != NULL &&
       game_tile_at(game, x, y + 1) != NULL &&
@@ -264,34 +237,28 @@ bool game_is_place_open(game_t *game, int x, int y)
   return true;
 }
 
-void game_add_open_tile(tile_list_t *tl, placed_tile_t *tile)
-{
+void game_add_open_tile(tile_list_t *tl, placed_tile_t *tile) {
   tile_list_element_t *head = malloc(sizeof(tile_list_element_t));
-  head->tile = tile;
-  head->next = tl->head;
-  tl->head = head;
+  head->tile                = tile;
+  head->next                = tl->head;
+  tl->head                  = head;
 
-  if (tl->tail == NULL)
-    tl->tail = head;
+  if (tl->tail == NULL) tl->tail = head;
 
   tl->size++;
 }
 
-void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile)
-{
+void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile) {
   tile_list_element_t *curr = tl->head;
-  while (curr != NULL)
-  {
-    if (curr->tile == tile)
-    {
-      if (tl->head == curr)
-        tl->head = curr->next;
+  while (curr != NULL) {
+    if (curr->tile == tile) {
+      if (tl->head == curr) tl->head = curr->next;
 
       if (tl->tail == curr) tl->tail = curr->prev;
 
       curr->prev->next = curr->next;
       curr->next->prev = curr->prev;
-      curr->tile           = NULL;
+      curr->tile       = NULL;
       free(curr);
 
       tl->size--;
@@ -300,8 +267,7 @@ void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile)
   }
 }
 
-tile_list_t create_open_tiles_list(void)
-{
+tile_list_t create_open_tiles_list(void) {
   tile_list_t tl;
   tl.head = NULL;
   tl.tail = 0;

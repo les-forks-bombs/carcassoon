@@ -42,7 +42,7 @@ static tile_t
              .amount       = 1,
              .texture="tile_11.png"},
 
-            // CCCF
+        // CCCF
 
             {.family = "CCFC",
              .parts =
@@ -80,7 +80,7 @@ static tile_t
              .amount       = 3,
              .texture="tile_12.png"},
 
-            // CCCR
+        // CCCR
 
             {.family = "CCRC",
              .parts =
@@ -118,9 +118,9 @@ static tile_t
              .amount       = 1,
              .texture="tile_14.png"},
 
-            // CCFF
+        // CCFF
 
-            {// deux villes séparées
+        {// deux villes séparées
 
              .family = "CCFF",
              .parts =
@@ -213,7 +213,7 @@ static tile_t
              .amount       = 3,
              .texture="tile_23.png"},
 
-            // CFCF
+        // CFCF
 
             {
                 .family = "FCFC",
@@ -270,7 +270,7 @@ static tile_t
              .amount       = 3,
              .texture = "tile_04.png"},
 
-            // CFFF
+        // CFFF
 
             {.family = "CFFF",
              .parts =
@@ -290,7 +290,7 @@ static tile_t
              .amount       = 5,
              .texture="tile_17.png"},
 
-            // CFRR
+        // CFRR
 
             {.family = "CFRR",
              .parts =
@@ -310,7 +310,7 @@ static tile_t
              .amount       = 3,
              .texture="tile_20.png"},
 
-            // CRFR
+        // CRFR
 
             {.family = "CRFR",
              .parts =
@@ -406,7 +406,7 @@ static tile_t
              .amount       = 2,
              .texture ="tile_06.png"},
 
-            // FFRR
+        // FFRR
 
             {.family = "FFRR",
              .parts =
@@ -445,7 +445,7 @@ static tile_t
              .amount       = 8,
              .texture="tile_09.png"},
 
-            // FRRR
+        // FRRR
 
             {.family = "FRRR",
              .parts =
@@ -465,7 +465,7 @@ static tile_t
              .amount       = 4,
              .texture="tile_10.png"},
 
-            // RRRR
+        // RRRR
 
             {.family = "RRRR",
              .parts =

@@ -3,9 +3,9 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
-#include <string.h>
 
 runtime_config_t parse_options(int argc, char* argv[]) {
   int c;
@@ -33,10 +33,10 @@ runtime_config_t parse_options(int argc, char* argv[]) {
     switch (c) {
       case 'm':
         if (strcmp("sdl", optarg) == 0) {
-            config.mode = CARCASSONNE_MODE_SDL;
+          config.mode = CARCASSONNE_MODE_SDL;
         }
         if (strcmp("cli", optarg) == 0) {
-            config.mode = CARCASSONNE_MODE_CLI;
+          config.mode = CARCASSONNE_MODE_CLI;
         }
 
         break;
@@ -66,9 +66,9 @@ runtime_config_t parse_options(int argc, char* argv[]) {
 }
 
 char* validate_options(runtime_config_t* config) {
-    if (config->ai >= config->players) {
-        return "Le nombre d'IA est supérieur au nombre de joueurs!";
-    }
+  if (config->ai >= config->players) {
+    return "Le nombre d'IA est supérieur au nombre de joueurs!";
+  }
 
-    return NULL;
+  return NULL;
 }
