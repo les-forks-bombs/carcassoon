@@ -66,8 +66,7 @@ typedef struct placed_tile_group {
   meeple_t* meeple;
 } placed_tile_group_t;
 
-typedef struct placed_face_groups
-{
+typedef struct placed_face_groups {
   placed_tile_group_t* face[3];
 } placed_face_groups_t;
 
@@ -82,7 +81,6 @@ typedef struct placed_tile {
   tile_orientation_t orientation;
 } placed_tile_t;
 
-
 /// @brief Récupère une famille de la tuile en fonction de l'orientation et de
 /// la face de connexion
 /// @param tile Le modèle de tuile à utiliser
@@ -90,8 +88,9 @@ typedef struct placed_tile {
 /// @param connexion_face La face de connexion
 /// @return La famille de la face de connexion
 /// @related tile_t
-tile_part_type_t tile_get_family_face(tile_t* tile, tile_orientation_t orientation,
-                          tile_orientation_t connexion_face);
+tile_part_type_t tile_get_family_face(tile_t*            tile,
+                                      tile_orientation_t orientation,
+                                      tile_orientation_t connexion_face);
 
 return_code_t placed_tile_create(placed_tile_t* placed_tile, tile_t* parent,
                                  tile_orientation_t orientation);
@@ -99,8 +98,6 @@ void          placed_tile_destroy(placed_tile_t*);
 
 tile_orientation_t tile_orientation_invert(tile_orientation_t orientation);
 
-return_code_t tile_get_face(
-  placed_face_groups_t* ret,
-  placed_tile_t*     tile,
-                                            tile_orientation_t connexion_face);
+return_code_t tile_get_face(placed_face_groups_t* ret, placed_tile_t* tile,
+                            tile_orientation_t connexion_face);
 #endif

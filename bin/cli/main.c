@@ -21,10 +21,12 @@ int main(void) {
   tile = find_tile(&game, "CFCF");
 
   // en bas
-  printf("%d\n", game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST));
+  printf("%d\n", game_place_tile(&game, tile, 1, 0,
+                                 LIBCARCASSONNE_TILE_ORIENTATION_WEST));
 
   // en haut
-  printf("%d\n", game_place_tile(&game, tile, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH));
+  printf("%d\n", game_place_tile(&game, tile, -1, 0,
+                                 LIBCARCASSONNE_TILE_ORIENTATION_NORTH));
 
   game_print_detail(&game, 0, 0, 3);
 
