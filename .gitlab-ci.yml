@@ -81,6 +81,7 @@ stages:
 
 'Lint':
   stage: test
+  needs: []
   script:
     - make -s check
 
