@@ -48,7 +48,7 @@ out/$(PROFILE)/$(TARGET):
 	@mkdir -p out/$(PROFILE)/
 	@cp -r $(BUILD_DIR)/out $@
 
-clean:
+clean: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@
 	@$(MAKE) -C bin -f build.mk $@
 	@$(MAKE) -C $(BINS_DIR)/tests -f test.mk $@ || true
