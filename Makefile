@@ -21,7 +21,7 @@ CC	   := $(CC)
 
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
 CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic  # General building flags
-LFLAGS += -L$(LIBS_DIR)
+LFLAGS += -L$(LIBS_DIR) -lm
 
 ifeq "$(PROFILE)" "debug"
 	ifeq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
@@ -39,6 +39,7 @@ export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TA
 build: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@
 	@$(MAKE) -C bin -f build.mk $@
+	@cp -r assets/ $(BINS_DIR)
 
 cli sdl: build
 	$(BINS_DIR)/$@

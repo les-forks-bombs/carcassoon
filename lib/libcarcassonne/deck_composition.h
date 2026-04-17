@@ -464,7 +464,8 @@ static tile_t start_tile = {.family = "CRFR",
                                 },
                             .parts_groups = {D, A, D, B, 0, B, C, C, C},
                             .blason       = 0,
-                            .amount       = 1};
+                            .amount       = 1,
+                            .texture      = "tile_18.png"};
 
 // On supprime les macros qu'on a utilisé
 
