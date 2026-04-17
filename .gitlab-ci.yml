@@ -38,12 +38,27 @@ stages:
     matrix:
       - TARGET: *targets
         PROFILE: *profiles
-  
+
+  needs:
+    - job: 'Build'
+      parallel:
+        matrix:
+          - TARGET: ['$[[ matrix.TARGET ]]']
+            PROFILE: ['$[[ matrix.PROFILE ]]']
+
   script:
     - run-clang-tidy -p out/$PROFILE/$TARGET/
 
 'Test':
   stage: test
+
+  needs:
+    - job: 'Build'
+      parallel:
+        matrix:
+          - TARGET: ['$[[ matrix.TARGET ]]']
+            PROFILE: ['$[[ matrix.PROFILE ]]']
+
   parallel:
     matrix:
       - TARGET: *targets
