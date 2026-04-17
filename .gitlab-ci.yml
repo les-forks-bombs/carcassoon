@@ -62,7 +62,12 @@ stages:
     matrix:
       - TARGET: *targets
         PROFILE: *profiles
-  
+  needs:
+    - job: 'Build'
+      parallel:
+        matrix:
+          - TARGET: ['$[[ matrix.TARGET ]]']
+            PROFILE: ['$[[ matrix.PROFILE ]]']
   script:
     - make -s test TARGET=$TARGET PROFILE=$PROFILE
 
@@ -81,6 +86,7 @@ stages:
 
 'Docs':
   stage: docs
+  dependencies: []
   script:
     - make docs
   artifacts:
