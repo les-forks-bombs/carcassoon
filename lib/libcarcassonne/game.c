@@ -52,11 +52,9 @@ void destroy_game(game_t *game) {
   for (int i = -LIBCARCASSONNE_TILES_COUNT + 1; i < LIBCARCASSONNE_TILES_COUNT;
        i++)
     for (int j = -LIBCARCASSONNE_TILES_COUNT + 1;
-         j < LIBCARCASSONNE_TILES_COUNT; j++)
-    {
+         j < LIBCARCASSONNE_TILES_COUNT; j++) {
       placed_tile_t **tile = game_tile_at(game, i, j);
-      if (*tile != NULL)
-        free(*tile);
+      if (*tile != NULL) free(*tile);
     }
 
   free(game->map);
@@ -96,8 +94,8 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
       return INVALID_PLACEMENT;
 
     placed_tile_t *placed_tile = calloc(1, sizeof(placed_tile_t));
-    placed_tile->parent = tile;
-    placed_tile->orientation = orientation;
+    placed_tile->parent        = tile;
+    placed_tile->orientation   = orientation;
 
     *tile_ref = placed_tile;
 
@@ -116,18 +114,14 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
     if (!game_is_place_open(game, x, y - 1))  // Tuile de gauche
       game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x, y - 1));
 
-    return SUCCESS; // Placed
-  }
-  else
-  {
-    return NOT_FREE; // not Free
+    return SUCCESS;  // Placed
+  } else {
+    return NOT_FREE;  // not Free
   }
 }
 
-return_code_t game_place_meeple(game_t *game, int x, int y, int tile_part)
-{
-  if (game == NULL)
-  {
+return_code_t game_place_meeple(game_t *game, int x, int y, int tile_part) {
+  if (game == NULL) {
     return ERROR;
   }
 
@@ -137,9 +131,8 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int tile_part)
     return OUT_OF_BOUNDS;  // Out of bounds
   }
 
-  if (*tile_ref != NULL)
-  {
-    (*tile_ref)->meeple[tile_part] = calloc(1, sizeof(meeple_t));
+  if (*tile_ref != NULL) {
+    (*tile_ref)->meeple[tile_part]         = calloc(1, sizeof(meeple_t));
     (*tile_ref)->meeple[tile_part]->player = game->current_player;
     return SUCCESS;
   } else {
