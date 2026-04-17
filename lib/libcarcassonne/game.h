@@ -10,45 +10,43 @@
 /// @brief Élement dans la liste chaîné list_tile_t
 typedef struct tile_list_element {
   /// @brief La tuile placée
-  placed_tile_t* tile;
+  placed_tile_t *tile;
   /// @brief Le prochain élément de la liste
-  struct tile_list_element* next;
+  struct tile_list_element *next;
   /// @brief L'élément précédent de la liste
-  struct tile_list_element* prev;
+  struct tile_list_element *prev;
 } tile_list_element_t;
 
 /// @brief Structure de liste chainée utilisée pour conserver toutes les tuiles
 /// avec au moins 1 côté disponible
-typedef struct tile_list
-{
-    /// @brief Tête de la liste
-    tile_list_element_t *head;
-    /// @brief Queue de la liste
-    tile_list_element_t *tail;
-    /// @brief Nombre d'éléments de la liste
-    unsigned int size;
+typedef struct tile_list {
+  /// @brief Tête de la liste
+  tile_list_element_t *head;
+  /// @brief Queue de la liste
+  tile_list_element_t *tail;
+  /// @brief Nombre d'éléments de la liste
+  unsigned int size;
 } tile_list_t;
 
 /// @brief Représente une partie
-typedef struct game
-{
-    /// @brief Index du joueur actuel
-    unsigned int current_player;
-    /// @brief Nombre total de joueurs dans la partie
-    unsigned int players_count;
-    /// @brief Tableau avec la liste des joueurs
-    player_t players[LIBCARCASSONNE_MAX_PLAYERS];
+typedef struct game {
+  /// @brief Index du joueur actuel
+  unsigned int current_player;
+  /// @brief Nombre total de joueurs dans la partie
+  unsigned int players_count;
+  /// @brief Tableau avec la liste des joueurs
+  player_t players[LIBCARCASSONNE_MAX_PLAYERS];
 
-    /// @brief Index du tour courrant
-    unsigned int turn;
-    /// @brief Nombre de tours maximum de la partie
-    /// @details Si turns_limit = 0, la partie n'a pas de limite de tour.
-    unsigned int turns_limit;
+  /// @brief Index du tour courrant
+  unsigned int turn;
+  /// @brief Nombre de tours maximum de la partie
+  /// @details Si turns_limit = 0, la partie n'a pas de limite de tour.
+  unsigned int turns_limit;
 
   /// @brief Instance du deck pour la partie
   deck_t deck;
   /// @brief Pointeur vers le premier élément de la map
-  placed_tile_t** map;
+  placed_tile_t **map;
   /// @brief Instance de la liste des tuiles
   tile_list_t open_tiles;
 
@@ -79,10 +77,10 @@ void destroy_game(game_t *game);
 /// @related game_t
 placed_tile_t **game_tile_at(game_t *game, int x, int y);
 
-void          game_print_map(game_t*);
-void          game_print_detail(game_t*, int x, int y, int zoom);
+void game_print_map(game_t *);
+void game_print_detail(game_t *, int x, int y, int zoom);
 
-return_code_t game_place_tile(game_t*, tile_t* tile, int x, int y,
+return_code_t game_place_tile(game_t *, tile_t *tile, int x, int y,
                               tile_orientation_t orientation);
 
 /// @brief Détermine si une tuile peut être placé à l'emplacement désigné
