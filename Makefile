@@ -69,4 +69,10 @@ req:
 docs:
 	doxygen
 
+lint:
+	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format -i
+
+check:
+	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format --dry-run --Werror
+
 .PHONY: clean build test docs
