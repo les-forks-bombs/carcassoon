@@ -4,12 +4,12 @@
 #include <libcarcassonne/extension.h>
 #include <unistd.h>
 
-typedef enum runtime_mode {
+typedef enum options_mode {
   CARCASSONNE_MODE_SDL = 0,
   CARCASSONNE_MODE_CLI = 1,
 } options_mode_t;
 
-typedef struct runtime_config {
+typedef struct options {
   options_mode_t   mode;
   unsigned int     players;
   unsigned int     seed;
