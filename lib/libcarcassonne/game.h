@@ -51,7 +51,7 @@ typedef struct game {
 /// @param options Les options de la partie
 /// @return Status de la création du jeu
 /// @related game_t
-return_code_t create_game(game_t *game, const options_t *options);
+return_code_t create_game(game_t *game, options_t *options);
 
 /// @brief Détruis & dé-alloue le jeu
 /// @param game Le jeu à dé-allouer

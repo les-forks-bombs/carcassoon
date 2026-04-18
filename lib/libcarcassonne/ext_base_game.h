@@ -483,12 +483,17 @@ static const extension_tiles_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
             sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]),
     .tiles = &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]};
 
+static const extension_list_t LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS = {
+    .size = 0, .extensions = NULL};
+
 static const extension_t LIBCARCASSONNE_EXT_BASE_GAME = {
     .name                 = "Base Game",
     .hooks                = &LIBCARCASSONNE_EXT_BASE_GAME_HOOKS,
     .tiles                = &LIBCARCASSONNE_EXT_BASE_GAME_TILES,
     .start_tiles          = &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES,
-    .start_tiles_priority = 0};
+    .start_tiles_priority = 0,
+    .required             = &LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS,
+};
 
 #undef VILLAGE
 #undef FIELD
