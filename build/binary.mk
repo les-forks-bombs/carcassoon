@@ -18,7 +18,5 @@ test:: $(PROG)
 
 .PHONY: clean
 clean::
-	@$(RM) -f $(OBJS) $(PROG)
-	@$(RM) -rf $(PROG){,.exe}
-	@echo "    RM    $(notdir $(OBJS))"
+	@$(RM) -f $(PROG){,.exe}
 	@echo "    RM    $(notdir $(PROG))"

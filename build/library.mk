@@ -11,7 +11,6 @@ test:: $(ARCHIVE)
 
 .PHONY: clean
 clean::
-	@$(RM) -f $(ARCHIVE) $(OBJS)
+	@$(RM) -f $(ARCHIVE)
 	@echo "    RM    $(notdir $(ARCHIVE))"
-	@echo "    RM    $(notdir $(OBJS))"
 	@$(MAKE) -C tests -f build.mk clean
