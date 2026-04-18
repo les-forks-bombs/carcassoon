@@ -266,14 +266,14 @@ void tile_get_family_face_works(void** state) {
   tile_t tile = {.amount       = 1,
                  .blason       = 0,
                  .family       = "AAAA",
-                 .parts        = {0, 1, 2, 3, 4, 5, 6, 7, 8},
-                 .parts_groups = {1, 2, 3, 4, 5, 6, 7, 8, 9}};
+                 .parts        = {0, 1, 2, 3, 4, 5, 0, 1, 2},
+                 .parts_groups = {1, 2, 3, 4, 5, 6, 1, 2, 7}};
 
   // Base orientation north
 
   // 0 1 2
   // 3 4 5
-  // 6 7 8
+  // 0 1 2
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
                            LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
@@ -287,16 +287,16 @@ void tile_get_family_face_works(void** state) {
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
                            LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
-      7);
+      1);
 
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
                            LIBCARCASSONNE_TILE_ORIENTATION_WEST),
       3);
 
-  // 6 3 0
-  // 7 4 1
-  // 8 5 2
+  // 0 3 0
+  // 1 4 1
+  // 2 5 2
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
                            LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
@@ -315,15 +315,15 @@ void tile_get_family_face_works(void** state) {
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
                            LIBCARCASSONNE_TILE_ORIENTATION_WEST),
-      7);
+      1);
 
-  // 8 7 6
+  // 2 1 0
   // 5 4 3
   // 2 1 0
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
                            LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
-      7);
+      1);
 
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
@@ -340,9 +340,9 @@ void tile_get_family_face_works(void** state) {
                            LIBCARCASSONNE_TILE_ORIENTATION_WEST),
       5);
 
-  // 2 5 8
-  // 1 4 7
-  // 0 3 6
+  // 2 5 2
+  // 1 4 1
+  // 0 3 0
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
                            LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
@@ -351,7 +351,7 @@ void tile_get_family_face_works(void** state) {
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
                            LIBCARCASSONNE_TILE_ORIENTATION_EAST),
-      7);
+      1);
 
   assert_int_equal(
       tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
