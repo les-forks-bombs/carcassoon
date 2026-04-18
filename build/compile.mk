@@ -1,4 +1,4 @@
-OBJ_DIR := $(OBJ_DIR)/$(shell realpath -s --relative-to="$(MAKE_DIR)" "$(shell pwd)")
+OBJ_DIR := $(OBJ_DIR)$(subst $(MAKE_DIR),,$(CURDIR))
 
 SRCS := $(wildcard *.c)
 OBJS := $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
