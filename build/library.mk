@@ -14,11 +14,11 @@ $(OBJS): $(OUT_OBJ_DIR)/%.o: %.c
 
 -include $(OBJS:.o=.d)
 
-build: $(LIB)
-	@$(MAKE) -C tests -f build.mk build
+build:: $(LIB)
+test:: $(LIB)
 
 .PHONY: clean
-clean:
+clean::
 	@$(RM) -f $(LIB) $(OBJS)
 	@echo "    RM    $(notdir $(OBJS))"
 	@echo "    RM    $(notdir $(LIB))"

@@ -15,8 +15,6 @@ $(PROG): $(OBJS) $(LLIBS:%=$(LIBS_DIR)/lib%.a)
 	esac
 	@echo "    LD    $(notdir $@)"
 
-
-
 $(OBJS): $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
@@ -24,10 +22,11 @@ $(OBJS): $(OBJ_DIR)/%.o: %.c
 
 -include $(OBJS:.o=.d)
 
-build: $(PROG)
+build:: $(PROG)
+test:: $(PROG)
 
 .PHONY: clean
-clean:
+clean::
 	@$(RM) -f $(OBJS) $(PROG)
 	@$(RM) -rf $(PROG){,.exe}
 	@echo "    RM    $(notdir $(OBJS))"
