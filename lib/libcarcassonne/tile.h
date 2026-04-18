@@ -1,5 +1,4 @@
-#ifndef H_LIBCARCASSONNE_TILE
-#define H_LIBCARCASSONNE_TILE
+#pragma once
 
 #include <libcarcassonne/consts.h>
 #include <stdbool.h>
@@ -57,6 +56,11 @@ typedef struct tile {
   char* texture;
 } tile_t;
 
+typedef struct extension_tiles {
+  const unsigned int size;
+  const tile_t*      tiles;
+} extension_tiles_t;
+
 /// @brief Récupère une famille de la tuile en fonction de l'orientation et de
 /// la face de connexion
 /// @param tile Le modèle de tuile à utiliser
@@ -68,5 +72,3 @@ tile_part_type_t   tile_get_family_face(const tile_t*      tile,
                                         tile_orientation_t orientation,
                                         tile_orientation_t connexion_face);
 tile_orientation_t tile_orientation_invert(tile_orientation_t orientation);
-
-#endif

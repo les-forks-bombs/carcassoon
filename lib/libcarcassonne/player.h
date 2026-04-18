@@ -1,5 +1,4 @@
-#ifndef H_LIBCARCASSONNE_PLAYER
-#define H_LIBCARCASSONNE_PLAYER
+#pragma once
 
 enum player_type {
   LIBCARCASSONNE_PLAYER_AI    = 0,
@@ -14,5 +13,3 @@ typedef struct player {
 } player_t;
 
 player_t create_player(player_type_t type);
-
-#endif

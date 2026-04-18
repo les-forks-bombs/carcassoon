@@ -13,6 +13,11 @@ const static options_t options = {
     .seed      = 500,
     .ai        = 0,
     .max_turns = 0,
+    .extensions =
+        {
+            .extensions = &LIBCARCASSONNE_EXT_BASE_GAME,
+            .size       = 1,
+        },
 };
 
 /* Vérifie l'instanciation d'une game */

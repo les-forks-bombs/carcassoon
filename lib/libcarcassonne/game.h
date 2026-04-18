@@ -1,5 +1,4 @@
-#ifndef H_LIBCARCASSONNE_GAME
-#define H_LIBCARCASSONNE_GAME
+#pragma once
 
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/deck.h>
@@ -37,7 +36,7 @@ typedef struct game {
   /// @brief Tableau avec la liste des joueurs
   player_t players[LIBCARCASSONNE_MAX_PLAYERS];
   /// @brief Instance du deck pour la partie
-  deck_t deck;
+  struct deck deck;
   /// @brief Pointeur vers le premier élément de la map
   placed_tile_t **map;
   /// @brief Instance de la liste des tuiles
@@ -104,5 +103,3 @@ void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile);
 /// @brief Instancie une liste chaînée de tuile
 /// @return Une liste chaînée de tile vide
 tile_list_t create_open_tiles_list(void);
-
-#endif
