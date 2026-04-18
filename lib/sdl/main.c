@@ -5,7 +5,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <stdlib.h>
 
-#include "test_affichage.h"
+#include <sdl/test_affichage.h>
 
 #define WINDOW_WIDTH              800
 #define WINDOW_HEIGHT             500

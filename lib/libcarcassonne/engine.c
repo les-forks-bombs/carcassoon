@@ -1,7 +1,6 @@
+#include <libcarcassonne/consts.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/game.h>
-
-#include "libcarcassonne/consts.h"
 
 return_code_t create_engine(engine_t *engine, options_t options) {
   if (engine == NULL) {
