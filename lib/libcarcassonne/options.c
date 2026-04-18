@@ -1,20 +1,17 @@
-#include "options.h"
-
-#include <getopt.h>
+#include <libcarcassonne/options.h>
+#include <time.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <unistd.h>
 
-runtime_config_t parse_options(int argc, char* argv[]) {
+options_t parse_options(int argc, char* argv[]) {
   int c;
 
-  runtime_config_t config = {.ai        = 0,
-                             .max_turns = 0,
-                             .seed      = time(NULL),
-                             .players   = 3,
-                             .mode      = CARCASSONNE_MODE_SDL};
+  options_t config = {.ai        = 0,
+                      .max_turns = 0,
+                      .seed      = time(NULL),
+                      .players   = 3,
+                      .mode      = CARCASSONNE_MODE_SDL};
 
   while (1) {
     int           option_index = 0;
@@ -65,7 +62,7 @@ runtime_config_t parse_options(int argc, char* argv[]) {
   return config;
 }
 
-char* validate_options(runtime_config_t* config) {
+char* validate_options(options_t* config) {
   if (config->ai >= config->players) {
     return "Le nombre d'IA est supérieur au nombre de joueurs!";
   }

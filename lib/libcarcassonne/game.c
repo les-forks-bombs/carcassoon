@@ -6,24 +6,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-return_code_t create_game(game_t *game, unsigned int players_count,
-                          unsigned int ai_count, unsigned int seed,
-                          unsigned int turns_limit) {
+#include "libcarcassonne/options.h"
+
+return_code_t create_game(game_t *game, options_t options) {
   if (game == NULL) {
     return ERROR;
   }
 
-  // On vérifie que le nombre de joueurs est dans [2, 5]
-  // et que le nombre d'IA est inférieur au nombre de joueurs
-  if (players_count < 2 || players_count > 5 || ai_count > players_count) {
+  if (validate_options(&options) != NULL) {
     return ERROR;
   }
 
   game->current_player = 0;
-  game->deck           = create_deck(seed);
-  game->players_count  = players_count;
-  game->turn           = 0;
-  game->turns_limit    = turns_limit;
+  game->deck           = create_deck(options.seed);
+  game->options        = options;
 
   game->open_tiles = create_open_tiles_list();
 
@@ -34,9 +30,10 @@ return_code_t create_game(game_t *game, unsigned int players_count,
   game->map = calloc(largeur * largeur, sizeof(placed_tile_t *));
 
   // on instancie les joueurs
-  for (unsigned int i = 0; i < players_count; i++)
-    game->players[i] = create_player(i > ai_count ? LIBCARCASSONNE_PLAYER_HUMAN
-                                                  : LIBCARCASSONNE_PLAYER_AI);
+  for (unsigned int i = 0; i < game->options.players; i++)
+    game->players[i] =
+        create_player(i > game->options.ai ? LIBCARCASSONNE_PLAYER_HUMAN
+                                           : LIBCARCASSONNE_PLAYER_AI);
 
   return SUCCESS;
 }
@@ -320,5 +317,3 @@ tile_list_t create_open_tiles_list(void) {
 
   return tl;
 }
-
-void game_print_detail(game_t *, int x, int y, int zoom) {}

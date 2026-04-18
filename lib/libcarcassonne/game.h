@@ -7,6 +7,7 @@
 #include <libcarcassonne/player.h>
 #include <libcarcassonne/tile.h>
 #include <libcarcassonne/vector2d.h>
+#include <libcarcassonne/options.h>
 
 /// @brief Élement dans la liste chaîné list_tile_t
 typedef struct tile_list_element {
@@ -33,17 +34,8 @@ typedef struct tile_list {
 typedef struct game {
   /// @brief Index du joueur actuel
   unsigned int current_player;
-  /// @brief Nombre total de joueurs dans la partie
-  unsigned int players_count;
   /// @brief Tableau avec la liste des joueurs
   player_t players[LIBCARCASSONNE_MAX_PLAYERS];
-
-  /// @brief Index du tour courrant
-  unsigned int turn;
-  /// @brief Nombre de tours maximum de la partie
-  /// @details Si turns_limit = 0, la partie n'a pas de limite de tour.
-  unsigned int turns_limit;
-
   /// @brief Instance du deck pour la partie
   deck_t deck;
   /// @brief Pointeur vers le premier élément de la map
@@ -51,20 +43,16 @@ typedef struct game {
   /// @brief Instance de la liste des tuiles
   tile_list_t open_tiles;
 
+  options_t options;
   // todo: implémenter une liste de meeples pour garder les noeuds en mémoire
 } game_t;
 
 /// @brief Initialise un objet `game` en mémoire
 /// @param game L'emplacement ou créer le jeu
-/// @param players_count Le nombre de joueurs
-/// @param ai_count Le nombre d'IAs
-/// @param seed La seed pour le deck
-/// @param turns_limit La limite du nombre de tours
+/// @param options Les options de la partie
 /// @return Status de la création du jeu
 /// @related game_t
-return_code_t create_game(game_t *game, unsigned int players_count,
-                          unsigned int ai_count, unsigned int seed,
-                          unsigned int turns_limit);
+return_code_t create_game(game_t *game, options_t options);
 
 /// @brief Détruis & dé-alloue le jeu
 /// @param game Le jeu à dé-allouer

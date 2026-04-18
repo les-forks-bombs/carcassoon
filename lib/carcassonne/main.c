@@ -1,10 +1,10 @@
-#include <libcarcassonne/libcarcassonne.h>
+#include <libcarcassonne/game.h>
 #include <stdio.h>
+#include "libcarcassonne/options.h"
 
-#include "options.h"
 
 int main(int argc, char* argv[]) {
-  runtime_config_t config = parse_options(argc, argv);
+  options_t config = parse_options(argc, argv);
 
   char* reason = validate_options(&config);
   if (reason != NULL) {
@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
   }
 
   game_t game;
-  create_game(&game, config.players, config.ai, config.seed, config.max_turns);
+  create_game(&game, config);
 
   switch (config.mode) {
     case CARCASSONNE_MODE_CLI:
