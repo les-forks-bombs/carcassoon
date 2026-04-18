@@ -1,3 +1,4 @@
+#include <libcarcassonne/consts.h>
 #include <libcarcassonne/options.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,6 +66,14 @@ options_t parse_options(int argc, char* argv[]) {
 char* validate_options(options_t* config) {
   if (config->ai >= config->players) {
     return "Le nombre d'IA est supérieur au nombre de joueurs!";
+  }
+
+  if (config->players < 2) {
+    return "Le nombre de joueurs doit être au moins égal à 2!";
+  }
+
+  if (config->players > LIBCARCASSONNE_MAX_PLAYERS) {
+    return "Le nombre de joueurs doit être inférieur ou égal à 5!";
   }
 
   return NULL;

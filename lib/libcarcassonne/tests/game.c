@@ -31,7 +31,15 @@ void game_do_not_build_because_game_is_null(void** state) {
 void game_do_not_build_because_nb_players_too_low(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), ERROR);
+
+  options_t t = {
+      .mode      = CARCASSONNE_MODE_CLI,
+      .players   = 0,
+      .seed      = 500,
+      .ai        = 0,
+      .max_turns = 0,
+  };
+  assert_int_equal(create_game(&game, t), ERROR);
 }
 
 void game_do_not_build_because_nb_players_too_high(void** state) {
