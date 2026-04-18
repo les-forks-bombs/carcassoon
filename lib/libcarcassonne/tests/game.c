@@ -19,13 +19,13 @@ const static options_t options = {
 void game_builds(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
   destroy_game(&game);
 }
 
 void game_do_not_build_because_game_is_null(void** state) {
   (void)state;
-  assert_int_equal(create_game(NULL, options), ERROR);
+  assert_int_equal(create_game(NULL, &options), ERROR);
 }
 
 void game_do_not_build_because_nb_players_too_low(void** state) {
@@ -39,7 +39,7 @@ void game_do_not_build_because_nb_players_too_low(void** state) {
       .ai        = 0,
       .max_turns = 0,
   };
-  assert_int_equal(create_game(&game, t), ERROR);
+  assert_int_equal(create_game(&game, &t), ERROR);
 }
 
 void game_do_not_build_because_nb_players_too_high(void** state) {
@@ -52,7 +52,7 @@ void game_do_not_build_because_nb_players_too_high(void** state) {
       .max_turns = 0,
   };
   game_t game;
-  assert_int_equal(create_game(&game, t), ERROR);
+  assert_int_equal(create_game(&game, &t), ERROR);
 }
 
 void game_do_not_build_because_nb_ia_too_high(void** state) {
@@ -65,7 +65,7 @@ void game_do_not_build_because_nb_ia_too_high(void** state) {
       .max_turns = 0,
   };
   game_t game;
-  assert_int_equal(create_game(&game, t), ERROR);
+  assert_int_equal(create_game(&game, &t), ERROR);
 }
 
 /** game_tile_at */
@@ -73,7 +73,7 @@ void game_do_not_build_because_nb_ia_too_high(void** state) {
 void game_tile_at_works(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   placed_tile_t** tile = game_tile_at(&game, -71, -71);
   assert_ptr_equal(tile, &game.map[0]);
@@ -84,7 +84,7 @@ void game_tile_at_works(void** state) {
 void game_tile_at_out_of_bounds(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   placed_tile_t** placed_tile = game_tile_at(&game, -200, 200);
   assert_ptr_equal(placed_tile, NULL);
@@ -97,7 +97,7 @@ void game_tile_at_out_of_bounds(void** state) {
 void game_place_tile_works(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   tile_t* tile = deck_pick(&game.deck);
   assert_ptr_not_equal(tile, NULL);
@@ -112,7 +112,7 @@ void game_place_tile_works(void** state) {
 void game_place_tile_do_not_work_because_game_is_null(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   tile_t* tile = deck_pick(&game.deck);
   assert_ptr_not_equal(tile, NULL);
@@ -127,7 +127,7 @@ void game_place_tile_do_not_work_because_game_is_null(void** state) {
 void game_place_tile_do_not_work_because_tile_is_null(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   assert_int_equal(
       game_place_tile(&game, NULL, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
@@ -139,7 +139,7 @@ void game_place_tile_do_not_work_because_tile_is_null(void** state) {
 void game_place_tile_do_not_work_because_tile_cannot_be_replaced(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   tile_t* tile = deck_pick(&game.deck);
   assert_ptr_not_equal(tile, NULL);
@@ -158,7 +158,7 @@ void game_place_tile_do_not_work_because_position_is_out_of_bounds(
     void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   tile_t* tile = deck_pick(&game.deck);
   assert_ptr_not_equal(tile, NULL);
@@ -173,7 +173,7 @@ void game_place_tile_do_not_work_because_position_is_out_of_bounds(
 void game_place_tile_do_not_work_because_position_is_taken(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   tile_t* tile = deck_pick(&game.deck);
   assert_ptr_not_equal(tile, NULL);
@@ -200,7 +200,7 @@ tile_t* find_tile(game_t* game, char* family) {
 void game_place_multiple_tile_works(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   tile_t* tile = deck_pick(&game.deck);
   assert_ptr_not_equal(tile, NULL);
@@ -270,7 +270,7 @@ void game_place_multiple_tile_works(void** state) {
 void game_place_tile_do_not_work_because_tiles_are_incompatible(void** state) {
   (void)state;
   game_t game;
-  assert_int_equal(create_game(&game, options), SUCCESS);
+  assert_int_equal(create_game(&game, &options), SUCCESS);
 
   tile_t* tile = deck_pick(&game.deck);
   assert_ptr_not_equal(tile, NULL);

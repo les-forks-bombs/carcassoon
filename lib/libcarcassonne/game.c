@@ -6,17 +6,17 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-return_code_t create_game(game_t *game, options_t options) {
+return_code_t create_game(game_t *game, const options_t *options) {
   if (game == NULL) {
     return ERROR;
   }
 
-  if (validate_options(&options) != NULL) {
+  if (validate_options(options) != NULL) {
     return ERROR;
   }
 
   game->current_player = 0;
-  game->deck           = create_deck(options.seed);
+  game->deck           = create_deck(options->seed);
   game->options        = options;
 
   game->open_tiles = create_open_tiles_list();
@@ -28,10 +28,10 @@ return_code_t create_game(game_t *game, options_t options) {
   game->map = calloc(largeur * largeur, sizeof(placed_tile_t *));
 
   // on instancie les joueurs
-  for (unsigned int i = 0; i < game->options.players; i++)
+  for (unsigned int i = 0; i < game->options->players; i++)
     game->players[i] =
-        create_player(i > game->options.ai ? LIBCARCASSONNE_PLAYER_HUMAN
-                                           : LIBCARCASSONNE_PLAYER_AI);
+        create_player(i > game->options->ai ? LIBCARCASSONNE_PLAYER_HUMAN
+                                            : LIBCARCASSONNE_PLAYER_AI);
 
   return SUCCESS;
 }
@@ -75,7 +75,7 @@ placed_tile_t **game_tile_at(game_t *game, int colonne, int ligne) {
   return &game->map[index];
 }
 
-return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
+return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
                               tile_orientation_t orientation) {
   if (game == NULL || tile == NULL) {
     return ERROR;
@@ -185,7 +185,7 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group) {
   }
 }
 
-bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y,
+bool game_is_tile_placeable(game_t *game, const tile_t *tile, int x, int y,
                             tile_orientation_t orientation) {
   if (game == NULL || tile == NULL) return false;
 

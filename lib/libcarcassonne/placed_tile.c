@@ -4,7 +4,7 @@
 #include <string.h>
 
 return_code_t placed_tile_get_face(placed_face_groups_t* ret,
-                                   placed_tile_t*        tile,
+                                   const placed_tile_t*  tile,
                                    tile_orientation_t    connexion_face) {
   if (tile == NULL) return ERROR;
 
@@ -23,7 +23,8 @@ return_code_t placed_tile_get_face(placed_face_groups_t* ret,
   return SUCCESS;
 }
 
-return_code_t placed_tile_create(placed_tile_t* placed_tile, tile_t* parent,
+return_code_t placed_tile_create(placed_tile_t*     placed_tile,
+                                 const tile_t*      parent,
                                  tile_orientation_t orientation) {
   if (placed_tile == NULL || parent == NULL) return ERROR;
 

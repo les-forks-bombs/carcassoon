@@ -43,7 +43,7 @@ typedef struct game {
   /// @brief Instance de la liste des tuiles
   tile_list_t open_tiles;
 
-  options_t options;
+  const options_t *options;
   // todo: implémenter une liste de meeples pour garder les noeuds en mémoire
 } game_t;
 
@@ -52,7 +52,7 @@ typedef struct game {
 /// @param options Les options de la partie
 /// @return Status de la création du jeu
 /// @related game_t
-return_code_t create_game(game_t *game, options_t options);
+return_code_t create_game(game_t *game, const options_t *options);
 
 /// @brief Détruis & dé-alloue le jeu
 /// @param game Le jeu à dé-allouer
@@ -66,7 +66,7 @@ void destroy_game(game_t *game);
 /// @related game_t
 placed_tile_t **game_tile_at(game_t *game, int x, int y);
 
-return_code_t game_place_tile(game_t *, tile_t *tile, int x, int y,
+return_code_t game_place_tile(game_t *, const tile_t *tile, int x, int y,
                               tile_orientation_t orientation);
 
 /// @brief Détermine si une tuile peut être placé à l'emplacement désigné
@@ -77,7 +77,7 @@ return_code_t game_place_tile(game_t *, tile_t *tile, int x, int y,
 /// @param orientation L'orientation de la tuile
 /// @return Un booléen représentant la capacité à placer la tuile à cet endroit
 /// @related game_t
-bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y,
+bool game_is_tile_placeable(game_t *game, const tile_t *tile, int x, int y,
                             tile_orientation_t orientation);
 
 /// @brief Permet de libérer la mémoire liée à une liste de tuile

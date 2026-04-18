@@ -8,8 +8,8 @@ $(addprefix clean_,$(BINS)): clean_%:
 $(addprefix test_,$(BINS)): test_%:
 	@$(MAKE) -C $* -f build.mk test
 
-libcarcassonne: libai
-sdl carcassonne cli: libcarcassonne
+sdl cli: libcarcassonne
+carcassonne: sdl cli
 
 build: $(BINS)
 clean: $(addprefix clean_,$(BINS))

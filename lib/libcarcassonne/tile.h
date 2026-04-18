@@ -64,7 +64,7 @@ typedef struct tile {
 /// @param connexion_face La face de connexion
 /// @return La famille de la face de connexion
 /// @related tile_t
-tile_part_type_t   tile_get_family_face(tile_t*            tile,
+tile_part_type_t   tile_get_family_face(const tile_t*      tile,
                                         tile_orientation_t orientation,
                                         tile_orientation_t connexion_face);
 tile_orientation_t tile_orientation_invert(tile_orientation_t orientation);
