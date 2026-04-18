@@ -54,31 +54,47 @@ options_t parse_options(int argc, char* argv[]) {
       case 'm':
         if (strcmp("sdl", optarg) == 0) {
           config.mode = CARCASSONNE_MODE_SDL;
-        }
-        if (strcmp("cli", optarg) == 0) {
+        } else if (strcmp("cli", optarg) == 0) {
           config.mode = CARCASSONNE_MODE_CLI;
+        } else {
+          goto bad_value;
         }
 
         break;
       case 'p':
         config.players = strtod(optarg, &endPtr);
+        if (endPtr == optarg) goto bad_value;
+
         break;
       case 'a':
         config.ai = strtod(optarg, &endPtr);
+        if (endPtr == optarg) goto bad_value;
         break;
       case 't':
         config.max_turns = strtod(optarg, &endPtr);
+        if (endPtr == optarg) goto bad_value;
         break;
       case 's':
         config.seed = strtod(optarg, &endPtr);
+        if (endPtr == optarg) goto bad_value;
         break;
 
+      bad_value:
+        printf("La valeur pour -%c, '%s' n'est pas une valeur valide.\n\n", c,
+               optarg);
       case 'h':
+      print_help:
       default:
         printf(help_string, argv[0]);
         exit(0);
         break;
     }
+  }
+  char* message;
+
+  if ((message = validate_options(&config)) != NULL) {
+    printf("Les paramètres sont invalide: %s\n\n", message);
+    goto print_help;
   }
 
   return config;
@@ -93,8 +109,8 @@ char* validate_options(options_t* config) {
     return "Le nombre de joueurs doit être au moins égal à 2!";
   }
 
-  if (config->players > LIBCARCASSONNE_MAX_PLAYERS) {
-    return "Le nombre de joueurs doit être inférieur ou égal à 5!";
+  if (config->players >= LIBCARCASSONNE_MAX_PLAYERS) {
+    return "Le nombre de joueurs doit être inférieur à 5!";
   }
 
   return NULL;

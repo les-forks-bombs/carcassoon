@@ -39,7 +39,7 @@ build test clean: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@
 
 cli sdl: build
-	$(BINS_DIR)/$@
+	$(BINS_DIR)/carcassonne -m $@
 
 req:
 	@echo "/!\ Attention !"
