@@ -140,8 +140,6 @@ void test_tile_group_merge_two_trees(void** state) {
   free(b2);
 }
 
-
-
 void tile_get_family_face_works(void** state) {
   (void)state;
   tile_t tile = {.amount       = 1,

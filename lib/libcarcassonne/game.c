@@ -1,12 +1,10 @@
 #include <assert.h>
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/game.h>
+#include <libcarcassonne/options.h>
 #include <memory.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
-
-#include "libcarcassonne/options.h"
 
 return_code_t create_game(game_t *game, options_t options) {
   if (game == NULL) {
