@@ -1,19 +1,22 @@
-TEST_CASES := $(shell find . -mindepth 1 -name "*_test" -exec basename {} \;) \
-	$(shell find . -mindepth 1 -name "*_test.exe" -exec basename {} \;)
+PROG = $(BINS_DIR)/tests/$(NAME)
+LFLAGS += -lcmocka
 
-test: $(addsuffix .xml,$(TEST_CASES))
+include $(BUILD_DIR)/binary.mk
 
-%_test.xml: %_test
-	@CMOCKA_XML_FILE='./$*_test.xml' CMOCKA_MESSAGE_OUTPUT=xml \
-		./$*_test
-	@echo "    TEST  $(notdir $*)"
+RUNNER := 
+ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
+    RUNNER := wine
+endif
 
-%_test.exe.xml: %_test.exe
-	@CMOCKA_XML_FILE='./$*_test.exe.xml' CMOCKA_MESSAGE_OUTPUT=xml \
-		wine ./$*_test.exe
-	@echo "    TEST  $(notdir $*)"
+$(PROG).xml: $(PROG)
+	@CMOCKA_XML_FILE='$@' CMOCKA_MESSAGE_OUTPUT=xml \
+		$(RUNNER) $<
+	@echo "    TEST  $(notdir $<)"
 
-clean:
-	@rm *_test{,.exe}.xml 2>/dev/null || true
+test:: $(PROG).xml
+
+clean::
+	@$(RM) -f $(PROG).xml
+	@echo "    RM    $(notdir $(PROG).xml)"
 
 .PHONY: test clean

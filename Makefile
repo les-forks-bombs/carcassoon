@@ -36,10 +36,8 @@ endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
 
-build: out/$(PROFILE)/$(TARGET)
+build test clean: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@
-	@$(MAKE) -C bin -f build.mk $@
-	@cp -r assets/ $(BINS_DIR)
 
 cli sdl: build
 	$(BINS_DIR)/$@
@@ -47,14 +45,6 @@ cli sdl: build
 out/$(PROFILE)/$(TARGET):
 	@mkdir -p out/$(PROFILE)/
 	@cp -r $(BUILD_DIR)/out $@
-
-clean: out/$(PROFILE)/$(TARGET)
-	@$(MAKE) -C lib -f build.mk $@
-	@$(MAKE) -C bin -f build.mk $@
-	@$(MAKE) -C $(BINS_DIR)/tests -f test.mk $@ || true
-
-test: build
-	@$(MAKE) -C $(BINS_DIR)/tests -f test.mk $@ || true
 
 req:
 	@echo "/!\ Attention !"

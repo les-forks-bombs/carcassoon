@@ -9,3 +9,7 @@ LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --libs)
 CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --cflags)
 
 include $(BUILD_DIR)/binary.mk
+
+build:: ./assets
+	@cp -r ./assets $(BINS_DIR)/
+
