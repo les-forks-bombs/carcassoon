@@ -1,7 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
-#include "test_affichage.h"
+#include <sdl/test_affichage.h>
 
-#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 

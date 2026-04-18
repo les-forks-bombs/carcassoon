@@ -1,9 +1,8 @@
 #pragma once
 
 #include <getopt.h>
+#include <libcarcassonne/extension.h>
 #include <unistd.h>
-
-#include "libcarcassonne/extension.h"
 
 typedef enum runtime_mode {
   CARCASSONNE_MODE_SDL = 0,

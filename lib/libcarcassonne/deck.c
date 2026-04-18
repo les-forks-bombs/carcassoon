@@ -1,9 +1,8 @@
 #include <libcarcassonne/deck.h>
 #include <libcarcassonne/extension.h>
+#include <libcarcassonne/prng_mersenne_twister.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-#include "libcarcassonne/prng_mersenne_twister.h"
 
 deck_t create_deck(int seed, extension_list_t* extensions) {
   // On initialise la struct, cette dernière sera stoquée dans le stack
