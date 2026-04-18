@@ -20,7 +20,7 @@ LFLAGS := --target=$(TARGET)
 CC	   := $(CC)
 
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
-CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic  # General building flags
+CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
 LFLAGS += -L$(LIBS_DIR) -lm
 
 ifeq "$(PROFILE)" "debug"
