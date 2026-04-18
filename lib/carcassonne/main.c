@@ -1,7 +1,5 @@
-#include <libcarcassonne/game.h>
+#include <libcarcassonne/engine.h>
 #include <stdio.h>
-
-#include "libcarcassonne/options.h"
 
 int main(int argc, char* argv[]) {
   options_t config = parse_options(argc, argv);
@@ -12,10 +10,10 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  game_t game;
-  create_game(&game, config);
+  engine_t engine;
+  create_engine(&engine, config);
 
-  switch (config.mode) {
+  switch (engine.config.mode) {
     case CARCASSONNE_MODE_CLI:
       printf("Starting using CLI...\n");
       break;
@@ -27,5 +25,5 @@ int main(int argc, char* argv[]) {
       break;
   }
 
-  destroy_game(&game);
+  destroy_engine(&engine);
 }

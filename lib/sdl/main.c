@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <stdlib.h>
 
 #include "test_affichage.h"
@@ -68,6 +69,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   if (!SDL_Init(SDL_INIT_VIDEO)) {
     return SDL_APP_FAILURE;
   }
+
+  TTF_Init();
 
   AppState *as = (AppState *)SDL_malloc(sizeof(AppState));
   if (!as) {

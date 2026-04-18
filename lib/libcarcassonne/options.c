@@ -1,9 +1,30 @@
+#include <getopt.h>
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/options.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+const char* help_string =
+    ""
+    ""
+    "Usage: %1$s [OPTIONS]\n"
+    "\n"
+    "Options:\n"
+    "  -m, --mode=MODE          Set the mode (sdl or cli)\n"
+    "  -p, --players=NUM        Set the number of players\n"
+    "  -a, --ai=NUM             Set the number of AI players\n"
+    "  -t, --max-turns=NUM      Set the maximum number of turns\n"
+    "  -s, --seed=NUM           Set the random seed\n"
+    "\n"
+    "Example:\n"
+    "  %1$s -m sdl -p 4 -a 2 -t 100 -s 12345\n"
+    "  %1$s -m cli -p 4 -a 2 -t 100 -s 12345\n"
+    "\n"
+    "Attribution:"
+    "  Matthieu P. & Salomé P. & Damien J. & Bastien VD.\n"
+    "\n";
 
 options_t parse_options(int argc, char* argv[]) {
   int c;
@@ -22,9 +43,10 @@ options_t parse_options(int argc, char* argv[]) {
                                     {"ai", required_argument, 0, 'a'},
                                     {"max-turns", required_argument, 0, 't'},
                                     {"seed", required_argument, 0, 's'},
+                                    {"help", no_argument, 0, 'h'},
                                     {0, 0, 0, 0}};
 
-    c = getopt_long(argc, argv, "m:p:a:t:s:", long_options, &option_index);
+    c = getopt_long(argc, argv, "m:p:a:t:s:h", long_options, &option_index);
 
     if (c == -1) break;
 
@@ -51,11 +73,10 @@ options_t parse_options(int argc, char* argv[]) {
         config.seed = strtod(optarg, &endPtr);
         break;
 
+      case 'h':
       default:
-
-        printf("option %s (%c)", long_options[option_index].name, c);
-        if (optarg) printf(" with arg %s", optarg);
-        printf("\n");
+        printf(help_string, argv[0]);
+        exit(0);
         break;
     }
   }

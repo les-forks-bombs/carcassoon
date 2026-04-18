@@ -1,16 +1,18 @@
 #ifndef H_LIBCARCASSONNE_PLAYER
 #define H_LIBCARCASSONNE_PLAYER
 
-#define LIBCARCASSONNE_PLAYER_AI    0
-#define LIBCARCASSONNE_PLAYER_HUMAN 1
+enum player_type {
+  LIBCARCASSONNE_PLAYER_AI    = 0,
+  LIBCARCASSONNE_PLAYER_HUMAN = 1
+};
 
-typedef char player_type;
+typedef enum player_type player_type_t;
 
 typedef struct player {
-  player_type player_type;
-  int         score;
+  player_type_t player_type;
+  int           score;
 } player_t;
 
-player_t create_player(player_type type);
+player_t create_player(player_type_t type);
 
 #endif

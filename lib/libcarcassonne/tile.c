@@ -3,7 +3,7 @@
 #include <memory.h>
 #include <stdlib.h>
 
-tile_part_type_t tile_get_family_face(tile_t*            tile,
+tile_part_type_t tile_get_family_face(const tile_t*      tile,
                                       tile_orientation_t orientation,
                                       tile_orientation_t connexion_face) {
   if (tile == NULL) return 0;
