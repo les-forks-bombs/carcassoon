@@ -23,13 +23,13 @@ void game_place_tile_do_not_work_because_position_is_taken(void** state);
 void game_place_multiple_tile_works(void** state);
 void game_place_tile_do_not_work_because_tiles_are_incompatible(void** state);
 
-void test_tile_group_initialization(void** state);
+void test_tile_group_builds(void** state);
 void test_tile_group_link(void** state);
 void test_tile_group_dynamic_connectivity(void** state);
 void test_tile_group_cut(void** state);
 void test_tile_group_merge_two_trees(void** state);
 
-const struct CMUnitTest tests[] = {
+static const struct CMUnitTest tests[] = {
     cmocka_unit_test(deck_builds),
     cmocka_unit_test(deck_seed_consistent),
     cmocka_unit_test(game_builds),
@@ -52,7 +52,7 @@ const struct CMUnitTest tests[] = {
         game_place_tile_do_not_work_because_tiles_are_incompatible),
     cmocka_unit_test(tile_get_family_face_works),
 
-    cmocka_unit_test(test_tile_group_initialization),
+    cmocka_unit_test(test_tile_group_builds),
     cmocka_unit_test(test_tile_group_link),
     cmocka_unit_test(test_tile_group_dynamic_connectivity),
     cmocka_unit_test(test_tile_group_cut),

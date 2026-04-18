@@ -29,7 +29,7 @@ void test_tile_group_builds(void** state) {
   free(node);
 }
 
-void test_group_link(void** state) {
+void test_tile_group_link(void** state) {
   (void)state;
 
   // on crée les deux tile groups
@@ -49,7 +49,7 @@ void test_group_link(void** state) {
   free(b);
 }
 
-void test_group_dynamic_connectivity(void** state) {
+void test_tile_group_dynamic_connectivity(void** state) {
   (void)state;
 
   // comme "test_group_link" mais avec 4 tile group
@@ -77,7 +77,7 @@ void test_group_dynamic_connectivity(void** state) {
   free(n4);
 }
 
-void test_group_cut(void** state) {
+void test_tile_group_cut(void** state) {
   (void)state;
   placed_tile_group_t* a = create_test_group();
   placed_tile_group_t* b = create_test_group();
@@ -108,7 +108,7 @@ void test_group_cut(void** state) {
   free(c);
 }
 
-void test_group_merge_two_trees(void** state) {
+void test_tile_group_merge_two_trees(void** state) {
   (void)state;
 
   // création d'un premier arbre
