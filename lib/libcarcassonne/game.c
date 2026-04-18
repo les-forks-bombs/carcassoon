@@ -138,14 +138,19 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
       if (neighbor != NULL && *neighbor != NULL) {
         placed_face_groups_t neighboor_face;
         placed_face_groups_t current_face;
-        tile_get_face(&neighboor_face, *neighbor, tile_orientation_invert(s));
-        tile_get_face(&current_face, placed_tile, s);
+        placed_tile_get_face(&neighboor_face, *neighbor,
+                             tile_orientation_invert(s));
+        placed_tile_get_face(&current_face, placed_tile, s);
 
         for (int i = 0; i < 3; i++) {
-          neighboor_face.face[i]->neighbors[tile_orientation_invert(s)] =
-              current_face.face[i]->neighbors[s];
-          current_face.face[i]->neighbors[s] =
-              neighboor_face.face[i]->neighbors[tile_orientation_invert(s)];
+          // on évite les boucles durant la construction
+          placed_tile_group_t *root_a =
+              placed_tile_group_find_root(neighboor_face.face[i]);
+          placed_tile_group_t *root_b =
+              placed_tile_group_find_root(current_face.face[i]);
+          if (root_a != root_b) {
+            placed_tile_group_link(root_a, root_b);
+          }
         }
       }
     }

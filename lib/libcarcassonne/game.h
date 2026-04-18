@@ -3,6 +3,7 @@
 
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/deck.h>
+#include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/player.h>
 #include <libcarcassonne/tile.h>
 #include <libcarcassonne/vector2d.h>
