@@ -139,3 +139,108 @@ void test_tile_group_merge_two_trees(void** state) {
   free(b1);
   free(b2);
 }
+
+
+
+void tile_get_family_face_works(void** state) {
+  (void)state;
+  tile_t tile = {.amount       = 1,
+                 .blason       = 0,
+                 .family       = "AAAA",
+                 .parts        = {0, 1, 2, 3, 4, 5, 0, 1, 2},
+                 .parts_groups = {1, 2, 3, 4, 5, 6, 1, 2, 7}};
+
+  // Base orientation north
+
+  // 0 1 2
+  // 3 4 5
+  // 0 1 2
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                           LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+      1);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                           LIBCARCASSONNE_TILE_ORIENTATION_EAST),
+      5);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                           LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
+      1);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                           LIBCARCASSONNE_TILE_ORIENTATION_WEST),
+      3);
+
+  // 0 3 0
+  // 1 4 1
+  // 2 5 2
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                           LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+      3);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                           LIBCARCASSONNE_TILE_ORIENTATION_EAST),
+      1);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                           LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
+      5);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                           LIBCARCASSONNE_TILE_ORIENTATION_WEST),
+      1);
+
+  // 2 1 0
+  // 5 4 3
+  // 2 1 0
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                           LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+      1);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                           LIBCARCASSONNE_TILE_ORIENTATION_EAST),
+      3);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                           LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
+      1);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                           LIBCARCASSONNE_TILE_ORIENTATION_WEST),
+      5);
+
+  // 2 5 2
+  // 1 4 1
+  // 0 3 0
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+                           LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+      5);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+                           LIBCARCASSONNE_TILE_ORIENTATION_EAST),
+      1);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+                           LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
+      3);
+
+  assert_int_equal(
+      tile_get_family_face(&tile, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+                           LIBCARCASSONNE_TILE_ORIENTATION_WEST),
+      1);
+}
