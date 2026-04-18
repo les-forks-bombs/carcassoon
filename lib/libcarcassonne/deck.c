@@ -43,8 +43,6 @@ deck_t create_deck(int seed, extension_list_t* extensions) {
         start_tile == NULL) {
       start_tile_priority = extensions->extensions[j].start_tiles_priority;
       start_tile          = extensions->extensions[j].start_tiles;
-      printf("priority extension %s for start_tile\n",
-             extensions->extensions[j].name);
     }
   }
 
@@ -62,7 +60,6 @@ deck_t create_deck(int seed, extension_list_t* extensions) {
   }
 
   int index = prng_mersenne_twister_random(&deck.state) % start_tile->size;
-  printf("start tile is index: %i\n", index);
   deck_list_prepend(&deck.list, &start_tile->tiles[index]);
 
   return deck;

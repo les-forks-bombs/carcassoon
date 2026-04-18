@@ -29,6 +29,7 @@ endif
 
 ifeq "$(PROFILE)" "release"
 	CFLAGS += -O3
+	LFLAGS += -s
 endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
@@ -47,7 +48,7 @@ cli sdl: build
 req:
 	@echo "/!\ Attention !"
 	@echo ""
-	@echo "Ce projet utilise les libraries système pour compiler avec sdl"
+	@echo "Ce projet utilise les libraries système pour compiler avec sdl et cmocka"
 	@echo "Merci de l'installer pour le target $(TARGET) afin que pkg-config"
 	@echo "Puisse trouver la librarie !"
 	@echo
