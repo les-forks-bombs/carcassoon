@@ -1,7 +1,5 @@
+#pragma once
 #include <libcarcassonne/meeple.h>
-
-#ifndef H_LIBCARCASSONNE_PLACED_TILE
-#define H_LIBCARCASSONNE_PLACED_TILE
 
 /// @brief Information des groupes de la sous-tile
 typedef struct placed_tile_group {
@@ -42,4 +40,3 @@ void placed_tile_group_cut(placed_tile_group_t* node);
 void placed_tile_group_link(placed_tile_group_t* a, placed_tile_group_t* b);
 void placed_tile_group_splay(placed_tile_group_t* node);
 bool placed_tile_group_splay_is_root(placed_tile_group_t* node);
-#endif

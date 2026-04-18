@@ -1,15 +1,15 @@
-#ifndef H_LIBCARCASSONNE_DECK
-#define H_LIBCARCASSONNE_DECK
+#pragma once
 
 #include <libcarcassonne/consts.h>
-#include <libcarcassonne/deck_composition.h>
 #include <libcarcassonne/prng_mersenne_twister.h>
 #include <libcarcassonne/tile.h>
+
+struct extensions_list;
 
 /// @brief Element dans la pile deck_list_t, double chainé (next, prev)
 typedef struct deck_element {
   /// @brief Référence vers la tile lié
-  tile_t* tile;
+  const tile_t* tile;
   /// @brief Prochain élément dans la liste chainée
   struct deck_element* next;
   /// @brief Prédecesseur a l'élément courrant
@@ -38,10 +38,11 @@ typedef struct deck {
 
 /// @brief Permet de créer une instance de deck
 /// @param seed La seed qui sera utilisée pour la rng
+/// @param extensions The list of extensions to include in the deck
 /// @return une instance de deck
 /// @attention Le deck vis dans le stack!
 /// @relates deck
-deck_t create_deck(int seed);
+deck_t create_deck(int seed, struct extensions_list* extensions);
 
 /// @brief Permet de libérer la mémoire liée a un deck
 /// @param deck Le deck a libérer
@@ -52,28 +53,28 @@ void free_deck(deck_t deck);
 /// @param deck Le deck qui sera utilisé pour piocher la tile
 /// @return La tile piochée
 /// @relates deck
-tile_t* deck_pick(deck_t* deck);
+const tile_t* deck_pick(deck_t* deck);
 
 /// @brief Permet de remettre une tile dans le deck
 /// @details Est utilisé dans le cas ou la tile proposée n'est pas utilisable
 /// @param deck Le deck ciblé
 /// @param tile La tile a remettre dans la pile
 /// @relates deck
-void deck_defausser(deck_t* deck, tile_t* tile);
+void deck_defausser(deck_t* deck, const tile_t* tile);
 
 /// @brief Ajoute un éléments a la queue de la liste
 /// @param deck_list La liste chainée
 /// @param tile La tile a ajouter
 /// @returns La nouvelle liste chainée
 /// @relates deck_list
-deck_list_t* deck_list_append(deck_list_t* deck_list, tile_t* tile);
+deck_list_t* deck_list_append(deck_list_t* deck_list, const tile_t* tile);
 
 /// @brief Ajoute un éléments a la tête de la liste
 /// @param deck_list La liste chainée
 /// @param element La tile a ajouter
 /// @returns La nouvelle liste chainée
 /// @relates deck_list
-deck_list_t* deck_list_prepend(deck_list_t* deck_list, tile_t* element);
+deck_list_t* deck_list_prepend(deck_list_t* deck_list, const tile_t* element);
 
 /// @brief Insère in élément a un index donné
 /// @param deck_list La liste chainée
@@ -82,7 +83,7 @@ deck_list_t* deck_list_prepend(deck_list_t* deck_list, tile_t* element);
 /// @returns La nouvelle liste chainée
 /// @relates deck_list
 deck_list_t* deck_list_insert(deck_list_t* deck_list, unsigned int index,
-                              tile_t* element);
+                              const tile_t* element);
 
 /// @brief Supprime un élément de la liste chainée
 /// @param deck_list La liste chainée
@@ -101,5 +102,3 @@ deck_element_t* deck_list_nth(deck_list_t* deck_list, unsigned int index);
 /// @param deck_list La liste chainée a nettoyer
 /// @relates deck_list
 void deck_list_free(deck_list_t* deck_list);
-
-#endif

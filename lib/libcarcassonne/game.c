@@ -16,7 +16,7 @@ return_code_t create_game(game_t *game, const options_t *options) {
   }
 
   game->current_player = 0;
-  game->deck           = create_deck(options->seed);
+  game->deck           = create_deck(options->seed, &options->extensions);
   game->options        = options;
 
   game->open_tiles = create_open_tiles_list();

@@ -15,7 +15,7 @@ CFLAGS += --target=$(TARGET)
 LFLAGS += --target=$(TARGET)
 
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
-CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
+CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
 LFLAGS += -L$(LIBS_DIR) -lm
 
 ifeq "$(PROFILE)" "debug"
@@ -23,6 +23,8 @@ ifeq "$(PROFILE)" "debug"
 	    CFLAGS += -fsanitize=address
 	    LFLAGS += -fsanitize=address
 	endif
+
+	CFLAGS += -O0 -g
 endif
 
 ifeq "$(PROFILE)" "release"
@@ -31,12 +33,13 @@ endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
 
-out/$(PROFILE)/$(TARGET):
-	@mkdir -p out/$(PROFILE)/
-	@cp -r $(BUILD_DIR)/out $@
 
 build test clean: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@
+
+out/$(PROFILE)/$(TARGET):
+	@mkdir -p out/$(PROFILE)/
+	@cp -r $(BUILD_DIR)/out $@
 
 cli sdl: build
 	$(BINS_DIR)/carcassonne -m $@

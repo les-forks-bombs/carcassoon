@@ -1,7 +1,14 @@
 #ifndef H_TESTS
 #define H_TESTS
 
+#include <libcarcassonne/ext_base_game.h>
+#include <libcarcassonne/extension.h>
 #include <libutils/cmocka.h>
+
+static extension_list_t base = {
+    .size       = 1,
+    .extensions = &LIBCARCASSONNE_EXT_BASE_GAME,
+};
 
 void deck_builds(void** state);
 void deck_seed_consistent(void** state);
