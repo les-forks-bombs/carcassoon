@@ -1,6 +1,7 @@
-#include <libcarcassonne/libcarcassonne.h>
+#include <libcarcassonne/game.h>
 #include <stdio.h>
 #include <string.h>
+#include "libcarcassonne/options.h"
 
 tile_t* find_tile(game_t* game, char* family) {
   deck_element_t* curr = game->deck.list.head;
@@ -13,7 +14,14 @@ tile_t* find_tile(game_t* game, char* family) {
 
 int main(void) {
   game_t game;
-  create_game(&game, 3, 0, 500, 0);
+  options_t config = {
+      .mode      = CARCASSONNE_MODE_CLI,
+      .players   = 3,
+      .seed      = 500,
+      .ai        = 0,
+      .max_turns = 0,
+  };
+  create_game(&game, config);
 
   tile_t* tile = deck_pick(&game.deck);
   game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH);
@@ -27,8 +35,6 @@ int main(void) {
   // en haut
   printf("%d\n", game_place_tile(&game, tile, -1, 0,
                                  LIBCARCASSONNE_TILE_ORIENTATION_NORTH));
-
-  game_print_detail(&game, 0, 0, 3);
 
   destroy_game(&game);
 }

@@ -187,22 +187,6 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group) {
   }
 }
 
-void game_print_map(game_t *game) {
-  for (int i = -LIBCARCASSONNE_TILES_COUNT + 1; i < LIBCARCASSONNE_TILES_COUNT;
-       i++) {
-    printf("|");
-    for (int j = -LIBCARCASSONNE_TILES_COUNT + 1;
-         j < LIBCARCASSONNE_TILES_COUNT; j++) {
-      placed_tile_t **tile = game_tile_at(game, i, j);
-      if (*tile == NULL)
-        printf(".");
-      else
-        printf("#");
-    }
-    printf("|\n");
-  }
-}
-
 bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y,
                             tile_orientation_t orientation) {
   if (game == NULL || tile == NULL) return false;
