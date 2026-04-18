@@ -1,25 +1,17 @@
-LIB  := $(LIBS_DIR)/$(NAME).a
-OUT_OBJ_DIR := $(OBJ_DIR)/$(shell realpath -s --relative-to="$(MAKE_DIR)" "$(shell pwd)")
-SRCS := $(wildcard *.c)
-OBJS := $(patsubst %.c, $(OUT_OBJ_DIR)/%.o, $(SRCS))
+include $(BUILD_DIR)/compile.mk
 
-$(LIB): $(OBJS)
+ARCHIVE  := $(LIBS_DIR)/$(NAME).a
+
+$(ARCHIVE): $(OBJS)
 	@$(AR) cr $@ $^
 	@echo "    AR    $(notdir $@)"
 
-$(OBJS): $(OUT_OBJ_DIR)/%.o: %.c
-	@mkdir -p $(OUT_OBJ_DIR)
-	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
-	@echo "    CC    $<"
-
--include $(OBJS:.o=.d)
-
-build:: $(LIB)
-test:: $(LIB)
+build:: $(ARCHIVE)
+test:: $(ARCHIVE)
 
 .PHONY: clean
 clean::
-	@$(RM) -f $(LIB) $(OBJS)
+	@$(RM) -f $(ARCHIVE) $(OBJS)
+	@echo "    RM    $(notdir $(ARCHIVE))"
 	@echo "    RM    $(notdir $(OBJS))"
-	@echo "    RM    $(notdir $(LIB))"
 	@$(MAKE) -C tests -f build.mk clean
