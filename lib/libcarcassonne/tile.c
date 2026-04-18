@@ -1,5 +1,4 @@
 #include <libcarcassonne/tile.h>
-
 #include <memory.h>
 #include <stdlib.h>
 

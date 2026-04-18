@@ -3,9 +3,8 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
-#include <stdlib.h>
-
 #include <sdl/test_affichage.h>
+#include <stdlib.h>
 
 #define WINDOW_WIDTH              800
 #define WINDOW_HEIGHT             500
