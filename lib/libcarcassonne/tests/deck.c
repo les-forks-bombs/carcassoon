@@ -2,9 +2,6 @@
 #include <libcarcassonne/tests/tests.h>
 #include <libutils/cmocka.h>
 
-#include "libcarcassonne/ext_base_game.h"
-#include "libcarcassonne/extension.h"
-
 /* Vérifie l'instanciation d'un deck */
 void deck_builds(void** state) {
   (void)state;
