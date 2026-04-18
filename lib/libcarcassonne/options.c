@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
+
+#include "libcarcassonne/extensions_list.h"
 
 const char* help_string =
     ""
@@ -17,6 +20,7 @@ const char* help_string =
     "  -a, --ai=NUM             Set the number of AI players\n"
     "  -t, --max-turns=NUM      Set the maximum number of turns\n"
     "  -s, --seed=NUM           Set the random seed\n"
+    "  -e, --extensions=A,B,C   Set of extensions to enable\n"
     "\n"
     "Example:\n"
     "  %1$s -m sdl -p 4 -a 2 -t 100 -s 12345\n"
@@ -27,13 +31,17 @@ const char* help_string =
     "\n";
 
 options_t parse_options(int argc, char* argv[]) {
-  int c;
+  int  c;
+  char arg[25] = "";
 
-  options_t config = {.ai        = 0,
-                      .max_turns = 0,
-                      .seed      = time(NULL),
-                      .players   = 3,
-                      .mode      = CARCASSONNE_MODE_SDL};
+  options_t config = {
+      .ai         = 0,
+      .max_turns  = 0,
+      .seed       = time(NULL),
+      .players    = 3,
+      .mode       = CARCASSONNE_MODE_SDL,
+      .extensions = {.size = 0, .extensions = NULL},
+  };
 
   while (1) {
     int           option_index = 0;
@@ -44,9 +52,10 @@ options_t parse_options(int argc, char* argv[]) {
                                     {"max-turns", required_argument, 0, 't'},
                                     {"seed", required_argument, 0, 's'},
                                     {"help", no_argument, 0, 'h'},
+                                    {"extension", required_argument, 0, 'e'},
                                     {0, 0, 0, 0}};
 
-    c = getopt_long(argc, argv, "m:p:a:t:s:h", long_options, &option_index);
+    c = getopt_long(argc, argv, "m:p:a:t:s:he:", long_options, &option_index);
 
     if (c == -1) break;
 
@@ -78,9 +87,31 @@ options_t parse_options(int argc, char* argv[]) {
         config.seed = strtod(optarg, &endPtr);
         if (endPtr == optarg) goto bad_value;
         break;
+      case 'e':
+        // trouver l'extension
+        for (unsigned int i = 0; i < sizeof(LIBCARCASSONNE_EXTENSIONS) /
+                                         sizeof(LIBCARCASSONNE_EXTENSIONS[0]);
+             i++) {
+          if (strcmp(LIBCARCASSONNE_EXTENSIONS[i]->name, optarg) == 0) {
+            // todo: implement append to extension_list_t
+            printf("Ajout de l'extension %s \n",
+                   LIBCARCASSONNE_EXTENSIONS[i]->name);
+            goto e_success;
+            break;
+          }
+        }
+        goto bad_value;
+
+      e_success:
+        break;
 
       bad_value:
-        printf("La valeur pour -%c, '%s' n'est pas une valeur valide.\n\n", c,
+        if (long_options[option_index].has_arg == 0) {
+          sprintf(&arg[0], "-%c", c);
+        } else {
+          sprintf(&arg[0], "--%s", long_options[option_index].name);
+        }
+        printf("La valeur pour %s, '%s' n'est pas une valeur valide.\n\n", arg,
                optarg);
       case 'h':
       print_help:
@@ -111,6 +142,11 @@ char* validate_options(options_t* config) {
 
   if (config->players >= LIBCARCASSONNE_MAX_PLAYERS) {
     return "Le nombre de joueurs doit être inférieur à 5!";
+  }
+
+  if (config->extensions.size == 0) {
+    return "Pour jouer a carcassonne, vous devez avoir au minimum l'extension "
+           "de base.";
   }
 
   // Vérification des dépendances

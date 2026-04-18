@@ -6,7 +6,7 @@
 
 /** create_game */
 
-const static options_t options = {
+static options_t options = {
     .mode      = CARCASSONNE_MODE_CLI,
     .players   = 3,
     .seed      = 500,

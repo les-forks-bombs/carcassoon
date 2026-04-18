@@ -1,6 +1,7 @@
 #include <libcarcassonne/deck.h>
 #include <libcarcassonne/extension.h>
 #include <libcarcassonne/prng_mersenne_twister.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -37,10 +38,13 @@ deck_t create_deck(int seed, extension_list_t* extensions) {
     }
 
     // On cherche la liste de tiles de démarrage avec la plus haute priorité
-    if (extensions->extensions[j].start_tiles_priority > start_tile_priority ||
+    if ((extensions->extensions[j].start_tiles_priority >
+         start_tile_priority) ||
         start_tile == NULL) {
       start_tile_priority = extensions->extensions[j].start_tiles_priority;
       start_tile          = extensions->extensions[j].start_tiles;
+      printf("priority extension %s for start_tile\n",
+             extensions->extensions[j].name);
     }
   }
 
@@ -58,6 +62,7 @@ deck_t create_deck(int seed, extension_list_t* extensions) {
   }
 
   int index = prng_mersenne_twister_random(&deck.state) % start_tile->size;
+  printf("start tile is index: %i\n", index);
   deck_list_prepend(&deck.list, &start_tile->tiles[index]);
 
   return deck;
