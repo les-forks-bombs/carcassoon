@@ -26,7 +26,7 @@ ifeq "$(PROFILE)" "debug"
 endif
 
 ifeq "$(PROFILE)" "release"
-	CFLAGS += -O3 -Werror
+	CFLAGS += -O3
 endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
