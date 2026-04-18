@@ -3,11 +3,11 @@
 
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/deck.h>
+#include <libcarcassonne/options.h>
 #include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/player.h>
 #include <libcarcassonne/tile.h>
 #include <libcarcassonne/vector2d.h>
-#include <libcarcassonne/options.h>
 
 /// @brief Élement dans la liste chaîné list_tile_t
 typedef struct tile_list_element {

@@ -1,6 +1,7 @@
 #include <libcarcassonne/game.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "libcarcassonne/options.h"
 
 tile_t* find_tile(game_t* game, char* family) {
@@ -13,7 +14,7 @@ tile_t* find_tile(game_t* game, char* family) {
 }
 
 int main(void) {
-  game_t game;
+  game_t    game;
   options_t config = {
       .mode      = CARCASSONNE_MODE_CLI,
       .players   = 3,

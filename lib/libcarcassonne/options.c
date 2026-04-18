@@ -1,8 +1,8 @@
 #include <libcarcassonne/options.h>
-#include <time.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 options_t parse_options(int argc, char* argv[]) {
   int c;
