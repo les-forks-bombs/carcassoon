@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-return_code_t create_game(game_t *game, const options_t *options) {
+return_code_t create_game(game_t *game, options_t *options) {
   if (game == NULL) {
     return ERROR;
   }

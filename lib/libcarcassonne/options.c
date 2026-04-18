@@ -113,5 +113,30 @@ char* validate_options(options_t* config) {
     return "Le nombre de joueurs doit être inférieur à 5!";
   }
 
+  // Vérification des dépendances
+  for (unsigned int i = 0; i < config->extensions.size; i++) {
+    for (unsigned int j = 0;
+         j < config->extensions.extensions[i].required->size; j++) {
+      for (unsigned int k = 0; k < config->extensions.size; k++) {
+        const char* name =
+            config->extensions.extensions[i].required->extensions[j].name;
+
+        if (&config->extensions.extensions[k] ==
+            &config->extensions.extensions[i].required->extensions[j]) {
+          goto found;
+        }
+
+        printf("Extension %s requise par %s\n", name,
+               config->extensions.extensions[i].name);
+
+        return "Une extension requise n'est pas présente dans la liste des "
+               "extensions!";
+
+      found:
+        continue;
+      }
+    }
+  }
+
   return NULL;
 }
