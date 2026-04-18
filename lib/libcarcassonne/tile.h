@@ -2,7 +2,6 @@
 #define H_LIBCARCASSONNE_TILE
 
 #include <libcarcassonne/consts.h>
-#include <libcarcassonne/meeple.h>
 #include <stdbool.h>
 
 /// @brief Les différents types de sous-tiles
@@ -58,31 +57,6 @@ typedef struct tile {
   char* texture;
 } tile_t;
 
-/// @brief Information des groupes de la sous-tile
-typedef struct placed_tile_group {
-  /// @brief Groupes adjacents qui sont enfants
-  struct placed_tile_group* neighbors[4];
-  /// @brief Référence vers la tile représentant le groupe
-  struct placed_tile* tile;
-  /// @brief Référence vers l'éventuel meeple placé dans le groupe
-  meeple_t* meeple;
-} placed_tile_group_t;
-
-typedef struct placed_face_groups {
-  placed_tile_group_t* face[3];
-} placed_face_groups_t;
-
-/// @brief Représentation d'une tile qui a été placée
-typedef struct placed_tile {
-  /// @brief Pointeur vers la définition de la tile
-  tile_t* parent;
-  /// @brief Groupes présents a l'intérieur de la tile
-  /// @remark On peut au maximum avoir 9 groupes dans une tile
-  placed_tile_group_t* groups[9];
-  /// @brief Orientation de placement de la tile
-  tile_orientation_t orientation;
-} placed_tile_t;
-
 /// @brief Récupère une famille de la tuile en fonction de l'orientation et de
 /// la face de connexion
 /// @param tile Le modèle de tuile à utiliser
@@ -93,13 +67,6 @@ typedef struct placed_tile {
 tile_part_type_t tile_get_family_face(tile_t*            tile,
                                       tile_orientation_t orientation,
                                       tile_orientation_t connexion_face);
-
-return_code_t placed_tile_create(placed_tile_t* placed_tile, tile_t* parent,
-                                 tile_orientation_t orientation);
-void          placed_tile_destroy(placed_tile_t*);
-
 tile_orientation_t tile_orientation_invert(tile_orientation_t orientation);
 
-return_code_t tile_get_face(placed_face_groups_t* ret, placed_tile_t* tile,
-                            tile_orientation_t connexion_face);
 #endif
