@@ -1,9 +1,9 @@
 TESTS := tests
 
-build:: $(LIB)
+build:: $(ARCHIVE)
 	@$(MAKE) -C $(TESTS) -f build.mk build
 
-test:: $(LIB)
+test:: $(ARCHIVE)
 	@$(MAKE) -C $(TESTS) -f build.mk test
 
 clean::
