@@ -3,6 +3,7 @@
 
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/deck.h>
+#include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/player.h>
 #include <libcarcassonne/tile.h>
 #include <libcarcassonne/vector2d.h>
@@ -45,12 +46,12 @@ typedef struct game {
 
   /// @brief Instance du deck pour la partie
   deck_t deck;
-
   /// @brief Pointeur vers le premier élément de la map
   placed_tile_t **map;
-
   /// @brief Instance de la liste des tuiles
   tile_list_t open_tiles;
+
+  // todo: implémenter une liste de meeples pour garder les noeuds en mémoire
 } game_t;
 
 /// @brief Initialise un objet `game` en mémoire
@@ -77,7 +78,9 @@ void destroy_game(game_t *game);
 /// @related game_t
 placed_tile_t **game_tile_at(game_t *game, int x, int y);
 
-void          game_print_map(game_t *);
+void game_print_map(game_t *);
+void game_print_detail(game_t *, int x, int y, int zoom);
+
 return_code_t game_place_tile(game_t *, tile_t *tile, int x, int y,
                               tile_orientation_t orientation);
 

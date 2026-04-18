@@ -4,12 +4,16 @@
 
 /* Vérifie l'instanciation d'un deck */
 void deck_builds(void** state) {
+  (void)state;
+
   deck_t deck = create_deck(0);
   free_deck(deck);
 }
 
 /* Vérifie que le deck est consistant quand on a les memes seed */
 void deck_seed_consistent(void** state) {
+  (void)state;
+
   deck_t deck1 = create_deck(0);
   deck_t deck2 = create_deck(0);
   deck_t deck3 = create_deck(100);

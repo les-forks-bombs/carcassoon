@@ -1,6 +1,5 @@
 #include <libcarcassonne/deck.h>
 #include <libcarcassonne/deck_composition.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 deck_t create_deck(int seed) {
