@@ -65,6 +65,15 @@ void placed_tile_group_access(placed_tile_group_t* x) {
     // on rémène notre élément a la racine du splay tree
     placed_tile_group_splay(node);
 
+    // vu qu'on va retirer un lien fort, je retire node.right donc je l'ajoute
+    // de la liste des liaisons faibles
+    if (node->right != NULL)
+      placed_tile_group_weak_childs_add(node, node->right);
+
+    // vu que je crée une liaison forte vers w, je le supprime
+    // de la liste des liaisons faibles
+    if (w != NULL) placed_tile_group_weak_childs_rem(node, w);
+
     node->right = w;
 
     // comme les voisins ont changés, on mets a jour les valeurs
@@ -76,6 +85,7 @@ void placed_tile_group_access(placed_tile_group_t* x) {
 
   placed_tile_group_splay(x);
 }
+
 placed_tile_group_t* placed_tile_group_find_root(placed_tile_group_t* node) {
   // on reconstruis le chemin préféré
   placed_tile_group_access(node);
@@ -89,6 +99,25 @@ placed_tile_group_t* placed_tile_group_find_root(placed_tile_group_t* node) {
 }
 void placed_tile_group_path_aggregate(placed_tile_group_t* node) {
   // todo: aggregate function
+
+  node->groupe_open_slots = node->local_open_slots;
+  node->groupe_taille     = 1;
+
+  if (node->left != NULL) {
+    node->groupe_taille     += node->left->groupe_taille;
+    node->groupe_open_slots += node->left->groupe_open_slots;
+  }
+  if (node->right != NULL) {
+    node->groupe_taille     += node->right->groupe_taille;
+    node->groupe_open_slots += node->right->groupe_open_slots;
+  }
+
+  for (unsigned int i = 0; i < node->weak_childs_count; i++) {
+    if (node->weak_childs[i] != NULL) {
+      node->groupe_taille     += node->weak_childs[i]->groupe_taille;
+      node->groupe_open_slots += node->weak_childs[i]->groupe_open_slots;
+    }
+  }
 }
 
 void placed_tile_group_cut(placed_tile_group_t* node) {
@@ -106,10 +135,16 @@ void placed_tile_group_cut(placed_tile_group_t* node) {
 void placed_tile_group_link(placed_tile_group_t* a, placed_tile_group_t* b) {
   // on part du postulat que "b" est la racine de son splay tree (aka. il a été
   // splay)
-  placed_tile_group_access(a);
-  placed_tile_group_access(b);
+  if (a == NULL || b == NULL) return;
+  if (placed_tile_group_find_root(a) == placed_tile_group_find_root(b)) return;
+
+  placed_tile_group_makeroot(a);
 
   a->parent = b;
+
+  placed_tile_group_weak_childs_add(b, a);
+
+  placed_tile_group_access(b);
 }
 
 bool placed_tile_group_splay_is_root(placed_tile_group_t* node) {
@@ -196,4 +231,42 @@ void placed_tile_group_splay(placed_tile_group_t* node) {
   }
 
   placed_tile_group_path_aggregate(node);
+}
+
+void placed_tile_group_weak_childs_add(placed_tile_group_t* node,
+                                       placed_tile_group_t* el) {
+  node->weak_childs[node->weak_childs_count++] = el;
+}
+
+void placed_tile_group_weak_childs_rem(placed_tile_group_t* node,
+                                       placed_tile_group_t* el) {
+  for (unsigned int i = 0; i < node->weak_childs_count; i++) {
+    if (node->weak_childs[i] == el) {
+      // on remplace l'élément actuel par le dernier élément (on s'en fiche de
+      // l'ordre)
+      node->weak_childs_count--;
+      node->weak_childs[i] = node->weak_childs[node->weak_childs_count];
+    }
+  }
+}
+
+bool placed_tile_group_complete(placed_tile_group_t* group) {
+  return placed_tile_group_find_root(group)->groupe_open_slots == 0;
+}
+
+void placed_tile_group_makeroot(placed_tile_group_t* node) {
+  placed_tile_group_access(node);
+  node->flipped_delta ^= true;
+  placed_tile_group_push_down(node);
+}
+
+void placed_tile_group_push_down(placed_tile_group_t* node) {
+  if (node != NULL && node->flipped_delta) {
+    placed_tile_group_t* tmp = node->left;
+    node->left               = node->right;
+    node->right              = tmp;
+    if (node->left) node->left->flipped_delta ^= true;
+    if (node->right) node->right->flipped_delta ^= true;
+    node->flipped_delta = false;
+  }
 }
