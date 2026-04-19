@@ -28,8 +28,8 @@ ifeq "$(PROFILE)" "debug"
 endif
 
 ifeq "$(PROFILE)" "release"
-	CFLAGS += -O3
-	LFLAGS += -s
+	CFLAGS += -O3 -flto
+	LFLAGS += -s -flto
 endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
@@ -37,6 +37,11 @@ export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TA
 
 build test clean: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@
+
+ifneq ($(filter clean,$(MAKECMDGOALS)),)
+build: clean
+test: clean
+endif
 
 out/$(PROFILE)/$(TARGET):
 	@mkdir -p out/$(PROFILE)/

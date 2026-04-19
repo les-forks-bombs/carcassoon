@@ -24,8 +24,7 @@ stages:
         PROFILE: *profiles
   
   script:
-    - make -s clean TARGET=$TARGET PROFILE=$PROFILE
-    - bear --output ./out/$PROFILE/$TARGET/compile_commands.json -- make -s build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - bear --output ./out/$PROFILE/$TARGET/compile_commands.json -- make -s clean build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always
