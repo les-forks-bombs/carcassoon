@@ -9,41 +9,52 @@
 #include <libcarcassonne/vector2d.h>
 
 /// @brief Élement dans la liste chaîné list_tile_t
-typedef struct tile_list_element {
-  /// @brief La tuile placée
-  placed_tile_t *tile;
-  /// @brief Le prochain élément de la liste
-  struct tile_list_element *next;
-  /// @brief L'élément précédent de la liste
-  struct tile_list_element *prev;
+typedef struct tile_list_element
+{
+    /// @brief La tuile placée
+    placed_tile_t *tile;
+    /// @brief Le prochain élément de la liste
+    struct tile_list_element *next;
+    /// @brief L'élément précédent de la liste
+    struct tile_list_element *prev;
 } tile_list_element_t;
 
 /// @brief Structure de liste chainée utilisée pour conserver toutes les tuiles
 /// avec au moins 1 côté disponible
-typedef struct tile_list {
-  /// @brief Tête de la liste
-  tile_list_element_t *head;
-  /// @brief Queue de la liste
-  tile_list_element_t *tail;
-  /// @brief Nombre d'éléments de la liste
-  unsigned int size;
+typedef struct tile_list
+{
+    /// @brief Tête de la liste
+    tile_list_element_t *head;
+    /// @brief Queue de la liste
+    tile_list_element_t *tail;
+    /// @brief Nombre d'éléments de la liste
+    unsigned int size;
 } tile_list_t;
 
 /// @brief Représente une partie
-typedef struct game {
-  /// @brief Index du joueur actuel
-  unsigned int current_player;
-  /// @brief Tableau avec la liste des joueurs
-  player_t players[LIBCARCASSONNE_MAX_PLAYERS];
-  /// @brief Instance du deck pour la partie
-  struct deck deck;
-  /// @brief Pointeur vers le premier élément de la map
-  placed_tile_t **map;
-  /// @brief Instance de la liste des tuiles
-  tile_list_t open_tiles;
+typedef struct game
+{
+    /// @brief Index du joueur actuel
+    unsigned int current_player;
+    /// @brief Nombre total de joueurs dans la partie
+    unsigned int players_count;
+    /// @brief Tableau avec la liste des joueurs
+    player_t players[LIBCARCASSONNE_MAX_PLAYERS];
 
-  const options_t *options;
-  // todo: implémenter une liste de meeples pour garder les noeuds en mémoire
+    /// @brief Index du tour courrant
+    unsigned int turn;
+    /// @brief Nombre de tours maximum de la partie
+    /// @details Si turns_limit = 0, la partie n'a pas de limite de tour.
+    unsigned int turns_limit;
+
+    /// @brief Instance du deck pour la partie
+    deck_t deck;
+
+    /// @brief Pointeur vers le premier élément de la map
+    placed_tile_t **map;
+
+    /// @brief Instance de la liste des tuiles
+    tile_list_t open_tiles;
 } game_t;
 
 /// @brief Initialise un objet `game` en mémoire
@@ -102,4 +113,10 @@ void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile);
 
 /// @brief Instancie une liste chaînée de tuile
 /// @return Une liste chaînée de tile vide
-tile_list_t create_open_tiles_list(void);
+tile_list_t create_open_tiles_list();
+
+/// @brief Permet de savoir si une partie est terminée ou non
+/// @return Vrai si la partie est terminé, Faux sinon
+bool is_game_finished(game_t *game);
+
+#endif
