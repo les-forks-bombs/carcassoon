@@ -118,4 +118,9 @@ void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile);
 /// @brief Instancie une liste chaînée de tuile
 /// @return Une liste chaînée de tile vide
 tile_list_t create_open_tiles_list();
+
+/// @brief Permet de savoir si une partie est terminée ou non
+/// @return Vrai si la partie est terminé, Faux sinon
+bool is_game_finished(game_t* game);
+
 #endif
