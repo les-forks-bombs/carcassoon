@@ -4,18 +4,18 @@
 #include <SDL3_image/SDL_image.h>
 #include <stdlib.h>
 
-#include "test_affichage.h"
-
-#define WINDOW_WIDTH              800
-#define WINDOW_HEIGHT             500
-#define WINDOW_RESIZABLE          0
-#define STEP_RATE_IN_MILLISECONDS 16
+#include "consts.h"
+#include "tile_temp.h"
+#include "camera.h"
+#include "map.h"
 
 typedef struct {
-  SDL_Window        *window;
-  SDL_Renderer      *renderer;
-  Uint64             last_step;
-  tuile_affichage_t *tuile;
+  SDL_Window    *window;
+  SDL_Renderer  *renderer;
+  map_t         *map;
+  camera_t      *camera;
+  SDL_FRect      map_viewport;
+  Uint64         last_step;
 } AppState;
 
 static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
@@ -23,23 +23,23 @@ static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
   switch (key_val) {
     case SDLK_ESCAPE:
       return SDL_APP_SUCCESS;
-    case SDLK_SPACE:
-      redimensionate_ta(as->tuile, 80, 80);
-      break;
-    case SDLK_BACKSPACE:
-      redimensionate_ta(as->tuile, 50, 50);
-      break;
     case SDLK_UP:
-      move_ta(as->tuile, 0, -10.0f);
+      as->camera->y += 10.0f;
       break;
     case SDLK_DOWN:
-      move_ta(as->tuile, 0, 10.0f);
+      as->camera->y -= 10.0f;
       break;
     case SDLK_LEFT:
-      move_ta(as->tuile, -10.0f, 0);
+      as->camera->x += 10.0f;
       break;
     case SDLK_RIGHT:
-      move_ta(as->tuile, 10.0f, 0);
+      as->camera->x -= 10.0f;
+      break;
+    case SDLK_KP_PLUS:
+      as->camera->zoom += 0.1f;
+      break;
+    case SDLK_KP_MINUS:
+      as->camera->zoom -= 0.1f;
       break;
     default:
       break;
@@ -55,7 +55,15 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     as->last_step += STEP_RATE_IN_MILLISECONDS;
   }
   SDL_RenderClear(as->renderer);
-  render_ta(as->renderer, as->tuile);
+  
+  SDL_Rect v = { (int)as->map_viewport.x, (int)as->map_viewport.y, 
+                 (int)as->map_viewport.w, (int)as->map_viewport.h };
+  SDL_SetRenderViewport(as->renderer, &v);
+
+  render_map(as->map, as->renderer, as->camera);
+
+  SDL_SetRenderViewport(as->renderer, NULL);
+  
   SDL_RenderPresent(as->renderer);
   return SDL_APP_CONTINUE;
 }
@@ -65,30 +73,34 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
-  if (!SDL_Init(SDL_INIT_VIDEO)) {
-    return SDL_APP_FAILURE;
-  }
+  if (!SDL_Init(SDL_INIT_VIDEO)) return SDL_APP_FAILURE;
 
   AppState *as = (AppState *)SDL_malloc(sizeof(AppState));
-  if (!as) {
-    return SDL_APP_FAILURE;
-  }
-
+  if (!as) return SDL_APP_FAILURE;
   *appstate = as;
 
-  if (!SDL_CreateWindowAndRenderer("Test fenêtre Carcassonne", WINDOW_WIDTH,
-                                   WINDOW_HEIGHT, WINDOW_RESIZABLE, &as->window,
-                                   &as->renderer)) {
+  if (!SDL_CreateWindowAndRenderer("Carcassonne Test", WINDOW_WIDTH, WINDOW_HEIGHT, 0, &as->window, &as->renderer)) {
     return SDL_APP_FAILURE;
   }
 
-  as->tuile = create_ta(as->renderer, "assets/img/tiles_png/tile_00.png");
+  as->map = create_map();
+  as->camera = create_camera();
 
-  if (!as->tuile) {
-    return SDL_APP_FAILURE;
+  as->map->tiles[0] = create_tt(as->renderer, "lib/sdl/assets/img/tiles_png/tile_00.png");
+  if (as->map->tiles[0]) {
+      as->map->tiles[0]->world_x = 100.0f;
+      as->map->tiles[0]->world_y = 100.0f;
+  }
+  as->map->tiles[1] = create_tt(as->renderer, "lib/sdl/assets/img/tiles_png/tile_01.png");
+  if (as->map->tiles[1]) {
+      as->map->tiles[1]->world_x = 164.0f;
+      as->map->tiles[1]->world_y = 100.0f;
   }
 
-  redimensionate_ta(as->tuile, 50, 50);
+  as->map_viewport.x = 0;
+  as->map_viewport.y = 0;
+  as->map_viewport.w = 500;
+  as->map_viewport.h = 500;
 
   as->last_step = SDL_GetTicks();
   return SDL_APP_CONTINUE;
