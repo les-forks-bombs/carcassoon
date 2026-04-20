@@ -47,6 +47,43 @@ static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
   return SDL_APP_CONTINUE;
 }
 
+static SDL_AppResult handle_mouse_event_(void *appstate, SDL_Event *event) {
+    AppState *as = (AppState *)appstate;
+    float mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    const SDL_FPoint mouse_pos = { mouseX, mouseY };
+
+    switch (event->type){
+      case SDL_EVENT_MOUSE_WHEEL:
+        if (SDL_PointInRectFloat(&mouse_pos, &as->map_viewport)) {
+          float localX = mouseX - as->map_viewport.x;
+          float localY = mouseY - as->map_viewport.y;
+
+          float worldMouseX = (localX / as->camera->zoom) + as->camera->x;
+          float worldMouseY = (localY / as->camera->zoom) + as->camera->y;
+
+          if (event->wheel.y > 0) {
+            if (as->camera->zoom < ZOOM_MAX) as->camera->zoom *= 1.1f;
+          } else {
+            if (as->camera->zoom > ZOOM_MIN) as->camera->zoom *= 0.9f;
+          }
+          
+          as->camera->x = worldMouseX - (localX / as->camera->zoom);
+          as->camera->y = worldMouseY - (localY / as->camera->zoom);
+        }
+        break;    
+      case SDL_EVENT_MOUSE_MOTION :
+        if (event->motion.state & SDL_BUTTON_LMASK && SDL_PointInRectFloat(&mouse_pos, &as->map_viewport)) {
+            as->camera->x -= event->motion.xrel / as->camera->zoom;
+            as->camera->y -= event->motion.yrel / as->camera->zoom;
+        }
+        break;
+      default:
+        break;
+    }
+    return SDL_APP_CONTINUE;
+}
+
 SDL_AppResult SDL_AppIterate(void *appstate) {
   AppState    *as  = (AppState *)appstate;
   const Uint64 now = SDL_GetTicks();
@@ -86,15 +123,18 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   as->map = create_map();
   as->camera = create_camera();
 
-  as->map->tiles[0] = create_tt(as->renderer, "lib/sdl/assets/img/tiles_png/tile_00.png");
-  if (as->map->tiles[0]) {
-      as->map->tiles[0]->world_x = 100.0f;
-      as->map->tiles[0]->world_y = 100.0f;
-  }
-  as->map->tiles[1] = create_tt(as->renderer, "lib/sdl/assets/img/tiles_png/tile_01.png");
-  if (as->map->tiles[1]) {
-      as->map->tiles[1]->world_x = 164.0f;
-      as->map->tiles[1]->world_y = 100.0f;
+  int map_width_temp = 5;
+
+  for (int i = 0; i < 10; i++) {
+    int col = i % map_width_temp; 
+    int row = i / map_width_temp;
+        
+    as->map->tiles[i] = create_tt(as->renderer, "lib/sdl/assets/img/tiles_png/tile_05.png");
+
+    if (as->map->tiles[i]) {
+      as->map->tiles[i]->world_x = (col * MAP_TILE_SIZE);
+      as->map->tiles[i]->world_y = (row * MAP_TILE_SIZE);
+    }
   }
 
   as->map_viewport.x = 0;
@@ -107,12 +147,16 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 }
 
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
-  (void)appstate;
+  AppState *as = (AppState *)appstate;
   switch (event->type) {
     case SDL_EVENT_QUIT:
       return SDL_APP_SUCCESS;
     case SDL_EVENT_KEY_DOWN:
       return handle_key_event_(appstate, event->key.key);
+    case SDL_EVENT_MOUSE_WHEEL:
+    case SDL_EVENT_MOUSE_MOTION:
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+      return handle_mouse_event_(appstate, event);
     default:
       break;
   }
