@@ -8,6 +8,8 @@
 #define WINDOW_WIDTH              800
 #define WINDOW_HEIGHT             500
 #define WINDOW_RESIZABLE          0
+#define ZOOM_MAX                  10
+#define ZOOM_MIN                  0.1
 #define STEP_RATE_IN_MILLISECONDS 16
 
 #endif
