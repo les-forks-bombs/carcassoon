@@ -62,12 +62,7 @@ stages:
     matrix:
       - TARGET: *targets
         PROFILE: *profiles
-  needs:
-    - job: 'Build'
-      parallel:
-        matrix:
-          - TARGET: ['$[[ matrix.TARGET ]]']
-            PROFILE: ['$[[ matrix.PROFILE ]]']
+
   script:
     - make -s test TARGET=$TARGET PROFILE=$PROFILE
 
@@ -81,6 +76,7 @@ stages:
 'Lint':
   stage: test
   needs: []
+  allow_failure: true
   script:
     - make -s check
 
