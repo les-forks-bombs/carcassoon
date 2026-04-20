@@ -31,12 +31,12 @@ endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
 
+build test clean: out/$(PROFILE)/$(TARGET)
+	@$(MAKE) -C lib -f build.mk $@
+
 out/$(PROFILE)/$(TARGET):
 	@mkdir -p out/$(PROFILE)/
 	@cp -r $(BUILD_DIR)/out $@
-
-build test clean: out/$(PROFILE)/$(TARGET)
-	@$(MAKE) -C lib -f build.mk $@
 
 cli sdl: build
 	$(BINS_DIR)/$@
