@@ -14,4 +14,3 @@ include $(BUILD_DIR)/binary.mk
 
 build:: ./assets
 	@cp -r ./assets $(BINS_DIR)/
-

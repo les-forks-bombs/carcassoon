@@ -15,7 +15,7 @@ CFLAGS += --target=$(TARGET)
 LFLAGS += --target=$(TARGET)
 
 CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
-CFLAGS += -std=c99 -g -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
+CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
 LFLAGS += -L$(LIBS_DIR) -lm
 
 ifeq "$(PROFILE)" "debug"
@@ -23,28 +23,37 @@ ifeq "$(PROFILE)" "debug"
 	    CFLAGS += -fsanitize=address
 	    LFLAGS += -fsanitize=address
 	endif
+
+	CFLAGS += -O0 -g
 endif
 
 ifeq "$(PROFILE)" "release"
 	CFLAGS += -O3
+	LFLAGS += -s
 endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
 
+
 build test clean: out/$(PROFILE)/$(TARGET)
 	@$(MAKE) -C lib -f build.mk $@
+
+ifneq ($(filter clean,$(MAKECMDGOALS)),)
+build: clean
+test: clean
+endif
 
 out/$(PROFILE)/$(TARGET):
 	@mkdir -p out/$(PROFILE)/
 	@cp -r $(BUILD_DIR)/out $@
 
 cli sdl: build
-	$(BINS_DIR)/$@
+	$(BINS_DIR)/carcassonne -m $@
 
 req:
 	@echo "/!\ Attention !"
 	@echo ""
-	@echo "Ce projet utilise les libraries système pour compiler avec sdl"
+	@echo "Ce projet utilise les libraries système pour compiler avec sdl et cmocka"
 	@echo "Merci de l'installer pour le target $(TARGET) afin que pkg-config"
 	@echo "Puisse trouver la librarie !"
 	@echo
@@ -60,5 +69,7 @@ lint:
 check:
 	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format --dry-run --Werror
 
-.PHONY: clean build test docs check lint req cli sdl
+bear: out/$(PROFILE)/$(TARGET)
+	@bear --output ./out/$(PROFILE)/$(TARGET)/compile_commands.json -- make clean build
 
+.PHONY: clean build test docs check lint req cli sdl

@@ -4,6 +4,7 @@ default:
 .targets: &targets
   - x86_64-redhat-linux-gnu
   - x86_64-w64-mingw64
+  - x86_64-w64-mingw32
 
 .profiles: &profiles 
   - debug
@@ -23,8 +24,8 @@ stages:
         PROFILE: *profiles
   
   script:
-    - make -s clean TARGET=$TARGET PROFILE=$PROFILE
-    - bear --output ./out/$PROFILE/$TARGET/compile_commands.json -- make -s build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make -s out/$PROFILE/$TARGET -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - bear --output ./out/$PROFILE/$TARGET/compile_commands.json -- make -s clean build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always

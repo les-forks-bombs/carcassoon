@@ -1,7 +1,8 @@
-#ifndef H_LIBCARCASSONNE_DECK_COMPOSITION
-#define H_LIBCARCASSONNE_DECK_COMPOSITION
+#pragma once
 
+#include <libcarcassonne/extension.h>
 #include <libcarcassonne/tile.h>
+#include <unistd.h>
 
 #define VILLAGE LIBCARCASSONNE_TILE_PART_VILLAGE
 #define FIELD   LIBCARCASSONNE_TILE_PART_FIELD
@@ -20,7 +21,7 @@
 #define H LIBCARCASSONNE_TILE_PART_H
 #define I LIBCARCASSONNE_TILE_PART_I
 
-static tile_t tiles[] =
+static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
     {
         // CCCC
         {.family = "CCCC",
@@ -449,25 +450,50 @@ static tile_t tiles[] =
          .amount       = 1},
 };
 
-static tile_t start_tile = {.family = "CRFR",
-                            .parts =
-                                {
-                                    FIELD,
-                                    TOWN,
-                                    FIELD,
-                                    ROAD,
-                                    ROAD,
-                                    ROAD,
-                                    FIELD,
-                                    FIELD,
-                                    FIELD,
-                                },
-                            .parts_groups = {D, A, D, B, 0, B, C, C, C},
-                            .blason       = 0,
-                            .amount       = 1,
-                            .texture      = "tile_18.png"};
+const static tile_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[] = {
+    {.family = "CRFR",
+     .parts =
+         {
+             FIELD,
+             TOWN,
+             FIELD,
+             ROAD,
+             ROAD,
+             ROAD,
+             FIELD,
+             FIELD,
+             FIELD,
+         },
+     .parts_groups = {D, A, D, B, 0, B, C, C, C},
+     .blason       = 0,
+     .amount       = 1,
+     .texture      = "tile_18.png"}};
 
-// On supprime les macros qu'on a utilisé
+static const extension_tiles_t LIBCARCASSONNE_EXT_BASE_GAME_TILES = {
+    .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS) /
+            sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]),
+    .tiles = &LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]};
+
+static const extension_process_hooks_t LIBCARCASSONNE_EXT_BASE_GAME_HOOKS = {
+    .size  = 0,
+    .hooks = NULL,
+};
+static const extension_tiles_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
+    .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS) /
+            sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]),
+    .tiles = &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]};
+
+static const extension_list_t LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS = {
+    .size = 0, .extensions = NULL};
+
+static const extension_t LIBCARCASSONNE_EXT_BASE_GAME = {
+    .name                 = "Base Game",
+    .hooks                = &LIBCARCASSONNE_EXT_BASE_GAME_HOOKS,
+    .tiles                = &LIBCARCASSONNE_EXT_BASE_GAME_TILES,
+    .start_tiles          = &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES,
+    .start_tiles_priority = 0,
+    .required             = &LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS,
+};
 
 #undef VILLAGE
 #undef FIELD
@@ -475,5 +501,3 @@ static tile_t start_tile = {.family = "CRFR",
 #undef WALL
 #undef ABBEY
 #undef TOWN
-
-#endif

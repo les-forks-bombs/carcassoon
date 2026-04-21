@@ -1,5 +1,4 @@
-#ifndef H_LIBCARCASSONNE_PRNG_MERSENNE_TWISTER
-#define H_LIBCARCASSONNE_PRNG_MERSENNE_TWISTER
+#pragma once
 
 #include <stdint.h>
 
@@ -40,5 +39,3 @@ prng_mersenne_twister_state_t create_prng_mersenne_twister_state(int seed);
 /// @return Un nombre aléatoire
 /// @related prng_mersenne_twister_state
 unsigned int prng_mersenne_twister_random(prng_mersenne_twister_state_t* state);
-
-#endif
