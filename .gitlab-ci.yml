@@ -51,22 +51,21 @@ stages:
 
 'Coverage':
   stage: test
-
-
   needs:
     - job: 'Build'
       parallel:
         matrix:
-          - TARGET: ['x86_64-redhat-linux-gnu']
+          - TARGET: ['$[[ matrix.TARGET ]]']
             PROFILE: ['$[[ matrix.PROFILE ]]']
-
   parallel:
     matrix:
-      - TARGET: *targets
+      - TARGET: ['x86_64-redhat-linux-gnu']
         PROFILE: ['debug']
-  coverage: '/TOTAL.*\s+(\d+\.\d+)\%/'
+
   script:
     - make -s coverage TARGET=$TARGET PROFILE=$PROFILE
+  
+  coverage: '/TOTAL.*\s+(\d+\.\d+)\%/'
   artifacts:
       when: always
       reports:
