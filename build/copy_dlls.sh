@@ -34,7 +34,6 @@ copy_dependencies() {
     done
 }
 
-echo "Analyzing $EXE..."
 if [ -f "$EXE" ]; then
     copy_dependencies "$EXE"
 else

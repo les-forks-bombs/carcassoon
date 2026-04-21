@@ -1,6 +1,5 @@
 #include <libcarcassonne/prng_mersenne_twister.h>
 #include <memory.h>
-#include <stdlib.h>
 
 prng_mersenne_twister_state_t create_prng_mersenne_twister_state(int seed) {
   prng_mersenne_twister_state_t state;

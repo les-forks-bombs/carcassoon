@@ -1,21 +1,25 @@
-#include <libutils/cmocka.h>
 #include <libcarcassonne/deck.h>
 #include <libcarcassonne/tests/tests.h>
+#include <libutils/cmocka.h>
 
 /* Vérifie l'instanciation d'un deck */
 void deck_builds(void** state) {
-  deck_t deck = create_deck(0);
+  (void)state;
+
+  deck_t deck = create_deck(0, &base);
   free_deck(deck);
 }
 
 /* Vérifie que le deck est consistant quand on a les memes seed */
 void deck_seed_consistent(void** state) {
-  deck_t deck1 = create_deck(0);
-  deck_t deck2 = create_deck(0);
-  deck_t deck3 = create_deck(100);
+  (void)state;
+
+  deck_t deck1 = create_deck(0, &base);
+  deck_t deck2 = create_deck(0, &base);
+  deck_t deck3 = create_deck(100, &base);
 
   // on skip le premier car c'est toujours le meme (tile de départ)
-  tile_t* r = deck_pick(&deck1);
+  const tile_t* r = deck_pick(&deck1);
   assert_ptr_equal(deck_pick(&deck2), r);
   assert_ptr_equal(deck_pick(&deck3), r);
 

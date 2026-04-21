@@ -1,5 +1,5 @@
-#ifndef H_LIBCARCASSONNE_CONSTS
-#define H_LIBCARCASSONNE_CONSTS
+#pragma once
+
 #define LIBCARCASSONNE_MAX_PLAYERS 5
 #define LIBCARCASSONNE_TILES_COUNT 72
 
@@ -9,7 +9,6 @@
 #define OUT_OF_BOUNDS     3
 #define NO_TILE           4
 #define INVALID_PLACEMENT 5
+#define ALREADY_ALLOCATED 6
 
 typedef char return_code_t;
-
-#endif
