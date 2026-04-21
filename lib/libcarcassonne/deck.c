@@ -1,9 +1,11 @@
 #include <libcarcassonne/deck.h>
-#include <libcarcassonne/deck_composition.h>
+#include <libcarcassonne/extension.h>
+#include <libcarcassonne/prng_mersenne_twister.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-deck_t create_deck(int seed) {
+deck_t create_deck(int seed, extension_list_t* extensions) {
   // On initialise la struct, cette dernière sera stoquée dans le stack
   deck_t deck = {.list =
                      {
@@ -21,13 +23,26 @@ deck_t create_deck(int seed) {
       .size = 0,
   };
 
-  // A partir d'une composition de deck,
-  // on ajoute les éléments a la queue
-  for (unsigned int i = 0; i < sizeof(tiles) / sizeof(tiles[0]); i++) {
-    tile_t* element = &tiles[i];
+  unsigned int             start_tile_priority = 0;
+  const extension_tiles_t* start_tile          = NULL;
 
-    for (unsigned int j = 0; j < element->amount; j++) {
-      deck_list_append(&queue, element);
+  for (unsigned int j = 0; j < extensions->size; j++) {
+    // A partir d'une composition de deck,
+    // on ajoute les éléments a la queue
+    for (unsigned int i = 0; i < extensions->extensions[j].tiles->size; i++) {
+      const tile_t* element = &extensions->extensions[j].tiles->tiles[i];
+
+      for (unsigned int j = 0; j < element->amount; j++) {
+        deck_list_append(&queue, element);
+      }
+    }
+
+    // On cherche la liste de tiles de démarrage avec la plus haute priorité
+    if ((extensions->extensions[j].start_tiles_priority >
+         start_tile_priority) ||
+        start_tile == NULL) {
+      start_tile_priority = extensions->extensions[j].start_tiles_priority;
+      start_tile          = extensions->extensions[j].start_tiles;
     }
   }
 
@@ -44,28 +59,29 @@ deck_t create_deck(int seed) {
     deck_list_remove(&queue, element);
   }
 
-  deck_list_prepend(&deck.list, &start_tile);
+  int index = prng_mersenne_twister_random(&deck.state) % start_tile->size;
+  deck_list_prepend(&deck.list, &start_tile->tiles[index]);
 
   return deck;
 }
 
 void free_deck(deck_t deck) { deck_list_free(&deck.list); }
 
-tile_t* deck_pick(deck_t* deck) {
+const tile_t* deck_pick(deck_t* deck) {
   if (deck->list.head == NULL) return NULL;
 
-  tile_t* el = deck->list.head->tile;
+  const tile_t* el = deck->list.head->tile;
   deck_list_remove(&deck->list, deck->list.head);
 
   return el;
 }
 
-void deck_defausser(deck_t* deck, tile_t* tile) {
+void deck_defausser(deck_t* deck, const tile_t* tile) {
   int index = prng_mersenne_twister_random(&deck->state) % deck->list.size;
   deck_list_insert(&deck->list, index, tile);
 }
 
-deck_list_t* deck_list_append(deck_list_t* l, tile_t* tile) {
+deck_list_t* deck_list_append(deck_list_t* l, const tile_t* tile) {
   deck_element_t* el = malloc(sizeof(deck_element_t));
   el->next = el->prev = NULL;
   el->tile            = tile;
@@ -90,7 +106,7 @@ deck_list_t* deck_list_append(deck_list_t* l, tile_t* tile) {
   return l;
 }
 
-deck_list_t* deck_list_prepend(deck_list_t* l, tile_t* tile) {
+deck_list_t* deck_list_prepend(deck_list_t* l, const tile_t* tile) {
   deck_element_t* el = malloc(sizeof(deck_element_t));
   el->next = el->prev = NULL;
   el->tile            = tile;
@@ -115,7 +131,7 @@ deck_list_t* deck_list_prepend(deck_list_t* l, tile_t* tile) {
 }
 
 deck_list_t* deck_list_insert(deck_list_t* l, unsigned int index,
-                              tile_t* tile) {
+                              const tile_t* tile) {
   if (l == NULL) {
     return NULL;
   }

@@ -1,11 +1,21 @@
 BINS := $(shell find . -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
 
-build_libcarcassonne: build_libai
-
-build_%: %/
+$(BINS): %:
 	@$(MAKE) -C $* -f build.mk build
-clean_%: %/
-	@$(MAKE) -C $* -f build.mk clean
 
-build: $(addprefix build_,$(BINS))
+$(addprefix clean_,$(BINS)): clean_%:
+	@$(MAKE) -C $* -f build.mk clean
+$(addprefix test_,$(BINS)): test_%:
+	@$(MAKE) -C $* -f build.mk test
+
+sdl carcassonne cli: libcarcassonne libai
+
+build: $(BINS)
 clean: $(addprefix clean_,$(BINS))
+test: $(addprefix test_,$(BINS))
+
+.PHONY: \
+	clean build test \
+	$(BINS) \
+	$(addprefix clean_,$(BINS)) \
+	$(addprefix test_,$(BINS))
