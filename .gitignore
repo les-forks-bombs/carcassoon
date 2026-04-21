@@ -3,4 +3,4 @@
 public/
 .cache
 .idea
-default.profraw
+*.profraw
