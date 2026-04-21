@@ -55,6 +55,8 @@ typedef struct game
 
     /// @brief Instance de la liste des tuiles
     tile_list_t open_tiles;
+    /// @brief Paramètres du jeu
+    options_t *options;
 } game_t;
 
 /// @brief Initialise un objet `game` en mémoire
@@ -113,10 +115,8 @@ void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile);
 
 /// @brief Instancie une liste chaînée de tuile
 /// @return Une liste chaînée de tile vide
-tile_list_t create_open_tiles_list();
+tile_list_t create_open_tiles_list(void);
 
 /// @brief Permet de savoir si une partie est terminée ou non
 /// @return Vrai si la partie est terminé, Faux sinon
 bool is_game_finished(game_t *game);
-
-#endif
