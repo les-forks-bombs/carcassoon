@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "consts.h"
 
 tile_temp_t *create_tt(SDL_Renderer *renderer, char *chemin) {
@@ -29,6 +30,4 @@ void render_tt(SDL_Renderer *renderer, tile_temp_t *t) {
                            SDL_FLIP_NONE);
 }
 
-void destroy_tt(tile_temp_t *t) {
-  free(t);
-}
+void destroy_tt(tile_temp_t *t) { free(t); }

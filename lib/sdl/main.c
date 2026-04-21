@@ -5,11 +5,11 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <stdlib.h>
 
-#include "consts.h"
-#include "tile_temp.h"
 #include "camera.h"
+#include "consts.h"
 #include "map.h"
 #include "text.h"
+#include "tile_temp.h"
 
 typedef struct {
   SDL_Window    *window;
@@ -51,40 +51,41 @@ static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
 }
 
 static SDL_AppResult handle_mouse_event_(void *appstate, SDL_Event *event) {
-    AppState *as = (AppState *)appstate;
-    float mouseX, mouseY;
-    SDL_GetMouseState(&mouseX, &mouseY);
-    const SDL_FPoint mouse_pos = { mouseX, mouseY };
+  AppState *as = (AppState *)appstate;
+  float     mouseX, mouseY;
+  SDL_GetMouseState(&mouseX, &mouseY);
+  const SDL_FPoint mouse_pos = {mouseX, mouseY};
 
-    switch (event->type){
-      case SDL_EVENT_MOUSE_WHEEL:
-        if (SDL_PointInRectFloat(&mouse_pos, &as->map_viewport)) {
-          float localX = mouseX - as->map_viewport.x;
-          float localY = mouseY - as->map_viewport.y;
+  switch (event->type) {
+    case SDL_EVENT_MOUSE_WHEEL:
+      if (SDL_PointInRectFloat(&mouse_pos, &as->map_viewport)) {
+        float localX = mouseX - as->map_viewport.x;
+        float localY = mouseY - as->map_viewport.y;
 
-          float worldMouseX = (localX / as->camera->zoom) + as->camera->x;
-          float worldMouseY = (localY / as->camera->zoom) + as->camera->y;
+        float worldMouseX = (localX / as->camera->zoom) + as->camera->x;
+        float worldMouseY = (localY / as->camera->zoom) + as->camera->y;
 
-          if (event->wheel.y > 0) {
-            if (as->camera->zoom < ZOOM_MAX) as->camera->zoom *= 1.1f;
-          } else {
-            if (as->camera->zoom > ZOOM_MIN) as->camera->zoom *= 0.9f;
-          }
-          
-          as->camera->x = worldMouseX - (localX / as->camera->zoom);
-          as->camera->y = worldMouseY - (localY / as->camera->zoom);
+        if (event->wheel.y > 0) {
+          if (as->camera->zoom < ZOOM_MAX) as->camera->zoom *= 1.1f;
+        } else {
+          if (as->camera->zoom > ZOOM_MIN) as->camera->zoom *= 0.9f;
         }
-        break;    
-      case SDL_EVENT_MOUSE_MOTION :
-        if (event->motion.state & SDL_BUTTON_LMASK && SDL_PointInRectFloat(&mouse_pos, &as->map_viewport)) {
-            as->camera->x -= event->motion.xrel / as->camera->zoom;
-            as->camera->y -= event->motion.yrel / as->camera->zoom;
-        }
-        break;
-      default:
-        break;
-    }
-    return SDL_APP_CONTINUE;
+
+        as->camera->x = worldMouseX - (localX / as->camera->zoom);
+        as->camera->y = worldMouseY - (localY / as->camera->zoom);
+      }
+      break;
+    case SDL_EVENT_MOUSE_MOTION:
+      if (event->motion.state & SDL_BUTTON_LMASK &&
+          SDL_PointInRectFloat(&mouse_pos, &as->map_viewport)) {
+        as->camera->x -= event->motion.xrel / as->camera->zoom;
+        as->camera->y -= event->motion.yrel / as->camera->zoom;
+      }
+      break;
+    default:
+      break;
+  }
+  return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult SDL_AppIterate(void *appstate) {
@@ -95,9 +96,9 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     as->last_step += STEP_RATE_IN_MILLISECONDS;
   }
   SDL_RenderClear(as->renderer);
-  
-  SDL_Rect v = { (int)as->map_viewport.x, (int)as->map_viewport.y, 
-                 (int)as->map_viewport.w, (int)as->map_viewport.h };
+
+  SDL_Rect v = {(int)as->map_viewport.x, (int)as->map_viewport.y,
+                (int)as->map_viewport.w, (int)as->map_viewport.h};
   SDL_SetRenderViewport(as->renderer, &v);
 
   render_map(as->map, as->renderer, as->camera);
@@ -105,10 +106,10 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderViewport(as->renderer, NULL);
 
   if (as->text) {
-    SDL_FRect dest = { 50.0f, 50.0f, as->text->w, as->text->h };
+    SDL_FRect dest = {50.0f, 50.0f, as->text->w, as->text->h};
     SDL_RenderTexture(as->renderer, as->text->texture, NULL, &dest);
   }
-  
+
   SDL_RenderPresent(as->renderer);
   return SDL_APP_CONTINUE;
 }
@@ -124,7 +125,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   if (!as) return SDL_APP_FAILURE;
   *appstate = as;
 
-  if (!SDL_CreateWindowAndRenderer("Carcassonne Test", WINDOW_WIDTH, WINDOW_HEIGHT, 0, &as->window, &as->renderer)) {
+  if (!SDL_CreateWindowAndRenderer("Carcassonne Test", WINDOW_WIDTH,
+                                   WINDOW_HEIGHT, 0, &as->window,
+                                   &as->renderer)) {
     return SDL_APP_FAILURE;
   }
 
@@ -133,9 +136,10 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   }
 
   SDL_Color white_text = {255, 255, 255, 255};
-  as->text = init_text_object(as->renderer, "lib/sdl/assets/fonts/Orange.ttf", 32.0f, "Ici c'est Carcassonne !", white_text);
+  as->text = init_text_object(as->renderer, "lib/sdl/assets/fonts/Orange.ttf",
+                              32.0f, "Ici c'est Carcassonne !", white_text);
 
-  as->map = create_map();
+  as->map    = create_map();
   as->camera = create_camera();
 
   if (as->map == NULL || as->camera == NULL) {
@@ -145,10 +149,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   int map_width_temp = 5;
 
   for (int i = 0; i < 10; i++) {
-    int col = i % map_width_temp; 
+    int col = i % map_width_temp;
     int row = i / map_width_temp;
-        
-    as->map->tiles[i] = create_tt(as->renderer, "lib/sdl/assets/img/tiles_png/tile_05.png");
+
+    as->map->tiles[i] =
+        create_tt(as->renderer, "lib/sdl/assets/img/tiles_png/tile_05.png");
 
     if (as->map->tiles[i]) {
       as->map->tiles[i]->world_x = (col * MAP_TILE_SIZE);
