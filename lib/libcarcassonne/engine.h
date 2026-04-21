@@ -6,6 +6,14 @@
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/options.h>
 
+/// @brief Représente la prochaine action attendue par le moteur
+typedef enum engine_state
+{
+  LIBCARCASSONNE_ENGINE_WAITING_PLAYER_TILE_ACTION = LIBCARCASSONNE_ACTION_PLACE_TILE,
+  LIBCARCASSONNE_ENGINE_WAITING_PLAYER_MEEPLE_ACTION = LIBCARCASSONNE_ACTION_PLACE_MEEPLE,
+  LIBCARCASSONNE_ENGINE_WAITING_PLAYER_END_TURN = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_END_TURN,
+} engine_state_t;
+
 /// @brief Représente un moteur pour une partie de carcassonne
 typedef struct engine
 {
@@ -37,5 +45,10 @@ return_code_t dispatch_action(engine_t *engine, action_t action);
 
 /// @brief Réalise un tour de jeu complet
 void play_turn();
+
+/// @brief Permet de récupérer l'état interne du moteur
+/// @param engine Le moteur duquel récupérer l'état
+/// @return L'état interne du moteur
+engine_state_t get_engine_state(engine_t *engine);
 
 #endif
