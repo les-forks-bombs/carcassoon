@@ -19,21 +19,19 @@ CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building 
 LFLAGS += -L$(LIBS_DIR) -lm
 
 ifeq "$(PROFILE)" "debug"
+	CFLAGS += -O0 -g
 	ifeq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
 	    CFLAGS += -fsanitize=address
 	    LFLAGS += -fsanitize=address
+		CFLAGS  += -fprofile-instr-generate -fcoverage-mapping
+		LFLAGS += -fprofile-instr-generate -fcoverage-mapping
 	endif
-
-	CFLAGS += -O0 -g
-	CFLAGS  += -fprofile-instr-generate -fcoverage-mapping
-	LFLAGS += -fprofile-instr-generate -fcoverage-mapping
 endif
 
 ifeq "$(PROFILE)" "release"
 	CFLAGS += -O3
 	LFLAGS += -s
 endif
-
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
 
