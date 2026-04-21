@@ -83,7 +83,7 @@ OBJECT_FLAGS = $(foreach bin,$(OTHER_BINS),-object $(bin))
 coverage: test
 	llvm-profdata merge -sparse $(wildcard $(BINS_DIR)/tests/*.profraw) -o $(OUT_DIR)/coverage.profdata
 	llvm-cov report $(FIRST_BIN) $(OBJECT_FLAGS) -instr-profile=$(OUT_DIR)/coverage.profdata
-	llvm-cov export $(FIRST_BIN) $(OBJECT_FLAGS) -instr-profile=$(OUT_DIR)/tests.profdata -format=lcov > $(OUT_DIR)/coverage.lcov
+	llvm-cov export $(FIRST_BIN) $(OBJECT_FLAGS) -instr-profile=$(OUT_DIR)/coverage.profdata -format=lcov > $(OUT_DIR)/coverage.lcov
 	lcov_cobertura $(OUT_DIR)/coverage.lcov --output $(OUT_DIR)/coverage.xml
 
 .PHONY: clean build test docs check lint req cli sdl
