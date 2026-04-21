@@ -6,8 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-
-#include "libcarcassonne/extensions_list.h"
+#include <libcarcassonne/extensions_list.h>
 
 const char* help_string =
     ""
@@ -20,7 +19,7 @@ const char* help_string =
     "  -a, --ai=NUM             Set the number of AI players\n"
     "  -t, --max-turns=NUM      Set the maximum number of turns\n"
     "  -s, --seed=NUM           Set the random seed\n"
-    "  -e, --extensions=A,B,C   Set of extensions to enable\n"
+    "  -e, --extensions=A       Set of extensions to enable (use this option multiple times to enable many extensions)\n"
     "\n"
     "Example:\n"
     "  %1$s -m sdl -p 4 -a 2 -t 100 -s 12345\n"
@@ -40,7 +39,7 @@ options_t parse_options(int argc, char* argv[]) {
       .seed       = time(NULL),
       .players    = 3,
       .mode       = CARCASSONNE_MODE_SDL,
-      .extensions = {.size = 0, .extensions = NULL},
+      .extensions = {.size = 1, .extensions = &LIBCARCASSONNE_EXT_BASE_GAME},
   };
 
   while (1) {
