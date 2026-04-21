@@ -5,8 +5,7 @@
 #include "libcarcassonne/tile.h"
 
 /// @brief Représente les différents types d'action possible
-typedef enum action_type
-{
+typedef enum action_type {
   /// @brief Mettre fin au tour du joueur courant
   LIBCARCASSONNE_ACTION_END_PLAYER_TURN = -1,
   /// @brief Poser une tuile sur la plateau
@@ -16,8 +15,7 @@ typedef enum action_type
 } action_type_t;
 
 /// @brief Action de placement de tuile
-typedef struct action_place_tile
-{
+typedef struct action_place_tile {
   /// @brief Coordonnée en abscisse
   int x;
   /// @brief Coordonné en ordonnée
@@ -29,8 +27,7 @@ typedef struct action_place_tile
 } action_place_tile_t;
 
 /// @brief Action de pose d'un meeple
-typedef struct action_place_meeple
-{
+typedef struct action_place_meeple {
   /// @brief Coordonnée en abscisse
   int x;
   /// @brief Coordonné en ordonnée
@@ -42,15 +39,13 @@ typedef struct action_place_meeple
 } action_place_meeple_t;
 
 /// @brief Union contenant les actions réalisables
-typedef union action_order
-{
-  action_place_tile_t place_tile;
+typedef union action_order {
+  action_place_tile_t   place_tile;
   action_place_meeple_t place_meeple;
 } action_order_t;
 
 /// @brief Action à réaliser
-typedef struct action
-{
+typedef struct action {
   /// @brief Le type d'action à réaliser
   action_type_t type;
   /// @brief La manière de réaliser l'action

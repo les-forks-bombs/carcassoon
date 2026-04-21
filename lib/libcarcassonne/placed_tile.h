@@ -2,8 +2,7 @@
 #include <libcarcassonne/meeple.h>
 
 /// @brief Information des groupes de la sous-tile
-typedef struct placed_tile_group
-{
+typedef struct placed_tile_group {
   /// @brief Référence vers la tile représentant le groupe
   const struct placed_tile *tile;
   /// @brief Référence vers l'éventuel meeple placé dans le groupe
@@ -64,14 +63,12 @@ typedef struct placed_tile_group
   unsigned int local_open_slots;
 } placed_tile_group_t;
 
-typedef struct placed_face_groups
-{
+typedef struct placed_face_groups {
   placed_tile_group_t *face[3];
 } placed_face_groups_t;
 
 /// @brief Représentation d'une tile qui a été placée
-typedef struct placed_tile
-{
+typedef struct placed_tile {
   /// @brief Pointeur vers la définition de la tile
   const tile_t *parent;
   /// @brief Groupes présents a l'intérieur de la tile
@@ -81,14 +78,14 @@ typedef struct placed_tile
   tile_orientation_t orientation;
 } placed_tile_t;
 
-return_code_t placed_tile_create(placed_tile_t *placed_tile,
-                                 const tile_t *parent,
-                                 tile_orientation_t orientation);
-void placed_tile_destroy(placed_tile_t *);
-return_code_t placed_tile_get_face(placed_face_groups_t *ret,
-                                   const placed_tile_t *tile,
-                                   tile_orientation_t connexion_face);
-void placed_tile_group_access(placed_tile_group_t *node);
+return_code_t        placed_tile_create(placed_tile_t     *placed_tile,
+                                        const tile_t      *parent,
+                                        tile_orientation_t orientation);
+void                 placed_tile_destroy(placed_tile_t *);
+return_code_t        placed_tile_get_face(placed_face_groups_t *ret,
+                                          const placed_tile_t  *tile,
+                                          tile_orientation_t    connexion_face);
+void                 placed_tile_group_access(placed_tile_group_t *node);
 placed_tile_group_t *placed_tile_group_find_root(placed_tile_group_t *node);
 void placed_tile_group_path_aggregate(placed_tile_group_t *node);
 void placed_tile_group_cut(placed_tile_group_t *node);
