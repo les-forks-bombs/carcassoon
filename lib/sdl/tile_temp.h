@@ -10,7 +10,7 @@ typedef struct tile_temp {
 } tile_temp_t;
 
 tile_temp_t *create_tt(SDL_Renderer *renderer, char *chemin);
-void               render_tt(SDL_Renderer *renderer, tile_temp_t *t);
-void               destroy_tt(tile_temp_t *at);
+void         render_tt(SDL_Renderer *renderer, tile_temp_t *t);
+void         destroy_tt(tile_temp_t *at);
 
 #endif

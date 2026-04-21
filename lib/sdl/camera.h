@@ -2,8 +2,8 @@
 #define H_CAMERA
 
 typedef struct {
-    float x, y;
-    float zoom;
+  float x, y;
+  float zoom;
 } camera_t;
 
 camera_t *create_camera(void);
