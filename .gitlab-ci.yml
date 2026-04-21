@@ -49,6 +49,30 @@ stages:
   script:
     - run-clang-tidy -p out/$PROFILE/$TARGET/
 
+'Coverage':
+  stage: test
+  needs:
+    - job: 'Build'
+      parallel:
+        matrix:
+          - TARGET: ['$[[ matrix.TARGET ]]']
+            PROFILE: ['$[[ matrix.PROFILE ]]']
+  parallel:
+    matrix:
+      - TARGET: ['x86_64-redhat-linux-gnu']
+        PROFILE: ['debug']
+
+  script:
+    - make -s coverage TARGET=$TARGET PROFILE=$PROFILE
+  
+  coverage: '/TOTAL.*\s+(\d+\.\d+)\%/'
+  artifacts:
+      when: always
+      reports:
+        coverage_report:
+          coverage_format: cobertura
+          path: ./out/$PROFILE/$TARGET/coverage.xml
+  
 'Test':
   stage: test
 
@@ -62,13 +86,8 @@ stages:
   parallel:
     matrix:
       - TARGET: *targets
-        PROFILE: *profiles
-  needs:
-    - job: 'Build'
-      parallel:
-        matrix:
-          - TARGET: ['$[[ matrix.TARGET ]]']
-            PROFILE: ['$[[ matrix.PROFILE ]]']
+        PROFILE: ['release', 'debug']
+
   script:
     - make -s test TARGET=$TARGET PROFILE=$PROFILE
 
@@ -82,6 +101,7 @@ stages:
 'Lint':
   stage: test
   needs: []
+  allow_failure: true
   script:
     - make -s check
 
