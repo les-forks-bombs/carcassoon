@@ -11,9 +11,6 @@ typedef struct tile_temp {
 
 tile_temp_t *create_tt(SDL_Renderer *renderer, char *chemin);
 void               render_tt(SDL_Renderer *renderer, tile_temp_t *t);
-void               rotate_tt(tile_temp_t *t, int rot);
-void               redimensionate_tt(tile_temp_t *t, double w, double h);
-void               move_tt(tile_temp_t *t, float x, float y);
 void               destroy_tt(tile_temp_t *at);
 
 #endif
