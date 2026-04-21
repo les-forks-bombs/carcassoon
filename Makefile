@@ -69,5 +69,7 @@ lint:
 check:
 	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format --dry-run --Werror
 
-.PHONY: clean build test docs check lint req cli sdl
+bear: out/$(PROFILE)/$(TARGET)
+	@bear --output ./out/$(PROFILE)/$(TARGET)/compile_commands.json -- make clean build
 
+.PHONY: clean build test docs check lint req cli sdl
