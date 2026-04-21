@@ -1,6 +1,6 @@
 NAME := cli
 PROG = $(BINS_DIR)/$(NAME)
 
-LLIBS += carcassonne
+LLIBS += ai carcassonne
 
 include $(BUILD_DIR)/binary.mk

@@ -8,15 +8,15 @@ ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
     RUNNER := wine
 endif
 
-$(PROG).xml: $(PROG)
-	@CMOCKA_XML_FILE='$@' CMOCKA_MESSAGE_OUTPUT=xml \
+$(PROG).xml $(PROG).profraw: $(PROG)
+	@CMOCKA_XML_FILE='$@' LLVM_PROFILE_FILE="$(PROG).profraw" CMOCKA_MESSAGE_OUTPUT=xml \
 		$(RUNNER) $<
 	@echo "    TEST  $(notdir $<)"
 
 test:: $(PROG).xml
 
 clean::
-	@$(RM) -f $(PROG).xml
+	@$(RM) -f $(PROG).{xml,profraw}
 	@echo "    RM    $(notdir $(PROG).xml)"
 
 .PHONY: test clean
