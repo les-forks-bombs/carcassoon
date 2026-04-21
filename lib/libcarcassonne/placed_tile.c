@@ -97,27 +97,86 @@ placed_tile_group_t* placed_tile_group_find_root(placed_tile_group_t* node) {
 
   return node;
 }
+
 void placed_tile_group_path_aggregate(placed_tile_group_t* node) {
   // todo: aggregate function
 
-  node->groupe_open_slots = node->local_open_slots;
-  node->groupe_taille     = 1;
+  node->groupe_open_slots           = node->local_open_slots;
+  node->global_phantom_childs_count = node->phantom_childs_count;
+  node->groupe_taille               = 1;
 
   if (node->left != NULL) {
     node->groupe_taille     += node->left->groupe_taille;
     node->groupe_open_slots += node->left->groupe_open_slots;
+    node->global_phantom_childs_count +=
+        node->left->global_phantom_childs_count;
   }
   if (node->right != NULL) {
     node->groupe_taille     += node->right->groupe_taille;
     node->groupe_open_slots += node->right->groupe_open_slots;
+    node->global_phantom_childs_count +=
+        node->right->global_phantom_childs_count;
   }
 
   for (unsigned int i = 0; i < node->weak_childs_count; i++) {
     if (node->weak_childs[i] != NULL) {
       node->groupe_taille     += node->weak_childs[i]->groupe_taille;
       node->groupe_open_slots += node->weak_childs[i]->groupe_open_slots;
+      node->global_phantom_childs_count +=
+          node->weak_childs[i]->global_phantom_childs_count;
+    } else
+      break;
+  }
+}
+
+static placed_tile_group_t* placed_tile_group_parent_absolu_sans_splay(
+    placed_tile_group_t* node) {
+  while (node->parent != NULL) node = node->parent;
+  return node;
+}
+
+bool placed_tile_group_trouver_phantom(placed_tile_group_t*  node,
+                                       placed_tile_group_t** ret_source,
+                                       placed_tile_group_t** ret_target) {
+  if (node == NULL || node->global_phantom_childs_count == 0) return false;
+  placed_tile_group_t* my_root =
+      placed_tile_group_parent_absolu_sans_splay(node);
+
+  for (unsigned int i = 0; i < node->phantom_childs_count; i++) {
+    placed_tile_group_t* target = node->phantom_childs[i];
+    // si un fantôme est désormais dans un autre groupe, on a trouvé un phantom
+    // qu'on peut réparer
+    if (placed_tile_group_parent_absolu_sans_splay(target) != my_root) {
+      *ret_source = node;
+      *ret_target = target;
+      return true;
     }
   }
+
+  // sinon, on descend là où le radar (aggregate) indique des fantômes
+  // on check la gauche
+  if (node->left && node->left->global_phantom_childs_count > 0) {
+    if (placed_tile_group_trouver_phantom(node->left, ret_source, ret_target))
+      return true;
+  }
+
+  // on check la droite
+  if (node->right && node->right->global_phantom_childs_count > 0) {
+    if (placed_tile_group_trouver_phantom(node->right, ret_source, ret_target))
+      return true;
+  }
+
+  // on check les enfants faibles (branches secondaires)
+  for (unsigned int i = 0; i < node->weak_childs_count; i++) {
+    if (node->weak_childs[i] &&
+        node->weak_childs[i]->global_phantom_childs_count > 0) {
+      if (placed_tile_group_trouver_phantom(node->weak_childs[i], ret_source,
+                                            ret_target))
+        return true;
+    }
+  }
+
+  return false;
 }
 
 void placed_tile_group_cut(placed_tile_group_t* node) {
@@ -129,6 +188,16 @@ void placed_tile_group_cut(placed_tile_group_t* node) {
     node->left         = NULL;
 
     placed_tile_group_path_aggregate(node);
+    placed_tile_group_t* source = NULL;
+    placed_tile_group_t* target = NULL;
+    placed_tile_group_t* root =
+        placed_tile_group_parent_absolu_sans_splay(node);
+
+    while (placed_tile_group_trouver_phantom(root, &source, &target)) {
+      placed_tile_group_phantom_childs_rem(source, target);
+      placed_tile_group_phantom_childs_rem(target, source);
+      placed_tile_group_link(source, target);
+    }
   }
 }
 
@@ -136,7 +205,12 @@ void placed_tile_group_link(placed_tile_group_t* a, placed_tile_group_t* b) {
   // on part du postulat que "b" est la racine de son splay tree (aka. il a été
   // splay)
   if (a == NULL || b == NULL) return;
-  if (placed_tile_group_find_root(a) == placed_tile_group_find_root(b)) return;
+  if (placed_tile_group_find_root(a) == placed_tile_group_find_root(b)) {
+    // si on crée une boucle on l'ajoute comme arrête "fantome"
+    placed_tile_group_phantom_childs_add(a, b);
+    placed_tile_group_phantom_childs_add(b, a);
+    return;
+  }
 
   placed_tile_group_makeroot(a);
 
@@ -246,6 +320,24 @@ void placed_tile_group_weak_childs_rem(placed_tile_group_t* node,
       // l'ordre)
       node->weak_childs_count--;
       node->weak_childs[i] = node->weak_childs[node->weak_childs_count];
+    }
+  }
+}
+
+void placed_tile_group_phantom_childs_add(placed_tile_group_t* node,
+                                          placed_tile_group_t* el) {
+  node->phantom_childs[node->phantom_childs_count++] = el;
+}
+
+void placed_tile_group_phantom_childs_rem(placed_tile_group_t* node,
+                                          placed_tile_group_t* el) {
+  for (unsigned int i = 0; i < node->phantom_childs_count; i++) {
+    if (node->phantom_childs[i] == el) {
+      // on remplace l'élément actuel par le dernier élément (on s'en fiche de
+      // l'ordre)
+      node->phantom_childs_count--;
+      node->phantom_childs[i] =
+          node->phantom_childs[node->phantom_childs_count];
     }
   }
 }

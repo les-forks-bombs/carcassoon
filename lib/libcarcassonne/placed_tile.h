@@ -24,6 +24,22 @@ typedef struct placed_tile_group {
   unsigned int weak_childs_count;
 
   /**
+   * @brief Liens "fantômes"
+   *
+   */
+  struct placed_tile_group* phantom_childs[3 * 4];
+
+  /**
+   * @brief Nombre d'éléments dans "phantom_childs"
+   *
+   */
+  unsigned int phantom_childs_count;
+  /**
+   * @brief Nombre d'enfants fantômes aggrégé
+   */
+  unsigned int global_phantom_childs_count;
+
+  /**
    * @brief
    *
    */
@@ -81,6 +97,10 @@ void placed_tile_group_weak_childs_add(placed_tile_group_t* node,
                                        placed_tile_group_t* el);
 void placed_tile_group_weak_childs_rem(placed_tile_group_t* node,
                                        placed_tile_group_t* el);
+void placed_tile_group_phantom_childs_add(placed_tile_group_t* node,
+                                          placed_tile_group_t* el);
+void placed_tile_group_phantom_childs_rem(placed_tile_group_t* node,
+                                          placed_tile_group_t* el);
 void placed_tile_group_push_down(placed_tile_group_t* node);
 void placed_tile_group_makeroot(placed_tile_group_t* node);
 
