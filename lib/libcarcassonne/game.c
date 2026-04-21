@@ -1,29 +1,23 @@
 #include <assert.h>
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/game.h>
+#include <libcarcassonne/options.h>
 #include <memory.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 
-return_code_t create_game(game_t *game, unsigned int players_count,
-                          unsigned int ai_count, unsigned int seed,
-                          unsigned int turns_limit) {
+return_code_t create_game(game_t *game, options_t *options) {
   if (game == NULL) {
     return ERROR;
   }
 
-  // On vérifie que le nombre de joueurs est dans [2, 5]
-  // et que le nombre d'IA est inférieur au nombre de joueurs
-  if (players_count < 2 || players_count > 5 || ai_count > players_count) {
+  if (validate_options(options) != NULL) {
     return ERROR;
   }
 
   game->current_player = 0;
-  game->deck           = create_deck(seed);
-  game->players_count  = players_count;
-  game->turn           = 0;
-  game->turns_limit    = turns_limit;
+  game->deck           = create_deck(options->seed, &options->extensions);
+  game->options        = options;
 
   game->open_tiles = create_open_tiles_list();
 
@@ -34,9 +28,10 @@ return_code_t create_game(game_t *game, unsigned int players_count,
   game->map = calloc(largeur * largeur, sizeof(placed_tile_t *));
 
   // on instancie les joueurs
-  for (unsigned int i = 0; i < players_count; i++)
-    game->players[i] = create_player(i > ai_count ? LIBCARCASSONNE_PLAYER_HUMAN
-                                                  : LIBCARCASSONNE_PLAYER_AI);
+  for (unsigned int i = 0; i < game->options->players; i++)
+    game->players[i] =
+        create_player(i > game->options->ai ? LIBCARCASSONNE_PLAYER_HUMAN
+                                            : LIBCARCASSONNE_PLAYER_AI);
 
   return SUCCESS;
 }
@@ -80,7 +75,7 @@ placed_tile_t **game_tile_at(game_t *game, int colonne, int ligne) {
   return &game->map[index];
 }
 
-return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
+return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
                               tile_orientation_t orientation) {
   if (game == NULL || tile == NULL) {
     return ERROR;
@@ -143,14 +138,7 @@ return_code_t game_place_tile(game_t *game, tile_t *tile, int x, int y,
         placed_tile_get_face(&current_face, placed_tile, s);
 
         for (int i = 0; i < 3; i++) {
-          // on évite les boucles durant la construction
-          placed_tile_group_t *root_a =
-              placed_tile_group_find_root(neighboor_face.face[i]);
-          placed_tile_group_t *root_b =
-              placed_tile_group_find_root(current_face.face[i]);
-          if (root_a != root_b) {
-            placed_tile_group_link(root_a, root_b);
-          }
+          placed_tile_group_link(neighboor_face.face[i], current_face.face[i]);
         }
       }
     }
@@ -190,23 +178,7 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group) {
   }
 }
 
-void game_print_map(game_t *game) {
-  for (int i = -LIBCARCASSONNE_TILES_COUNT + 1; i < LIBCARCASSONNE_TILES_COUNT;
-       i++) {
-    printf("|");
-    for (int j = -LIBCARCASSONNE_TILES_COUNT + 1;
-         j < LIBCARCASSONNE_TILES_COUNT; j++) {
-      placed_tile_t **tile = game_tile_at(game, i, j);
-      if (*tile == NULL)
-        printf(".");
-      else
-        printf("#");
-    }
-    printf("|\n");
-  }
-}
-
-bool game_is_tile_placeable(game_t *game, tile_t *tile, int x, int y,
+bool game_is_tile_placeable(game_t *game, const tile_t *tile, int x, int y,
                             tile_orientation_t orientation) {
   if (game == NULL || tile == NULL) return false;
 
@@ -320,5 +292,3 @@ tile_list_t create_open_tiles_list(void) {
 
   return tl;
 }
-
-void game_print_detail(game_t *, int x, int y, int zoom) {}

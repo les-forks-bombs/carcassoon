@@ -6,7 +6,7 @@
 void deck_builds(void** state) {
   (void)state;
 
-  deck_t deck = create_deck(0);
+  deck_t deck = create_deck(0, &base);
   free_deck(deck);
 }
 
@@ -14,12 +14,12 @@ void deck_builds(void** state) {
 void deck_seed_consistent(void** state) {
   (void)state;
 
-  deck_t deck1 = create_deck(0);
-  deck_t deck2 = create_deck(0);
-  deck_t deck3 = create_deck(100);
+  deck_t deck1 = create_deck(0, &base);
+  deck_t deck2 = create_deck(0, &base);
+  deck_t deck3 = create_deck(100, &base);
 
   // on skip le premier car c'est toujours le meme (tile de départ)
-  tile_t* r = deck_pick(&deck1);
+  const tile_t* r = deck_pick(&deck1);
   assert_ptr_equal(deck_pick(&deck2), r);
   assert_ptr_equal(deck_pick(&deck3), r);
 
