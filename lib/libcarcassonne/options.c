@@ -1,12 +1,12 @@
 #include <getopt.h>
 #include <libcarcassonne/consts.h>
+#include <libcarcassonne/extensions_list.h>
 #include <libcarcassonne/options.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-#include <libcarcassonne/extensions_list.h>
 
 const char* help_string =
     ""
@@ -19,7 +19,8 @@ const char* help_string =
     "  -a, --ai=NUM             Set the number of AI players\n"
     "  -t, --max-turns=NUM      Set the maximum number of turns\n"
     "  -s, --seed=NUM           Set the random seed\n"
-    "  -e, --extensions=A       Set of extensions to enable (use this option multiple times to enable many extensions)\n"
+    "  -e, --extensions=A       Set of extensions to enable (use this option "
+    "multiple times to enable many extensions)\n"
     "\n"
     "Example:\n"
     "  %1$s -m sdl -p 4 -a 2 -t 100 -s 12345\n"
