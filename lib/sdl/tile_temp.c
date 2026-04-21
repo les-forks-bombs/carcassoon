@@ -20,13 +20,6 @@ tile_temp_t *create_tt(SDL_Renderer *renderer, char *chemin) {
   return t;
 }
 
-void rotate_tt(tile_temp_t *t, int rot) { t->rotation = rot; }
-
-void move_tt(tile_temp_t *t, float x, float y) {
-  t->x += x;
-  t->y += y;
-}
-
 void render_tt(SDL_Renderer *renderer, tile_temp_t *t) {
   if (!t || !t->texture) return;
 

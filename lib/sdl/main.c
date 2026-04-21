@@ -2,12 +2,14 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <stdlib.h>
 
 #include "consts.h"
 #include "tile_temp.h"
 #include "camera.h"
 #include "map.h"
+#include "text.h"
 
 typedef struct {
   SDL_Window    *window;
@@ -16,6 +18,7 @@ typedef struct {
   camera_t      *camera;
   SDL_FRect      map_viewport;
   Uint64         last_step;
+  text_object_t *text;
 } AppState;
 
 static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
@@ -100,6 +103,11 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   render_map(as->map, as->renderer, as->camera);
 
   SDL_SetRenderViewport(as->renderer, NULL);
+
+  if (as->text) {
+    SDL_FRect dest = { 50.0f, 50.0f, as->text->w, as->text->h };
+    SDL_RenderTexture(as->renderer, as->text->texture, NULL, &dest);
+  }
   
   SDL_RenderPresent(as->renderer);
   return SDL_APP_CONTINUE;
@@ -120,8 +128,19 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     return SDL_APP_FAILURE;
   }
 
+  if (!TTF_Init()) {
+    return SDL_APP_FAILURE;
+  }
+
+  SDL_Color white_text = {255, 255, 255, 255};
+  as->text = init_text_object(as->renderer, "lib/sdl/assets/fonts/Orange.ttf", 32.0f, "Ici c'est Carcassonne !", white_text);
+
   as->map = create_map();
   as->camera = create_camera();
+
+  if (as->map == NULL || as->camera == NULL) {
+    return SDL_APP_FAILURE;
+  }
 
   int map_width_temp = 5;
 
@@ -171,6 +190,8 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     AppState *as = (AppState *)appstate;
     SDL_DestroyRenderer(as->renderer);
     SDL_DestroyWindow(as->window);
+    destroy_text_object(as->text);
+    TTF_Quit();
     SDL_free(as);
   }
 }
