@@ -7,6 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "libcarcassonne/ext_base_game.h"
 #include "libcarcassonne/extensions_list.h"
 
 const char* help_string =
@@ -40,7 +41,7 @@ options_t parse_options(int argc, char* argv[]) {
       .seed       = time(NULL),
       .players    = 3,
       .mode       = CARCASSONNE_MODE_SDL,
-      .extensions = {.size = 0, .extensions = NULL},
+      .extensions = {.size = 1, .extensions = &LIBCARCASSONNE_EXT_BASE_GAME},
   };
 
   while (1) {
