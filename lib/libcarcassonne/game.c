@@ -292,3 +292,7 @@ tile_list_t create_open_tiles_list(void) {
 
   return tl;
 }
+
+bool is_game_finished(game_t *game) {
+  return game->deck.list.size == 0 || game->turn == game->turns_limit;
+}
