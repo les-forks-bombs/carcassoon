@@ -24,7 +24,7 @@ typedef struct {
 list_node_t *_list_append(list_t *list, const void *data, size_t size);
 list_node_t *_list_prepend(list_t *list, const void *data, size_t size);
 list_node_t *_list_insert(list_t *list, const void *data, size_t size,
-                             unsigned int index);
+                          unsigned int index);
 list_node_t *_list_nth(list_t *list, unsigned int index);
 void         _list_free(list_t *list);
 void         _list_remove(list_t *list, list_node_t *data);
@@ -40,10 +40,10 @@ void         _list_remove_value(list_t *list, const void *data, size_t size);
 
 #define list_insert(list, item, index)                             \
   _list_insert(&((list)->meta), (1 ? (item) : (list)->type_ghost), \
-                  sizeof(*(list)->type_ghost), index)
+               sizeof(*(list)->type_ghost), index)
 
 #define list_nth(list, index)   _list_nth(&((list)->meta), index)
-#define list_value(list, node)    ((__typeof__((list)->type_ghost))((node)->value))
+#define list_value(list, node)  ((__typeof__((list)->type_ghost))((node)->value))
 #define list_remove(list, item) _list_remove(&((list)->meta), item)
 
 #define list_head(list) ((list)->meta.head)
@@ -55,4 +55,4 @@ void         _list_remove_value(list_t *list, const void *data, size_t size);
 
 #define list_remove_value(list, item)                                    \
   _list_remove_value(&((list)->meta), (1 ? (item) : (list)->type_ghost), \
-                   sizeof(*(list)->type_ghost))
+                     sizeof(*(list)->type_ghost))

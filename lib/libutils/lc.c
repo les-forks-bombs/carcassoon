@@ -41,7 +41,7 @@ list_node_t *_list_prepend(list_t *l, const void *data, size_t size) {
 }
 
 list_node_t *_list_insert(list_t *l, const void *data, size_t size,
-                             unsigned int index) {
+                          unsigned int index) {
   if (index == 0) return _list_prepend(l, data, size);
   if (index >= l->size) return _list_append(l, data, size);
 
