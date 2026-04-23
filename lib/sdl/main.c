@@ -5,13 +5,12 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <sdl/camera.h>
+#include <sdl/consts.h>
+#include <sdl/map.h>
+#include <sdl/text.h>
+#include <sdl/tile_temp.h>
 #include <stdlib.h>
-
-#include "camera.h"
-#include "consts.h"
-#include "map.h"
-#include "text.h"
-#include "tile_temp.h"
 
 typedef struct {
   SDL_Window    *window;

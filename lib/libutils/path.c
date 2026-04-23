@@ -3,10 +3,9 @@
 #define _POSIX_C_SOURCE 200809L
 #endif
 
+#include <libcarcassonne/consts.h>
 #include <libutils/path.h>
 #include <string.h>
-
-#include "libcarcassonne/consts.h"
 
 #ifdef _WIN32
 #include <shlwapi.h>
