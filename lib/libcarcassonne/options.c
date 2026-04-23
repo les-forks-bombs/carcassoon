@@ -1,5 +1,6 @@
 #include <getopt.h>
 #include <libcarcassonne/consts.h>
+#include <libcarcassonne/ext_base_game.h>
 #include <libcarcassonne/extensions_list.h>
 #include <libcarcassonne/options.h>
 #include <stdio.h>
@@ -7,9 +8,6 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-
-#include "libcarcassonne/ext_base_game.h"
-#include "libcarcassonne/extensions_list.h"
 
 const char* help_string =
     ""

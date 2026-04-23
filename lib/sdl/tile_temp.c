@@ -1,11 +1,7 @@
 #define _POSIX_C_SOURCE 200809L
-#include "tile_temp.h"
-
-#include <math.h>
+#include <sdl/consts.h>
+#include <sdl/tile_temp.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "consts.h"
 
 tile_temp_t *create_tt(SDL_Renderer *renderer, char *chemin) {
   tile_temp_t *t = malloc(sizeof(tile_temp_t));
