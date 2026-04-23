@@ -99,8 +99,6 @@ placed_tile_group_t* placed_tile_group_find_root(placed_tile_group_t* node) {
 }
 
 void placed_tile_group_path_aggregate(placed_tile_group_t* node) {
-  // todo: aggregate function
-
   node->groupe_open_slots           = node->local_open_slots;
   node->global_phantom_childs_count = node->phantom_childs_count;
   node->groupe_taille               = 1;
@@ -124,8 +122,7 @@ void placed_tile_group_path_aggregate(placed_tile_group_t* node) {
       node->groupe_open_slots += node->weak_childs[i]->groupe_open_slots;
       node->global_phantom_childs_count +=
           node->weak_childs[i]->global_phantom_childs_count;
-    } else
-      break;
+    }
   }
 }
 
@@ -216,8 +213,6 @@ void placed_tile_group_link(placed_tile_group_t* a, placed_tile_group_t* b) {
 
   a->parent = b;
 
-  placed_tile_group_weak_childs_add(b, a);
-
   placed_tile_group_access(b);
 }
 
@@ -245,6 +240,11 @@ void placed_tile_group_rotate(placed_tile_group_t* node) {
   placed_tile_group_t* y          = node->parent;
   placed_tile_group_t* z          = y->parent;
   bool                 x_is_right = (y->right == node);
+
+  if (z != NULL && placed_tile_group_splay_is_root(y)) {
+    placed_tile_group_weak_childs_rem(z, y);
+    placed_tile_group_weak_childs_add(z, node);
+  }
 
   if (x_is_right) {
     y->right = node->left;
