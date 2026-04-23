@@ -7,27 +7,9 @@
 #include <libcarcassonne/player.h>
 #include <libcarcassonne/tile.h>
 #include <libcarcassonne/vector2d.h>
+#include <libutils/lc.h>
 
-/// @brief Élement dans la liste chaîné list_tile_t
-typedef struct tile_list_element {
-  /// @brief La tuile placée
-  placed_tile_t *tile;
-  /// @brief Le prochain élément de la liste
-  struct tile_list_element *next;
-  /// @brief L'élément précédent de la liste
-  struct tile_list_element *prev;
-} tile_list_element_t;
-
-/// @brief Structure de liste chainée utilisée pour conserver toutes les tuiles
-/// avec au moins 1 côté disponible
-typedef struct tile_list {
-  /// @brief Tête de la liste
-  tile_list_element_t *head;
-  /// @brief Queue de la liste
-  tile_list_element_t *tail;
-  /// @brief Nombre d'éléments de la liste
-  unsigned int size;
-} tile_list_t;
+typedef List(placed_tile_t*) placed_tile_list_t;
 
 /// @brief Représente une partie
 typedef struct game {
@@ -51,7 +33,7 @@ typedef struct game {
   placed_tile_t **map;
 
   /// @brief Instance de la liste des tuiles
-  tile_list_t open_tiles;
+  placed_tile_list_t open_tiles;
   /// @brief Paramètres du jeu
   options_t *options;
 } game_t;
@@ -89,30 +71,12 @@ return_code_t game_place_tile(game_t *, const tile_t *tile, int x, int y,
 bool game_is_tile_placeable(game_t *game, const tile_t *tile, int x, int y,
                             tile_orientation_t orientation);
 
-/// @brief Permet de libérer la mémoire liée à une liste de tuile
-/// @param tl La liste de tuile
-void destroy_tile_list(tile_list_t *tl);
-
 /// @brief Vérifie si la case est ouverte ou non
 /// @param game La partie dans laquelle vérifier
 /// @param x La position en x
 /// @param y La position en y
 /// @return true si la case est ouverte, false sinon
 bool game_is_place_open(game_t *game, int x, int y);
-
-/// @brief Ajoute une tuile en tête de liste
-/// @param tl La liste dans laquelle ajouter
-/// @param tile La tuile à ajouter
-void game_add_open_tile(tile_list_t *tl, placed_tile_t *tile);
-
-/// @brief Retire une tuile de la liste
-/// @param tl La liste depuis laquelle retirer
-/// @param tile La tuile à retirer
-void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile);
-
-/// @brief Instancie une liste chaînée de tuile
-/// @return Une liste chaînée de tile vide
-tile_list_t create_open_tiles_list(void);
 
 /// @brief Permet de savoir si une partie est terminée ou non
 /// @return Vrai si la partie est terminé, Faux sinon
