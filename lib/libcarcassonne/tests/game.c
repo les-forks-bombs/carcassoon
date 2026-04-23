@@ -193,12 +193,12 @@ void game_place_tile_do_not_work_because_position_is_taken(void** state) {
 }
 
 const tile_t* find_tile(game_t* game, char* family) {
-  deck_element_t* curr = game->deck.list.head;
-  while (strcmp(curr->tile->family, family) != 0) {
+  list_node_t* curr = list_head(&game->deck.list);
+  while (strcmp((*list_value(&game->deck.list, curr))->family, family) != 0) {
     curr = curr->next;
   }
 
-  return curr->tile;
+  return *list_value(&game->deck.list, curr);
 }
 
 void game_place_multiple_tile_works(void** state) {
@@ -283,11 +283,11 @@ void game_place_tile_do_not_work_because_tiles_are_incompatible(void** state) {
       game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
       SUCCESS);
 
-  deck_element_t* curr = game.deck.list.head;
-  while (strcmp(curr->tile->family, "FFFF") != 0) {
+  list_node_t* curr = list_head(&game.deck.list);
+  while (strcmp((*list_value(&game.deck.list, curr))->family, "FFFF") != 0) {
     curr = curr->next;
   }
-  const tile_t* tile2 = curr->tile;
+  const tile_t* tile2 = *list_value(&game.deck.list, curr);
   assert_ptr_not_equal(tile2, NULL);
 
   assert_int_equal(game_place_tile(&game, tile2, -1, 0,

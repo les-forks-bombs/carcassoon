@@ -24,7 +24,7 @@ void deck_seed_consistent(void** state) {
   assert_ptr_equal(deck_pick(&deck3), r);
 
   int i = 1;  // on mets le compteur a 1 car on a fait un premier appel
-  while (deck1.list.head != NULL) {
+  while (list_head(&deck1.list) != NULL) {
     r = deck_pick(&deck1);
 
     // on vérifie que deux générateurs doivent être égals
