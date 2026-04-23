@@ -242,3 +242,88 @@ void tile_get_family_face_works(void** state) {
                            LIBCARCASSONNE_TILE_ORIENTATION_WEST),
       1);
 }
+
+void test_tile_group_phantomtile(void** state) {
+  (void)state;
+
+  placed_tile_group_t* a1 = create_test_group();
+  placed_tile_group_t* a2 = create_test_group();
+  placed_tile_group_t* a3 = create_test_group();
+  placed_tile_group_t* a4 = create_test_group();
+
+  // 1 - 2
+  // |   |
+  // 3 - 4
+
+  placed_tile_group_link(a1, a2);
+  placed_tile_group_link(a1, a3);
+  placed_tile_group_link(a2, a4);
+
+  // Le dernier lien va créer un lien fantôme
+  placed_tile_group_link(a3, a4);
+
+  placed_tile_group_access(a1);
+  assert_int_equal(a1->global_phantom_childs_count, 2);
+
+  // si on coupe a3 (le lien 1-3)
+  placed_tile_group_cut(a3);
+
+  placed_tile_group_access(a1);
+  assert_int_equal(a1->global_phantom_childs_count, 0);
+
+  free(a1);
+  free(a2);
+  free(a3);
+  free(a4);
+}
+
+void test_tile_group_phantomtile2(void** state) {
+  (void)state;
+
+  placed_tile_group_t* a1 = create_test_group();
+  placed_tile_group_t* a2 = create_test_group();
+  placed_tile_group_t* a3 = create_test_group();
+  placed_tile_group_t* a4 = create_test_group();
+  placed_tile_group_t* a5 = create_test_group();
+  placed_tile_group_t* a6 = create_test_group();
+
+  // 1 _ 2 _ 5
+  // )   )   F
+  // 3 F 4 _ 6
+
+  placed_tile_group_link(a1, a2);
+  placed_tile_group_link(a1, a3);
+  placed_tile_group_link(a2, a4);
+  placed_tile_group_link(a2, a5);
+  placed_tile_group_link(a4, a6);
+
+  // Le dernier lien va créer un lien fantôme
+  placed_tile_group_link(a3, a4);
+
+  placed_tile_group_access(a1);
+  assert_int_equal(a1->global_phantom_childs_count, 2);
+
+  // Le deuxième lien fantôme
+  placed_tile_group_link(a5, a6);
+
+  placed_tile_group_access(a1);
+  assert_int_equal(a1->global_phantom_childs_count, 4);
+
+  // si on coupe a3 (le lien 1-3)
+  placed_tile_group_cut(a3);
+
+  placed_tile_group_access(a1);
+  assert_int_equal(a1->global_phantom_childs_count, 2);
+
+
+  placed_tile_group_cut(a5);
+  placed_tile_group_access(a1);
+  assert_int_equal(a1->global_phantom_childs_count, 0);
+
+  free(a1);
+  free(a2);
+  free(a3);
+  free(a4);
+  free(a5);
+  free(a6);
+}

@@ -35,6 +35,8 @@ void test_tile_group_link(void** state);
 void test_tile_group_dynamic_connectivity(void** state);
 void test_tile_group_cut(void** state);
 void test_tile_group_merge_two_trees(void** state);
+void test_tile_group_phantomtile(void** state);
+void test_tile_group_phantomtile2(void** state);
 
 static const struct CMUnitTest tests[] = {
     cmocka_unit_test(deck_builds),
@@ -64,6 +66,9 @@ static const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_tile_group_dynamic_connectivity),
     cmocka_unit_test(test_tile_group_cut),
     cmocka_unit_test(test_tile_group_merge_two_trees),
+    cmocka_unit_test(test_tile_group_phantomtile),
+    cmocka_unit_test(test_tile_group_phantomtile2)
+    
 };
 
 #endif
