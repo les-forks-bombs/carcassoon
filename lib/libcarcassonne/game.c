@@ -24,6 +24,10 @@ return_code_t create_game(game_t *game, options_t *options) {
   game->open_tiles.meta.tail = NULL;
   game->open_tiles.meta.size = 0;
 
+  game->meeples.meta.head = NULL;
+  game->meeples.meta.tail = NULL;
+  game->meeples.meta.size = 0;
+
   // todo: considérer les extensions pour calculer la taille max du tableau
   unsigned int largeur =
       LIBCARCASSONNE_TILES_COUNT + LIBCARCASSONNE_TILES_COUNT - 1;

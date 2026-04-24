@@ -7,7 +7,7 @@
 typedef struct {
   unsigned int size;
   unsigned int caps;
-  char        *data;
+  void        *data;
 } vector_t;
 
 #define Vector(T)        \
@@ -19,7 +19,7 @@ int _vector_alloc(vector_t *list, size_t capacity, size_t element);
 int _vector_grow(vector_t *list, size_t size, size_t element);
 
 int   _vector_append(vector_t *list, const void *data, size_t size);
-void *_vector_nth(vector_t *list, unsigned int index, size_t size);
+void *_vector_nth(const vector_t *list, unsigned int index, size_t size);
 void  _vector_free(vector_t *list);
 void  _vector_remove(vector_t *list, unsigned int index, size_t size);
 void  _vector_remove_value(vector_t *list, const void *data, size_t size);
