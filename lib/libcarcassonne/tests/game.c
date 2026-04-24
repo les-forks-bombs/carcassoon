@@ -6,19 +6,6 @@
 
 /** create_game */
 
-static options_t options = {
-    .mode      = CARCASSONNE_MODE_CLI,
-    .players   = 3,
-    .seed      = 500,
-    .ai        = 0,
-    .max_turns = 0,
-    .extensions =
-        {
-            .extensions = &LIBCARCASSONNE_EXT_BASE_GAME,
-            .size       = 1,
-        },
-};
-
 /* Vérifie l'instanciation d'une game */
 void game_builds(void** state) {
   (void)state;
@@ -194,8 +181,11 @@ void game_place_tile_do_not_work_because_position_is_taken(void** state) {
 
 const tile_t* find_tile(game_t* game, char* family) {
   list_node_t* curr = list_head(&game->deck.list);
+
   while (strcmp((*list_value(&game->deck.list, curr))->family, family) != 0) {
     curr = curr->next;
+
+    assert_non_null(curr);
   }
 
   return *list_value(&game->deck.list, curr);
