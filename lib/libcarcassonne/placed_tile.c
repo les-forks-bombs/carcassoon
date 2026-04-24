@@ -1,7 +1,6 @@
 #include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/tile.h>
 #include <libutils/vector.h>
-#include <linux/limits.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
