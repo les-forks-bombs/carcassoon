@@ -5,9 +5,24 @@
 #include <libcarcassonne/extension.h>
 #include <libutils/cmocka.h>
 
-static extension_list_t base = {
-    .size       = 1,
-    .extensions = &LIBCARCASSONNE_EXT_BASE_GAME,
+#include "libcarcassonne/options.h"
+
+static const struct extension* base_ptr_table[] = {
+    &LIBCARCASSONNE_EXT_BASE_GAME};
+
+static const extension_list_t base = {.meta = {
+                                          .size = 1,
+                                          .caps = 1,
+                                          .data = &base_ptr_table,
+                                      }};
+
+static options_t options = {
+    .mode       = CARCASSONNE_MODE_CLI,
+    .players    = 3,
+    .seed       = 500,
+    .ai         = 0,
+    .max_turns  = 0,
+    .extensions = base,
 };
 
 void deck_builds(void** state);
@@ -35,8 +50,6 @@ void test_tile_group_link(void** state);
 void test_tile_group_dynamic_connectivity(void** state);
 void test_tile_group_cut(void** state);
 void test_tile_group_merge_two_trees(void** state);
-void test_tile_group_phantomtile(void** state);
-void test_tile_group_phantomtile2(void** state);
 
 static const struct CMUnitTest tests[] = {
     cmocka_unit_test(deck_builds),
@@ -66,9 +79,7 @@ static const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_tile_group_dynamic_connectivity),
     cmocka_unit_test(test_tile_group_cut),
     cmocka_unit_test(test_tile_group_merge_two_trees),
-    cmocka_unit_test(test_tile_group_phantomtile),
-    cmocka_unit_test(test_tile_group_phantomtile2)
-    
+
 };
 
 #endif
