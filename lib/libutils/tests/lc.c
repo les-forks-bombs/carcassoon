@@ -25,16 +25,14 @@ void utils_list_append_prepend(void** state) {
 
   list_insert(&list, &ints[3], 2);
   assert_int_equal(*list_value(&list, list_nth(&list, 2)), 3);
-  
+
   assert_int_equal(list_size(&list), 7);
 
   list_remove_value(&list, &ints[3]);
-
   assert_int_equal(list_size(&list), 6);
 
   list_remove_value(&list, &ints[3]);
   assert_int_equal(list_size(&list), 5);
-
 
   list_free(&list);
 }
