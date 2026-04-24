@@ -3,6 +3,7 @@
 #include <libcarcassonne/prng_mersenne_twister.h>
 #include <libcarcassonne/tile.h>
 #include <libutils/lc.h>
+#include <libutils/vector.h>
 #include <unistd.h>
 
 deck_t create_deck(int seed, extension_list_t* extensions) {
@@ -23,26 +24,39 @@ deck_t create_deck(int seed, extension_list_t* extensions) {
                            .size = 0,
                        }};
 
-  unsigned int             start_tile_priority = 0;
-  const extension_tiles_t* start_tile          = NULL;
+  unsigned int       start_tile_priority = 0;
+  const tile_list_t* start_tile          = NULL;
 
-  for (unsigned int j = 0; j < extensions->size; j++) {
+  for (unsigned int i = 0; i < vector_size(extensions); i++) {
     // A partir d'une composition de deck,
     // on ajoute les éléments a la queue
-    for (unsigned int i = 0; i < extensions->extensions[j].tiles->size; i++) {
-      const tile_t* element = &extensions->extensions[j].tiles->tiles[i];
-
-      for (unsigned int j = 0; j < element->amount; j++) {
+    const extension_t* extension = *(vector_nth(extensions, i));
+    for (unsigned int j = 0; j < vector_size(extension->tiles); j++) {
+      const tile_t* element = vector_nth(extension->tiles, j);
+      for (unsigned int k = 0; k < element->amount; k++) {
         list_append(&queue, &element);
       }
     }
 
     // On cherche la liste de tiles de démarrage avec la plus haute priorité
-    if ((extensions->extensions[j].start_tiles_priority >
-         start_tile_priority) ||
+    if ((extension->start_tiles_priority > start_tile_priority) ||
         start_tile == NULL) {
-      start_tile_priority = extensions->extensions[j].start_tiles_priority;
-      start_tile          = extensions->extensions[j].start_tiles;
+      start_tile_priority = extension->start_tiles_priority;
+      start_tile          = extension->start_tiles;
+    }
+  }
+
+  deck_list_t start_tiles = {.meta = {
+                                 .head = NULL,
+                                 .tail = NULL,
+                                 .size = 0,
+                             }};
+
+  for (unsigned int i = 0; i < vector_size(start_tile); i++) {
+    const tile_t* element = vector_nth(start_tile, i);
+
+    for (unsigned int j = 0; j < element->amount; j++) {
+      list_append(&start_tiles, &element);
     }
   }
 
@@ -59,8 +73,19 @@ deck_t create_deck(int seed, extension_list_t* extensions) {
     list_remove(&queue, element);
   }
 
-  int index = prng_mersenne_twister_random(&deck.state) % start_tile->size;
-  list_prepend(&deck.list, &(start_tile->tiles) + index);
+  while (list_size(&start_tiles) != 0) {
+    int index =
+        prng_mersenne_twister_random(&deck.state) % list_size(&start_tiles);
+
+    // Récupérer l'élément a l'index n (O(n))
+    list_node_t* element = list_nth(&start_tiles, index);
+
+    // on ajoute l'élément au deck
+    list_prepend(&deck.list, list_value(&start_tiles, element));
+
+    // on le retire aussi de la queue
+    list_remove(&start_tiles, element);
+  }
 
   return deck;
 }

@@ -2,6 +2,7 @@
 
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/deck.h>
+#include <libcarcassonne/meeple.h>
 #include <libcarcassonne/options.h>
 #include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/player.h>
@@ -10,6 +11,7 @@
 #include <libutils/lc.h>
 
 typedef List(placed_tile_t *) placed_tile_list_t;
+typedef List(meeple_t *) meeple_list_t;
 
 /// @brief Représente une partie
 typedef struct game {
@@ -34,6 +36,9 @@ typedef struct game {
 
   /// @brief Instance de la liste des tuiles
   placed_tile_list_t open_tiles;
+
+  meeple_list_t meeples;
+
   /// @brief Paramètres du jeu
   options_t *options;
 } game_t;

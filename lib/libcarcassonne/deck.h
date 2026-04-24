@@ -1,11 +1,10 @@
 #pragma once
 
 #include <libcarcassonne/consts.h>
+#include <libcarcassonne/extension.h>
 #include <libcarcassonne/prng_mersenne_twister.h>
 #include <libcarcassonne/tile.h>
 #include <libutils/lc.h>
-
-struct extensions_list;
 
 typedef List(const tile_t*) deck_list_t;
 
@@ -23,7 +22,7 @@ typedef struct deck {
 /// @return une instance de deck
 /// @attention Le deck vis dans le stack!
 /// @relates deck
-deck_t create_deck(int seed, struct extensions_list* extensions);
+deck_t create_deck(int seed, extension_list_t* extensions);
 
 /// @brief Permet de libérer la mémoire liée a un deck
 /// @param deck Le deck a libérer
