@@ -1,15 +1,16 @@
+#include <SDL3/SDL_render.h>
+#include <stdbool.h>
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <sdl/camera.h>
+#include <sdl/consts.h>
+#include <sdl/map.h>
+#include <sdl/text.h>
+#include <sdl/tile_temp.h>
 #include <stdlib.h>
-
-#include "camera.h"
-#include "consts.h"
-#include "map.h"
-#include "text.h"
-#include "tile_temp.h"
 
 typedef struct {
   SDL_Window    *window;
@@ -130,6 +131,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
                                    &as->renderer)) {
     return SDL_APP_FAILURE;
   }
+
+  SDL_SetRenderVSync(as->renderer, true);
 
   if (!TTF_Init()) {
     return SDL_APP_FAILURE;

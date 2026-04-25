@@ -8,7 +8,7 @@ CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-image --cflags)
 LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --libs)
 CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --cflags)
 
-LLIBS := ai carcassonne
+LLIBS := ai carcassonne utils
 
 include $(BUILD_DIR)/binary.mk
 

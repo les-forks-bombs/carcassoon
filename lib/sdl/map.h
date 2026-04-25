@@ -1,9 +1,9 @@
 #ifndef H_MAP
 #define H_MAP
 
-#include "camera.h"
-#include "consts.h"
-#include "tile_temp.h"
+#include <sdl/camera.h>
+#include <sdl/consts.h>
+#include <sdl/tile_temp.h>
 
 typedef struct {
   tile_temp_t *tiles[MAP_TABLE_SIZE * MAP_TABLE_SIZE];

@@ -1,5 +1,8 @@
 #pragma once
 #include <libcarcassonne/meeple.h>
+#include <libutils/vector.h>
+
+typedef Vector(struct placed_tile_group *) placed_tile_group_neighbors_t;
 
 /// @brief Information des groupes de la sous-tile
 typedef struct placed_tile_group {
@@ -9,63 +12,15 @@ typedef struct placed_tile_group {
   meeple_t *meeple;
 
   /**
-   * @brief Elements du L/C tree
-   */
-  struct placed_tile_group *right, *left, *parent;
-
-  /**
    * @brief Tableau des enfants au total
    * Utilisé pour le parcours "simple" depuis la racine
    */
-  struct placed_tile_group *weak_childs[3 * 4];
-  /**
-   * @brief Nombre d'enfants dans "weak_childs"
-   */
-  unsigned int weak_childs_count;
+  placed_tile_group_neighbors_t neighbors;
 
-  /**
-   * @brief Liens "fantômes"
-   *
-   */
-  struct placed_tile_group *phantom_childs[3 * 4];
+  unsigned int open_slots;
 
-  /**
-   * @brief Nombre d'éléments dans "phantom_childs"
-   *
-   */
-  unsigned int phantom_childs_count;
-  /**
-   * @brief Nombre d'enfants fantômes aggrégé
-   */
-  unsigned int global_phantom_childs_count;
-
-  /**
-   * @brief
-   *
-   */
-  bool flipped_delta;
-
-  /**
-   * @brief Le nombre de faces a remplir pour que le groupe soit completé
-   * @remark Si ==0, alors le groupe est complété
-   */
-  unsigned int groupe_open_slots;
-
-  /**
-   * @brief Le nombre de tiles qui font partie du groupe
-   */
-  unsigned int groupe_taille;
-
-  /**
-   * @brief Le nombre de faces a remplir pour que le groupe soit completé
-   * @remark Si ==0, alors le groupe est complété
-   */
-  unsigned int local_open_slots;
+  int marker;
 } placed_tile_group_t;
-
-typedef struct placed_face_groups {
-  placed_tile_group_t *face[3];
-} placed_face_groups_t;
 
 /// @brief Représentation d'une tile qui a été placée
 typedef struct placed_tile {
@@ -78,30 +33,47 @@ typedef struct placed_tile {
   tile_orientation_t orientation;
 } placed_tile_t;
 
-return_code_t        placed_tile_create(placed_tile_t     *placed_tile,
-                                        const tile_t      *parent,
-                                        tile_orientation_t orientation);
-void                 placed_tile_destroy(placed_tile_t *);
-return_code_t        placed_tile_get_face(placed_face_groups_t *ret,
-                                          const placed_tile_t  *tile,
-                                          tile_orientation_t    connexion_face);
-void                 placed_tile_group_access(placed_tile_group_t *node);
-placed_tile_group_t *placed_tile_group_find_root(placed_tile_group_t *node);
-void placed_tile_group_path_aggregate(placed_tile_group_t *node);
-void placed_tile_group_cut(placed_tile_group_t *node);
+return_code_t placed_tile_create(placed_tile_t     *placed_tile,
+                                 const tile_t      *parent,
+                                 tile_orientation_t orientation);
+void          placed_tile_destroy(placed_tile_t *);
+
+void placed_tile_group_create(placed_tile_group_t **group, meeple_t *meeple,
+                              const placed_tile_t *tile);
+void placed_tile_group_destory(placed_tile_group_t *group);
+
+/**
+ * @brief Crée un lien entre deux groupes
+ *
+ * @param a Le groupe a relier a "b"
+ * @param b Le groupe a relier a "a"
+ */
 void placed_tile_group_link(placed_tile_group_t *a, placed_tile_group_t *b);
-void placed_tile_group_splay(placed_tile_group_t *node);
-bool placed_tile_group_splay_is_root(placed_tile_group_t *node);
 
-void placed_tile_group_weak_childs_add(placed_tile_group_t *node,
-                                       placed_tile_group_t *el);
-void placed_tile_group_weak_childs_rem(placed_tile_group_t *node,
-                                       placed_tile_group_t *el);
-void placed_tile_group_phantom_childs_add(placed_tile_group_t *node,
-                                          placed_tile_group_t *el);
-void placed_tile_group_phantom_childs_rem(placed_tile_group_t *node,
-                                          placed_tile_group_t *el);
-void placed_tile_group_push_down(placed_tile_group_t *node);
-void placed_tile_group_makeroot(placed_tile_group_t *node);
+/**
+ * @brief Coupe le lien entre deux groupes
+ *
+ * @param a Le noeud "b" a couper de "a"
+ * @param b Le noeud "a" a couper de "b"
+ */
+void placed_tile_group_cut(placed_tile_group_t *a, placed_tile_group_t *b);
 
+/**
+ * @brief Détermine si un groupe est complété (plus de faces ouvertes)
+ *
+ * @param group Le groupe a vérifier
+ * @return true Toutes les faces sont remplies (ville fermée ou route completée)
+ * @return false Il y a au moins une face ouverte
+ */
 bool placed_tile_group_complete(placed_tile_group_t *group);
+
+/**
+ * @brief Détermine si deux tiles sont connectées
+ *
+ * @param a Le noeud "b"
+ * @param b Le noeud "a"
+ * @return true Les deux tiles sont dans le meme groupe
+ * @return false Les deux tiles ne sont pas dans le meme groupe
+ */
+bool placed_tile_group_connected(placed_tile_group_t *a,
+                                 placed_tile_group_t *b);
