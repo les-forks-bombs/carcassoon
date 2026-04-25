@@ -1,9 +1,9 @@
 #pragma once
 
-#include "libcarcassonne/action.h"
-#include "libcarcassonne/consts.h"
-#include "libcarcassonne/extension.h"
-#include "libcarcassonne/tile.h"
+#include <libcarcassonne/action.h>
+#include <libcarcassonne/consts.h>
+#include <libcarcassonne/extension.h>
+#include <libcarcassonne/tile.h>
 
 typedef struct meeple_place_hook_state {
   int               x, y;
