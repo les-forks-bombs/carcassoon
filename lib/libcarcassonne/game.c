@@ -149,7 +149,8 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
   }
 }
 
-return_code_t game_place_meeple(game_t *game, int x, int y, int group) {
+return_code_t game_place_meeple(game_t *game, int x, int y, int group,
+                                meeple_type_t meeple_type) {
   if (game == NULL) {
     return ERROR;
   }
@@ -164,9 +165,10 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group) {
     placed_tile_group_t *group_ref = (*tile_ref)->groups[group];
 
     if (group_ref->meeple == NULL) {
-      group_ref->meeple             = calloc(1, sizeof(meeple_t));
-      group_ref->meeple->player     = game->current_player;
-      group_ref->meeple->group_node = group_ref;
+      group_ref->meeple              = calloc(1, sizeof(meeple_t));
+      group_ref->meeple->player      = game->current_player;
+      group_ref->meeple->group_node  = group_ref;
+      group_ref->meeple->meeple_type = meeple_type;
 
       // todo: ajouter au meeple a la liste des meeple
     } else {
@@ -295,4 +297,29 @@ tile_list_t create_open_tiles_list(void) {
 
 bool is_game_finished(game_t *game) {
   return game->deck.list.size == 0 || game->turn == game->turns_limit;
+}
+
+return_code_t game_end_player_turn(game_t *game) {
+  if (game == NULL) return NULL_POINTER;
+
+  if (game->current_player + 1 >= game->current_player) {
+    return NO_MORE_PLAYER;
+  }
+
+  game->current_player++;
+
+  return SUCCESS;
+}
+
+return_code_t game_end_round(game_t *game) {
+  if (game == NULL) return NULL_POINTER;
+
+  if (game->current_player != game->players_count) {
+    return PLAYER_NOT_CALLED;
+  }
+
+  game->current_player = 0;
+  game->turn++;
+
+  return SUCCESS;
 }
