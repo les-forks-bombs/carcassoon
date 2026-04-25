@@ -1,17 +1,16 @@
-#ifndef H_LIBCARCASSONNE_ACTION
-#define H_LIBCARCASSONNE_ACTION
+#pragma once
 
 #include "libcarcassonne/placed_tile.h"
 #include "libcarcassonne/tile.h"
 
 /// @brief Représente les différents types d'action possible
 typedef enum action_type {
-  /// @brief Mettre fin au tour du joueur courant
-  LIBCARCASSONNE_ACTION_END_PLAYER_TURN = -1,
   /// @brief Poser une tuile sur la plateau
-  LIBCARCASSONNE_ACTION_PLACE_TILE = 0,
+  LIBCARCASSONNE_ACTION_PLACE_TILE = 1,
   /// @brief Poser un meeple
-  LIBCARCASSONNE_ACTION_PLACE_MEEPLE = 1,
+  LIBCARCASSONNE_ACTION_PLACE_MEEPLE = 2,
+  /// @brief Mettre fin au tour du joueur courant
+  LIBCARCASSONNE_ACTION_END_PLAYER_TURN = 3,
 } action_type_t;
 
 /// @brief Action de placement de tuile
@@ -35,7 +34,9 @@ typedef struct action_place_meeple {
   /// @brief La tuile sur laquelle placer le meeple
   placed_tile_t *tile;
   /// @brief Le sous-groupe auquel le meeple doit appartenir
-  tile_part_group_t part_group;
+  int part_group;
+  /// @brief Le type de meeple à placer
+  meeple_type_t meeple_type;
 } action_place_meeple_t;
 
 /// @brief Union contenant les actions réalisables
@@ -51,5 +52,3 @@ typedef struct action {
   /// @brief La manière de réaliser l'action
   action_order_t order;
 } action_t;
-
-#endif

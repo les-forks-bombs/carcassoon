@@ -117,3 +117,21 @@ tile_list_t create_open_tiles_list(void);
 /// @brief Permet de savoir si une partie est terminée ou non
 /// @return Vrai si la partie est terminé, Faux sinon
 bool is_game_finished(game_t *game);
+
+/// @brief Termine le tour du joueur du courant
+/// @return Le code de statut de l'opération, SUCCESS en cas de réussite
+return_code_t game_end_player_turn(game_t *game);
+
+/// @brief Termine le tour de table
+/// @return Le code de statut de l'opération, SUCCESS en cas de réussite
+return_code_t game_end_round(game_t *game);
+
+/// @brief Place un meeple à l'emplacement spécifié
+/// @param game La partie auquel ajouter le meeple
+/// @param x Les coordonnées en abscisse
+/// @param y Les coordonnées en ordonnées
+/// @param part_group L'index de la partie de groupe
+/// @param meeple_type Le type de meeple à placer
+/// @return Le code de statut de l'opération, SUCCESS en cas de réussite
+return_code_t game_place_meeple(game_t *game, int x, int y, int part_group,
+                                meeple_type_t meeple_type);
