@@ -1,6 +1,5 @@
-#include "map.h"
-
 #include <SDL3/SDL.h>
+#include <sdl/map.h>
 
 map_t *create_map(void) {
   map_t *map = SDL_calloc(1, sizeof(map_t));

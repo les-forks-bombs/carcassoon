@@ -6,7 +6,7 @@
 void deck_builds(void** state) {
   (void)state;
 
-  deck_t deck = create_deck(0, &base);
+  deck_t deck = create_deck(0, &options.extensions);
   free_deck(deck);
 }
 
@@ -14,9 +14,9 @@ void deck_builds(void** state) {
 void deck_seed_consistent(void** state) {
   (void)state;
 
-  deck_t deck1 = create_deck(0, &base);
-  deck_t deck2 = create_deck(0, &base);
-  deck_t deck3 = create_deck(100, &base);
+  deck_t deck1 = create_deck(0, &options.extensions);
+  deck_t deck2 = create_deck(0, &options.extensions);
+  deck_t deck3 = create_deck(100, &options.extensions);
 
   // on skip le premier car c'est toujours le meme (tile de départ)
   const tile_t* r = deck_pick(&deck1);
@@ -24,7 +24,7 @@ void deck_seed_consistent(void** state) {
   assert_ptr_equal(deck_pick(&deck3), r);
 
   int i = 1;  // on mets le compteur a 1 car on a fait un premier appel
-  while (deck1.list.head != NULL) {
+  while (list_head(&deck1.list) != NULL) {
     r = deck_pick(&deck1);
 
     // on vérifie que deux générateurs doivent être égals
