@@ -9,9 +9,10 @@
 #include <libcarcassonne/tile.h>
 #include <libcarcassonne/vector2d.h>
 #include <libutils/lc.h>
+#include <libutils/vector.h>
 
 typedef List(placed_tile_t *) placed_tile_list_t;
-typedef List(meeple_t *) meeple_list_t;
+typedef Vector(meeple_t *) meeple_list_t;
 
 /// @brief Représente une partie
 typedef struct game {

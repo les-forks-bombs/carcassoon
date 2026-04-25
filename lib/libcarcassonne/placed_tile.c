@@ -6,26 +6,6 @@
 #include <string.h>
 #include <time.h>
 
-return_code_t placed_tile_get_face(placed_face_groups_t *ret,
-                                   const placed_tile_t  *tile,
-                                   tile_orientation_t    connexion_face) {
-  if (tile == NULL) return ERROR;
-
-  int index = (connexion_face + tile->orientation) % 4;
-
-  static const int values[4][3] = {{0, 1, 2}, {2, 5, 8}, {8, 7, 6}, {6, 3, 0}};
-
-  tile_part_group_t groups[3] = {tile->parent->parts_groups[values[index][0]],
-                                 tile->parent->parts_groups[values[index][1]],
-                                 tile->parent->parts_groups[values[index][2]]};
-
-  ret->face[0] = tile->groups[groups[0]];
-  ret->face[1] = tile->groups[groups[1]];
-  ret->face[2] = tile->groups[groups[2]];
-
-  return SUCCESS;
-}
-
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
                                  tile_orientation_t orientation) {
@@ -37,11 +17,25 @@ return_code_t placed_tile_create(placed_tile_t     *placed_tile,
     placed_tile_group_t **group =
         &placed_tile->groups[placed_tile->parent->parts_groups[i]];
     if (*group == NULL) {
-      *group               = calloc(1, sizeof(placed_tile_group_t));
-      (*group)->tile       = placed_tile;
-      (*group)->open_slots = 0;  // todo: compter le nombre de fois ou le sous
-                                 // groupe est sur les bords
-      vector_alloc(&(*group)->neighbors, 1);
+      *group         = calloc(1, sizeof(placed_tile_group_t));
+      (*group)->tile = placed_tile;
+
+      // La tile numéro 4 est toujours le centre
+      // donc elle ne se connecte a rien, dont aucun slot
+      if (i != 4) (*group)->open_slots = 0;
+
+      // si on est un champ, on peux se connecter dans les coins
+      if (i == 0 || i == 2 || i == 6 || i == 8) {
+        if (placed_tile->parent->parts[i] == LIBCARCASSONNE_TILE_PART_FIELD) {
+          // représente deux faces
+          (*group)->open_slots = 2;
+        } else {
+          // sinon les coins ne comptent pas
+          (*group)->open_slots = 0;
+        }
+      }
+
+      vector_alloc(&(*group)->neighbors, 0);
     }
   }
 
@@ -83,6 +77,7 @@ static bool placed_tile_group_connected_inner(placed_tile_group_t *a,
 
   return false;
 }
+
 static int dfs_counter = 1;
 
 bool placed_tile_group_connected(placed_tile_group_t *a,
@@ -105,9 +100,6 @@ void placed_tile_group_link(placed_tile_group_t *a, placed_tile_group_t *b) {
   // On les lie dans le graphe
   vector_append(&a->neighbors, &b);
   vector_append(&b->neighbors, &a);
-
-  a->open_slots--;
-  b->open_slots--;
 }
 
 static int placed_tile_group_complete_inner(placed_tile_group_t *a,
