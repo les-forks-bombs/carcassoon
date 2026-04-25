@@ -1,5 +1,5 @@
 NAME := carcassonne_test
-LLIBS = carcassonne
+LLIBS = carcassonne utils
 
 include $(BUILD_DIR)/test.mk
 
