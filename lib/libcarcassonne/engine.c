@@ -49,7 +49,8 @@ return_code_t start_game(engine_t *engine) {
 /// @warning En cas de réussite le moteur change d'état
 /// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
 return_code_t handle_place_tile(engine_t *engine, action_t action) {
-  if(engine->state!=LIBCARCASSONNE_ENGINE_WAITING_PLAYER_TILE_ACTION) return INVALID_ACTION;
+  if (engine->state != LIBCARCASSONNE_ENGINE_WAITING_PLAYER_TILE_ACTION)
+    return INVALID_ACTION;
 
   game_t *game = &engine->game;
 
@@ -72,7 +73,8 @@ return_code_t handle_place_tile(engine_t *engine, action_t action) {
 /// @warning En cas de réussite le moteur change d'état
 /// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
 return_code_t handle_place_meeple(engine_t *engine, action_t action) {
-  if(engine->state!=LIBCARCASSONNE_ENGINE_WAITING_PLAYER_MEEPLE_ACTION) return INVALID_ACTION;
+  if (engine->state != LIBCARCASSONNE_ENGINE_WAITING_PLAYER_MEEPLE_ACTION)
+    return INVALID_ACTION;
 
   game_t *game = &engine->game;
 
@@ -89,7 +91,8 @@ return_code_t handle_place_meeple(engine_t *engine, action_t action) {
 /// @warning En cas de réussite le moteur change d'état
 /// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
 return_code_t handle_end_player_turn(engine_t *engine) {
-  if(engine->state!=LIBCARCASSONNE_ENGINE_WAITING_PLAYER_END_TURN) return INVALID_ACTION;
+  if (engine->state != LIBCARCASSONNE_ENGINE_WAITING_PLAYER_END_TURN)
+    return INVALID_ACTION;
 
   return_code_t code = game_end_player_turn(&engine->game);
   if (code == NO_MORE_PLAYER)  // Si on a plus de joueur à faire jouer on passe

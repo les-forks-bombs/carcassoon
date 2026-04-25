@@ -1,7 +1,8 @@
 #pragma once
 
-#include <libcarcassonne/meeple.h>
 #include <libutils/vector.h>
+
+struct meeple;
 
 enum player_type {
   LIBCARCASSONNE_PLAYER_AI    = 0,
