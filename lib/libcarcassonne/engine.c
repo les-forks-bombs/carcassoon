@@ -49,6 +49,8 @@ return_code_t start_game(engine_t *engine) {
 /// @warning En cas de réussite le moteur change d'état
 /// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
 return_code_t handle_place_tile(engine_t *engine, action_t action) {
+  if(engine->state!=LIBCARCASSONNE_ENGINE_WAITING_PLAYER_TILE_ACTION) return INVALID_ACTION;
+
   game_t *game = &engine->game;
 
   tile_t            *tile        = action.order.place_tile.tile;
@@ -70,6 +72,8 @@ return_code_t handle_place_tile(engine_t *engine, action_t action) {
 /// @warning En cas de réussite le moteur change d'état
 /// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
 return_code_t handle_place_meeple(engine_t *engine, action_t action) {
+  if(engine->state!=LIBCARCASSONNE_ENGINE_WAITING_PLAYER_MEEPLE_ACTION) return INVALID_ACTION;
+
   game_t *game = &engine->game;
 
   int           part_group = action.order.place_meeple.part_group;
@@ -82,10 +86,11 @@ return_code_t handle_place_meeple(engine_t *engine, action_t action) {
 
 /// @brief Gère la fin du tour d'un joueur
 /// @param engine Le moteur auquel on demande de placer une tuile
-/// @param action L'action à effectuer
 /// @warning En cas de réussite le moteur change d'état
 /// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
-return_code_t handle_end_player_turn(engine_t *engine, action_t action) {
+return_code_t handle_end_player_turn(engine_t *engine) {
+  if(engine->state!=LIBCARCASSONNE_ENGINE_WAITING_PLAYER_END_TURN) return INVALID_ACTION;
+
   return_code_t code = game_end_player_turn(&engine->game);
   if (code == NO_MORE_PLAYER)  // Si on a plus de joueur à faire jouer on passe
                                // au round suivant
@@ -97,26 +102,23 @@ return_code_t handle_end_player_turn(engine_t *engine, action_t action) {
 return_code_t dispatch_action(engine_t *engine, action_t action) {
   if (engine == NULL) return NULL_POINTER;
 
-  if (engine->state == LIBCARCASSONNE_ENGINE_WAITING_GAME_START ||
-      engine->state != action.type) {
-    return INVALID_ACTION;
-  }
+  return_code_t code;
 
   switch (action.type) {
     case LIBCARCASSONNE_ACTION_PLACE_TILE:
-      return handle_place_tile(engine, action);
+      code = handle_place_tile(engine, action);
       break;
     case LIBCARCASSONNE_ACTION_PLACE_MEEPLE:
-      return handle_place_meeple(engine, action);
+      code = handle_place_meeple(engine, action);
       break;
     case LIBCARCASSONNE_ACTION_END_PLAYER_TURN:
-      return handle_end_player_turn(engine, action);
+      code = handle_end_player_turn(engine);
       break;
     default:
-      return INVALID_ACTION;
+      code = INVALID_ACTION;
   }
 
-  return INVALID_ACTION;
+  return code;
 }
 
 engine_state_t get_engine_state(engine_t *engine) {

@@ -12,7 +12,6 @@
 #include <libutils/vector.h>
 
 typedef List(placed_tile_t *) placed_tile_list_t;
-typedef Vector(meeple_t *) meeple_list_t;
 
 /// @brief Représente une partie
 typedef struct game {
