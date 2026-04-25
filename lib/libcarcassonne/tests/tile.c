@@ -3,50 +3,33 @@
 #include <libcarcassonne/tests/tests.h>
 #include <libutils/cmocka.h>
 #include <malloc.h>
-
-// instancie un groupe vide
-static placed_tile_group_t* create_test_group(void) {
-  return (placed_tile_group_t*)calloc(1, sizeof(placed_tile_group_t));
-}
+#include <stdio.h>
 
 void test_tile_group_builds(void** state) {
   (void)state;
-  placed_tile_group_t* node = create_test_group();
-
-  // Un noeud seul (= un seul splay tree) doit être la racine de lui-même
-  // donc il doit être la racine de son splay tree
-  assert_true(placed_tile_group_splay_is_root(node));
-
-  // ne doit pas avoir de parent (racine de l'arbre global)
-  // ni d'autre éléments
-  assert_null(node->parent);
-  assert_null(node->left);
-  assert_null(node->right);
-
-  // il doit être sa propre racine
-  assert_ptr_equal(placed_tile_group_find_root(node), node);
-
-  free(node);
+  placed_tile_group_t* node;
+  placed_tile_group_create(&node, NULL, NULL);
+  placed_tile_group_destory(node);
 }
 
 void test_tile_group_link(void** state) {
   (void)state;
 
   // on crée les deux tile groups
-  placed_tile_group_t* a = create_test_group();
-  placed_tile_group_t* b = create_test_group();
+  placed_tile_group_t* a;
+  placed_tile_group_create(&a, NULL, NULL);
+
+  placed_tile_group_t* b;
+  placed_tile_group_create(&b, NULL, NULL);
 
   // On connecte 'a' à 'b' (a devient un enfant de b)
   placed_tile_group_link(a, b);
 
   // La racine de 'a' doit maintenant être 'b'
-  assert_ptr_equal(placed_tile_group_find_root(a), b);
+  assert_int_equal(placed_tile_group_connected(a, b), true);
 
-  // 'b' est toujours sa propre racine
-  assert_ptr_equal(placed_tile_group_find_root(b), b);
-
-  free(a);
-  free(b);
+  placed_tile_group_destory(a);
+  placed_tile_group_destory(b);
 }
 
 void test_tile_group_dynamic_connectivity(void** state) {
@@ -54,10 +37,14 @@ void test_tile_group_dynamic_connectivity(void** state) {
 
   // comme "test_group_link" mais avec 4 tile group
 
-  placed_tile_group_t* n1 = create_test_group();
-  placed_tile_group_t* n2 = create_test_group();
-  placed_tile_group_t* n3 = create_test_group();
-  placed_tile_group_t* n4 = create_test_group();
+  placed_tile_group_t* n1;
+  placed_tile_group_create(&n1, NULL, NULL);
+  placed_tile_group_t* n2;
+  placed_tile_group_create(&n2, NULL, NULL);
+  placed_tile_group_t* n3;
+  placed_tile_group_create(&n3, NULL, NULL);
+  placed_tile_group_t* n4;
+  placed_tile_group_create(&n4, NULL, NULL);
 
   // on crée une chaîne logique: n1 -> n2 -> n3 -> n4
   placed_tile_group_link(n1, n2);
@@ -66,78 +53,77 @@ void test_tile_group_dynamic_connectivity(void** state) {
 
   // peu importe d'ou on part, la racine absolue de la route est n4 (dernière
   // racine linkée)
-  assert_ptr_equal(placed_tile_group_find_root(n1), n4);
-  assert_ptr_equal(placed_tile_group_find_root(n2), n4);
-  assert_ptr_equal(placed_tile_group_find_root(n3), n4);
-  assert_ptr_equal(placed_tile_group_find_root(n4), n4);
+  assert_int_equal(placed_tile_group_connected(n1, n4), true);
+  assert_int_equal(placed_tile_group_connected(n1, n4), true);
+  assert_int_equal(placed_tile_group_connected(n3, n4), true);
+  assert_int_equal(placed_tile_group_connected(n4, n4), true);
 
-  free(n1);
-  free(n2);
-  free(n3);
-  free(n4);
+  placed_tile_group_destory(n1);
+  placed_tile_group_destory(n2);
+  placed_tile_group_destory(n3);
+  placed_tile_group_destory(n4);
 }
 
 void test_tile_group_cut(void** state) {
   (void)state;
-  placed_tile_group_t* a = create_test_group();
-  placed_tile_group_t* b = create_test_group();
-  placed_tile_group_t* c = create_test_group();
+  placed_tile_group_t* a;
+  placed_tile_group_create(&a, NULL, NULL);
+  placed_tile_group_t* b;
+  placed_tile_group_create(&b, NULL, NULL);
+  placed_tile_group_t* c;
+  placed_tile_group_create(&c, NULL, NULL);
 
   // on lie a -> b -> c
   placed_tile_group_link(a, b);
   placed_tile_group_link(b, c);
 
   // on vérifie que la racine est bien la dernière racine liée (c)
-  assert_ptr_equal(placed_tile_group_find_root(a), c);
+  assert_int_equal(placed_tile_group_connected(a, b), true);
 
   // on sépare le lien b de c (on coupe son parent)
   // aka. on le splay (access) pour qu'il soit en haut de l'arbre
   // avec son enfant a gauche, et l'on coupe ce lien
-  placed_tile_group_cut(b);
+  placed_tile_group_cut(a, b);
 
   // on vérifie que le c est désormais son propre groupe
-  assert_ptr_equal(placed_tile_group_find_root(c), c);
+  assert_int_equal(placed_tile_group_connected(a, b), false);
 
-  // a et b sont toujours liés, mais comment b a été splay il est désormais
-  // la racine du splay tree
-  assert_ptr_equal(placed_tile_group_find_root(a), b);
-  assert_ptr_equal(placed_tile_group_find_root(b), b);
-
-  free(a);
-  free(b);
-  free(c);
+  placed_tile_group_destory(a);
+  placed_tile_group_destory(b);
+  placed_tile_group_destory(c);
 }
 
 void test_tile_group_merge_two_trees(void** state) {
   (void)state;
 
   // création d'un premier arbre
-  placed_tile_group_t* a1 = create_test_group();
-  placed_tile_group_t* a2 = create_test_group();
+  placed_tile_group_t* a1;
+  placed_tile_group_create(&a1, NULL, NULL);
+  placed_tile_group_t* a2;
+  placed_tile_group_create(&a2, NULL, NULL);
   placed_tile_group_link(a1, a2);
 
   // création d'un autre arbre identique
-  placed_tile_group_t* b1 = create_test_group();
-  placed_tile_group_t* b2 = create_test_group();
+  placed_tile_group_t* b1;
+  placed_tile_group_create(&b1, NULL, NULL);
+  placed_tile_group_t* b2;
+  placed_tile_group_create(&b2, NULL, NULL);
   placed_tile_group_link(b1, b2);
 
   // on vérifie qu'ils sont bien distincts
-  assert_ptr_not_equal(placed_tile_group_find_root(a1),
-                       placed_tile_group_find_root(b1));
+  assert_int_equal(placed_tile_group_connected(a1, b1), false);
 
   // on merge les deux groupes
-  placed_tile_group_t* root_a = placed_tile_group_find_root(a1);
-  placed_tile_group_t* root_b = placed_tile_group_find_root(b1);
-  placed_tile_group_link(root_a, root_b);
+
+  placed_tile_group_link(a2, b2);
 
   // Maintenant ils doivent faire partie du meme groupe
-  assert_ptr_equal(placed_tile_group_find_root(a1), b2);
-  assert_ptr_equal(placed_tile_group_find_root(b1), b2);
+  assert_int_equal(placed_tile_group_connected(a1, b1), true);
 
-  free(a1);
-  free(a2);
-  free(b1);
-  free(b2);
+  placed_tile_group_destory(a1);
+  placed_tile_group_destory(a2);
+  placed_tile_group_destory(b1);
+  placed_tile_group_destory(b2);
 }
 
 void tile_get_family_face_works(void** state) {

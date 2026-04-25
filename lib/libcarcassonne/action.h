@@ -1,7 +1,7 @@
 #pragma once
 
-#include "libcarcassonne/placed_tile.h"
-#include "libcarcassonne/tile.h"
+#include <libcarcassonne/placed_tile.h>
+#include <libcarcassonne/tile.h>
 
 /// @brief Représente les différents types d'action possible
 typedef enum action_type {
