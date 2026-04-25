@@ -1,4 +1,4 @@
-#include "text.h"
+#include <sdl/text.h>
 
 text_object_t *init_text_object(SDL_Renderer *renderer, char *font_path,
                                 float font_size, const char *content,

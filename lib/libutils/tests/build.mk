@@ -1,6 +1,4 @@
-NAME := utils
-PROG = $(BINS_DIR)/tests/$(NAME)_test
+NAME := utils_test
+LLIBS = utils
 
-LIBS = cmocka utils
-
-include $(BUILD_DIR)/binary.mk
+include $(BUILD_DIR)/test.mk

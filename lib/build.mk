@@ -8,6 +8,8 @@ $(addprefix clean_,$(BINS)): clean_%:
 $(addprefix test_,$(BINS)): test_%:
 	@$(MAKE) -C $* -f build.mk test
 
+libcarcassonne: libutils
+
 sdl carcassonne cli: libcarcassonne libai
 
 build: $(BINS)
