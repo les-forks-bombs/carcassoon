@@ -22,10 +22,6 @@ typedef struct placed_tile_group {
   int marker;
 } placed_tile_group_t;
 
-typedef struct placed_face_groups {
-  placed_tile_group_t *face[3];
-} placed_face_groups_t;
-
 /// @brief Représentation d'une tile qui a été placée
 typedef struct placed_tile {
   /// @brief Pointeur vers la définition de la tile
@@ -41,9 +37,6 @@ return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
                                  tile_orientation_t orientation);
 void          placed_tile_destroy(placed_tile_t *);
-return_code_t placed_tile_get_face(placed_face_groups_t *ret,
-                                   const placed_tile_t  *tile,
-                                   tile_orientation_t    connexion_face);
 
 void placed_tile_group_create(placed_tile_group_t **group, meeple_t *meeple,
                               const placed_tile_t *tile);
