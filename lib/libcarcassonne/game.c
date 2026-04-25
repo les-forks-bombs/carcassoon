@@ -188,7 +188,7 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
 
     if (group_ref->meeple == NULL) {
       group_ref->meeple              = calloc(1, sizeof(meeple_t));
-      group_ref->meeple->player      = game->current_player;
+      group_ref->meeple->player      = &game->players[game->current_player];
       group_ref->meeple->group_node  = group_ref;
       group_ref->meeple->meeple_type = meeple_type;
 
