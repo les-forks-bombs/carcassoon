@@ -1,21 +1,10 @@
 #pragma once
 
 #include <libcarcassonne/action.h>
-#include <libcarcassonne/deck.h>
+#include <libcarcassonne/consts.h>
+#include <libcarcassonne/engine_state.h>
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/options.h>
-
-/// @brief Représente la prochaine action attendue par le moteur
-typedef enum engine_state {
-  LIBCARCASSONNE_ENGINE_NULL_ENGINE        = -1,
-  LIBCARCASSONNE_ENGINE_WAITING_GAME_START = 0,
-  LIBCARCASSONNE_ENGINE_WAITING_PLAYER_TILE_ACTION =
-      LIBCARCASSONNE_ACTION_PLACE_TILE,
-  LIBCARCASSONNE_ENGINE_WAITING_PLAYER_MEEPLE_ACTION =
-      LIBCARCASSONNE_ACTION_PLACE_MEEPLE,
-  LIBCARCASSONNE_ENGINE_WAITING_PLAYER_END_TURN =
-      LIBCARCASSONNE_ACTION_END_PLAYER_TURN,
-} engine_state_t;
 
 /// @brief Représente un moteur pour une partie de carcassonne
 typedef struct engine {
