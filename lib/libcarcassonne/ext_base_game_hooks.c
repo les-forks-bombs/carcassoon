@@ -1,10 +1,9 @@
+#include <libcarcassonne/action.h>
+#include <libcarcassonne/consts.h>
+#include <libcarcassonne/engine.h>
 #include <libcarcassonne/ext_base_game_hooks.h>
+#include <libcarcassonne/game.h>
 #include <stdlib.h>
-
-#include "libcarcassonne/action.h"
-#include "libcarcassonne/consts.h"
-#include "libcarcassonne/engine.h"
-#include "libcarcassonne/game.h"
 
 return_code_t meeple_place_fw(void** state_store, engine_t* engine,
                               action_t* action) {
