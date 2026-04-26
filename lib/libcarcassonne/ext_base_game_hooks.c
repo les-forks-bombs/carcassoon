@@ -29,7 +29,7 @@ return_code_t meeple_place_fw(void** state_store, engine_t* engine,
 
 return_code_t meeple_place_bw(void** state_store, engine_t* engine) {
   meeple_place_hook_state_t* state = *state_store;
-  
+
   // game_remove_meeple(&engine->game, state->x, state->y, state->group);
   engine->game.players[engine->game.current_player].nb_meeples++;
 

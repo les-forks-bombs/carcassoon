@@ -1,12 +1,10 @@
 #pragma once
 
-#include <libcarcassonne/forward.h>
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/engine_state.h>
+#include <libcarcassonne/forward.h>
 #include <libcarcassonne/tile.h>
 #include <libutils/vector.h>
-
-
 
 struct extension_process_hook {
   const unsigned int           priority;
