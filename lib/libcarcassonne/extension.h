@@ -1,5 +1,6 @@
 #pragma once
 
+#include <libcarcassonne/meeple.h>
 #include <libcarcassonne/tile.h>
 #include <libutils/vector.h>
 
@@ -21,6 +22,7 @@ typedef struct extension {
   const unsigned int               start_tiles_priority;
   const extension_process_hooks_t* hooks;
   const extension_list_t*          required;
+  const meeple_count_list_t        meeples_count;
 } extension_t;
 
 return_code_t create_extension_list(extension_list_t*);
