@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "libcarcassonne/forward.h"
 
 #define LIBCARCASSONNE_PRNG_n     624
 #define LIBCARCASSONNE_PRNG_m     397
@@ -21,12 +22,12 @@
 /// @brief Status du générateur aléatoire
 /// @cite https://en.wikipedia.org/wiki/Mersenne_Twister#C_code
 /// @remark Emprunté de l'article wikipedia
-typedef struct prng_mersenne_twister_state {
+struct prng_mersenne_twister_state {
   unsigned int
       state_array[LIBCARCASSONNE_PRNG_n];  // the array for the state vector
   int state_index;  // index into state vector array, 0 <= state_index <= n-1
                     // always
-} prng_mersenne_twister_state_t;
+};
 
 /// @brief Crée un état de générateur de nombre pseudo aléatoire
 /// @param seed La seed pour initialiser le state

@@ -6,8 +6,7 @@
 #include <libcarcassonne/options.h>
 #include <libutils/cmocka.h>
 
-static const struct extension* base_ptr_table[] = {
-    &LIBCARCASSONNE_EXT_BASE_GAME};
+static const extension_t* base_ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
 
 static const extension_list_t base = {.meta = {
                                           .size = 1,

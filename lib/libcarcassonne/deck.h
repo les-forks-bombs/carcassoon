@@ -6,15 +6,13 @@
 #include <libcarcassonne/tile.h>
 #include <libutils/lc.h>
 
-typedef List(const tile_t*) deck_list_t;
-
 /// @brief Le deck permet de piocher et défausser des tiles
-typedef struct deck {
+struct deck {
   /// @brief La liste des tiles dans un ordre aléatoire
   deck_list_t list;
   /// @brief State du générateur de nombres pseudo-aléatoire
   prng_mersenne_twister_state_t state;
-} deck_t;
+};
 
 /// @brief Permet de créer une instance de deck
 /// @param seed La seed qui sera utilisée pour la rng

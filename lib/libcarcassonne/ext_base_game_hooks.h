@@ -5,10 +5,10 @@
 #include <libcarcassonne/extension.h>
 #include <libcarcassonne/tile.h>
 
-typedef struct meeple_place_hook_state {
+struct meeple_place_hook_state {
   int               x, y;
   tile_part_group_t group;
-} meeple_place_hook_state_t;
+};
 
 return_code_t meeple_place_fw(void** state_store, engine_t* engine,
                               action_t* action);
