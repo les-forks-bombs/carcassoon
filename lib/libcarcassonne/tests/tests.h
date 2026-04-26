@@ -3,12 +3,10 @@
 
 #include <libcarcassonne/ext_base_game.h>
 #include <libcarcassonne/extension.h>
+#include <libcarcassonne/options.h>
 #include <libutils/cmocka.h>
 
-#include "libcarcassonne/options.h"
-
-static const struct extension* base_ptr_table[] = {
-    &LIBCARCASSONNE_EXT_BASE_GAME};
+static const extension_t* base_ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
 
 static const extension_list_t base = {.meta = {
                                           .size = 1,
