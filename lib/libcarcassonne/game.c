@@ -37,11 +37,39 @@ return_code_t create_game(game_t *game, options_t *options) {
 
   game->map = calloc(largeur * largeur, sizeof(placed_tile_t *));
 
+  meeple_count_list_t *meeples_count;
+  vector_alloc(meeples_count, 3);
+  meeples_count->meta.size = 0;
+
+  meeple_count_t basic_meeple_count = {.count = 0, .meeple_type = BASIC};
+  vector_append(meeples_count, &basic_meeple_count);
+
+  meeple_count_t large_meeple_count = {.count = 0, .meeple_type = LARGE};
+  vector_append(meeples_count, &large_meeple_count);
+
+  meeple_count_t abbot_meeple_count = {.count = 0, .meeple_type = ABBOT};
+  vector_append(meeples_count, &abbot_meeple_count);
+
+  for (int i = 0; i < options->extensions.meta.size; i++) {
+    extension_t *extension = (extension_t *)&options->extensions.meta.data[i];
+    meeple_count_list_t ext_meeple_count_list = extension->meeples_count;
+    for (int i = 0; i < ext_meeple_count_list.meta.size; i++)
+    {
+      meeple_count_t *ext_meeple_count = (meeple_count_t*)&ext_meeple_count_list.meta.data[i];
+
+      meeple_count_t *meeple_count = (meeple_count_t*)&meeples_count->meta.data[ext_meeple_count->meeple_type];
+
+      meeple_count->count += ext_meeple_count->count;
+    }
+    
+  }
+
   // on instancie les joueurs
   for (unsigned int i = 0; i < game->options->players; i++)
     game->players[i] =
         create_player(i > game->options->ai ? LIBCARCASSONNE_PLAYER_HUMAN
-                                            : LIBCARCASSONNE_PLAYER_AI);
+                                            : LIBCARCASSONNE_PLAYER_AI,
+                      meeples_count);
 
   return SUCCESS;
 }
@@ -62,6 +90,12 @@ void destroy_game(game_t *game) {
         free(*tile);
       }
     }
+
+  for (int i = 0; i < LIBCARCASSONNE_MAX_PLAYERS; i++)
+  {
+    free_player(&game->players[i]);
+  }
+  
 
   list_free(&game->open_tiles);
 
@@ -187,10 +221,15 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
     placed_tile_group_t *group_ref = (*tile_ref)->groups[group];
 
     if (group_ref->meeple == NULL) {
-      group_ref->meeple              = calloc(1, sizeof(meeple_t));
-      group_ref->meeple->player      = &game->players[game->current_player];
-      group_ref->meeple->group_node  = group_ref;
-      group_ref->meeple->meeple_type = meeple_type;
+      player_t player = game->players[game->current_player];
+      meeple_t *meeple = calloc(1, sizeof(meeple_t));
+      meeple->group_node  = group_ref;
+      meeple->meeple_type = meeple_type;
+
+      group_ref->meeple              = meeple;
+      group_ref->meeple->player      = &player;
+
+      vector_append(&player.meeples,meeple);
 
       // todo: ajouter au meeple a la liste des meeple
       vector_append(&game->meeples, &group_ref->meeple);

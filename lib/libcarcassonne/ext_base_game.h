@@ -494,6 +494,18 @@ static const extension_process_hooks_t LIBCARCASSONNE_EXT_BASE_GAME_HOOKS = {
 static const extension_list_t LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS = {
     .meta = {.size = 0, .caps = 0, .data = NULL}};
 
+const static meeple_count_t LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT[] = {
+    {.count = 5, .meeple_type = BASIC}};
+
+static const meeple_count_list_t meeples_count = {
+    .meta = {
+        .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT) /
+                sizeof(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT[0]),
+        .caps = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT) /
+                sizeof(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT[0]),
+        .data =
+            (meeple_count_t*)&LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT[0]}};
+
 static const extension_t LIBCARCASSONNE_EXT_BASE_GAME = {
     .name                 = "Base Game",
     .hooks                = &LIBCARCASSONNE_EXT_BASE_GAME_HOOKS,
