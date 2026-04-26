@@ -53,15 +53,15 @@ return_code_t create_game(game_t *game, options_t *options) {
   for (int i = 0; i < options->extensions.meta.size; i++) {
     extension_t *extension = (extension_t *)&options->extensions.meta.data[i];
     meeple_count_list_t ext_meeple_count_list = extension->meeples_count;
-    for (int i = 0; i < ext_meeple_count_list.meta.size; i++)
-    {
-      meeple_count_t *ext_meeple_count = (meeple_count_t*)&ext_meeple_count_list.meta.data[i];
+    for (int i = 0; i < ext_meeple_count_list.meta.size; i++) {
+      meeple_count_t *ext_meeple_count =
+          (meeple_count_t *)&ext_meeple_count_list.meta.data[i];
 
-      meeple_count_t *meeple_count = (meeple_count_t*)&meeples_count->meta.data[ext_meeple_count->meeple_type];
+      meeple_count_t *meeple_count = (meeple_count_t *)&meeples_count->meta
+                                         .data[ext_meeple_count->meeple_type];
 
       meeple_count->count += ext_meeple_count->count;
     }
-    
   }
 
   // on instancie les joueurs
@@ -91,11 +91,9 @@ void destroy_game(game_t *game) {
       }
     }
 
-  for (int i = 0; i < LIBCARCASSONNE_MAX_PLAYERS; i++)
-  {
+  for (int i = 0; i < LIBCARCASSONNE_MAX_PLAYERS; i++) {
     free_player(&game->players[i]);
   }
-  
 
   list_free(&game->open_tiles);
 
@@ -221,15 +219,15 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
     placed_tile_group_t *group_ref = (*tile_ref)->groups[group];
 
     if (group_ref->meeple == NULL) {
-      player_t player = game->players[game->current_player];
-      meeple_t *meeple = calloc(1, sizeof(meeple_t));
+      player_t  player    = game->players[game->current_player];
+      meeple_t *meeple    = calloc(1, sizeof(meeple_t));
       meeple->group_node  = group_ref;
       meeple->meeple_type = meeple_type;
 
-      group_ref->meeple              = meeple;
-      group_ref->meeple->player      = &player;
+      group_ref->meeple         = meeple;
+      group_ref->meeple->player = &player;
 
-      vector_append(&player.meeples,meeple);
+      vector_append(player.meeples, meeple);
 
       // todo: ajouter au meeple a la liste des meeple
       vector_append(&game->meeples, &group_ref->meeple);

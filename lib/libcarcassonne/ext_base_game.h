@@ -1,5 +1,6 @@
 #pragma once
 
+#include <libcarcassonne/ext_base_game_hooks.h>
 #include <libcarcassonne/extension.h>
 #include <libcarcassonne/tile.h>
 #include <unistd.h>
@@ -484,11 +485,14 @@ static const tile_list_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
                 sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]),
         .data = (tile_t*)&LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]}};
 
+static const extension_process_hook_t*
+    LIBCARCASSONNE_EXT_BASE_GAME_HOOKS_LIST[] = {&meeple_place};
+
 static const extension_process_hooks_t LIBCARCASSONNE_EXT_BASE_GAME_HOOKS = {
     .meta = {
         .size = 0,
         .caps = 0,
-        .data = NULL,
+        .data = LIBCARCASSONNE_EXT_BASE_GAME_HOOKS_LIST,
     }};
 
 static const extension_list_t LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS = {

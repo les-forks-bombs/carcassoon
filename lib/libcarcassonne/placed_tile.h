@@ -2,12 +2,12 @@
 #include <libcarcassonne/meeple.h>
 #include <libutils/vector.h>
 
-typedef Vector(struct placed_tile_group *) placed_tile_group_neighbors_t;
+#include "libcarcassonne/forward.h"
 
 /// @brief Information des groupes de la sous-tile
-typedef struct placed_tile_group {
+struct placed_tile_group {
   /// @brief Référence vers la tile représentant le groupe
-  const struct placed_tile *tile;
+  const placed_tile_t *tile;
   /// @brief Référence vers l'éventuel meeple placé dans le groupe
   meeple_t *meeple;
 
@@ -20,10 +20,10 @@ typedef struct placed_tile_group {
   unsigned int open_slots;
 
   int marker;
-} placed_tile_group_t;
+};
 
 /// @brief Représentation d'une tile qui a été placée
-typedef struct placed_tile {
+struct placed_tile {
   /// @brief Pointeur vers la définition de la tile
   const tile_t *parent;
   /// @brief Groupes présents a l'intérieur de la tile
@@ -31,7 +31,7 @@ typedef struct placed_tile {
   placed_tile_group_t *groups[9];
   /// @brief Orientation de placement de la tile
   tile_orientation_t orientation;
-} placed_tile_t;
+};
 
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,

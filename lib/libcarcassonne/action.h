@@ -14,7 +14,7 @@ typedef enum action_type {
 } action_type_t;
 
 /// @brief Action de placement de tuile
-typedef struct action_place_tile {
+struct action_place_tile {
   /// @brief Coordonnée en abscisse
   int x;
   /// @brief Coordonné en ordonnée
@@ -23,10 +23,10 @@ typedef struct action_place_tile {
   tile_t *tile;
   /// @brief L'orientation de la tuile à placer
   tile_orientation_t orientation;
-} action_place_tile_t;
+};
 
 /// @brief Action de pose d'un meeple
-typedef struct action_place_meeple {
+struct action_place_meeple {
   /// @brief Coordonnée en abscisse
   int x;
   /// @brief Coordonné en ordonnée
@@ -37,18 +37,18 @@ typedef struct action_place_meeple {
   int part_group;
   /// @brief Le type de meeple à placer
   meeple_type_t meeple_type;
-} action_place_meeple_t;
+};
 
 /// @brief Union contenant les actions réalisables
-typedef union action_order {
+union action_order {
   action_place_tile_t   place_tile;
   action_place_meeple_t place_meeple;
-} action_order_t;
+};
 
 /// @brief Action à réaliser
-typedef struct action {
+struct action {
   /// @brief Le type d'action à réaliser
   action_type_t type;
   /// @brief La manière de réaliser l'action
   action_order_t order;
-} action_t;
+};

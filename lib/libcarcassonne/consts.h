@@ -14,5 +14,6 @@
 #define NULL_POINTER      8
 #define NO_MORE_PLAYER    9
 #define PLAYER_NOT_CALLED 10
+#define NO_PROGRESS       11
 
 typedef char return_code_t;

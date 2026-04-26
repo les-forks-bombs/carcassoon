@@ -24,17 +24,15 @@ player_t create_player(player_type_t type, meeple_count_list_t *meeples_count) {
   return player;
 }
 
-void free_player(player_t *player){
-  for (int i = 0; i < player->meeples.meta.size; i++)
-  {
-    meeple_t *meeple = (meeple_t*) &player->meeples.meta.data[i];
+void free_player(player_t *player) {
+  for (int i = 0; i < player->meeples->meta.size; i++) {
+    meeple_t *meeple = (meeple_t *)&player->meeples->meta.data[i];
     free(meeple);
   }
 
-  for (int i = 0; i < player->meeples_count.meta.size; i++)
-  {
-    meeple_count_t *meeple_count = (meeple_count_t*) &player->meeples_count.meta.data[i];
+  for (int i = 0; i < player->meeples_count->meta.size; i++) {
+    meeple_count_t *meeple_count =
+        (meeple_count_t *)&player->meeples_count->meta.data[i];
     free(meeple_count);
   }
-  
 }
