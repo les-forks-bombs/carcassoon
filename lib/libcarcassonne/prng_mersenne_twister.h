@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+
 #include "libcarcassonne/forward.h"
 
 #define LIBCARCASSONNE_PRNG_n     624
