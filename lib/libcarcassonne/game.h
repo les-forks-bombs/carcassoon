@@ -11,10 +11,8 @@
 #include <libutils/lc.h>
 #include <libutils/vector.h>
 
-typedef List(placed_tile_t *) placed_tile_list_t;
-
 /// @brief Représente une partie
-typedef struct game {
+struct game {
   /// @brief Index du joueur actuel
   unsigned int current_player;
   /// @brief Nombre total de joueurs dans la partie
@@ -41,7 +39,7 @@ typedef struct game {
 
   /// @brief Paramètres du jeu
   options_t *options;
-} game_t;
+};
 
 /// @brief Initialise un objet `game` en mémoire
 /// @param game L'emplacement ou créer le jeu

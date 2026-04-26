@@ -9,14 +9,14 @@ typedef enum options_mode {
   CARCASSONNE_MODE_CLI = 1,
 } options_mode_t;
 
-typedef struct options {
+struct options {
   options_mode_t   mode;
   unsigned int     players;
   unsigned int     seed;
   unsigned int     ai;
   unsigned int     max_turns;
   extension_list_t extensions;
-} options_t;
+};
 
 options_t parse_options(int argc, char* argv[]);
 

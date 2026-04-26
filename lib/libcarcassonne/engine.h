@@ -7,12 +7,12 @@
 #include <libcarcassonne/options.h>
 
 /// @brief Représente un moteur pour une partie de carcassonne
-typedef struct engine {
+struct engine {
   /// @brief La statut du plateau de jeu
   game_t         game;
   options_t      config;
   engine_state_t state;
-} engine_t;
+};
 
 /// @brief Permet de créer une instance d'un moteur
 /// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
