@@ -4,9 +4,7 @@
 #include <libutils/lc.h>
 #include <libutils/vector.h>
 
-#define ForwardDefinition(type, name) \
-  type              name;             \
-  typedef type name name##_t
+#define ForwardDefinition(type, name) typedef type name name##_t
 
 ForwardDefinition(struct, tile_temp);
 ForwardDefinition(struct, engine);
