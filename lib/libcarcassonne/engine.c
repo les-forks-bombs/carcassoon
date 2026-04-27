@@ -19,12 +19,12 @@ return_code_t create_engine(engine_t *engine, options_t options) {
 
   extension_process_hooks_list_t hooks;
 
-  for (unsigned int i = 0; i < options.extensions.meta.size; i++) {
+  for (unsigned int i = 0; i < vector_size(&options.extensions); i++) {
     extension_t *ext = *vector_nth(&options.extensions, i);
     for (unsigned int j = 0; j < ext->hooks->meta.size; j++) {
       const extension_process_hook_t *hook = *vector_nth(ext->hooks, j);
       unsigned int                    k    = 0;
-      for (; k < hooks.meta.size; k++) {
+      for (; k < vector_size(&hooks); k++) {
         if ((*list_value(&hooks, list_nth(&hooks, k)))->priority <
             hook->priority) {
           k++;
@@ -51,6 +51,8 @@ return_code_t destroy_engine(engine_t *engine) {
     return NULL_POINTER;
   }
 
+  vector_free(&engine->hooks);
+
   destroy_game(&engine->game);
 
   return SUCCESS;
@@ -67,7 +69,7 @@ return_code_t start_game(engine_t *engine) {
     return code;
   }
 
-  engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_TILE_ACTION;
+  engine->state = LIBCARCASSONNE_ENGINE_NULL_ENGINE;
 
   return SUCCESS;
 }
@@ -187,7 +189,9 @@ return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
 
     dispatch_t *store =
         vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1);
-    current_hook->bw(&(store->state_store), engine);
+    current_hook->bw(&store->state_store, engine);
+
+    current_hook->free(&store->state_store);
 
     vector_remove(&engine->dispatchs, vector_size(&engine->hooks));
 
