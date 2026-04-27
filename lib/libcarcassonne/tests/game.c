@@ -9,7 +9,7 @@
 /* Vérifie l'instanciation d'une game */
 void game_builds(void** state) {
   (void)state;
-  game_t game;
+  game_t game = {0};
   assert_int_equal(create_game(&game, &options), SUCCESS);
   destroy_game(&game);
 }
