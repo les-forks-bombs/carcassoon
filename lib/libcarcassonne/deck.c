@@ -6,7 +6,7 @@
 #include <libutils/vector.h>
 #include <unistd.h>
 
-deck_t create_deck(int seed, extension_list_t* extensions) {
+deck_t create_deck(int seed, extension_vector_t* extensions) {
   // On initialise la struct, cette dernière sera stoquée dans le stack
   deck_t deck = {.list  = {.meta =
                                {
@@ -24,8 +24,8 @@ deck_t create_deck(int seed, extension_list_t* extensions) {
                            .size = 0,
                        }};
 
-  unsigned int       start_tile_priority = 0;
-  const tile_list_t* start_tile          = NULL;
+  unsigned int         start_tile_priority = 0;
+  const tile_vector_t* start_tile          = NULL;
 
   for (unsigned int i = 0; i < vector_size(extensions); i++) {
     // A partir d'une composition de deck,

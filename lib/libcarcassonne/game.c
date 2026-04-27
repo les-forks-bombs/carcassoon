@@ -33,8 +33,8 @@ return_code_t create_game(game_t *game, options_t *options) {
 
   game->map = calloc(largeur * largeur, sizeof(placed_tile_t *));
 
-  meeple_count_list_t meeples_count;
-  
+  meeple_count_vector_t meeples_count;
+
   meeples_count.meta.data = NULL;
   vector_alloc(&meeples_count, 3);
   meeples_count.meta.size = 0;
@@ -45,12 +45,12 @@ return_code_t create_game(game_t *game, options_t *options) {
   meeple_count_t large_meeple_count = {.count = 0, .meeple_type = LARGE};
   vector_append(&meeples_count, &large_meeple_count);
 
-  meeple_count_t  abbot_meeple_count = {.count = 0, .meeple_type = ABBOT};
+  meeple_count_t abbot_meeple_count = {.count = 0, .meeple_type = ABBOT};
   vector_append(&meeples_count, &abbot_meeple_count);
 
   for (unsigned int i = 0; i < options->extensions.meta.size; i++) {
-    extension_t        *extension = *vector_nth(&options->extensions, i);
-    meeple_count_list_t ext_meeple_count_list = extension->meeples_count;
+    extension_t          *extension = *vector_nth(&options->extensions, i);
+    meeple_count_vector_t ext_meeple_count_list = extension->meeples_count;
     for (unsigned int i = 0; i < ext_meeple_count_list.meta.size; i++) {
       meeple_count_t *ext_meeple_count = vector_nth(&ext_meeple_count_list, i);
 

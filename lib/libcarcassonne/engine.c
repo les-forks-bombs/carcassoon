@@ -1,6 +1,12 @@
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/game.h>
+#include <unistd.h>
+
+#include "libcarcassonne/engine_state.h"
+#include "libcarcassonne/forward.h"
+#include "libutils/lc.h"
+#include "libutils/vector.h"
 
 return_code_t create_engine(engine_t *engine, options_t options) {
   if (engine == NULL) {
@@ -11,10 +17,31 @@ return_code_t create_engine(engine_t *engine, options_t options) {
 
   engine->config = options;
 
+  extension_process_hooks_list_t hooks;
+
+  for (unsigned int i = 0; i < options.extensions.meta.size; i++) {
+    extension_t *ext = *vector_nth(&options.extensions, i);
+    for (unsigned int j = 0; j < ext->hooks->meta.size; j++) {
+      const extension_process_hook_t *hook = *vector_nth(ext->hooks, j);
+      unsigned int                    k    = 0;
+      for (; k < hooks.meta.size; k++) {
+        if ((*list_value(&hooks, list_nth(&hooks, k)))->priority <
+            hook->priority) {
+          k++;
+        }
+        list_insert(&hooks, &hook, k);
+      }
+    }
+  }
+
+  engine->current_hook = 0;
+
   return_code_t code = create_game(&engine->game, &engine->config);
   if (code != SUCCESS) {
     return code;
   }
+
+  engine->state = LIBCARCASSONNE_ENGINE_WAITING_GAME_START;
 
   return SUCCESS;
 }
@@ -105,28 +132,73 @@ return_code_t handle_end_player_turn(engine_t *engine) {
 }
 
 return_code_t dispatch_action(engine_t *engine, action_t action) {
-  if (engine == NULL) return NULL_POINTER;
+  do {
+    const extension_process_hook_t *current_hook =
+        (*vector_nth(&engine->hooks, engine->current_hook));
 
-  return_code_t code;
+    if (action.type != current_hook->needed_action) {
+      return NO_PROGRESS;
+    }
 
-  switch (action.type) {
-    case LIBCARCASSONNE_ACTION_PLACE_TILE:
-      code = handle_place_tile(engine, action);
-      break;
-    case LIBCARCASSONNE_ACTION_PLACE_MEEPLE:
-      code = handle_place_meeple(engine, action);
-      break;
-    case LIBCARCASSONNE_ACTION_END_PLAYER_TURN:
-      code = handle_end_player_turn(engine);
-      break;
-    default:
-      code = INVALID_ACTION;
-  }
+    dispatch_t dispatch;
+    vector_append(&engine->dispatchs, &dispatch);
 
-  return code;
+    dispatch_t *store =
+        vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1);
+    current_hook->fw(&(store->state_store), engine, &action);
+
+    engine->current_hook =
+        (engine->current_hook + 1) % vector_size(&engine->hooks);
+
+  } while (engine->current_hook != 0);
+
+  return SUCCESS;
 }
 
 engine_state_t get_engine_state(engine_t *engine) {
   if (engine == NULL) return LIBCARCASSONNE_ENGINE_NULL_ENGINE;
   return engine->state;
+}
+
+return_code_t engine_adapt_state(engine_t *engine) {
+  switch ((*vector_nth(&engine->hooks, engine->current_hook))->needed_action) {
+    case LIBCARCASSONNE_ACTION_PLACE_TILE:
+      engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_TILE_ACTION;
+      break;
+    case LIBCARCASSONNE_ACTION_PLACE_MEEPLE:
+      engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_MEEPLE_ACTION;
+      break;
+    case LIBCARCASSONNE_ACTION_END_PLAYER_TURN:
+      engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_END_TURN;
+      break;
+    default:
+      engine->state = LIBCARCASSONNE_ENGINE_NULL_ENGINE;
+  }
+
+  return SUCCESS;
+}
+
+return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
+  unsigned int i = vector_size(&engine->dispatchs);
+
+  do {
+    const extension_process_hook_t *current_hook =
+        (*vector_nth(&engine->hooks, engine->current_hook));
+
+    dispatch_t *store =
+        vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1);
+    current_hook->bw(&(store->state_store), engine);
+
+    vector_remove(&engine->dispatchs, vector_size(&engine->hooks));
+
+    if (engine->current_hook == 0) {
+      engine->current_hook = vector_size(&engine->hooks);
+    } else {
+      engine->current_hook = (engine->current_hook - 1);
+    }
+
+    i++;
+  } while (i == epoch);
+
+  return SUCCESS;
 }
