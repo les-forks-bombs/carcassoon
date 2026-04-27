@@ -9,6 +9,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+
 #include "libcarcassonne/forward.h"
 
 const char* help_string =
@@ -46,7 +47,7 @@ options_t parse_options(int argc, char* argv[]) {
       .extensions = {0},
   };
 
-  extension_t *ext = (extension_t*)&LIBCARCASSONNE_EXT_BASE_GAME;
+  extension_t* ext = (extension_t*)&LIBCARCASSONNE_EXT_BASE_GAME;
 
   vector_append(&config.extensions, &ext);
   while (1) {

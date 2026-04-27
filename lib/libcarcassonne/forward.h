@@ -26,15 +26,19 @@ ForwardDefinition(struct, vector2d);
 ForwardDefinition(struct, extension);
 ForwardDefinition(struct, extension_process_hook);
 ForwardDefinition(struct, meeple_place_hook_state);
+ForwardDefinition(struct, dispatch);
 
 typedef List(const tile_t *) deck_list_t;
 typedef List(placed_tile_t *) placed_tile_list_t;
-typedef Vector(const extension_process_hook_t *) extension_process_hooks_t;
-typedef Vector(extension_t *) extension_list_t;
-typedef Vector(const tile_t) tile_list_t;
+typedef List(const extension_process_hook_t *) extension_process_hooks_list_t;
+typedef Vector(const extension_process_hook_t *)
+    extension_process_hooks_vector_t;
+typedef Vector(extension_t *) extension_vector_t;
+typedef Vector(const tile_t) tile_vector_t;
 typedef Vector(placed_tile_group_t *) placed_tile_group_neighbors_t;
-typedef Vector(meeple_count_t) meeple_count_list_t;
-typedef Vector(meeple_t *) meeple_list_t;
+typedef Vector(meeple_count_t) meeple_count_vector_t;
+typedef Vector(meeple_t *) meeple_vector_t;
+typedef Vector(dispatch_t) dispatch_vector_t;
 
 typedef return_code_t (*extension_forward_t)(void    **state, engine_t *,
                                              action_t *action);

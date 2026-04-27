@@ -10,12 +10,12 @@ typedef enum options_mode {
 } options_mode_t;
 
 struct options {
-  options_mode_t   mode;
-  unsigned int     players;
-  unsigned int     seed;
-  unsigned int     ai;
-  unsigned int     max_turns;
-  extension_list_t extensions;
+  options_mode_t     mode;
+  unsigned int       players;
+  unsigned int       seed;
+  unsigned int       ai;
+  unsigned int       max_turns;
+  extension_vector_t extensions;
 };
 
 options_t parse_options(int argc, char* argv[]);

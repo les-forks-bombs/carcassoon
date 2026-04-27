@@ -8,11 +8,11 @@
 
 static const extension_t* base_ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
 
-static const extension_list_t base = {.meta = {
-                                          .size = 1,
-                                          .caps = 1,
-                                          .data = &base_ptr_table,
-                                      }};
+static const extension_vector_t base = {.meta = {
+                                            .size = 1,
+                                            .caps = 1,
+                                            .data = &base_ptr_table,
+                                        }};
 
 static options_t options = {
     .mode       = CARCASSONNE_MODE_CLI,

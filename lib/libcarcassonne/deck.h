@@ -20,7 +20,7 @@ struct deck {
 /// @return une instance de deck
 /// @attention Le deck vis dans le stack!
 /// @relates deck
-deck_t create_deck(int seed, extension_list_t* extensions);
+deck_t create_deck(int seed, extension_vector_t* extensions);
 
 /// @brief Permet de libérer la mémoire liée a un deck
 /// @param deck Le deck a libérer

@@ -34,7 +34,7 @@ void *_vector_nth(const vector_t *list, unsigned int index, size_t size) {
 }
 
 void _vector_free(vector_t *list) {
-  if(list->data != NULL) {
+  if (list->data != NULL) {
     free(list->data);
   }
   list->data = NULL;
