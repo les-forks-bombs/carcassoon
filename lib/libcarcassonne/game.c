@@ -48,10 +48,10 @@ return_code_t create_game(game_t *game, options_t *options) {
   meeple_count_t abbot_meeple_count = {.count = 0, .meeple_type = ABBOT};
   vector_append(&meeples_count, &abbot_meeple_count);
 
-  for (unsigned int i = 0; i < options->extensions.meta.size; i++) {
+  for (unsigned int i = 0; i < vector_size(&options->extensions); i++) {
     extension_t          *extension = *vector_nth(&options->extensions, i);
     meeple_count_vector_t ext_meeple_count_list = extension->meeples_count;
-    for (unsigned int i = 0; i < ext_meeple_count_list.meta.size; i++) {
+    for (unsigned int i = 0; i < vector_size(&ext_meeple_count_list); i++) {
       meeple_count_t *ext_meeple_count = vector_nth(&ext_meeple_count_list, i);
 
       meeple_count_t *meeple_count =
