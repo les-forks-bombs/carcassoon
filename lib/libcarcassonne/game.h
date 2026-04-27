@@ -34,9 +34,7 @@ struct game {
 
   /// @brief Instance de la liste des tuiles
   placed_tile_list_t open_tiles;
-
-  meeple_list_t meeples;
-
+  
   /// @brief Paramètres du jeu
   options_t *options;
 };

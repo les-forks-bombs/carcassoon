@@ -41,6 +41,8 @@ return_code_t start_game(engine_t *engine) {
   }
 
   engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_TILE_ACTION;
+
+  return SUCCESS;
 }
 
 /// @brief Gère le placement d'une tuile

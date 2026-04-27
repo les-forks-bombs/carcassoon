@@ -33,7 +33,7 @@ typedef Vector(const extension_process_hook_t *) extension_process_hooks_t;
 typedef Vector(extension_t *) extension_list_t;
 typedef Vector(const tile_t) tile_list_t;
 typedef Vector(placed_tile_group_t *) placed_tile_group_neighbors_t;
-typedef Vector(meeple_count_t *) meeple_count_list_t;
+typedef Vector(meeple_count_t) meeple_count_list_t;
 typedef Vector(meeple_t *) meeple_list_t;
 
 typedef return_code_t (*extension_forward_t)(void    **state, engine_t *,

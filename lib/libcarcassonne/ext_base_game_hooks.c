@@ -5,6 +5,8 @@
 #include <libcarcassonne/game.h>
 #include <stdlib.h>
 
+#include "libutils/vector.h"
+
 return_code_t meeple_place_fw(void** state_store, engine_t* engine,
                               action_t* action) {
   if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE) {
@@ -19,8 +21,9 @@ return_code_t meeple_place_fw(void** state_store, engine_t* engine,
     // on place le meeple
     game_place_meeple(&engine->game, state->x, state->y, state->group,
                       action->order.place_meeple.meeple_type);
-    ((meeple_count_t*)&engine->game.players[engine->game.current_player]
-         .meeples_count->meta.data[state->meeple_type])
+
+    (vector_nth(engine->game.players[engine->game.current_player].meeples_count,
+                state->meeple_type))
         ->count--;
 
     return SUCCESS;
@@ -34,11 +37,14 @@ return_code_t meeple_place_bw(void** state_store, engine_t* engine) {
   meeple_place_hook_state_t* state = *state_store;
 
   // game_remove_meeple(&engine->game, state->x, state->y, state->group);
-  ((meeple_count_t*)&engine->game.players[engine->game.current_player]
-       .meeples_count->meta.data[state->meeple_type])
+  (vector_nth(engine->game.players[engine->game.current_player].meeples_count,
+              state->meeple_type))
       ->count++;
 
   return SUCCESS;
 }
 
-return_code_t meeple_place_state_free(void* state_store) { free(state_store); }
+return_code_t meeple_place_state_free(void* state_store) {
+  free(state_store);
+  return SUCCESS;
+}

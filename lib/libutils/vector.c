@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 int _vector_alloc(vector_t *list, size_t capacity, size_t element) {
   if (list->caps >= capacity && list->data != NULL) return list->caps;
@@ -33,7 +34,9 @@ void *_vector_nth(const vector_t *list, unsigned int index, size_t size) {
 }
 
 void _vector_free(vector_t *list) {
-  free(list->data);
+  if(list->data != NULL) {
+    free(list->data);
+  }
   list->data = NULL;
   list->caps = 0;
   list->size = 0;

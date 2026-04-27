@@ -27,38 +27,35 @@ return_code_t create_game(game_t *game, options_t *options) {
   game->open_tiles.meta.tail = NULL;
   game->open_tiles.meta.size = 0;
 
-  game->meeples.meta.caps = 0;
-  game->meeples.meta.size = 0;
-  game->meeples.meta.size = 0;
-
   // todo: considérer les extensions pour calculer la taille max du tableau
   unsigned int largeur =
       LIBCARCASSONNE_TILES_COUNT + LIBCARCASSONNE_TILES_COUNT - 1;
 
   game->map = calloc(largeur * largeur, sizeof(placed_tile_t *));
 
-  meeple_count_list_t *meeples_count;
-  vector_alloc(meeples_count, 3);
-  meeples_count->meta.size = 0;
+  meeple_count_list_t meeples_count;
+  
+  meeples_count.meta.data = NULL;
+  vector_alloc(&meeples_count, 3);
+  meeples_count.meta.size = 0;
 
   meeple_count_t basic_meeple_count = {.count = 0, .meeple_type = BASIC};
-  vector_append(meeples_count, &basic_meeple_count);
+  vector_append(&meeples_count, &basic_meeple_count);
 
   meeple_count_t large_meeple_count = {.count = 0, .meeple_type = LARGE};
-  vector_append(meeples_count, &large_meeple_count);
+  vector_append(&meeples_count, &large_meeple_count);
 
-  meeple_count_t abbot_meeple_count = {.count = 0, .meeple_type = ABBOT};
-  vector_append(meeples_count, &abbot_meeple_count);
+  meeple_count_t  abbot_meeple_count = {.count = 0, .meeple_type = ABBOT};
+  vector_append(&meeples_count, &abbot_meeple_count);
 
-  for (int i = 0; i < options->extensions.meta.size; i++) {
-    extension_t *extension = (extension_t *)&options->extensions.meta.data[i];
+  for (unsigned int i = 0; i < options->extensions.meta.size; i++) {
+    extension_t        *extension = *vector_nth(&options->extensions, i);
     meeple_count_list_t ext_meeple_count_list = extension->meeples_count;
-    for (int i = 0; i < ext_meeple_count_list.meta.size; i++) {
-      meeple_count_t *ext_meeple_count =
-          (meeple_count_t *)&ext_meeple_count_list.meta.data[i];
+    for (unsigned int i = 0; i < ext_meeple_count_list.meta.size; i++) {
+      meeple_count_t *ext_meeple_count = vector_nth(&ext_meeple_count_list, i);
 
-      meeple_count_t *meeple_count = (meeple_count_t *)&meeples_count->meta
-                                         .data[ext_meeple_count->meeple_type];
+      meeple_count_t *meeple_count =
+          vector_nth(&meeples_count, ext_meeple_count->meeple_type);
 
       meeple_count->count += ext_meeple_count->count;
     }
@@ -69,7 +66,7 @@ return_code_t create_game(game_t *game, options_t *options) {
     game->players[i] =
         create_player(i > game->options->ai ? LIBCARCASSONNE_PLAYER_HUMAN
                                             : LIBCARCASSONNE_PLAYER_AI,
-                      meeples_count);
+                      &meeples_count);
 
   return SUCCESS;
 }
@@ -91,7 +88,7 @@ void destroy_game(game_t *game) {
       }
     }
 
-  for (int i = 0; i < LIBCARCASSONNE_MAX_PLAYERS; i++) {
+  for (unsigned int i = 0; i < game->players_count; i++) {
     free_player(&game->players[i]);
   }
 
@@ -227,10 +224,8 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
       group_ref->meeple         = meeple;
       group_ref->meeple->player = &player;
 
-      vector_append(player.meeples, meeple);
+      vector_append(player.meeples, &meeple);
 
-      // todo: ajouter au meeple a la liste des meeple
-      vector_append(&game->meeples, &group_ref->meeple);
     } else {
       return ALREADY_ALLOCATED;
     }

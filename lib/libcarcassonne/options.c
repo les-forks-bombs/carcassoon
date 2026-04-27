@@ -9,6 +9,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "libcarcassonne/forward.h"
 
 const char* help_string =
     ""
@@ -42,10 +43,12 @@ options_t parse_options(int argc, char* argv[]) {
       .seed       = time(NULL),
       .players    = 3,
       .mode       = CARCASSONNE_MODE_SDL,
-      .extensions = {.meta = {.size = 1,
-                              .data = (char*)&LIBCARCASSONNE_EXT_BASE_GAME}},
+      .extensions = {0},
   };
 
+  extension_t *ext = (extension_t*)&LIBCARCASSONNE_EXT_BASE_GAME;
+
+  vector_append(&config.extensions, &ext);
   while (1) {
     int           option_index = 0;
     char*         endPtr;
