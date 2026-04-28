@@ -5,7 +5,7 @@ ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
 endif
 
 $(PROG): $(OBJS) $(LLIBS:%=$(LIBS_DIR)/lib%.a)
-	@$(CC)  -o $@ $(OBJS) $(LFLAGS) $(LLIBS:%=-l%)
+	$(CC)  -o $@ $(OBJS) $(LLIBS:%=-l%) $(LFLAGS)
 	@case "$(TARGET)" in \
 	        (x86_64-w64-mingw64|x86_64-w64-mingw32) \
 	            $(BUILD_DIR)/copy_dlls.sh $(PROG); \
