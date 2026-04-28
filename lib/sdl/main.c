@@ -157,9 +157,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   SDL_Color white_text = {255, 255, 255, 255};
   char *path = path_resolver_resolve(&as->resolver, "assets/fonts/Orange.ttf");
   printf("path relatif: %s\n", path);
-  
-  as->text = init_text_object(as->renderer, path,
-                              32.0f, "Ici c'est Carcassonne !", white_text);
+
+  as->text = init_text_object(as->renderer, path, 32.0f,
+                              "Ici c'est Carcassonne !", white_text);
   free(path);
 
   as->map    = create_map();
@@ -175,11 +175,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     int col = i % map_width_temp;
     int row = i / map_width_temp;
 
-    char *path = path_resolver_resolve(&as->resolver, "assets/tiles_png/tile_05.png");
+    char *path =
+        path_resolver_resolve(&as->resolver, "assets/tiles_png/tile_05.png");
     printf("path relatif: %s\n", path);
 
-    as->map->tiles[i] =
-        create_tt(as->renderer, path);
+    as->map->tiles[i] = create_tt(as->renderer, path);
     free(path);
 
     if (as->map->tiles[i]) {
