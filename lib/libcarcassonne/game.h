@@ -10,6 +10,7 @@
 #include <libcarcassonne/vector2d.h>
 #include <libutils/lc.h>
 #include <libutils/vector.h>
+#include "libcarcassonne/forward.h"
 
 /// @brief Représente une partie
 struct game {
@@ -59,6 +60,7 @@ placed_tile_t **game_tile_at(game_t *game, int coordinates_x,
 
 return_code_t game_place_tile(game_t *, const tile_t *tile, int x, int y,
                               tile_orientation_t orientation);
+return_code_t game_remove_tile(game_t *, int x, int y);
 
 /// @brief Détermine si une tuile peut être placé à l'emplacement désigné
 /// @param game Le jeu dans lequel placer la tuile
@@ -99,3 +101,5 @@ return_code_t game_end_round(game_t *game);
 /// @return Le code de statut de l'opération, SUCCESS en cas de réussite
 return_code_t game_place_meeple(game_t *game, int x, int y, int part_group,
                                 meeple_type_t meeple_type);
+
+return_code_t game_remove_meeple(game_t* game, int x, int y, int part_group);
