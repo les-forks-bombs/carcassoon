@@ -188,4 +188,4 @@ char* validate_options(options_t* config) {
   return NULL;
 }
 
-void free_options(options_t* t) { vector_free(&t->extensions); }
+void free_options(options_t* options) { vector_free(&options->extensions); }

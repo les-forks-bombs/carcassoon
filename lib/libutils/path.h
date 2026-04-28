@@ -1,6 +1,7 @@
 #pragma once
 
-#include <libcarcassonne/consts.h>
+#include "libcarcassonne/forward.h"
+
 #ifdef _WIN32
 #include <stdio.h>
 #include <tchar.h>

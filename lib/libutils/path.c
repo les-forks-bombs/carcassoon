@@ -19,10 +19,10 @@
 #include <unistd.h>
 #endif
 
-return_code_t current_executable_path(char path[LIBUTILS_PATH_BUF]) {
+return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]) {
   ssize_t len;
 #ifdef _WIN32
-  len = GetModuleFileNameA(NULL, path, MAX_PATH);
+  len = GetModuleFileNameA(NULL, ret, MAX_PATH);
   if (len == 0) {
     printf("GetModuleFileName failed. Error: %lu\n", GetLastError());
     return ERROR;
@@ -32,12 +32,12 @@ return_code_t current_executable_path(char path[LIBUTILS_PATH_BUF]) {
   }
 #else
 
-  len = readlink("/proc/self/exe", path, LIBUTILS_PATH_BUF - 1);
+  len = readlink("/proc/self/exe", ret, LIBUTILS_PATH_BUF - 1);
   if (len == -1) {
     perror("readlink failed");
     return ERROR;
   }
-  path[len] = '\0';
+  ret[len] = '\0';
 #endif
 
   return SUCCESS;
@@ -45,7 +45,9 @@ return_code_t current_executable_path(char path[LIBUTILS_PATH_BUF]) {
 
 return_code_t current_executable_dir(char ret[LIBUTILS_PATH_BUF]) {
   char path[LIBUTILS_PATH_BUF];
-  if (current_executable_path(path) != SUCCESS) return ERROR;
+  if (current_executable_path(path) != SUCCESS) {
+    return ERROR;
+  }
   char* out = path;
 
 #ifdef _WIN32
