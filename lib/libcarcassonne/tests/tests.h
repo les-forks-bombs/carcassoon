@@ -3,11 +3,24 @@
 
 #include <libcarcassonne/ext_base_game.h>
 #include <libcarcassonne/extension.h>
+#include <libcarcassonne/options.h>
 #include <libutils/cmocka.h>
 
-static extension_list_t base = {
-    .size       = 1,
-    .extensions = &LIBCARCASSONNE_EXT_BASE_GAME,
+static const extension_t* base_ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
+
+static const extension_vector_t base = {.meta = {
+                                            .size = 1,
+                                            .caps = 1,
+                                            .data = &base_ptr_table,
+                                        }};
+
+static options_t options = {
+    .mode       = CARCASSONNE_MODE_CLI,
+    .players    = 3,
+    .seed       = 500,
+    .ai         = 0,
+    .max_turns  = 0,
+    .extensions = base,
 };
 
 void deck_builds(void** state);
@@ -64,6 +77,7 @@ static const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_tile_group_dynamic_connectivity),
     cmocka_unit_test(test_tile_group_cut),
     cmocka_unit_test(test_tile_group_merge_two_trees),
+
 };
 
 #endif

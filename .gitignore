@@ -4,3 +4,4 @@ public/
 .cache
 .idea
 *.profraw
+.vscode/settings.json

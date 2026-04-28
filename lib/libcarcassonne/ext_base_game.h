@@ -1,5 +1,6 @@
 #pragma once
 
+#include <libcarcassonne/ext_base_game_hooks.h>
 #include <libcarcassonne/extension.h>
 #include <libcarcassonne/tile.h>
 #include <unistd.h>
@@ -450,6 +451,13 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .amount       = 1},
 };
 
+static const tile_vector_t LIBCARCASSONNE_EXT_BASE_GAME_TILES = {
+    .meta = {.size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS) /
+                     sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]),
+             .caps = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS) /
+                     sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]),
+             .data = (tile_t*)&LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]}};
+
 const static tile_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[] = {
     {.family = "CRFR",
      .parts =
@@ -469,22 +477,39 @@ const static tile_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[] = {
      .amount       = 1,
      .texture      = "tile_18.png"}};
 
-static const extension_tiles_t LIBCARCASSONNE_EXT_BASE_GAME_TILES = {
-    .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS) /
-            sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]),
-    .tiles = &LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]};
+static const tile_vector_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
+    .meta = {
+        .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS) /
+                sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]),
+        .caps = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS) /
+                sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]),
+        .data = (tile_t*)&LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]}};
 
-static const extension_process_hooks_t LIBCARCASSONNE_EXT_BASE_GAME_HOOKS = {
-    .size  = 0,
-    .hooks = NULL,
-};
-static const extension_tiles_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
-    .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS) /
-            sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]),
-    .tiles = &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]};
+static const extension_process_hook_t*
+    LIBCARCASSONNE_EXT_BASE_GAME_HOOKS_LIST[] = {&meeple_place};
 
-static const extension_list_t LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS = {
-    .size = 0, .extensions = NULL};
+static const extension_process_hooks_vector_t
+    LIBCARCASSONNE_EXT_BASE_GAME_HOOKS = {
+        .meta = {
+            .size = 0,
+            .caps = 0,
+            .data = LIBCARCASSONNE_EXT_BASE_GAME_HOOKS_LIST,
+        }};
+
+static const extension_vector_t LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS = {
+    .meta = {.size = 0, .caps = 0, .data = NULL}};
+
+const static meeple_count_t LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT[] = {
+    {.count = 5, .meeple_type = BASIC}};
+
+static const meeple_count_vector_t meeples_count = {
+    .meta = {
+        .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT) /
+                sizeof(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT[0]),
+        .caps = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT) /
+                sizeof(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT[0]),
+        .data =
+            (meeple_count_t*)&LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT[0]}};
 
 static const extension_t LIBCARCASSONNE_EXT_BASE_GAME = {
     .name                 = "Base Game",

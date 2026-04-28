@@ -2,35 +2,17 @@
 
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/deck.h>
+#include <libcarcassonne/meeple.h>
 #include <libcarcassonne/options.h>
 #include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/player.h>
 #include <libcarcassonne/tile.h>
 #include <libcarcassonne/vector2d.h>
-
-/// @brief Élement dans la liste chaîné list_tile_t
-typedef struct tile_list_element {
-  /// @brief La tuile placée
-  placed_tile_t *tile;
-  /// @brief Le prochain élément de la liste
-  struct tile_list_element *next;
-  /// @brief L'élément précédent de la liste
-  struct tile_list_element *prev;
-} tile_list_element_t;
-
-/// @brief Structure de liste chainée utilisée pour conserver toutes les tuiles
-/// avec au moins 1 côté disponible
-typedef struct tile_list {
-  /// @brief Tête de la liste
-  tile_list_element_t *head;
-  /// @brief Queue de la liste
-  tile_list_element_t *tail;
-  /// @brief Nombre d'éléments de la liste
-  unsigned int size;
-} tile_list_t;
+#include <libutils/lc.h>
+#include <libutils/vector.h>
 
 /// @brief Représente une partie
-typedef struct game {
+struct game {
   /// @brief Index du joueur actuel
   unsigned int current_player;
   /// @brief Nombre total de joueurs dans la partie
@@ -51,10 +33,11 @@ typedef struct game {
   placed_tile_t **map;
 
   /// @brief Instance de la liste des tuiles
-  tile_list_t open_tiles;
+  placed_tile_list_t open_tiles;
+
   /// @brief Paramètres du jeu
   options_t *options;
-} game_t;
+};
 
 /// @brief Initialise un objet `game` en mémoire
 /// @param game L'emplacement ou créer le jeu
@@ -89,10 +72,6 @@ return_code_t game_place_tile(game_t *, const tile_t *tile, int x, int y,
 bool game_is_tile_placeable(game_t *game, const tile_t *tile, int x, int y,
                             tile_orientation_t orientation);
 
-/// @brief Permet de libérer la mémoire liée à une liste de tuile
-/// @param tl La liste de tuile
-void destroy_tile_list(tile_list_t *tl);
-
 /// @brief Vérifie si la case est ouverte ou non
 /// @param game La partie dans laquelle vérifier
 /// @param x La position en x
@@ -100,20 +79,24 @@ void destroy_tile_list(tile_list_t *tl);
 /// @return true si la case est ouverte, false sinon
 bool game_is_place_open(game_t *game, int x, int y);
 
-/// @brief Ajoute une tuile en tête de liste
-/// @param tl La liste dans laquelle ajouter
-/// @param tile La tuile à ajouter
-void game_add_open_tile(tile_list_t *tl, placed_tile_t *tile);
-
-/// @brief Retire une tuile de la liste
-/// @param tl La liste depuis laquelle retirer
-/// @param tile La tuile à retirer
-void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile);
-
-/// @brief Instancie une liste chaînée de tuile
-/// @return Une liste chaînée de tile vide
-tile_list_t create_open_tiles_list(void);
-
 /// @brief Permet de savoir si une partie est terminée ou non
 /// @return Vrai si la partie est terminé, Faux sinon
 bool is_game_finished(game_t *game);
+
+/// @brief Termine le tour du joueur du courant
+/// @return Le code de statut de l'opération, SUCCESS en cas de réussite
+return_code_t game_end_player_turn(game_t *game);
+
+/// @brief Termine le tour de table
+/// @return Le code de statut de l'opération, SUCCESS en cas de réussite
+return_code_t game_end_round(game_t *game);
+
+/// @brief Place un meeple à l'emplacement spécifié
+/// @param game La partie auquel ajouter le meeple
+/// @param x Les coordonnées en abscisse
+/// @param y Les coordonnées en ordonnées
+/// @param part_group L'index de la partie de groupe
+/// @param meeple_type Le type de meeple à placer
+/// @return Le code de statut de l'opération, SUCCESS en cas de réussite
+return_code_t game_place_meeple(game_t *game, int x, int y, int part_group,
+                                meeple_type_t meeple_type);

@@ -1,40 +1,18 @@
 #pragma once
 
 #include <libcarcassonne/consts.h>
+#include <libcarcassonne/extension.h>
 #include <libcarcassonne/prng_mersenne_twister.h>
 #include <libcarcassonne/tile.h>
-
-struct extensions_list;
-
-/// @brief Element dans la pile deck_list_t, double chainé (next, prev)
-typedef struct deck_element {
-  /// @brief Référence vers la tile lié
-  const tile_t* tile;
-  /// @brief Prochain élément dans la liste chainée
-  struct deck_element* next;
-  /// @brief Prédecesseur a l'élément courrant
-  struct deck_element* prev;
-} deck_element_t;
-
-/// @brief Structure de liste chainée utilisée comme pile pour la pioche
-/// @details Accès a la tête en O(1), ajout d'élément a tel index en O(n),
-/// insertion au début ou la fin en O(1)
-typedef struct deck_list {
-  /// @brief Tête du tableau
-  deck_element_t* head;
-  /// @brief Queue du tableau
-  deck_element_t* tail;
-  /// @brief Nombre d'éléments dans la liste
-  unsigned int size;
-} deck_list_t;
+#include <libutils/lc.h>
 
 /// @brief Le deck permet de piocher et défausser des tiles
-typedef struct deck {
+struct deck {
   /// @brief La liste des tiles dans un ordre aléatoire
   deck_list_t list;
   /// @brief State du générateur de nombres pseudo-aléatoire
   prng_mersenne_twister_state_t state;
-} deck_t;
+};
 
 /// @brief Permet de créer une instance de deck
 /// @param seed La seed qui sera utilisée pour la rng
@@ -42,7 +20,7 @@ typedef struct deck {
 /// @return une instance de deck
 /// @attention Le deck vis dans le stack!
 /// @relates deck
-deck_t create_deck(int seed, struct extensions_list* extensions);
+deck_t create_deck(int seed, extension_vector_t* extensions);
 
 /// @brief Permet de libérer la mémoire liée a un deck
 /// @param deck Le deck a libérer
@@ -61,44 +39,3 @@ const tile_t* deck_pick(deck_t* deck);
 /// @param tile La tile a remettre dans la pile
 /// @relates deck
 void deck_defausser(deck_t* deck, const tile_t* tile);
-
-/// @brief Ajoute un éléments a la queue de la liste
-/// @param deck_list La liste chainée
-/// @param tile La tile a ajouter
-/// @returns La nouvelle liste chainée
-/// @relates deck_list
-deck_list_t* deck_list_append(deck_list_t* deck_list, const tile_t* tile);
-
-/// @brief Ajoute un éléments a la tête de la liste
-/// @param deck_list La liste chainée
-/// @param element La tile a ajouter
-/// @returns La nouvelle liste chainée
-/// @relates deck_list
-deck_list_t* deck_list_prepend(deck_list_t* deck_list, const tile_t* element);
-
-/// @brief Insère in élément a un index donné
-/// @param deck_list La liste chainée
-/// @param index L'index ou insérer l'élément
-/// @param element La tile a insérer
-/// @returns La nouvelle liste chainée
-/// @relates deck_list
-deck_list_t* deck_list_insert(deck_list_t* deck_list, unsigned int index,
-                              const tile_t* element);
-
-/// @brief Supprime un élément de la liste chainée
-/// @param deck_list La liste chainée
-/// @param element L'élément a supprimer
-/// @relates deck_list
-void deck_list_remove(deck_list_t* deck_list, deck_element_t* element);
-
-/// @brief Récupère le n-ième élément de la liste
-/// @param deck_list La liste chainée
-/// @param index L'index de l'élément a récupérer
-/// @return L'élément, peut être NULL si l'index est out-of-bounds
-/// @relates deck_list
-deck_element_t* deck_list_nth(deck_list_t* deck_list, unsigned int index);
-
-/// @brief Nettoie la mémoire d'une liste chainée
-/// @param deck_list La liste chainée a nettoyer
-/// @relates deck_list
-void deck_list_free(deck_list_t* deck_list);

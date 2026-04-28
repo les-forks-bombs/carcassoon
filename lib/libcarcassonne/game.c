@@ -2,9 +2,13 @@
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/options.h>
+#include <libcarcassonne/placed_tile.h>
+#include <libcarcassonne/tile.h>
+#include <libutils/vector.h>
 #include <memory.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 return_code_t create_game(game_t *game, options_t *options) {
   if (game == NULL) {
@@ -19,7 +23,9 @@ return_code_t create_game(game_t *game, options_t *options) {
   game->deck           = create_deck(options->seed, &options->extensions);
   game->options        = options;
 
-  game->open_tiles = create_open_tiles_list();
+  game->open_tiles.meta.head = NULL;
+  game->open_tiles.meta.tail = NULL;
+  game->open_tiles.meta.size = 0;
 
   // todo: considérer les extensions pour calculer la taille max du tableau
   unsigned int largeur =
@@ -27,11 +33,40 @@ return_code_t create_game(game_t *game, options_t *options) {
 
   game->map = calloc(largeur * largeur, sizeof(placed_tile_t *));
 
+  meeple_count_vector_t meeples_count;
+
+  meeples_count.meta.data = NULL;
+  vector_alloc(&meeples_count, 3);
+  meeples_count.meta.size = 0;
+
+  meeple_count_t basic_meeple_count = {.count = 0, .meeple_type = BASIC};
+  vector_append(&meeples_count, &basic_meeple_count);
+
+  meeple_count_t large_meeple_count = {.count = 0, .meeple_type = LARGE};
+  vector_append(&meeples_count, &large_meeple_count);
+
+  meeple_count_t abbot_meeple_count = {.count = 0, .meeple_type = ABBOT};
+  vector_append(&meeples_count, &abbot_meeple_count);
+
+  for (unsigned int i = 0; i < vector_size(&options->extensions); i++) {
+    extension_t          *extension = *vector_nth(&options->extensions, i);
+    meeple_count_vector_t ext_meeple_count_list = extension->meeples_count;
+    for (unsigned int i = 0; i < vector_size(&ext_meeple_count_list); i++) {
+      meeple_count_t *ext_meeple_count = vector_nth(&ext_meeple_count_list, i);
+
+      meeple_count_t *meeple_count =
+          vector_nth(&meeples_count, ext_meeple_count->meeple_type);
+
+      meeple_count->count += ext_meeple_count->count;
+    }
+  }
+
   // on instancie les joueurs
   for (unsigned int i = 0; i < game->options->players; i++)
     game->players[i] =
         create_player(i > game->options->ai ? LIBCARCASSONNE_PLAYER_HUMAN
-                                            : LIBCARCASSONNE_PLAYER_AI);
+                                            : LIBCARCASSONNE_PLAYER_AI,
+                      &meeples_count);
 
   return SUCCESS;
 }
@@ -53,7 +88,11 @@ void destroy_game(game_t *game) {
       }
     }
 
-  destroy_tile_list(&game->open_tiles);
+  for (unsigned int i = 0; i < game->players_count; i++) {
+    free_player(&game->players[i]);
+  }
+
+  list_free(&game->open_tiles);
 
   free(game->map);
   free_deck(game->deck);
@@ -97,19 +136,19 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
     *tile_ref = placed_tile;
 
     if (game_is_place_open(game, x, y))
-      game_add_open_tile(&game->open_tiles, placed_tile);
+      list_append(&game->open_tiles, &placed_tile);
 
     if (!game_is_place_open(game, x + 1, y))  // Tuile du bas
-      game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x + 1, y));
+      list_remove_value(&game->open_tiles, &*game_tile_at(game, x + 1, y));
 
     if (!game_is_place_open(game, x - 1, y))  // Tuile du haut
-      game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x - 1, y));
+      list_remove_value(&game->open_tiles, &*game_tile_at(game, x - 1, y));
 
     if (!game_is_place_open(game, x, y + 1))  // Tuile de droite
-      game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x, y + 1));
+      list_remove_value(&game->open_tiles, &*game_tile_at(game, x, y + 1));
 
     if (!game_is_place_open(game, x, y - 1))  // Tuile de gauche
-      game_remove_open_tile(&game->open_tiles, *game_tile_at(game, x, y - 1));
+      list_remove_value(&game->open_tiles, &*game_tile_at(game, x, y - 1));
 
     for (tile_orientation_t s = 0; s < 4; s++) {
       placed_tile_t **neighbor;
@@ -131,14 +170,26 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
 
       // on se marque comme étant voisin de notre voisin, et réciproquement
       if (neighbor != NULL && *neighbor != NULL) {
-        placed_face_groups_t neighboor_face;
-        placed_face_groups_t current_face;
-        placed_tile_get_face(&neighboor_face, *neighbor,
-                             tile_orientation_invert(s));
-        placed_tile_get_face(&current_face, placed_tile, s);
+        placed_tile_t   *rneighbor    = *neighbor;
+        static const int values[4][3] = {
+            {0, 1, 2}, {2, 5, 8}, {8, 7, 6}, {6, 3, 0}};
 
+        int oindex = (s + placed_tile->orientation) % 4;
+        int nindex = (tile_orientation_invert(s) + rneighbor->orientation) % 4;
+
+        // pour chaque sous tile de la face
         for (int i = 0; i < 3; i++) {
-          placed_tile_group_link(neighboor_face.face[i], current_face.face[i]);
+          int ngroup = rneighbor->parent->parts_groups[values[nindex][i]];
+          int ogroup = placed_tile->parent->parts_groups[values[oindex][i]];
+
+          if (rneighbor->parent->parts[values[nindex][i]] ==
+              placed_tile->parent->parts[values[oindex][i]]) {
+            placed_tile_group_link(rneighbor->groups[ngroup],
+                                   placed_tile->groups[ogroup]);
+          }
+
+          rneighbor->groups[ngroup]->open_slots--;
+          placed_tile->groups[ogroup]->open_slots--;
         }
       }
     }
@@ -149,7 +200,8 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
   }
 }
 
-return_code_t game_place_meeple(game_t *game, int x, int y, int group) {
+return_code_t game_place_meeple(game_t *game, int x, int y, int group,
+                                meeple_type_t meeple_type) {
   if (game == NULL) {
     return ERROR;
   }
@@ -164,11 +216,16 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group) {
     placed_tile_group_t *group_ref = (*tile_ref)->groups[group];
 
     if (group_ref->meeple == NULL) {
-      group_ref->meeple             = calloc(1, sizeof(meeple_t));
-      group_ref->meeple->player     = game->current_player;
-      group_ref->meeple->group_node = group_ref;
+      player_t  player    = game->players[game->current_player];
+      meeple_t *meeple    = calloc(1, sizeof(meeple_t));
+      meeple->group_node  = group_ref;
+      meeple->meeple_type = meeple_type;
 
-      // todo: ajouter au meeple a la liste des meeple
+      group_ref->meeple         = meeple;
+      group_ref->meeple->player = &player;
+
+      vector_append(player.meeples, &meeple);
+
     } else {
       return ALREADY_ALLOCATED;
     }
@@ -231,19 +288,6 @@ bool game_is_tile_placeable(game_t *game, const tile_t *tile, int x, int y,
   return true;
 }
 
-void destroy_tile_list(tile_list_t *tl) {
-  tile_list_element_t *next = tl->head;
-  while (tl->head != NULL) {
-    next           = tl->head;
-    tl->head->next = NULL;
-    tl->head->tile = NULL;
-
-    free(tl->head);
-
-    tl->head = next;
-  }
-}
-
 bool game_is_place_open(game_t *game, int x, int y) {
   if (game_tile_at(game, x + 1, y) != NULL &&
       game_tile_at(game, x - 1, y) != NULL &&
@@ -254,45 +298,31 @@ bool game_is_place_open(game_t *game, int x, int y) {
   return true;
 }
 
-void game_add_open_tile(tile_list_t *tl, placed_tile_t *tile) {
-  tile_list_element_t *head = malloc(sizeof(tile_list_element_t));
-  head->tile                = tile;
-  head->next                = tl->head;
-  tl->head                  = head;
-
-  if (tl->tail == NULL) tl->tail = head;
-
-  tl->size++;
-}
-
-void game_remove_open_tile(tile_list_t *tl, placed_tile_t *tile) {
-  tile_list_element_t *curr = tl->head;
-  while (curr != NULL) {
-    if (curr->tile == tile) {
-      if (tl->head == curr) tl->head = curr->next;
-
-      if (tl->tail == curr) tl->tail = curr->prev;
-
-      curr->prev->next = curr->next;
-      curr->next->prev = curr->prev;
-      curr->tile       = NULL;
-      free(curr);
-
-      tl->size--;
-      return;
-    }
-  }
-}
-
-tile_list_t create_open_tiles_list(void) {
-  tile_list_t tl;
-  tl.head = NULL;
-  tl.tail = 0;
-  tl.size = 0;
-
-  return tl;
-}
-
 bool is_game_finished(game_t *game) {
-  return game->deck.list.size == 0 || game->turn == game->turns_limit;
+  return list_size(&game->deck.list) == 0 || game->turn == game->turns_limit;
+}
+
+return_code_t game_end_player_turn(game_t *game) {
+  if (game == NULL) return NULL_POINTER;
+
+  if (game->current_player + 1 >= game->current_player) {
+    return NO_MORE_PLAYER;
+  }
+
+  game->current_player++;
+
+  return SUCCESS;
+}
+
+return_code_t game_end_round(game_t *game) {
+  if (game == NULL) return NULL_POINTER;
+
+  if (game->current_player != game->players_count) {
+    return PLAYER_NOT_CALLED;
+  }
+
+  game->current_player = 0;
+  game->turn++;
+
+  return SUCCESS;
 }
