@@ -2,7 +2,9 @@
 #ifndef _WIN32
 #define _POSIX_C_SOURCE 200809L
 #endif
+#include <stdlib.h>
 
+#include <unistd.h>
 #include <libcarcassonne/consts.h>
 #include <libutils/path.h>
 #include <string.h>
@@ -16,7 +18,6 @@
 #include <libgen.h>
 #include <linux/limits.h>
 #include <stdio.h>
-#include <unistd.h>
 #endif
 
 return_code_t current_executable_path(char path[LIBUTILS_PATH_BUF]) {
@@ -56,4 +57,18 @@ return_code_t current_executable_dir(char ret[LIBUTILS_PATH_BUF]) {
   strcpy(ret, out);
 
   return SUCCESS;
+}
+
+return_code_t create_path_resolver(path_resolver_t* resolver) {
+  current_executable_dir(resolver->base);
+  resolver->size = strlen(resolver->base);
+}
+
+char* path_resolver_resolve(path_resolver_t* resolver, char* file) {
+  unsigned int size = resolver->size + strlen(file);
+  char*        ret  = calloc(size, sizeof(char));
+
+  sprintf(ret, "%s/%s", resolver->base, file);
+
+  return ret;
 }
