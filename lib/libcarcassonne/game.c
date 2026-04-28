@@ -68,6 +68,8 @@ return_code_t create_game(game_t *game, options_t *options) {
                                             : LIBCARCASSONNE_PLAYER_AI,
                       &meeples_count);
 
+  vector_free(&meeples_count);
+
   return SUCCESS;
 }
 
@@ -88,7 +90,7 @@ void destroy_game(game_t *game) {
       }
     }
 
-  for (unsigned int i = 0; i < game->players_count; i++) {
+  for (unsigned int i = 0; i < game->options->players; i++) {
     free_player(&game->players[i]);
   }
 
@@ -224,7 +226,7 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
       group_ref->meeple         = meeple;
       group_ref->meeple->player = &player;
 
-      vector_append(player.meeples, &meeple);
+      vector_append(&player.meeples, &meeple);
 
     } else {
       return ALREADY_ALLOCATED;
@@ -317,7 +319,7 @@ return_code_t game_end_player_turn(game_t *game) {
 return_code_t game_end_round(game_t *game) {
   if (game == NULL) return NULL_POINTER;
 
-  if (game->current_player != game->players_count) {
+  if (game->current_player != game->options->players) {
     return PLAYER_NOT_CALLED;
   }
 

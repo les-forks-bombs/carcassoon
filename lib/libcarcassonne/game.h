@@ -15,8 +15,6 @@
 struct game {
   /// @brief Index du joueur actuel
   unsigned int current_player;
-  /// @brief Nombre total de joueurs dans la partie
-  unsigned int players_count;
   /// @brief Tableau avec la liste des joueurs
   player_t players[LIBCARCASSONNE_MAX_PLAYERS];
 

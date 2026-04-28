@@ -45,9 +45,11 @@ options_t parse_options(int argc, char* argv[]) {
       .extensions = {0},
   };
 
-  extension_t* ext = (extension_t*)&LIBCARCASSONNE_EXT_BASE_GAME;
+  memset(&config.extensions, 0, sizeof(extension_vector_t));
 
+  extension_t* ext = (extension_t*)&LIBCARCASSONNE_EXT_BASE_GAME;
   vector_append(&config.extensions, &ext);
+
   while (1) {
     int           option_index = 0;
     char*         endPtr;
@@ -183,3 +185,5 @@ char* validate_options(options_t* config) {
 
   return NULL;
 }
+
+void free_options(options_t* t) { vector_free(&t->extensions); }
