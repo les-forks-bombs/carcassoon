@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "libcarcassonne/forward.h"
+
 return_code_t create_game(game_t *game, options_t *options) {
   if (game == NULL) {
     return ERROR;
@@ -212,6 +214,41 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
   return NOT_FREE;  // not Free
 }
 
+return_code_t game_remove_tile(game_t *game, int x, int y) {
+  placed_tile_t **tile_ref = game_tile_at(game, x, y);
+
+  if (tile_ref == NULL) return OUT_OF_BOUNDS;
+  if (*tile_ref == NULL) return NO_TILE;
+
+  placed_tile_t *placed_tile = *tile_ref;
+
+  bool visite[9];
+  memset(&visite, 0, sizeof(visite));
+
+  for (int i = 0; i < 9; i++) {
+    int group = placed_tile->parent->parts_groups[i];
+    if (!visite[group]) {
+      meeple_t *meeple = placed_tile->groups[group]->meeple;
+      // pour chaque groupe, si un meeple est placé
+      if (meeple != NULL) {
+        return REMOVE_TILE_NOT_VOID;
+      }
+      placed_tile_group_t *pgroup = placed_tile->groups[group];
+
+      // on le déconnecte de tous ses voisins
+      for (unsigned int i = 0; i < vector_size(&pgroup->neighbors); i++) {
+        placed_tile_group_t *neigh = *vector_nth(&pgroup->neighbors, i);
+        vector_remove_value(&neigh->neighbors, &pgroup);
+      }
+
+      vector_free(&pgroup->neighbors);
+
+      free(pgroup);
+    }
+    visite[group] = true;
+  }
+}
+
 return_code_t game_place_meeple(game_t *game, int x, int y, int group,
                                 meeple_type_t meeple_type) {
   if (game == NULL) {
@@ -237,10 +274,43 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
       group_ref->meeple->player = &player;
 
       vector_append(&player.meeples, &meeple);
+      (vector_nth(&game->players[game->current_player].meeples_count,
+                  meeple->meeple_type))
+          ->count--;
 
     } else {
       return ALREADY_ALLOCATED;
     }
+    return SUCCESS;
+  }
+  return NO_TILE;
+}
+
+return_code_t game_remove_meeple(game_t *game, int x, int y, int part_group) {
+  if (game == NULL) {
+    return ERROR;
+  }
+
+  placed_tile_t **tile_ref = game_tile_at(game, x, y);
+
+  if (tile_ref == NULL) {
+    return OUT_OF_BOUNDS;  // Out of bounds
+  }
+
+  if (*tile_ref != NULL) {
+    placed_tile_group_t *group_ref = (*tile_ref)->groups[part_group];
+
+    if (group_ref->meeple != NULL) {
+      meeple_t *meeple = group_ref->meeple;
+
+      vector_remove_value(&meeple->player->meeples, &meeple);
+      (vector_nth(&game->players[game->current_player].meeples_count,
+                  meeple->meeple_type))
+          ->count++;
+      free(group_ref->meeple);
+      group_ref->meeple = NULL;
+    }
+
     return SUCCESS;
   }
   return NO_TILE;

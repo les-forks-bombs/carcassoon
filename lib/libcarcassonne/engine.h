@@ -17,7 +17,6 @@ struct engine {
   extension_process_hooks_vector_t hooks;
   unsigned int                     current_hook;
   dispatch_vector_t                dispatchs;
-  unsigned int                     last_tour_epoch;
 };
 
 /// @brief Permet de créer une instance d'un moteur

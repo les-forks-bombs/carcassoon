@@ -102,8 +102,6 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
 
   } while (engine->current_hook != 0);
 
-  engine->last_tour_epoch = vector_size(&engine->dispatchs);
-
   return SUCCESS;
 }
 
