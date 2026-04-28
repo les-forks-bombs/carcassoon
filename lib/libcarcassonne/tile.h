@@ -1,6 +1,8 @@
 #pragma once
 
 #include <libcarcassonne/consts.h>
+#include <libcarcassonne/forward.h>
+#include <libutils/vector.h>
 #include <stdbool.h>
 
 /// @brief Les différents types de sous-tiles
@@ -41,7 +43,7 @@ typedef enum tile_part_group  tile_part_group_t;
 typedef enum tile_orientation tile_orientation_t;
 
 /// @brief Une tile est un élément de jeu de carcassonne
-typedef struct tile {
+struct tile {
   /// @brief Famille de la tile
   char family[5];
   /// @brief Parties de la tile
@@ -54,12 +56,7 @@ typedef struct tile {
   tile_part_group_t parts_groups[9];
   /// @brief nom de l'image correspondante
   char* texture;
-} tile_t;
-
-typedef struct extension_tiles {
-  const unsigned int size;
-  const tile_t*      tiles;
-} extension_tiles_t;
+};
 
 /// @brief Récupère une famille de la tuile en fonction de l'orientation et de
 /// la face de connexion

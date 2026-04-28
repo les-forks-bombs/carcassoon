@@ -3,6 +3,7 @@
 #include <libcarcassonne/ext_base_game.h>
 #include <libcarcassonne/extensions_list.h>
 #include <libcarcassonne/options.h>
+#include <libutils/vector.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,9 +42,12 @@ options_t parse_options(int argc, char* argv[]) {
       .seed       = time(NULL),
       .players    = 3,
       .mode       = CARCASSONNE_MODE_SDL,
-      .extensions = {.size = 1, .extensions = &LIBCARCASSONNE_EXT_BASE_GAME},
+      .extensions = {0},
   };
 
+  extension_t* ext = (extension_t*)&LIBCARCASSONNE_EXT_BASE_GAME;
+
+  vector_append(&config.extensions, &ext);
   while (1) {
     int           option_index = 0;
     char*         endPtr;
@@ -145,26 +149,28 @@ char* validate_options(options_t* config) {
     return "Le nombre de joueurs doit être inférieur à 5!";
   }
 
-  if (config->extensions.size == 0) {
+  if (vector_size(&config->extensions) == 0) {
     return "Pour jouer a carcassonne, vous devez avoir au minimum l'extension "
            "de base.";
   }
 
   // Vérification des dépendances
-  for (unsigned int i = 0; i < config->extensions.size; i++) {
+  for (unsigned int i = 0; i < vector_size(&config->extensions); i++) {
     for (unsigned int j = 0;
-         j < config->extensions.extensions[i].required->size; j++) {
-      for (unsigned int k = 0; k < config->extensions.size; k++) {
+         j < vector_size((*vector_nth(&config->extensions, i))->required);
+         j++) {
+      for (unsigned int k = 0; k < vector_size(&config->extensions); k++) {
         const char* name =
-            config->extensions.extensions[i].required->extensions[j].name;
+            (*vector_nth((*vector_nth(&config->extensions, i))->required, k))
+                ->name;
 
-        if (&config->extensions.extensions[k] ==
-            &config->extensions.extensions[i].required->extensions[j]) {
+        if ((*vector_nth(&config->extensions, k)) ==
+            (*vector_nth((*vector_nth(&config->extensions, i))->required, j))) {
           goto found;
         }
 
         printf("Extension %s requise par %s\n", name,
-               config->extensions.extensions[i].name);
+               (*vector_nth(&config->extensions, i))->name);
 
         return "Une extension requise n'est pas présente dans la liste des "
                "extensions!";

@@ -1,33 +1,31 @@
 #pragma once
 
+#include <libcarcassonne/consts.h>
+#include <libcarcassonne/engine_state.h>
+#include <libcarcassonne/forward.h>
+#include <libcarcassonne/meeple.h>
 #include <libcarcassonne/tile.h>
+#include <libutils/vector.h>
 
-struct engine;
+#include "libcarcassonne/action.h"
 
-typedef int (*extension_process_t)(struct engine*);
-typedef struct extension_process_hook {
-  const unsigned int        priority;
-  const extension_process_t fn;
-} extension_process_hook_t;
+struct extension_process_hook {
+  const unsigned int           priority;
+  const extension_forward_t    fw;
+  const extension_backward_t   bw;
+  const extension_free_state_t free;
+  action_type_t                needed_action;
+};
 
-typedef struct extension_process_hooks {
-  const unsigned int              size;
-  const extension_process_hook_t* hooks;
-} extension_process_hooks_t;
+struct extension {
+  const char                             *name;
+  const tile_vector_t                    *tiles;
+  const tile_vector_t                    *start_tiles;
+  const unsigned int                      start_tiles_priority;
+  const extension_process_hooks_vector_t *hooks;
+  const extension_vector_t               *required;
+  const meeple_count_vector_t             meeples_count;
+};
 
-typedef struct extensions_list {
-  unsigned int            size;
-  const struct extension* extensions;
-} extension_list_t;
-
-typedef struct extension {
-  const char*                      name;
-  const extension_tiles_t*         tiles;
-  const extension_tiles_t*         start_tiles;
-  const unsigned int               start_tiles_priority;
-  const extension_process_hooks_t* hooks;
-  const extension_list_t*          required;
-} extension_t;
-
-return_code_t create_extension_list(extension_list_t*);
-void          destroy_extension_list(extension_list_t*);
+return_code_t create_extension_list(extension_vector_t *);
+void          destroy_extension_list(extension_vector_t *);

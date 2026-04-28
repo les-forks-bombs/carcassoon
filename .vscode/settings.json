@@ -1,0 +1,3 @@
+{
+    "markiscodecoverage.searchCriteria": "out/debug/x86_64-redhat-linux-gnu/*.lcov"
+}

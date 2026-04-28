@@ -10,5 +10,10 @@
 #define NO_TILE           4
 #define INVALID_PLACEMENT 5
 #define ALREADY_ALLOCATED 6
+#define INVALID_ACTION    7
+#define NULL_POINTER      8
+#define NO_MORE_PLAYER    9
+#define PLAYER_NOT_CALLED 10
+#define NO_PROGRESS       11
 
 typedef char return_code_t;
