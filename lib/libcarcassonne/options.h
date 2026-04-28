@@ -3,6 +3,7 @@
 #include <getopt.h>
 #include <libcarcassonne/extension.h>
 #include <unistd.h>
+#include "libcarcassonne/forward.h"
 
 typedef enum options_mode {
   CARCASSONNE_MODE_SDL = 0,
@@ -19,5 +20,7 @@ struct options {
 };
 
 options_t parse_options(int argc, char* argv[]);
+
+void free_options(options_t*);
 
 char* validate_options(options_t*);
