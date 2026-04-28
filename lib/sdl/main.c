@@ -155,7 +155,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   }
 
   SDL_Color white_text = {255, 255, 255, 255};
-  char *path = path_resolver_resolve(&as->resolver, "assets/fonts/Orange.ttf");
+  *path = path_resolver_resolve(&as->resolver, "assets/fonts/Orange.ttf");
   printf("path relatif: %s\n", path);
 
   as->text = init_text_object(as->renderer, path, 32.0f,
