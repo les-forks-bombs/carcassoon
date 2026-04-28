@@ -28,9 +28,13 @@ ifeq "$(PROFILE)" "debug"
 	endif
 endif
 
+ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
+    LFLAGS += -lshlwapi
+endif
+
 ifeq "$(PROFILE)" "release"
-	CFLAGS += -O0 -g
-	LFLAGS += -g
+	CFLAGS += -O0
+	LFLAGS += -s
 endif
 
 export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
