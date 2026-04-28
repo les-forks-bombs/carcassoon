@@ -28,6 +28,9 @@ ForwardDefinition(struct, extension_process_hook);
 ForwardDefinition(struct, meeple_place_hook_state);
 ForwardDefinition(struct, dispatch);
 ForwardDefinition(struct, tile_place_hook_state);
+ForwardDefinition(struct, rendre_meeple_hook_state);
+ForwardDefinition(struct, prochain_joueur_state);
+ForwardDefinition(struct, placed_tile_group_eval_points);
 
 typedef List(const tile_t *) deck_list_t;
 typedef List(placed_tile_t *) placed_tile_list_t;
