@@ -13,8 +13,8 @@ typedef enum player_type player_type_t;
 struct player {
   player_type_t          player_type;
   int                    score;
-  meeple_count_vector_t* meeples_count;
-  meeple_vector_t*       meeples;
+  meeple_count_vector_t meeples_count;
+  meeple_vector_t       meeples;
 };
 
 player_t create_player(player_type_t          type,

@@ -1,5 +1,6 @@
 #include <libcarcassonne/engine.h>
 #include <stdio.h>
+#include "libcarcassonne/options.h"
 
 int main(int argc, char* argv[]) {
   options_t config = parse_options(argc, argv);
@@ -26,4 +27,5 @@ int main(int argc, char* argv[]) {
   }
 
   destroy_engine(&engine);
+  free_options(&config);
 }
