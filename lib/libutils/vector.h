@@ -15,10 +15,11 @@ typedef struct {
     vector_t meta;       \
     type    *type_ghost; \
   }
-unsigned int utils_vector_alloc(vector_t *list, size_t capacity, size_t element);
+unsigned int utils_vector_alloc(vector_t *list, size_t capacity,
+                                size_t element);
 unsigned int utils_vector_grow(vector_t *list, size_t size, size_t element);
 
-unsigned int   utils_vector_append(vector_t *list, const void *data, size_t size);
+unsigned int utils_vector_append(vector_t *list, const void *data, size_t size);
 void *utils_vector_nth(const vector_t *list, unsigned int index, size_t size);
 void  utils_vector_free(vector_t *list);
 void  utils_vector_remove(vector_t *list, unsigned int index, size_t size);

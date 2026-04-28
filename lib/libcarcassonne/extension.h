@@ -1,7 +1,6 @@
 #pragma once
 
 #include <libcarcassonne/consts.h>
-#include <libcarcassonne/engine_state.h>
 #include <libcarcassonne/forward.h>
 #include <libcarcassonne/meeple.h>
 #include <libcarcassonne/tile.h>
@@ -10,10 +9,10 @@
 #include "libcarcassonne/action.h"
 
 struct extension_process_hook {
-  const unsigned int           priority;
-  const extension_forward_t    fw;
-  const extension_backward_t   bw;
-  action_type_t                needed_action;
+  const unsigned int         priority;
+  const extension_forward_t  fw;
+  const extension_backward_t bw;
+  action_type_t              needed_action;
 };
 
 struct extension {

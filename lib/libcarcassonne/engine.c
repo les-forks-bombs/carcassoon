@@ -4,8 +4,6 @@
 #include <unistd.h>
 
 #include "libcarcassonne/action.h"
-#include "libcarcassonne/dispatch.h"
-#include "libcarcassonne/engine_state.h"
 #include "libcarcassonne/forward.h"
 #include "libutils/lc.h"
 #include "libutils/vector.h"
@@ -14,8 +12,6 @@ return_code_t create_engine(engine_t *engine, options_t options) {
   if (engine == NULL) {
     return ERROR;
   }
-
-  engine->state = LIBCARCASSONNE_ENGINE_WAITING_GAME_START;
 
   engine->config = options;
 
@@ -41,8 +37,6 @@ return_code_t create_engine(engine_t *engine, options_t options) {
   if (code != SUCCESS) {
     return code;
   }
-
-  engine->state = LIBCARCASSONNE_ENGINE_WAITING_GAME_START;
 
   return SUCCESS;
 }
@@ -71,8 +65,6 @@ return_code_t start_game(engine_t *engine) {
   if (code != SUCCESS) {
     return code;
   }
-
-  engine->state = LIBCARCASSONNE_ENGINE_NULL_ENGINE;
 
   return SUCCESS;
 }
@@ -107,31 +99,6 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
   return SUCCESS;
 }
 
-engine_state_t get_engine_state(engine_t *engine) {
-  if (engine == NULL) {
-    return LIBCARCASSONNE_ENGINE_NULL_ENGINE;
-  }
-  return engine->state;
-}
-
-return_code_t engine_adapt_state(engine_t *engine) {
-  switch ((*vector_nth(&engine->hooks, engine->current_hook))->needed_action) {
-    case LIBCARCASSONNE_ACTION_PLACE_TILE:
-      engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_TILE_ACTION;
-      break;
-    case LIBCARCASSONNE_ACTION_PLACE_MEEPLE:
-      engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_MEEPLE_ACTION;
-      break;
-    case LIBCARCASSONNE_ACTION_END_PLAYER_TURN:
-      engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_END_TURN;
-      break;
-    default:
-      engine->state = LIBCARCASSONNE_ENGINE_NULL_ENGINE;
-  }
-
-  return SUCCESS;
-}
-
 return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
   unsigned int i = vector_size(&engine->dispatchs);
 
@@ -155,4 +122,8 @@ return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
   } while (i == epoch);
 
   return SUCCESS;
+}
+
+action_type_t engine_wanted_action(engine_t *engine) {
+  return (*vector_nth(&engine->hooks, engine->current_hook))->needed_action;
 }
