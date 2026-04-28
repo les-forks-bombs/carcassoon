@@ -96,6 +96,8 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   while ((now - as->last_step) >= STEP_RATE_IN_MILLISECONDS) {
     as->last_step += STEP_RATE_IN_MILLISECONDS;
   }
+
+  SDL_SetRenderDrawColor(as->renderer, 164, 116, 73, 255);
   SDL_RenderClear(as->renderer);
 
   SDL_Rect v = {(int)as->map_viewport.x, (int)as->map_viewport.y,
@@ -110,6 +112,9 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     SDL_FRect dest = {50.0f, 50.0f, as->text->w, as->text->h};
     SDL_RenderTexture(as->renderer, as->text->texture, NULL, &dest);
   }
+
+  SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
+  SDL_RenderRect(as->renderer, &as->map_viewport);
 
   SDL_RenderPresent(as->renderer);
   return SDL_APP_CONTINUE;
@@ -164,10 +169,10 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     }
   }
 
-  as->map_viewport.x = 0;
-  as->map_viewport.y = 0;
-  as->map_viewport.w = 500;
-  as->map_viewport.h = 500;
+  as->map_viewport.x = 100;
+  as->map_viewport.y = 150;
+  as->map_viewport.w = 800;
+  as->map_viewport.h = 400;
 
   as->last_step = SDL_GetTicks();
   return SDL_APP_CONTINUE;
