@@ -186,7 +186,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     int col = i % map_width_temp;
     int row = i / map_width_temp;
 
-    path = path_resolver_resolve(&as->resolver, "assets/tiles_png/tile_05.png");
+    path = path_resolver_resolve(&as->resolver, "assets/img/tiles_png/tile_05.png");
     printf("path relatif: %s\n", path);
 
     as->map->tiles[i] = create_tt(as->renderer, path);
