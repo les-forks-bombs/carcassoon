@@ -1,5 +1,8 @@
 #include <SDL3/SDL_render.h>
 #include <stdbool.h>
+#include <stdio.h>
+
+#include "libutils/path.h"
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
@@ -13,13 +16,14 @@
 #include <stdlib.h>
 
 typedef struct {
-  SDL_Window    *window;
-  SDL_Renderer  *renderer;
-  map_t         *map;
-  camera_t      *camera;
-  SDL_FRect      map_viewport;
-  Uint64         last_step;
-  text_object_t *text;
+  SDL_Window     *window;
+  SDL_Renderer   *renderer;
+  map_t          *map;
+  camera_t       *camera;
+  SDL_FRect       map_viewport;
+  Uint64          last_step;
+  text_object_t  *text;
+  path_resolver_t resolver;
 } AppState;
 
 static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
@@ -125,6 +129,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   AppState *as = (AppState *)SDL_malloc(sizeof(AppState));
   if (!as) return SDL_APP_FAILURE;
   *appstate = as;
+
+  create_path_resolver(&as->resolver);
+
+  // pour resolve:
+  char *path = path_resolver_resolve(&as->resolver, "mon/fichier.txt");
+  printf("path relatif: %s\n", path);
+  free(path);
 
   if (!SDL_CreateWindowAndRenderer("Carcassonne Test", WINDOW_WIDTH,
                                    WINDOW_HEIGHT, 0, &as->window,
