@@ -61,14 +61,15 @@ return_code_t current_executable_dir(char ret[LIBUTILS_PATH_BUF]) {
 
 return_code_t create_path_resolver(path_resolver_t* resolver) {
   current_executable_dir(resolver->base);
-  resolver->size = strlen(resolver->base);
+  resolver->size = strlen(resolver->base) + 1;
+
+  return SUCCESS;
 }
 
 char* path_resolver_resolve(path_resolver_t* resolver, char* file) {
-  unsigned int size = resolver->size + strlen(file);
+  unsigned int size = resolver->size + (strlen(file) + 1);
   char*        ret  = calloc(size, sizeof(char));
 
   sprintf(ret, "%s/%s", resolver->base, file);
-
   return ret;
 }
