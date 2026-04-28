@@ -4,6 +4,7 @@
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/extension.h>
 #include <libcarcassonne/tile.h>
+
 #include "libcarcassonne/forward.h"
 
 struct meeple_place_hook_state {

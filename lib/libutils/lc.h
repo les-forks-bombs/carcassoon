@@ -14,35 +14,35 @@ typedef struct {
   unsigned int size;
 } list_t;
 
-#define List(type)        \
+#define List(type)     \
   union {              \
     list_t meta;       \
-    type     *type_ghost; \
+    type  *type_ghost; \
   }
 
 list_node_t *utils_list_append(list_t *list, const void *data, size_t size);
 list_node_t *utils_list_prepend(list_t *list, const void *data, size_t size);
 list_node_t *utils_list_insert(list_t *list, const void *data, size_t size,
-                          unsigned int index);
+                               unsigned int index);
 list_node_t *utils_list_nth(list_t *list, unsigned int index);
 void         utils_list_free(list_t *list);
 void         utils_list_remove(list_t *list, list_node_t *data);
-void         utils_list_remove_value(list_t *list, const void *data, size_t size);
+void utils_list_remove_value(list_t *list, const void *data, size_t size);
 
-#define list_append(list, item)                                 \
+#define list_append(list, item)                                      \
   utils_list_append(&((list)->meta),                                 \
-               (const void *)(1 ? (item) : (list)->type_ghost), \
-               sizeof(*(list)->type_ghost))
+                    (const void *)(1 ? (item) : (list)->type_ghost), \
+                    sizeof(*(list)->type_ghost))
 
-#define list_prepend(list, item)                                 \
+#define list_prepend(list, item)                                      \
   utils_list_prepend(&((list)->meta),                                 \
-                (const void *)(1 ? (item) : (list)->type_ghost), \
-                sizeof(*(list)->type_ghost))
+                     (const void *)(1 ? (item) : (list)->type_ghost), \
+                     sizeof(*(list)->type_ghost))
 
-#define list_insert(list, item, index)                          \
+#define list_insert(list, item, index)                               \
   utils_list_insert(&((list)->meta),                                 \
-               (const void *)(1 ? (item) : (list)->type_ghost), \
-               sizeof(*(list)->type_ghost), index)
+                    (const void *)(1 ? (item) : (list)->type_ghost), \
+                    sizeof(*(list)->type_ghost), index)
 
 #define list_nth(list, index)  utils_list_nth(&((list)->meta), index)
 #define list_value(list, node) ((__typeof__((list)->type_ghost))((node)->value))
@@ -55,7 +55,7 @@ void         utils_list_remove_value(list_t *list, const void *data, size_t size
 
 #define list_size(list) (*(const unsigned int *)&((list)->meta.size))
 
-#define list_remove_value(list, item)                                 \
+#define list_remove_value(list, item)                                      \
   utils_list_remove_value(&((list)->meta),                                 \
-                     (const void *)(1 ? (item) : (list)->type_ghost), \
-                     sizeof(*(list)->type_ghost))
+                          (const void *)(1 ? (item) : (list)->type_ghost), \
+                          sizeof(*(list)->type_ghost))
