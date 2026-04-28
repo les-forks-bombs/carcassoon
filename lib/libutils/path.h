@@ -18,7 +18,7 @@ return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]);
 return_code_t current_executable_dir(char ret[LIBUTILS_PATH_BUF]);
 
 typedef struct path_resolver {
-  char base[LIBUTILS_PATH_BUF];
+  char         base[LIBUTILS_PATH_BUF];
   unsigned int size;
 } path_resolver_t;
 

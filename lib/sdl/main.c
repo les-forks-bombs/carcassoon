@@ -8,6 +8,7 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <sdl/banner.h>
 #include <sdl/camera.h>
 #include <sdl/consts.h>
 #include <sdl/map.h>
@@ -24,6 +25,8 @@ typedef struct {
   Uint64          last_step;
   text_object_t  *text;
   path_resolver_t resolver;
+
+  banner_t *test_banner, *test_banner2;
 } AppState;
 
 static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
@@ -49,6 +52,11 @@ static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
     case SDLK_KP_MINUS:
       as->camera->zoom -= 0.1f;
       break;
+    case SDLK_A:
+      as->test_banner->score+=1;
+      break;
+    case SDLK_Z:
+      toggle_banner(as->test_banner2,as->renderer);
     default:
       break;
   }
@@ -120,6 +128,9 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
   SDL_RenderRect(as->renderer, &as->map_viewport);
 
+  render_banner(as->test_banner,as->renderer);
+  render_banner(as->test_banner2,as->renderer);
+
   SDL_RenderPresent(as->renderer);
   return SDL_APP_CONTINUE;
 }
@@ -175,8 +186,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     int col = i % map_width_temp;
     int row = i / map_width_temp;
 
-    path =
-        path_resolver_resolve(&as->resolver, "assets/tiles_png/tile_05.png");
+    path = path_resolver_resolve(&as->resolver, "assets/tiles_png/tile_05.png");
     printf("path relatif: %s\n", path);
 
     as->map->tiles[i] = create_tt(as->renderer, path);
@@ -192,6 +202,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   as->map_viewport.y = 150;
   as->map_viewport.w = 800;
   as->map_viewport.h = 400;
+
+  SDL_Color blue = {0,0,255,255};
+  banner_t *test_banner = create_banner(as->renderer,blue,1);
+  banner_t *test_banner2 = create_banner(as->renderer,blue,2);
+
+  as->test_banner=test_banner;
+  as->test_banner2=test_banner2;
 
   as->last_step = SDL_GetTicks();
   return SDL_APP_CONTINUE;
