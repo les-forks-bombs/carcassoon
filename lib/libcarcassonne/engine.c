@@ -3,6 +3,7 @@
 #include <libcarcassonne/game.h>
 #include <unistd.h>
 
+#include "libcarcassonne/action.h"
 #include "libcarcassonne/dispatch.h"
 #include "libcarcassonne/engine_state.h"
 #include "libcarcassonne/forward.h"
@@ -81,7 +82,8 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     const extension_process_hook_t *current_hook =
         (*vector_nth(&engine->hooks, engine->current_hook));
 
-    if (action.type != current_hook->needed_action) {
+    if (action.type != current_hook->needed_action &&
+        current_hook->needed_action == LIBCARCASSONNE_ACTION_NONE) {
       return NO_PROGRESS;
     }
 

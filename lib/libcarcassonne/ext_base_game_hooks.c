@@ -9,6 +9,7 @@
 
 #include "libcarcassonne/dispatch.h"
 #include "libcarcassonne/forward.h"
+#include "libcarcassonne/placed_tile.h"
 #include "libutils/vector.h"
 
 return_code_t meeple_place_fw(void **state_store, engine_t *engine,
@@ -27,10 +28,9 @@ return_code_t meeple_place_fw(void **state_store, engine_t *engine,
                       action->order.place_meeple.meeple_type);
 
     return SUCCESS;
-  } else {
-    engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_MEEPLE_ACTION;
-    return NO_PROGRESS;
   }
+  engine->state = LIBCARCASSONNE_ENGINE_WAITING_PLAYER_MEEPLE_ACTION;
+  return NO_PROGRESS;
 }
 
 return_code_t meeple_place_bw(void **state_store, engine_t *engine) {
@@ -103,25 +103,52 @@ return_code_t rendre_meeples_fw(void **state_store, engine_t *engine,
   for (int i = 0; i < 9; i++) {
     int group = placed_tile->parent->parts_groups[i];
     if (!visite[group]) {
-      meeple_t *meeple = placed_tile->groups[group]->meeple;
-      // pour chaque groupe, si un meeple est placé
-      if (meeple != NULL) {
-        vector_remove_value(&meeple->player->meeples, &meeple);
+      placed_tile_group_t *groupp = placed_tile->groups[group];
 
-        (*vector_nth(&meeple->player->meeples_count, meeple->meeple_type))
-            .count++;
+      if (placed_tile_group_complete(groupp)) {
+        placed_tile_group_eval_points_t points =
+            placed_tile_group_eval_points(groupp);
 
-        // retirer le meeple
-        meeple = NULL;
-        free(meeple);
+        // todo: trouver le player avec le plus de meeple et lui ajouter les
+        // points
       }
     }
     visite[group] = true;
   }
+
+  return SUCCESS;
 }
 
 return_code_t rendre_meeples_bw(void **state_store, engine_t *engine) {
   // annulation des meeples rendus
 
   free(*state_store);
+
+  return SUCCESS;
+}
+
+return_code_t prochain_joueur_fw(void **state_store, engine_t *engine,
+                                 action_t *action) {
+  (void)state_store;
+  (void)action;
+
+  engine->game.current_player =
+      (engine->game.current_player + 1) % engine->config.players;
+
+  return SUCCESS;
+}
+return_code_t prochain_joueur_bw(void **state_store, engine_t *engine) {
+  (void)state_store;
+
+  if (vector_size(&engine->dispatchs) == 0) {
+    return ERROR;
+  }
+
+  if (engine->game.current_player == 0) {
+    engine->game.current_player = engine->config.players;
+  }
+
+  engine->game.current_player--;
+
+  return SUCCESS;
 }

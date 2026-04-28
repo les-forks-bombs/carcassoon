@@ -4,7 +4,9 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+#include <unistd.h>
+
+#include "libcarcassonne/forward.h"
 
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
@@ -138,4 +140,44 @@ void placed_tile_group_create(placed_tile_group_t **group, meeple_t *meeple,
 void placed_tile_group_destory(placed_tile_group_t *group) {
   vector_free(&group->neighbors);
   free(group);
+}
+
+static void placed_tile_group_collect_meeples_inner(
+    placed_tile_group_t *group, placed_tile_group_eval_points_t *points,
+    int marker) {
+  if (group->marker == marker) {
+    return;
+  }
+
+  // on le marque pour éviter de le re-visiter
+  group->marker = marker;
+
+  points->points++;
+  if (group->tile->parent->blason) {
+    points->points++;
+  }
+
+  if (group->meeple != NULL) {
+    vector_append(&points->meeples, &group->meeple);
+  }
+
+  for (unsigned int i = 0; i < vector_size(&group->neighbors); i++) {
+    placed_tile_group_collect_meeples_inner(*vector_nth(&group->neighbors, i),
+                                            points, marker);
+  }
+}
+
+/**
+ * @brief Renvoie la liste des meeples dans un groupe
+ *
+ * @param group Un noeud du groupe
+ */
+placed_tile_group_eval_points_t placed_tile_group_eval_points(
+    placed_tile_group_t *group) {
+  int                             search_marker = dfs_counter++;
+  placed_tile_group_eval_points_t points;
+
+  placed_tile_group_collect_meeples_inner(group, &points, search_marker);
+
+  return points;
 }
