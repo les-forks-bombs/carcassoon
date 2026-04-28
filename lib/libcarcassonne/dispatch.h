@@ -5,4 +5,5 @@
 struct dispatch {
   void*     state_store;
   action_t* action;
+  const extension_process_hook_t* hook;
 };

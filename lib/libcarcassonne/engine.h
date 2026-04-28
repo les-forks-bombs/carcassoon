@@ -6,7 +6,6 @@
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/options.h>
 
-#include "libcarcassonne/dispatch.h"
 #include "libcarcassonne/forward.h"
 
 /// @brief Représente un moteur pour une partie de carcassonne
@@ -18,6 +17,7 @@ struct engine {
   extension_process_hooks_vector_t hooks;
   unsigned int                     current_hook;
   dispatch_vector_t                dispatchs;
+  unsigned int                     last_tour_epoch;
 };
 
 /// @brief Permet de créer une instance d'un moteur
