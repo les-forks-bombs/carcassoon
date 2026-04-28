@@ -14,7 +14,7 @@ typedef enum options_mode {
 struct options {
   options_mode_t     mode;
   unsigned int       players;
-  unsigned int       seed;
+  int                seed;
   unsigned int       ai;
   unsigned int       max_turns;
   extension_vector_t extensions;

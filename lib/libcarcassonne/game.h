@@ -50,11 +50,12 @@ return_code_t create_game(game_t *game, options_t *options);
 void destroy_game(game_t *game);
 
 /// @brief Retourne une référence vers l'emplacement ou la tile est enregistrée
-/// @param x La cordonnée x
-/// @param y La cordonnée y
+/// @param coordinates_x La cordonnée x
+/// @param coordinates_y La cordonnée y
 /// @return Une référence vers l'emplacement dans `map`
 /// @related game_t
-placed_tile_t **game_tile_at(game_t *game, int x, int y);
+placed_tile_t **game_tile_at(game_t *game, int coordinates_x,
+                             int coordinates_y);
 
 return_code_t game_place_tile(game_t *, const tile_t *tile, int x, int y,
                               tile_orientation_t orientation);
