@@ -1,5 +1,6 @@
 #include <libcarcassonne/engine.h>
 #include <stdio.h>
+
 #include "libcarcassonne/options.h"
 
 int main(int argc, char* argv[]) {

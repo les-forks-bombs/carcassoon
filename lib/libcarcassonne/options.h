@@ -3,6 +3,7 @@
 #include <getopt.h>
 #include <libcarcassonne/extension.h>
 #include <unistd.h>
+
 #include "libcarcassonne/forward.h"
 
 typedef enum options_mode {
