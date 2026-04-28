@@ -5,6 +5,7 @@
 
 /// @brief Représente les différents types d'action possible
 typedef enum action_type {
+  LIBCARCASSONNE_ACTION_NONE = 0,
   /// @brief Poser une tuile sur la plateau
   LIBCARCASSONNE_ACTION_PLACE_TILE = 1,
   /// @brief Poser un meeple
