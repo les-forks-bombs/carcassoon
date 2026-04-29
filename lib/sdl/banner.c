@@ -73,11 +73,12 @@ void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
 
   if (banner->banner_texture) SDL_DestroyTexture(banner->banner_texture);
 
-  // char *path = banner->is_open ? path_resolver_resolve(&as->resolver,
-  // "assets/img/banner.svg") : path_resolver_resolve(&as->resolver,
-  // "assets/img/banner_tall.svg");;
-  banner->banner_texture =
-      IMG_LoadTexture(renderer, "lib/sdl/assets/img/carcassonne.jpg");
+  char *path =
+      banner->is_open
+          ? path_resolver_resolve(&resolver, "assets/img/banner.svg")
+          : path_resolver_resolve(&resolver, "assets/img/banner_tall.svg");
+  ;
+  banner->banner_texture = IMG_LoadTexture(renderer, path);
   // free(path);
 }
 
