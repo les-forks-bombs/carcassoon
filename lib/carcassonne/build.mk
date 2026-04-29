@@ -9,7 +9,7 @@ CLEAN += $(CARCASSONNE_OBJS) $(CARCASSONNE_OBJS:.o=.d)
 
 $(OUT)/bin/carcassonne$(EXT): $(CARCASSONNE_OBJS) $(OUT)/libcarcassonne.a $(OUT)/libutils.a $(OUT)/libai.a
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(LFLAGS) -o $@ $^ -lai -lcarcassonne -lutils
+	@$(CC) $(CFLAGS) -o $@ $^ -lai -lcarcassonne -lutils $(LFLAGS)
 	@case "$(TARGET)" in \
 	        (x86_64-w64-mingw64|x86_64-w64-mingw32) \
 	            $(UTIL_DIR)/copy_dlls.sh $@; \

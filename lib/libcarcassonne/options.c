@@ -10,8 +10,6 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "libcarcassonne/forward.h"
-
 const char* help_string =
     ""
     ""

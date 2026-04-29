@@ -43,6 +43,7 @@ RUNNER :=
 ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
     RUNNER := wine
 	EXT := .exe
+	LFLAGS += -lshlwapi
 endif
 
 build: $(OUT)/bin/sdl$(EXT) $(OUT)/bin/cli$(EXT) $(OUT)/bin/carcassonne$(EXT)
