@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#include "libutils/path.h"
+#include "sdl/resolver.h"
 #include "text.h"
 
 banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
@@ -11,7 +13,7 @@ banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
   banner->score          = 0;
   banner->last_score     = -1;
   banner->banner_texture = NULL;
-  banner->color=color;
+  banner->color          = color;
 
   banner->area.x = 20.0f + (float)nb * 80.0f;
   banner->area.y = 0.0f;
@@ -20,17 +22,14 @@ banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
 
   SDL_Color white = {255, 255, 255, 255};
 
-  // char *font_path = path_resolver_resolve(&as->resolver,
-  // "assets/fonts/Orange.ttf");
-  banner->score_object = init_text_object(
-      renderer, "lib/sdl/assets/fonts/Orange.ttf", 24.0f, "0", white);
-  // free(font_path);
+  char *font_path = path_resolver_resolve(&resolver, "assets/fonts/Orange.ttf");
+  banner->score_object =
+      init_text_object(renderer, font_path, 24.0f, "0", white);
+  free(font_path);
 
-  // char *img_path = path_resolver_resolve(&as->resolver,
-  // "assets/img/banner.svg");
-  banner->banner_texture =
-      IMG_LoadTexture(renderer, "lib/sdl/assets/img/banner.svg");
-  // free(img_path);
+  char *img_path = path_resolver_resolve(&resolver, "assets/img/banner.svg");
+  banner->banner_texture = IMG_LoadTexture(renderer, img_path);
+  free(img_path);
 
   return banner;
 }
@@ -53,7 +52,8 @@ void render_banner(banner_t *banner, SDL_Renderer *renderer) {
   }
 
   if (banner->banner_texture) {
-    SDL_SetTextureColorMod(banner->banner_texture, banner->color.r, banner->color.g, banner->color.b);
+    SDL_SetTextureColorMod(banner->banner_texture, banner->color.r,
+                           banner->color.g, banner->color.b);
     SDL_RenderTexture(renderer, banner->banner_texture, NULL, &banner->area);
   }
 
@@ -68,7 +68,7 @@ void render_banner(banner_t *banner, SDL_Renderer *renderer) {
 
 void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
   banner->area.h = banner->is_open ? 90.0f : 120.0f;
-  
+
   banner->is_open = !banner->is_open;
 
   if (banner->banner_texture) SDL_DestroyTexture(banner->banner_texture);
