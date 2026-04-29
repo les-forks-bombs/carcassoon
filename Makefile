@@ -1,22 +1,28 @@
 CC 		:= clang
 TARGET 	:= $(shell $(CC) -dumpmachine)
 PROFILE := debug
-
-# Directory configuration
-MAKE_DIR := $(CURDIR)
-OUT_DIR  := $(MAKE_DIR)/out/$(PROFILE)/$(TARGET)
-LIBS_DIR := $(OUT_DIR)/lib
-BINS_DIR := $(OUT_DIR)/bin
-OBJ_DIR  := $(OUT_DIR)/obj
-INCL_DIR := $(MAKE_DIR)/lib
-BUILD_DIR:= $(MAKE_DIR)/build
+CLEAN :=
+NULL :=
+TAB := $(NULL)	$(NULL)
+TESTS :=
+DIR_STACK := 
+DIR := $(PWD)
+UTIL_DIR := $(DIR)/build
+EXT :=
+OUT  := $(PWD)/out/$(PROFILE)/$(TARGET)
 
 CFLAGS += --target=$(TARGET)
-LFLAGS += --target=$(TARGET)
 
-CFLAGS += -I$(INCL_DIR) # In order to include files (#include header files)
+CFLAGS += -I$(DIR)/lib
 CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
-LFLAGS += -L$(LIBS_DIR) -lm
+LFLAGS += -L$(OUT) -lm
+
+LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --libs)
+CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --cflags)
+LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-image --libs)
+CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-image --cflags)
+LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --libs)
+CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --cflags)
 
 ifeq "$(PROFILE)" "debug"
 	CFLAGS += -O0 -g
@@ -33,24 +39,81 @@ ifeq "$(PROFILE)" "release"
 	LFLAGS += -s
 endif
 
-export CC MAKE_DIR OBJ_DIR LIBS_DIR BINS_DIR INCL_DIR BUILD_DIR CFLAGS LFLAGS TARGET
-
-
-build test clean: out/$(PROFILE)/$(TARGET)
-	@$(MAKE) -C lib -f build.mk $@
-
-ifneq ($(filter clean,$(MAKECMDGOALS)),)
-build: clean
-test: clean
+RUNNER := 
+ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
+    RUNNER := wine
+	EXT := .exe
 endif
 
+build: $(OUT)/bin/sdl$(EXT) $(OUT)/bin/cli$(EXT) $(OUT)/bin/carcassonne$(EXT)
 
-out/$(PROFILE)/$(TARGET):
-	@mkdir -p out/$(PROFILE)/
-	@cp -r $(BUILD_DIR)/out $@
+cli sdl:
+	$(OUT)/bin/carcassonne -m $@
 
-cli sdl: build
-	$(BINS_DIR)/carcassonne -m $@
+include lib/build.mk
+
+all: build $(TESTS)
+
+TESTS_XMLS := $(addsuffix .xml,$(TESTS))
+TESTS_COVE := $(addsuffix .profraw,$(TESTS))
+
+%.xml %.profraw: %
+	@CMOCKA_XML_FILE='$*.xml' \
+		LLVM_PROFILE_FILE="$*.profraw" \
+		CMOCKA_MESSAGE_OUTPUT=xml \
+		$(RUNNER) $<
+
+test: $(TESTS_XMLS) $(TESTS_COVE)
+CLEAN += $(TESTS_XMLS) $(TESTS_COVE)
+
+$(OUT)/objs/%.o: lib/%.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+	$(info $(TAB)CC $@)
+
+public/:
+	doxygen
+CLEAN += public/
+
+docs: public/
+
+format:
+	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format -i
+
+tidy: bear
+	@run-clang-tidy -p $(OUT)
+
+check:
+	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format --dry-run --Werror
+
+bear:
+	@mkdir -p $(OUT)
+	@bear --output $(OUT)/compile_commands.json -- make clean all -j$(shell nproc)
+CLEAN += $(OUT)/compile_commands.json
+
+FIRST_BIN := $(firstword $(TESTS))
+OTHER_BINS := $(wordlist 2, $(words $(TESTS)), $(TESTS))
+OBJECT_FLAGS := $(addprefix -object , $(OTHER_BINS))
+
+$(OUT)/coverage.profdata: $(TESTS_COVE)
+	@llvm-profdata merge -sparse $(TESTS_COVE) -o $(OUT)/coverage.profdata
+CLEAN += $(OUT)/coverage.profdata
+
+coverage: $(OUT)/coverage.profdata
+	@llvm-cov report $(FIRST_BIN) $(OBJECT_FLAGS) -instr-profile=$(OUT)/coverage.profdata
+
+$(OUT)/coverage.lcov: $(OUT)/coverage.profdata
+	@llvm-cov export $(FIRST_BIN) $(OBJECT_FLAGS) -instr-profile=$(OUT)/coverage.profdata -format=lcov > $(OUT)/coverage.lcov
+CLEAN += $(OUT)/coverage.lcov
+
+$(OUT)/coverage.xml: $(OUT)/coverage.lcov
+	@lcov_cobertura $(OUT)/coverage.lcov --output $(OUT)/coverage.xml
+CLEAN += $(OUT)/coverage.xml
+
+coverage-xml: coverage $(OUT)/coverage.xml
+
+clean:
+	@rm -rf $(CLEAN)
 
 req:
 	@echo "/!\ Attention !"
@@ -62,28 +125,6 @@ req:
 	@echo "RHEL/Fedora: dnf install libSDL3-devel libSDL3_ttf-devel libSDL3_image-devel libcmocka-devel"
 	@echo "Debian: apt-get install libsdl3-dev libsdl3-ttf-dev libsdl3-image-dev libcmocka-dev"
 
-docs:
-	doxygen
 
-lint:
-	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format -i
+.PHONY: clean build test docs check format coverage bear tidy req cli sdl coverage-xml
 
-check:
-	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format --dry-run --Werror
-
-bear: out/$(PROFILE)/$(TARGET)
-	@bear --output ./out/$(PROFILE)/$(TARGET)/compile_commands.json -- make clean build
-
-
-TEST_BINS = $(wildcard $(BINS_DIR)/tests/*_test)
-FIRST_BIN = $(word 1, $(TEST_BINS))
-OTHER_BINS = $(wordlist 2, $(words $(TEST_BINS)), $(TEST_BINS))
-OBJECT_FLAGS = $(foreach bin,$(OTHER_BINS),-object $(bin))
-
-coverage: test
-	llvm-profdata merge -sparse $(wildcard $(BINS_DIR)/tests/*.profraw) -o $(OUT_DIR)/coverage.profdata
-	llvm-cov report $(FIRST_BIN) $(OBJECT_FLAGS) -instr-profile=$(OUT_DIR)/coverage.profdata
-	llvm-cov export $(FIRST_BIN) $(OBJECT_FLAGS) -instr-profile=$(OUT_DIR)/coverage.profdata -format=lcov > $(OUT_DIR)/coverage.lcov
-	lcov_cobertura $(OUT_DIR)/coverage.lcov --output $(OUT_DIR)/coverage.xml
-
-.PHONY: clean build test docs check lint req cli sdl

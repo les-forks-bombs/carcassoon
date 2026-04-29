@@ -1,16 +1,26 @@
-NAME := sdl
-PROG = $(BINS_DIR)/$(NAME)
+DIR_STACK := $(DIR) $(DIR_STACK)
+DIR := $(DIR)/sdl
 
-LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --libs)
-CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --cflags)
-LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-image --libs)
-CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-image --cflags)
-LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --libs)
-CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --cflags)
+SDL_SRCS := $(wildcard $(DIR)/*.c)
+SDL_OBJS := $(patsubst $(PWD)/lib/%.c, $(OUT)/objs/%.o, $(SDL_SRCS))
 
-LLIBS := ai carcassonne
+CLEAN += $(SDL_OBJS) $(SDL_OBJS:.o=.d)
+-include $(SDL_OBJS:.o=.d)
 
-include $(BUILD_DIR)/binary.mk
+$(OUT)/bin/sdl$(EXT): $(SDL_OBJS) \
+    $(OUT)/libcarcassonne.a \
+    $(OUT)/libutils.a \
+    $(OUT)/libai.a
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
+	@case "$(TARGET)" in \
+	        (x86_64-w64-mingw64|x86_64-w64-mingw32) \
+	            $(UTIL_DIR)/copy_dlls.sh $@; \
+	            ;; \
+	esac
+	$(info $(TAB)LD $@)
 
-build:: ./assets
-	@cp -r ./assets $(BINS_DIR)/
+CLEAN += $(OUT)/bin/sdl$(EXT)
+
+DIR := $(firstword $(DIR_STACK))
+DIR_STACK := $(wordlist 2, $(words $(DIR_STACK)), $(DIR_STACK))
