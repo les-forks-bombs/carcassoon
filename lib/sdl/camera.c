@@ -1,6 +1,5 @@
-#include "camera.h"
-
 #include <SDL3/SDL_stdinc.h>
+#include <sdl/camera.h>
 
 camera_t* create_camera(void) {
   camera_t* cam = SDL_calloc(1, sizeof(camera_t));
