@@ -450,6 +450,13 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .amount       = 1},
 };
 
+static const tile_list_t LIBCARCASSONNE_EXT_BASE_GAME_TILES = {
+    .meta = {.size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS) /
+                     sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]),
+             .caps = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS) /
+                     sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]),
+             .data = (tile_t*)&LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]}};
+
 const static tile_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[] = {
     {.family = "CRFR",
      .parts =
@@ -469,22 +476,23 @@ const static tile_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[] = {
      .amount       = 1,
      .texture      = "tile_18.png"}};
 
-static const extension_tiles_t LIBCARCASSONNE_EXT_BASE_GAME_TILES = {
-    .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS) /
-            sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]),
-    .tiles = &LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]};
+static const tile_list_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
+    .meta = {
+        .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS) /
+                sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]),
+        .caps = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS) /
+                sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]),
+        .data = (tile_t*)&LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]}};
 
 static const extension_process_hooks_t LIBCARCASSONNE_EXT_BASE_GAME_HOOKS = {
-    .size  = 0,
-    .hooks = NULL,
-};
-static const extension_tiles_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
-    .size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS) /
-            sizeof(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]),
-    .tiles = &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]};
+    .meta = {
+        .size = 0,
+        .caps = 0,
+        .data = NULL,
+    }};
 
 static const extension_list_t LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS = {
-    .size = 0, .extensions = NULL};
+    .meta = {.size = 0, .caps = 0, .data = NULL}};
 
 static const extension_t LIBCARCASSONNE_EXT_BASE_GAME = {
     .name                 = "Base Game",
