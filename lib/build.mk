@@ -1,23 +1,13 @@
-BINS := $(shell find . -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
+DIR_STACK := $(DIR) $(DIR_STACK)
+DIR := $(DIR)/lib
 
-$(BINS): %:
-	@$(MAKE) -C $* -f build.mk build
+include $(DIR)/libcarcassonne/build.mk
+include $(DIR)/libai/build.mk
+include $(DIR)/libutils/build.mk
 
-$(addprefix clean_,$(BINS)): clean_%:
-	@$(MAKE) -C $* -f build.mk clean
-$(addprefix test_,$(BINS)): test_%:
-	@$(MAKE) -C $* -f build.mk test
+include $(DIR)/carcassonne/build.mk
+include $(DIR)/cli/build.mk
+include $(DIR)/sdl/build.mk
 
-libcarcassonne: libutils
-
-sdl carcassonne cli: libcarcassonne libai
-
-build: $(BINS)
-clean: $(addprefix clean_,$(BINS))
-test: $(addprefix test_,$(BINS))
-
-.PHONY: \
-	clean build test \
-	$(BINS) \
-	$(addprefix clean_,$(BINS)) \
-	$(addprefix test_,$(BINS))
+DIR := $(firstword $(DIR_STACK))
+DIR_STACK := $(wordlist 2, $(words $(DIR_STACK)), $(DIR_STACK))
