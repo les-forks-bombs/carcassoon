@@ -46,6 +46,11 @@ ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
 	LFLAGS += -lshlwapi
 endif
 
+ifneq ($(filter clean,$(MAKECMDGOALS)),)
+build: clean
+test: clean
+endif
+
 build: $(OUT)/bin/sdl$(EXT) $(OUT)/bin/cli$(EXT) $(OUT)/bin/carcassonne$(EXT)
 
 cli sdl:
