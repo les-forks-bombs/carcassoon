@@ -26,5 +26,4 @@ int main(int argc, char* argv[]) {
   }
 
   destroy_engine(&engine);
-  free_options(&config);
 }
