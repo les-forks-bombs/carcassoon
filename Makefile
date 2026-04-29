@@ -86,15 +86,19 @@ docs: public/
 format:
 	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format -i
 
-tidy: bear
+tidy: $(OUT)/compile_commands.json
 	@run-clang-tidy -p $(OUT)
 
 check:
 	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format --dry-run --Werror
 
-bear:
+$(OUT)/compile_commands.json:
 	@mkdir -p $(OUT)
-	@bear --output $(OUT)/compile_commands.json -- make clean all -j$(shell nproc)
+	@make clean
+	@bear --output $(OUT)/compile_commands.json -- make all -j$(shell nproc)
+
+bear: $(OUT)/compile_commands.json
+
 CLEAN += $(OUT)/compile_commands.json
 
 FIRST_BIN := $(firstword $(TESTS))
