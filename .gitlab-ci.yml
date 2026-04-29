@@ -24,8 +24,7 @@ stages:
         PROFILE: *profiles
   
   script:
-    - make -s out/$PROFILE/$TARGET -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
-    - bear --output ./out/$PROFILE/$TARGET/compile_commands.json -- make -s clean build -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make bear -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always
@@ -47,7 +46,7 @@ stages:
             PROFILE: ['$[[ matrix.PROFILE ]]']
 
   script:
-    - run-clang-tidy -p out/$PROFILE/$TARGET/
+    - make tidy -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
 
 'Coverage':
   stage: test
@@ -63,7 +62,7 @@ stages:
         PROFILE: ['debug']
 
   script:
-    - make -s coverage TARGET=$TARGET PROFILE=$PROFILE
+    - make coverage-xml -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
   
   coverage: '/TOTAL.*\s+(\d+\.\d+)\%/'
   artifacts:
@@ -87,21 +86,21 @@ stages:
         PROFILE: *profiles
 
   script:
-    - make -s test TARGET=$TARGET PROFILE=$PROFILE
+    - make test -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always
     paths:
-      - ./out/$PROFILE/$TARGET/bin/tests/*.xml
+      - ./out/$PROFILE/$TARGET/bin/*.xml
     reports:
-      junit: ./out/$PROFILE/$TARGET/bin/tests/*.xml
+      junit: ./out/$PROFILE/$TARGET/bin/*.xml
 
-'Lint':
+'Format':
   stage: test
   needs: []
   allow_failure: true
   script:
-    - make -s check
+    - make format
 
 'Docs':
   stage: docs
