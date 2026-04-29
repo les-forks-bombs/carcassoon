@@ -34,10 +34,6 @@ ifeq "$(PROFILE)" "debug"
 	endif
 endif
 
-ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
-    LFLAGS += -lshlwapi
-endif
-
 ifeq "$(PROFILE)" "release"
 	CFLAGS += -O3
 	LFLAGS += -s
@@ -47,6 +43,7 @@ RUNNER :=
 ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
     RUNNER := wine
 	EXT := .exe
+	LFLAGS += -lshlwapi
 endif
 
 build: $(OUT)/bin/sdl$(EXT) $(OUT)/bin/cli$(EXT) $(OUT)/bin/carcassonne$(EXT)

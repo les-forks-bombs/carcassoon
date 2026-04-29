@@ -12,7 +12,7 @@ $(OUT)/bin/cli$(EXT): $(CLI_OBJS) \
     $(OUT)/libutils.a \
     $(OUT)/libai.a
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(LFLAGS) -o $@ $^ -lcarcassonne -lutils -lai
+	@$(CC) $(CFLAGS) -o $@ $^ -lcarcassonne -lutils -lai $(LFLAGS)
 	@case "$(TARGET)" in \
 	        (x86_64-w64-mingw64|x86_64-w64-mingw32) \
 	            $(UTIL_DIR)/copy_dlls.sh $@; \
