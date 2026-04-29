@@ -1,6 +1,7 @@
 #pragma once
 
 #include <libcarcassonne/consts.h>
+#include <libutils/vector.h>
 #include <stdbool.h>
 
 /// @brief Les différents types de sous-tiles
@@ -56,10 +57,7 @@ typedef struct tile {
   char* texture;
 } tile_t;
 
-typedef struct extension_tiles {
-  const unsigned int size;
-  const tile_t*      tiles;
-} extension_tiles_t;
+typedef Vector(const tile_t) tile_list_t;
 
 /// @brief Récupère une famille de la tuile en fonction de l'orientation et de
 /// la face de connexion
