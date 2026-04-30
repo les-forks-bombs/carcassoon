@@ -5,21 +5,43 @@
 #include <libcarcassonne/extension.h>
 #include <libcarcassonne/tile.h>
 
+#include "libcarcassonne/forward.h"
+
 struct meeple_place_hook_state {
   int               x, y;
   tile_part_group_t group;
   meeple_type_t     meeple_type;
 };
 
-return_code_t meeple_place_fw(void** state_store, engine_t* engine,
-                              action_t* action);
+struct tile_place_hook_state {
+  int x, y;
+};
 
-return_code_t meeple_place_bw(void** state_store, engine_t* engine);
+struct rendre_meeple_hook_state {
+  meeple_vector_t* meeples;
+};
 
-return_code_t meeple_place_state_free(void* state_store);
+/**
+ * @brief Définis le hook pour placer une tile
+ *
+ */
+LIBCARCASSONNE_HOOK_DEF(tile_place, 4, LIBCARCASSONNE_ACTION_PLACE_TILE)
 
-static const extension_process_hook_t meeple_place = {
-    .fw       = &meeple_place_fw,
-    .bw       = &meeple_place_bw,
-    .free     = &meeple_place_state_free,
-    .priority = 5};
+/**
+ * @brief Définis le hook pour placer un meeple
+ *
+ */
+LIBCARCASSONNE_HOOK_DEF(meeple_place, 5, LIBCARCASSONNE_ACTION_PLACE_MEEPLE)
+
+/**
+ * @brief Hook de jeu qui restitue les meeples dans des groupes terminés (ex.
+ * abbaye, route ou ville)
+ *
+ */
+LIBCARCASSONNE_HOOK_DEF(rendre_meeples, 6, LIBCARCASSONNE_ACTION_NONE)
+
+/**
+ * @brief Change le player courrant au prochain
+ *
+ */
+LIBCARCASSONNE_HOOK_DEF(prochain_joueur, 7, LIBCARCASSONNE_ACTION_NONE)

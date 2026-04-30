@@ -11,6 +11,8 @@
 #include <libutils/lc.h>
 #include <libutils/vector.h>
 
+#include "libcarcassonne/forward.h"
+
 /// @brief Représente une partie
 struct game {
   /// @brief Index du joueur actuel
@@ -50,14 +52,16 @@ return_code_t create_game(game_t *game, options_t *options);
 void destroy_game(game_t *game);
 
 /// @brief Retourne une référence vers l'emplacement ou la tile est enregistrée
-/// @param x La cordonnée x
-/// @param y La cordonnée y
+/// @param coordinates_x La cordonnée x
+/// @param coordinates_y La cordonnée y
 /// @return Une référence vers l'emplacement dans `map`
 /// @related game_t
-placed_tile_t **game_tile_at(game_t *game, int x, int y);
+placed_tile_t **game_tile_at(game_t *game, int coordinates_x,
+                             int coordinates_y);
 
 return_code_t game_place_tile(game_t *, const tile_t *tile, int x, int y,
                               tile_orientation_t orientation);
+return_code_t game_remove_tile(game_t *, int x, int y);
 
 /// @brief Détermine si une tuile peut être placé à l'emplacement désigné
 /// @param game Le jeu dans lequel placer la tuile
@@ -98,3 +102,5 @@ return_code_t game_end_round(game_t *game);
 /// @return Le code de statut de l'opération, SUCCESS en cas de réussite
 return_code_t game_place_meeple(game_t *game, int x, int y, int part_group,
                                 meeple_type_t meeple_type);
+
+return_code_t game_remove_meeple(game_t *game, int x, int y, int part_group);

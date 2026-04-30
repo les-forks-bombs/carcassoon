@@ -1,67 +1,87 @@
 #include <libutils/lc.h>
 #include <string.h>
 
-static list_node_t *_create_node(const void *data, size_t size) {
+static list_node_t *utils_list_create_node(const void *data, size_t size) {
   list_node_t *node = malloc(sizeof(list_node_t) + size);
-  if (!node) return NULL;
+  if (!node) {
+    return NULL;
+  }
 
   memcpy(node->value, data, size);
   node->next = node->prev = NULL;
   return node;
 }
 
-list_node_t *_list_append(list_t *l, const void *data, size_t size) {
-  list_node_t *el = _create_node(data, size);
-  if (!el) return NULL;
-
-  if (l->tail) {
-    l->tail->next = el;
-    el->prev      = l->tail;
+list_node_t *utils_list_append(list_t *list, const void *data, size_t size) {
+  list_node_t *node = utils_list_create_node(data, size);
+  if (!node) {
+    return NULL;
   }
-  l->tail = el;
-  if (!l->head) l->head = el;
 
-  l->size++;
-  return el;
-}
-
-list_node_t *_list_prepend(list_t *l, const void *data, size_t size) {
-  list_node_t *el = _create_node(data, size);
-  if (!el) return NULL;
-
-  if (l->head) {
-    l->head->prev = el;
-    el->next      = l->head;
+  if (list->tail) {
+    list->tail->next = node;
+    node->prev       = list->tail;
   }
-  l->head = el;
-  if (!l->tail) l->tail = el;
+  list->tail = node;
+  if (!list->head) {
+    list->head = node;
+  }
 
-  l->size++;
-  return el;
+  list->size++;
+  return node;
 }
 
-list_node_t *_list_insert(list_t *l, const void *data, size_t size,
-                          unsigned int index) {
-  if (index == 0) return _list_prepend(l, data, size);
-  if (index >= l->size) return _list_append(l, data, size);
+list_node_t *utils_list_prepend(list_t *list, const void *data, size_t size) {
+  list_node_t *element = utils_list_create_node(data, size);
+  if (!element) {
+    return NULL;
+  }
 
-  list_node_t *successor = _list_nth(l, index);
-  if (!successor) return NULL;
+  if (list->head) {
+    list->head->prev = element;
+    element->next    = list->head;
+  }
+  list->head = element;
+  if (!list->tail) {
+    list->tail = element;
+  }
 
-  list_node_t *el = _create_node(data, size);
-  if (!el) return NULL;
-
-  el->next = successor;
-  el->prev = successor->prev;
-
-  if (successor->prev) successor->prev->next = el;
-  successor->prev = el;
-
-  l->size++;
-  return el;
+  list->size++;
+  return element;
 }
 
-void _list_remove(list_t *l, list_node_t *el) {
+list_node_t *utils_list_insert(list_t *list, const void *data, size_t size,
+                               unsigned int index) {
+  if (index == 0) {
+    return utils_list_prepend(list, data, size);
+  }
+  if (index >= list->size) {
+    return utils_list_append(list, data, size);
+  }
+
+  list_node_t *successor = utils_list_nth(list, index);
+  if (!successor) {
+    return NULL;
+  }
+
+  list_node_t *element = utils_list_create_node(data, size);
+  if (!element) {
+    return NULL;
+  }
+
+  element->next = successor;
+  element->prev = successor->prev;
+
+  if (successor->prev) {
+    successor->prev->next = element;
+  }
+  successor->prev = element;
+
+  list->size++;
+  return element;
+}
+
+void utils_list_remove(list_t *l, list_node_t *el) {
   if (l->head == el) l->head = el->next;
 
   if (l->tail == el) l->tail = el->prev;
@@ -74,20 +94,20 @@ void _list_remove(list_t *l, list_node_t *el) {
   free(el);
 }
 
-void _list_remove_value(list_t *l, const void *data, size_t size) {
+void utils_list_remove_value(list_t *l, const void *data, size_t size) {
   if (!l || !l->head) return;
 
   list_node_t *curr = l->head;
   while (curr) {
     if (memcmp(curr->value, data, size) == 0) {
-      _list_remove(l, curr);
+      utils_list_remove(l, curr);
       return;
     }
     curr = curr->next;
   }
 }
 
-list_node_t *_list_nth(list_t *l, unsigned int index) {
+list_node_t *utils_list_nth(list_t *l, unsigned int index) {
   if (index < 0 || index > l->size) return NULL;
 
   list_node_t *current = l->head;
@@ -96,6 +116,6 @@ list_node_t *_list_nth(list_t *l, unsigned int index) {
   return current;
 }
 
-void _list_free(list_t *l) {
-  while (l->size != 0) _list_remove(l, l->head);
+void utils_list_free(list_t *l) {
+  while (l->size != 0) utils_list_remove(l, l->head);
 }
