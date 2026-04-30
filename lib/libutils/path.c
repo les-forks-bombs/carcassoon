@@ -71,6 +71,7 @@ char* path_resolver_resolve(path_resolver_t* resolver, char* file) {
   unsigned int size = resolver->size + strlen(file) + 2;
   char*        ret  = calloc(size, sizeof(char));
 
-  sprintf(ret, "%s/%s", resolver->base, file);
+  snprintf(ret, size, "%s/%s", resolver->base, file);
+
   return ret;
 }
