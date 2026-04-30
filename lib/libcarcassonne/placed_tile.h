@@ -33,6 +33,11 @@ struct placed_tile {
   tile_orientation_t orientation;
 };
 
+struct placed_tile_group_eval_points {
+  unsigned int    points;
+  meeple_vector_t meeples;
+};
+
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
                                  tile_orientation_t orientation);
@@ -77,3 +82,12 @@ bool placed_tile_group_complete(placed_tile_group_t *group);
  */
 bool placed_tile_group_connected(placed_tile_group_t *a,
                                  placed_tile_group_t *b);
+
+/**
+ * @brief Evaluer le score d'un groupe
+ *
+ * @param group Le groupe évaluer
+ * @return Les résultats de l'évaluation des points
+ */
+placed_tile_group_eval_points_t placed_tile_group_eval_points(
+    placed_tile_group_t *group);
