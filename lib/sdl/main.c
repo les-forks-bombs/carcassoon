@@ -2,6 +2,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+
+#include "libcarcassonne/forward.h"
+#include "libcarcassonne/options.h"
 #include "libutils/path.h"
 #include "sdl/resolver.h"
 #define SDL_MAIN_USE_CALLBACKS 1
@@ -16,15 +19,17 @@
 #include <sdl/text.h>
 #include <sdl/tile_temp.h>
 #include <stdlib.h>
+#include "libcarcassonne/engine.h"
 
 typedef struct {
-  SDL_Window    *window;
-  SDL_Renderer  *renderer;
-  map_t         *map;
-  camera_t      *camera;
-  SDL_FRect      map_viewport;
-  Uint64         last_step;
-  text_object_t *text;
+  SDL_Window     *window;
+  SDL_Renderer   *renderer;
+  map_t          *map;
+  camera_t       *camera;
+  SDL_FRect       map_viewport;
+  Uint64          last_step;
+  text_object_t  *text;
+  engine_t engine;
 
   banner_t *test_banner, *test_banner2;
 } AppState;
@@ -138,17 +143,17 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 }
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
-  (void)appstate;
-  (void)argc;
-  (void)argv;
 
   create_path_resolver(&resolver);
+  options_t options = parse_options(argc,argv);
 
   if (!SDL_Init(SDL_INIT_VIDEO)) return SDL_APP_FAILURE;
 
   AppState *as = (AppState *)SDL_malloc(sizeof(AppState));
   if (!as) return SDL_APP_FAILURE;
   *appstate = as;
+
+  create_engine(&as->engine, options);
 
   // pour resolve:
   char *path = path_resolver_resolve(&resolver, "assets/img/carcassonne.jpg");
@@ -243,6 +248,8 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     SDL_DestroyWindow(as->window);
     destroy_text_object(as->text);
     TTF_Quit();
+    free_options(&as->engine.config);
+    destroy_engine(&as->engine);
     SDL_free(as);
   }
 }
