@@ -17,7 +17,13 @@ void utils_hashmap_get_set_test(void** state) {
   hashmap_create(&map, 5);
 
   char key1[20] = "hehe";
-  assert_null(hashmap_get(&map, &key1));
+  int  val1     = 42;
+  assert_null(hashmap_get(&map, key1));
+
+  hashmap_set(&map, key1, &val1);
+
+  int* res = hashmap_get(&map, key1);
+  assert_int_equal(*res, val1);
 
   hashmap_free(&map);
 }
