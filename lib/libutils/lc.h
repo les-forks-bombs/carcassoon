@@ -44,8 +44,8 @@ void utils_list_remove_value(list_t *list, const void *data, size_t size);
                     (const void *)(1 ? (item) : (list)->type_ghost), \
                     sizeof(*(list)->type_ghost), index)
 
-#define list_nth(list, index)   utils_list_nth(&((list)->meta), index)
-#define list_value(list, node)  ((__typeof__((list)->type_ghost))((node)->value))
+#define list_nth(list, index)  utils_list_nth(&((list)->meta), index)
+#define list_value(list, node) ((__typeof__((list)->type_ghost))((node)->value))
 #define list_remove(list, item) utils_list_remove(&((list)->meta), item)
 
 #define list_head(list) ((list)->meta.head)
