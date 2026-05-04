@@ -1,10 +1,15 @@
 #include <SDL3/SDL_render.h>
 #include <stdbool.h>
+#include <stdio.h>
+
+#include "libutils/path.h"
+#include "sdl/resolver.h"
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <sdl/banner.h>
 #include <sdl/camera.h>
 #include <sdl/consts.h>
 #include <sdl/map.h>
@@ -13,14 +18,18 @@
 #include <stdlib.h>
 
 typedef struct {
-  SDL_Window    *window;
-  SDL_Renderer  *renderer;
-  map_t         *map;
-  camera_t      *camera;
-  SDL_FRect      map_viewport;
-  Uint64         last_step;
-  text_object_t *text;
+  SDL_Window     *window;
+  SDL_Renderer   *renderer;
+  map_t          *map;
+  camera_t       *camera;
+  SDL_FRect       map_viewport;
+  Uint64          last_step;
+  text_object_t  *text;
+
+  banner_t *test_banner, *test_banner2;
 } AppState;
+
+path_resolver_t resolver;
 
 static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
   AppState *as = (AppState *)appstate;
@@ -45,6 +54,11 @@ static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
     case SDLK_KP_MINUS:
       as->camera->zoom -= 0.1f;
       break;
+    case SDLK_A:
+      as->test_banner->score+=1;
+      break;
+    case SDLK_Z:
+      toggle_banner(as->test_banner2,as->renderer);
     default:
       break;
   }
@@ -96,6 +110,8 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   while ((now - as->last_step) >= STEP_RATE_IN_MILLISECONDS) {
     as->last_step += STEP_RATE_IN_MILLISECONDS;
   }
+
+  SDL_SetRenderDrawColor(as->renderer, 164, 116, 73, 255);
   SDL_RenderClear(as->renderer);
 
   SDL_Rect v = {(int)as->map_viewport.x, (int)as->map_viewport.y,
@@ -111,6 +127,12 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     SDL_RenderTexture(as->renderer, as->text->texture, NULL, &dest);
   }
 
+  SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
+  SDL_RenderRect(as->renderer, &as->map_viewport);
+
+  render_banner(as->test_banner,as->renderer);
+  render_banner(as->test_banner2,as->renderer);
+
   SDL_RenderPresent(as->renderer);
   return SDL_APP_CONTINUE;
 }
@@ -120,11 +142,18 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
+  create_path_resolver(&resolver);
+
   if (!SDL_Init(SDL_INIT_VIDEO)) return SDL_APP_FAILURE;
 
   AppState *as = (AppState *)SDL_malloc(sizeof(AppState));
   if (!as) return SDL_APP_FAILURE;
   *appstate = as;
+
+  // pour resolve:
+  char *path = path_resolver_resolve(&resolver, "assets/img/carcassonne.jpg");
+  printf("path relatif: %s\n", path);
+  free(path);
 
   if (!SDL_CreateWindowAndRenderer("Carcassonne Test", WINDOW_WIDTH,
                                    WINDOW_HEIGHT, 0, &as->window,
@@ -139,8 +168,12 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   }
 
   SDL_Color white_text = {255, 255, 255, 255};
-  as->text = init_text_object(as->renderer, "lib/sdl/assets/fonts/Orange.ttf",
-                              32.0f, "Ici c'est Carcassonne !", white_text);
+  path = path_resolver_resolve(&resolver, "assets/fonts/Orange.ttf");
+  printf("path relatif: %s\n", path);
+
+  as->text = init_text_object(as->renderer, path, 32.0f,
+                              "Ici c'est Carcassonne !", white_text);
+  free(path);
 
   as->map    = create_map();
   as->camera = create_camera();
@@ -155,8 +188,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     int col = i % map_width_temp;
     int row = i / map_width_temp;
 
-    as->map->tiles[i] =
-        create_tt(as->renderer, "lib/sdl/assets/img/tiles_png/tile_05.png");
+    path = path_resolver_resolve(&resolver, "assets/img/tiles_png/tile_05.png");
+    printf("path relatif: %s\n", path);
+
+    as->map->tiles[i] = create_tt(as->renderer, path);
+    free(path);
 
     if (as->map->tiles[i]) {
       as->map->tiles[i]->world_x = (col * MAP_TILE_SIZE);
@@ -164,10 +200,17 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     }
   }
 
-  as->map_viewport.x = 0;
-  as->map_viewport.y = 0;
-  as->map_viewport.w = 500;
-  as->map_viewport.h = 500;
+  as->map_viewport.x = 100;
+  as->map_viewport.y = 150;
+  as->map_viewport.w = 800;
+  as->map_viewport.h = 400;
+
+  SDL_Color blue = {0,0,255,255};
+  banner_t *test_banner = create_banner(as->renderer,blue,1);
+  banner_t *test_banner2 = create_banner(as->renderer,blue,2);
+
+  as->test_banner=test_banner;
+  as->test_banner2=test_banner2;
 
   as->last_step = SDL_GetTicks();
   return SDL_APP_CONTINUE;
