@@ -13,7 +13,7 @@ deck_t create_deck(int seed, extension_vector_t* extensions) {
                                    .head = NULL,
                                    .tail = NULL,
                                    .size = 0,
-                               }},
+                              }},
                  .state = create_prng_mersenne_twister_state(seed)};
 
   // On crée une queue (linked-list) qui sera utilisée pour
