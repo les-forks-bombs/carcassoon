@@ -1,4 +1,3 @@
-#include <cmocka.h>
 #include <libutils/hashmap.h>
 #include <libutils/tests/tests.h>
 #include <string.h>
