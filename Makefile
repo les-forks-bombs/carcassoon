@@ -15,7 +15,7 @@ CFLAGS += --target=$(TARGET)
 
 CFLAGS += -I$(DIR)/lib
 CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
-LFLAGS += -L$(OUT) -lm
+LFLAGS += -L$(OUT) -lm -lcarcassonne -lutils -lai
 
 LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --libs)
 CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --cflags)
@@ -43,6 +43,12 @@ RUNNER :=
 ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
     RUNNER := wine
 	EXT := .exe
+	LFLAGS += -lshlwapi
+endif
+
+ifneq ($(filter clean,$(MAKECMDGOALS)),)
+build: clean
+test: clean
 endif
 
 build: $(OUT)/bin/sdl$(EXT) $(OUT)/bin/cli$(EXT) $(OUT)/bin/carcassonne$(EXT)
