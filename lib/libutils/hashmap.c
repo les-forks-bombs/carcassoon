@@ -45,10 +45,14 @@ void *utils_hashmap_get(const hashmap_t *map, const void *key,
 
   list_node_t    *list_node = list->head;
   hashmap_node_t *current   = ((hashmap_node_t *)list_node->value);
-  while (list_node != NULL || strcmp(current->key, key) != 0) {
+  while (list_node != NULL && strcmp(current->key, key) != 0) {
     list_node = list_node->next;
     current   = ((hashmap_node_t *)list_node->value);
   }
+  if (list_node == NULL) {
+    return NULL;
+  }
+
   return current->value;
 }
 
