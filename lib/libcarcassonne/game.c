@@ -250,8 +250,8 @@ return_code_t game_remove_tile(game_t *game, int x, int y) {
 }
 
 return_code_t game_place_meeple(game_t *game, int x, int y, int group,
-                                meeple_type_t meeple_type, player_t* player) {
-  if (game == NULL || player==NULL) {
+                                meeple_type_t meeple_type, player_t *player) {
+  if (game == NULL || player == NULL) {
     return ERROR;
   }
 
@@ -266,7 +266,7 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
 
     if (group_ref->meeple == NULL) {
       meeple_t *meeple    = calloc(1, sizeof(meeple_t));
-      meeple->group = group;
+      meeple->group       = group;
       meeple->group_node  = group_ref;
       meeple->meeple_type = meeple_type;
 
@@ -274,9 +274,7 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
       group_ref->meeple->player = player;
 
       vector_append(&player->meeples, &meeple);
-      (vector_nth(&player->meeples_count,
-                  meeple->meeple_type))
-          ->count--;
+      (vector_nth(&player->meeples_count, meeple->meeple_type))->count--;
 
     } else {
       return ALREADY_ALLOCATED;
@@ -416,6 +414,6 @@ return_code_t game_end_round(game_t *game) {
   return SUCCESS;
 }
 
-player_t * game_get_current_player(game_t *game){
+player_t *game_get_current_player(game_t *game) {
   return &game->players[game->current_player];
 }

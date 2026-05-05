@@ -1,4 +1,6 @@
 #include <libcarcassonne/player.h>
+#include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "libcarcassonne/forward.h"
@@ -19,6 +21,11 @@ player_t create_player(player_type_t          type,
 }
 
 void free_player(player_t *player) {
+  for (size_t i = 0; i < vector_size(&player->meeples); i++) {
+    meeple_t *meeple = *vector_nth(&player->meeples, i);
+    free(meeple);
+  }
+
   vector_free(&player->meeples);
   vector_free(&player->meeples_count);
 }
