@@ -10,11 +10,15 @@
 
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
-                                 tile_orientation_t orientation) {
+                                 tile_orientation_t orientation, int x, int y) {
   if (placed_tile == NULL || parent == NULL) return ERROR;
 
   placed_tile->parent      = parent;
   placed_tile->orientation = orientation;
+
+  placed_tile->x = x;
+  placed_tile->y = y;
+
   for (int i = 0; i < 9; i++) {
     placed_tile_group_t **group =
         &placed_tile->groups[placed_tile->parent->parts_groups[i]];
