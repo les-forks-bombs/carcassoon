@@ -11,7 +11,7 @@ banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
   banner->score          = 0;
   banner->last_score     = -1;
   banner->banner_texture = NULL;
-  banner->color=color;
+  banner->color          = color;
 
   banner->area.x = 20.0f + (float)nb * 80.0f;
   banner->area.y = 0.0f;
@@ -53,7 +53,8 @@ void render_banner(banner_t *banner, SDL_Renderer *renderer) {
   }
 
   if (banner->banner_texture) {
-    SDL_SetTextureColorMod(banner->banner_texture, banner->color.r, banner->color.g, banner->color.b);
+    SDL_SetTextureColorMod(banner->banner_texture, banner->color.r,
+                           banner->color.g, banner->color.b);
     SDL_RenderTexture(renderer, banner->banner_texture, NULL, &banner->area);
   }
 
@@ -68,7 +69,7 @@ void render_banner(banner_t *banner, SDL_Renderer *renderer) {
 
 void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
   banner->area.h = banner->is_open ? 90.0f : 120.0f;
-  
+
   banner->is_open = !banner->is_open;
 
   if (banner->banner_texture) SDL_DestroyTexture(banner->banner_texture);

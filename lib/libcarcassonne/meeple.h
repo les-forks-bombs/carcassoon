@@ -9,7 +9,7 @@ struct meeple {
   player_t*            player;
   placed_tile_group_t* group_node;
   meeple_type_t        meeple_type;
-  tile_part_group_t group;
+  tile_part_group_t    group;
 };
 
 struct meeple_count {

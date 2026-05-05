@@ -26,7 +26,8 @@ return_code_t meeple_place_fw(void **state_store, engine_t *engine,
 
   // on place le meeple
   game_place_meeple(&engine->game, state->x, state->y, state->group,
-                    action->order.place_meeple.meeple_type, game_get_current_player(&engine->game));
+                    action->order.place_meeple.meeple_type,
+                    game_get_current_player(&engine->game));
 
   return SUCCESS;
 }
@@ -35,6 +36,12 @@ return_code_t meeple_place_bw(void **state_store, engine_t *engine) {
   meeple_place_hook_state_t *state = *state_store;
 
   game_remove_meeple(&engine->game, state->x, state->y, state->group);
+
+  return SUCCESS;
+}
+
+return_code_t meeple_place_free(void **state_store, engine_t *engine) {
+  meeple_place_hook_state_t *state = *state_store;
 
   free(state);
 
@@ -61,6 +68,12 @@ return_code_t tile_place_bw(void **state_store, engine_t *engine) {
 
   game_remove_tile(&engine->game, state->x, state->y);
 
+  return SUCCESS;
+}
+
+return_code_t tile_place_free(void **state_store, engine_t *engine) {
+  tile_place_hook_state_t *state = *state_store;
+
   free(state);
 
   return SUCCESS;
@@ -79,10 +92,11 @@ static void update_score(engine_t                        *engine,
       if (&engine->game.players[i] == meeple->player) {
         players_meeple_count[i]++;
 
-        const placed_tile_t *meeple_tile = meeple->group_node->tile; 
+        const placed_tile_t *meeple_tile = meeple->group_node->tile;
 
         // Giving back meeple to player
-        game_remove_meeple(&engine->game, meeple_tile->x, meeple_tile->y,meeple->group);
+        game_remove_meeple(&engine->game, meeple_tile->x, meeple_tile->y,
+                           meeple->group);
 
         // Computing max
         if (winner_score < players_meeple_count[i]) {
@@ -100,10 +114,10 @@ static void update_score(engine_t                        *engine,
 }
 
 return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
-                                action_t *action) {
+                                   action_t *action) {
   // on récupère la dernière action "place"
   tile_place_hook_state_t *place = NULL;
-  for (unsigned j = vector_size(&engine->dispatchs); j != 0; j--) {
+  for (unsigned j = vector_size(&engine->dispatchs) - 1; j != 0; j--) {
     dispatch_t *dispatch = vector_nth(&engine->dispatchs, j);
 
     if (dispatch->hook == &hook_tile_place) {
@@ -176,7 +190,8 @@ static void revert_update_score(engine_t                        *engine,
         players_meeple_count[i]++;
 
         placed_tile_t *meeple_tile = meeple->group_node->tile;
-        game_place_meeple(&engine->game,meeple_tile->x,meeple_tile->y,meeple->group,meeple->meeple_type, meeple->player);
+        game_place_meeple(&engine->game, meeple_tile->x, meeple_tile->y,
+                          meeple->group, meeple->meeple_type, meeple->player);
 
         // Giving back meeple to player
         (*vector_nth(&engine->game.players[i].meeples_count,
@@ -202,10 +217,26 @@ return_code_t give_back_meeples_bw(void **state_store, engine_t *engine) {
   // annulation des meeples rendus
 
   placed_tile_group_eval_points_vector_t *evals = (*state_store);
+  if (evals == NULL) {
+    return SUCCESS;
+  }
 
-  for (size_t i=0; i<vector_size(evals); i++) {
+  for (size_t i = 0; i < vector_size(evals); i++) {
     placed_tile_group_eval_points_t *eval = vector_nth(evals, i);
     revert_update_score(engine, eval);
+  }
+
+  return SUCCESS;
+}
+
+return_code_t give_back_meeples_free(void **state_store, engine_t *engine) {
+  placed_tile_group_eval_points_vector_t *evals = (*state_store);
+  if (evals == NULL) {
+    return SUCCESS;
+  }
+
+  for (size_t i = 0; i < vector_size(evals); i++) {
+    placed_tile_group_eval_points_t *eval = vector_nth(evals, i);
     free(eval);
   }
 
@@ -215,7 +246,7 @@ return_code_t give_back_meeples_bw(void **state_store, engine_t *engine) {
 }
 
 return_code_t next_player_fw(void **state_store, engine_t *engine,
-                                 action_t *action) {
+                             action_t *action) {
   (void)state_store;
   (void)action;
 
@@ -237,5 +268,9 @@ return_code_t next_player_bw(void **state_store, engine_t *engine) {
 
   engine->game.current_player--;
 
+  return SUCCESS;
+}
+
+return_code_t next_player_free(void **state_store, engine_t *engine) {
   return SUCCESS;
 }
