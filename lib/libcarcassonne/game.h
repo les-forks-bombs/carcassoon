@@ -99,8 +99,11 @@ return_code_t game_end_round(game_t *game);
 /// @param y Les coordonnées en ordonnées
 /// @param part_group L'index de la partie de groupe
 /// @param meeple_type Le type de meeple à placer
+/// @param player Référence vers le joueur qui pose le meeple
 /// @return Le code de statut de l'opération, SUCCESS en cas de réussite
 return_code_t game_place_meeple(game_t *game, int x, int y, int part_group,
-                                meeple_type_t meeple_type);
+                                meeple_type_t meeple_type, player_t*player);
 
 return_code_t game_remove_meeple(game_t *game, int x, int y, int part_group);
+
+player_t * game_get_current_player(game_t *game);
