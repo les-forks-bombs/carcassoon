@@ -211,7 +211,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
 
         {.family = "CFCF",
          .parts = {FIELD, TOWN, FIELD, FIELD, FIELD, FIELD, FIELD, TOWN, FIELD},
-         .parts_groups = {A, B, A, A, 0, A, A, B, A},
+         .parts_groups = {A, C, A, A, 0, A, A, B, A},
          .blason       = false,
          .amount       = 3},
 

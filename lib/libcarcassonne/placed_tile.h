@@ -31,8 +31,8 @@ struct placed_tile {
   placed_tile_group_t *groups[9];
   /// @brief Orientation de placement de la tile
   tile_orientation_t orientation;
-  int x;
-  int y;
+  int                x;
+  int                y;
 };
 
 struct placed_tile_group_eval_points {
