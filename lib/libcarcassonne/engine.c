@@ -121,24 +121,31 @@ return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
   unsigned int i = vector_size(&engine->dispatchs);
 
   do {
-    const extension_process_hook_t *current_hook =
-        (*vector_nth(&engine->hooks, engine->current_hook));
-
     dispatch_t *store =
         vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1);
+
+    const extension_process_hook_t *current_hook = store->hook;
+
     current_hook->bw(&store->state_store, engine);
     current_hook->free(&store->state_store, engine);
 
-    vector_remove(&engine->dispatchs, vector_size(&engine->hooks));
+    vector_remove(&engine->dispatchs, vector_size(&engine->dispatchs) - 1);
 
-    if (engine->current_hook == 0) {
-      engine->current_hook = vector_size(&engine->hooks);
-    } else {
-      engine->current_hook = (engine->current_hook - 1);
+    i--;
+  } while (i != epoch);
+
+  if (vector_size(&engine->dispatchs) == 0) {
+    engine->current_hook = 0;
+  } else {
+    for (unsigned int i = 0; i < vector_size(&engine->hooks); i++) {
+      if ((*vector_nth(&engine->hooks, i)) ==
+          (vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1))
+              ->hook) {
+        engine->current_hook = i;
+        break;
+      }
     }
-
-    i++;
-  } while (i == epoch);
+  }
 
   return SUCCESS;
 }

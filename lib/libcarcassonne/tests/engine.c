@@ -1,6 +1,9 @@
+#include <cmocka.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/forward.h>
 #include <libcarcassonne/tests/tests.h>
+#include <stdbool.h>
+#include <stdio.h>
 
 #include "libcarcassonne/action.h"
 #include "libcarcassonne/consts.h"
@@ -24,7 +27,7 @@ void engine_short_play_test(void** state) {
 
   const tile_t* tile;
 
-  tile = deck_find_tile(&engine.game.deck, "CFCF");
+  tile = deck_find_tile(&engine.game.deck, "CFCF", false);
   assert_ptr_not_equal(tile, NULL);
   action_t action = {
       .type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
@@ -51,6 +54,160 @@ void engine_short_play_test(void** state) {
   action.order.place_meeple.tile        = *game_tile_at(&engine.game, -1, 0);
   action.order.place_meeple.x           = -1;
   action.order.place_meeple.y           = 0;
+
+  assert_int_equal(dispatch_action(&engine, action), SUCCESS);
+  assert_int_equal(engine.current_hook, 0);
+
+  engine_revert(&engine, 0);
+
+  assert_int_equal(engine.current_hook, 0);
+  for (int x = -2; x < 3; x++) {
+    for (int y = -2; y < 3; y++) {
+      placed_tile_t* tile = *game_tile_at(&engine.game, x, y);
+
+      if (x == 0 && y == 0) {
+        assert_non_null(tile);
+        assert_ptr_equal(tile->parent,
+                         &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]);
+      } else {
+        assert_null(tile);
+      }
+    }
+  }
+
+  destroy_engine(&engine);
+}
+
+void engine_long_play_test(void** state) {
+  (void)state;
+  engine_t engine = {0};
+  assert_int_equal(create_engine(&engine, options), SUCCESS);
+
+  const tile_t* tile;
+
+  /** Tour 1 Bastien */
+
+  tile = deck_find_tile(&engine.game.deck, "CFCF", true);
+
+  int x = 0;
+  int y = 1;
+
+  assert_ptr_not_equal(tile, NULL);
+  action_t action = {
+      .type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
+      .order = {
+          .place_tile = {.tile        = tile,
+                         .x           = x,
+                         .y           = y,
+                         .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST}}};
+
+  // assert_int_equal(engine.current_hook, 0);
+  // assert_int_equal(dispatch_action(&engine, action), NO_PROGRESS);
+  // assert_int_equal(engine.current_hook, 0);
+
+  assert_int_equal(start_game(&engine), SUCCESS);
+
+  assert_int_equal(engine.current_hook, 0);
+  assert_int_equal(dispatch_action(&engine, action), NO_PROGRESS);
+  assert_int_equal(engine.current_hook, 1);
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+
+  action.order.place_meeple.meeple_type = BASIC;
+  action.order.place_meeple.part_group  = tile->parts_groups[1];
+  action.order.place_meeple.tile        = *game_tile_at(&engine.game, x, y);
+  action.order.place_meeple.x           = x;
+  action.order.place_meeple.y           = y;
+
+  assert_int_equal(dispatch_action(&engine, action), SUCCESS);
+  assert_int_equal(engine.current_hook, 0);
+
+  /** Tour 1 Damien */
+
+  tile = deck_find_tile(&engine.game.deck, "FRRR", false);
+  assert_ptr_not_equal(tile, NULL);
+
+  x = 1;
+  y = 0;
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_TILE;
+
+  action.order.place_tile.tile        = tile;
+  action.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_NORTH;
+  action.order.place_tile.x           = x;
+  action.order.place_tile.y           = y;
+
+  assert_int_equal(engine.current_hook, 0);
+  assert_int_equal(dispatch_action(&engine, action), NO_PROGRESS);
+  assert_int_equal(engine.current_hook, 1);
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+
+  action.order.place_meeple.meeple_type = BASIC;
+  action.order.place_meeple.part_group  = tile->parts_groups[1];
+  action.order.place_meeple.tile        = *game_tile_at(&engine.game, x, y);
+  action.order.place_meeple.x           = x;
+  action.order.place_meeple.y           = y;
+
+  assert_int_equal(dispatch_action(&engine, action), SUCCESS);
+  assert_int_equal(engine.current_hook, 0);
+
+  /** Tour 1 Matthieu */
+
+  tile = deck_find_tile(&engine.game.deck, "FFRR", false);
+  assert_ptr_not_equal(tile, NULL);
+
+  x = 1;
+  y = -1;
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_TILE;
+
+  action.order.place_tile.tile        = tile;
+  action.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST;
+  action.order.place_tile.x           = x;
+  action.order.place_tile.y           = y;
+
+  assert_int_equal(engine.current_hook, 0);
+  assert_int_equal(dispatch_action(&engine, action), NO_PROGRESS);
+  assert_int_equal(engine.current_hook, 1);
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+
+  action.order.place_meeple.meeple_type = BASIC;
+  action.order.place_meeple.part_group  = tile->parts_groups[3];
+  action.order.place_meeple.tile        = *game_tile_at(&engine.game, x, y);
+  action.order.place_meeple.x           = x;
+  action.order.place_meeple.y           = y;
+
+  assert_int_equal(dispatch_action(&engine, action), SUCCESS);
+  assert_int_equal(engine.current_hook, 0);
+
+  /** Tour 2 Bastien */
+
+  tile = deck_find_tile(&engine.game.deck, "FRFR", false);
+  assert_ptr_not_equal(tile, NULL);
+
+  x = 2;
+  y = 0;
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_TILE;
+
+  action.order.place_tile.tile        = tile;
+  action.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST;
+  action.order.place_tile.x           = x;
+  action.order.place_tile.y           = y;
+
+  assert_int_equal(engine.current_hook, 0);
+  assert_int_equal(dispatch_action(&engine, action), NO_PROGRESS);
+  assert_int_equal(engine.current_hook, 1);
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+
+  action.order.place_meeple.meeple_type = BASIC;
+  action.order.place_meeple.part_group  = tile->parts_groups[3];
+  action.order.place_meeple.tile        = *game_tile_at(&engine.game, -1, 0);
+  action.order.place_meeple.x           = x;
+  action.order.place_meeple.y           = y;
 
   assert_int_equal(dispatch_action(&engine, action), SUCCESS);
   assert_int_equal(engine.current_hook, 0);

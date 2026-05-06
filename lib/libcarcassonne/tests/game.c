@@ -1,3 +1,4 @@
+#include <cmocka.h>
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/options.h>
 #include <libcarcassonne/tests/tests.h>
@@ -193,56 +194,56 @@ void game_place_multiple_tile_works(void** state) {
       SUCCESS);
 
   /** AJOUT BAS */
-  tile = deck_find_tile(&game.deck, "CFCF");
+  tile = deck_find_tile(&game.deck, "CFCF", false);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(
       game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST),
       SUCCESS);
 
   /** AJOUT HAUT */
-  tile = deck_find_tile(&game.deck, "CFCF");
+  tile = deck_find_tile(&game.deck, "CFCF", true);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(game_place_tile(&game, tile, -1, 0,
                                    LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
                    SUCCESS);
 
   /** AJOUT DROITE */
-  tile = deck_find_tile(&game.deck, "CCRR");
+  tile = deck_find_tile(&game.deck, "CCRR", true);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(
       game_place_tile(&game, tile, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
       SUCCESS);
 
   /** AJOUT GAUCHE */
-  tile = deck_find_tile(&game.deck, "FFFR");
+  tile = deck_find_tile(&game.deck, "FFFR", false);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(game_place_tile(&game, tile, 0, -1,
                                    LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
                    SUCCESS);
 
   /** AJOUT HAUT GAUCHE */
-  tile = deck_find_tile(&game.deck, "FFRR");
+  tile = deck_find_tile(&game.deck, "FFRR", false);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(game_place_tile(&game, tile, -1, -1,
                                    LIBCARCASSONNE_TILE_ORIENTATION_WEST),
                    SUCCESS);
 
   /** AJOUT HAUT DROIT */
-  tile = deck_find_tile(&game.deck, "CFFF");
+  tile = deck_find_tile(&game.deck, "CFFF", false);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(game_place_tile(&game, tile, -1, 1,
                                    LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
                    SUCCESS);
 
   /** AJOUT BAS GAUCHE */
-  tile = deck_find_tile(&game.deck, "CFFF");
+  tile = deck_find_tile(&game.deck, "CFFF", false);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(
       game_place_tile(&game, tile, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_WEST),
       SUCCESS);
 
   /** AJOUT BAS DROIT */
-  tile = deck_find_tile(&game.deck, "CRRR");
+  tile = deck_find_tile(&game.deck, "CRRR", false);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(
       game_place_tile(&game, tile, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_EAST),
