@@ -51,6 +51,7 @@ void test_tile_group_merge_two_trees(void** state);
 
 void engine_builds(void** state);
 void engine_short_play_test(void** state);
+void engine_long_play_test(void** state);
 
 static const struct CMUnitTest tests[] = {
     cmocka_unit_test(deck_builds),
@@ -83,6 +84,7 @@ static const struct CMUnitTest tests[] = {
 
     cmocka_unit_test(engine_builds),
     cmocka_unit_test(engine_short_play_test),
+    cmocka_unit_test(engine_long_play_test),
 
 };
 

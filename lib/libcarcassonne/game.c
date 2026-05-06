@@ -240,13 +240,15 @@ return_code_t game_remove_tile(game_t *game, int x, int y) {
         placed_tile_group_t *neigh = *vector_nth(&pgroup->neighbors, i);
         vector_remove_value(&neigh->neighbors, &pgroup);
       }
-
-      vector_free(&pgroup->neighbors);
-
-      free(pgroup);
     }
     visite[group] = true;
   }
+
+  placed_tile_destroy(*tile_ref);
+  free(*tile_ref);
+  *tile_ref = NULL;
+
+  return SUCCESS;
 }
 
 return_code_t game_place_meeple(game_t *game, int x, int y, int group,
