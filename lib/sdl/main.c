@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "libutils/path.h"
+#include "sdl/resolver.h"
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
@@ -24,10 +25,11 @@ typedef struct {
   SDL_FRect       map_viewport;
   Uint64          last_step;
   text_object_t  *text;
-  path_resolver_t resolver;
 
   banner_t *test_banner, *test_banner2;
 } AppState;
+
+path_resolver_t resolver;
 
 static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
   AppState *as = (AppState *)appstate;
@@ -140,16 +142,16 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
+  create_path_resolver(&resolver);
+
   if (!SDL_Init(SDL_INIT_VIDEO)) return SDL_APP_FAILURE;
 
   AppState *as = (AppState *)SDL_malloc(sizeof(AppState));
   if (!as) return SDL_APP_FAILURE;
   *appstate = as;
 
-  create_path_resolver(&as->resolver);
-
   // pour resolve:
-  char *path = path_resolver_resolve(&as->resolver, "assets/carcassonne.jpg");
+  char *path = path_resolver_resolve(&resolver, "assets/img/carcassonne.jpg");
   printf("path relatif: %s\n", path);
   free(path);
 
@@ -166,7 +168,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   }
 
   SDL_Color white_text = {255, 255, 255, 255};
-  path = path_resolver_resolve(&as->resolver, "assets/fonts/Orange.ttf");
+  path = path_resolver_resolve(&resolver, "assets/fonts/Orange.ttf");
   printf("path relatif: %s\n", path);
 
   as->text = init_text_object(as->renderer, path, 32.0f,
@@ -186,8 +188,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     int col = i % map_width_temp;
     int row = i / map_width_temp;
 
-    path = path_resolver_resolve(&as->resolver,
-                                 "assets/img/tiles_png/tile_05.png");
+    path = path_resolver_resolve(&resolver, "assets/img/tiles_png/tile_05.png");
     printf("path relatif: %s\n", path);
 
     as->map->tiles[i] = create_tt(as->renderer, path);
