@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#include "libutils/path.h"
+#include "sdl/resolver.h"
 #include "text.h"
 
 banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
@@ -20,17 +22,14 @@ banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
 
   SDL_Color white = {255, 255, 255, 255};
 
-  // char *font_path = path_resolver_resolve(&as->resolver,
-  // "assets/fonts/Orange.ttf");
-  banner->score_object = init_text_object(
-      renderer, "lib/sdl/assets/fonts/Orange.ttf", 24.0f, "0", white);
-  // free(font_path);
+  char *font_path = path_resolver_resolve(&resolver, "assets/fonts/Orange.ttf");
+  banner->score_object =
+      init_text_object(renderer, font_path, 24.0f, "0", white);
+  free(font_path);
 
-  // char *img_path = path_resolver_resolve(&as->resolver,
-  // "assets/img/banner.svg");
-  banner->banner_texture =
-      IMG_LoadTexture(renderer, "lib/sdl/assets/img/banner.svg");
-  // free(img_path);
+  char *img_path = path_resolver_resolve(&resolver, "assets/img/banner.svg");
+  banner->banner_texture = IMG_LoadTexture(renderer, img_path);
+  free(img_path);
 
   return banner;
 }
@@ -74,11 +73,12 @@ void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
 
   if (banner->banner_texture) SDL_DestroyTexture(banner->banner_texture);
 
-  // char *path = banner->is_open ? path_resolver_resolve(&as->resolver,
-  // "assets/img/banner.svg") : path_resolver_resolve(&as->resolver,
-  // "assets/img/banner_tall.svg");;
-  banner->banner_texture =
-      IMG_LoadTexture(renderer, "lib/sdl/assets/img/carcassonne.jpg");
+  char *path =
+      banner->is_open
+          ? path_resolver_resolve(&resolver, "assets/img/banner.svg")
+          : path_resolver_resolve(&resolver, "assets/img/banner_tall.svg");
+  ;
+  banner->banner_texture = IMG_LoadTexture(renderer, path);
   // free(path);
 }
 
