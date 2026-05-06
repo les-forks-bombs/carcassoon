@@ -17,7 +17,7 @@ return_code_t create_engine(engine_t *engine, options_t options) {
 
   engine->config = options;
 
-  extension_process_hooks_list_t hooks;
+  extension_process_hooks_list_t hooks = {0};
 
   for (unsigned int i = 0; i < vector_size(&options.extensions); i++) {
     extension_t *ext = *vector_nth(&options.extensions, i);
