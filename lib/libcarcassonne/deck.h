@@ -40,4 +40,4 @@ const tile_t* deck_pick(deck_t* deck);
 /// @relates deck
 void deck_defausser(deck_t* deck, const tile_t* tile);
 
-const tile_t* deck_find_tile(deck_t* deck, char* family);
+const tile_t* deck_find_tile(deck_t* deck, char* family, bool blason);
