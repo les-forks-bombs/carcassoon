@@ -1,4 +1,3 @@
-#include <cmocka.h>
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/options.h>
 #include <libcarcassonne/tests/tests.h>
