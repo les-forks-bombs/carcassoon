@@ -15,7 +15,7 @@ CFLAGS += --target=$(TARGET)
 
 CFLAGS += -I$(DIR)/lib
 CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
-LFLAGS += -L$(OUT) -lm
+LFLAGS += -L$(OUT) -lm -lcarcassonne -lutils -lai
 
 LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --libs)
 CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --cflags)
@@ -36,7 +36,7 @@ endif
 
 ifeq "$(PROFILE)" "release"
 	CFLAGS += -O3
-	LFLAGS += -s
+	LFLAGS += -g
 endif
 
 RUNNER := 
