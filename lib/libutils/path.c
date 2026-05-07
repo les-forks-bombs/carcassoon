@@ -13,10 +13,12 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <windows.h>
+#define LIBUTILS_DIR_DELIMITER "\\"
 #else
 #include <libgen.h>
 #include <linux/limits.h>
 #include <stdio.h>
+#define LIBUTILS_DIR_DELIMITER "/"
 #endif
 
 return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]) {
