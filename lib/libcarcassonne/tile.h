@@ -42,6 +42,12 @@ typedef enum tile_part_kind   tile_part_type_t;
 typedef enum tile_part_group  tile_part_group_t;
 typedef enum tile_orientation tile_orientation_t;
 
+struct tile_slot {
+  float x,y;
+  tile_part_group_t group;
+  //mask
+};
+
 /// @brief Une tile est un élément de jeu de carcassonne
 struct tile {
   /// @brief Famille de la tile
@@ -56,6 +62,9 @@ struct tile {
   tile_part_group_t parts_groups[9];
   /// @brief nom de l'image correspondante
   char* texture;
+  /// @brief Emplacements possibles pour les meeples
+  tile_slot_t slots[9];
+  unsigned int nb_slots;
 };
 
 /// @brief Récupère une famille de la tuile en fonction de l'orientation et de
