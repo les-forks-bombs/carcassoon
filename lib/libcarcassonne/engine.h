@@ -2,9 +2,9 @@
 
 #include <libcarcassonne/action.h>
 #include <libcarcassonne/consts.h>
+#include <libcarcassonne/dispatch.h>
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/options.h>
-#include <libcarcassonne/dispatch.h>
 
 #include "libcarcassonne/forward.h"
 

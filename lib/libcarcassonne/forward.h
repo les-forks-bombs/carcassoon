@@ -43,9 +43,12 @@ typedef Vector(placed_tile_group_t *) placed_tile_group_neighbors_t;
 typedef Vector(meeple_count_t) meeple_count_vector_t;
 typedef Vector(meeple_t *) meeple_vector_t;
 typedef Vector(dispatch_t) dispatch_vector_t;
+typedef Vector(placed_tile_group_eval_points_t)
+    placed_tile_group_eval_points_vector_t;
 
 typedef enum return_code return_code_t;
 
 typedef return_code_t (*extension_forward_t)(void    **state, engine_t *,
                                              action_t *action);
 typedef return_code_t (*extension_backward_t)(void **state, engine_t *);
+typedef return_code_t (*extension_free_t)(void **state, engine_t *);

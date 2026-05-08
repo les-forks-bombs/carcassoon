@@ -5,6 +5,7 @@
 #include <libcarcassonne/tile.h>
 #include <unistd.h>
 
+#include "ext_base_game_hooks.h"
 #include "libcarcassonne/consts.h"
 
 #define VILLAGE LIBCARCASSONNE_TILE_PART_VILLAGE
@@ -210,7 +211,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
 
         {.family = "CFCF",
          .parts = {FIELD, TOWN, FIELD, FIELD, FIELD, FIELD, FIELD, TOWN, FIELD},
-         .parts_groups = {A, B, A, A, 0, A, A, B, A},
+         .parts_groups = {A, C, A, A, 0, A, A, B, A},
          .blason       = false,
          .amount       = 3},
 
@@ -487,8 +488,8 @@ static const tile_vector_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
 
 static const extension_process_hook_t*
     LIBCARCASSONNE_EXT_BASE_GAME_HOOKS_LIST[] = {
-        &hook_meeple_place, &hook_tile_place, &hook_rendre_meeples,
-        &hook_prochain_joueur};
+        &hook_meeple_place, &hook_tile_place, &hook_give_back_meeples,
+        &hook_next_player};
 
 static const extension_process_hooks_vector_t
     LIBCARCASSONNE_EXT_BASE_GAME_HOOKS = {
