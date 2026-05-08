@@ -451,7 +451,16 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
              },
          .parts_groups = {E, A, F, B, 0, C, G, D, H},
          .blason       = false,
-         .amount       = 1},
+         .amount       = 1,
+         .slots = {
+            {
+                .x=0,
+                .y=1,
+                .group=A
+            }
+         },
+         .nb_slots=1
+        },
 };
 
 static const tile_vector_t LIBCARCASSONNE_EXT_BASE_GAME_TILES = {
