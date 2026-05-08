@@ -6,7 +6,6 @@
 
 #define ForwardDefinition(type, name) typedef type name name##_t
 
-ForwardDefinition(struct, tile_temp);
 ForwardDefinition(struct, engine);
 ForwardDefinition(struct, action);
 ForwardDefinition(struct, action_place_tile);
@@ -31,6 +30,7 @@ ForwardDefinition(struct, tile_place_hook_state);
 ForwardDefinition(struct, rendre_meeple_hook_state);
 ForwardDefinition(struct, prochain_joueur_state);
 ForwardDefinition(struct, placed_tile_group_eval_points);
+ForwardDefinition(struct, tile_slot);
 
 typedef List(const tile_t *) deck_list_t;
 typedef List(placed_tile_t *) placed_tile_list_t;
