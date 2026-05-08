@@ -31,6 +31,8 @@ struct placed_tile {
   placed_tile_group_t *groups[9];
   /// @brief Orientation de placement de la tile
   tile_orientation_t orientation;
+  int                x;
+  int                y;
 };
 
 struct placed_tile_group_eval_points {
@@ -40,7 +42,7 @@ struct placed_tile_group_eval_points {
 
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
-                                 tile_orientation_t orientation);
+                                 tile_orientation_t orientation, int x, int y);
 void          placed_tile_destroy(placed_tile_t *);
 
 void placed_tile_group_create(placed_tile_group_t **group, meeple_t *meeple,

@@ -17,5 +17,3 @@ ExcludeHeaderFilterRegex: ''
 FormatStyle:     none
 CheckOptions:    {}
 SystemHeaders:   false
-
-
