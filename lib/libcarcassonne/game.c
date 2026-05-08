@@ -139,7 +139,7 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
     }
 
     placed_tile_t *placed_tile = calloc(1, sizeof(placed_tile_t));
-    placed_tile_create(placed_tile, tile, orientation);
+    placed_tile_create(placed_tile, tile, orientation, x, y);
 
     *tile_ref = placed_tile;
 
@@ -240,18 +240,20 @@ return_code_t game_remove_tile(game_t *game, int x, int y) {
         placed_tile_group_t *neigh = *vector_nth(&pgroup->neighbors, i);
         vector_remove_value(&neigh->neighbors, &pgroup);
       }
-
-      vector_free(&pgroup->neighbors);
-
-      free(pgroup);
     }
     visite[group] = true;
   }
+
+  placed_tile_destroy(*tile_ref);
+  free(*tile_ref);
+  *tile_ref = NULL;
+
+  return SUCCESS;
 }
 
 return_code_t game_place_meeple(game_t *game, int x, int y, int group,
-                                meeple_type_t meeple_type) {
-  if (game == NULL) {
+                                meeple_type_t meeple_type, player_t *player) {
+  if (game == NULL || player == NULL) {
     return ERROR;
   }
 
@@ -265,18 +267,16 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
     placed_tile_group_t *group_ref = (*tile_ref)->groups[group];
 
     if (group_ref->meeple == NULL) {
-      player_t  player    = game->players[game->current_player];
       meeple_t *meeple    = calloc(1, sizeof(meeple_t));
+      meeple->group       = group;
       meeple->group_node  = group_ref;
       meeple->meeple_type = meeple_type;
 
       group_ref->meeple         = meeple;
-      group_ref->meeple->player = &player;
+      group_ref->meeple->player = player;
 
-      vector_append(&player.meeples, &meeple);
-      (vector_nth(&game->players[game->current_player].meeples_count,
-                  meeple->meeple_type))
-          ->count--;
+      vector_append(&player->meeples, &meeple);
+      (vector_nth(&player->meeples_count, meeple->meeple_type))->count--;
 
     } else {
       return ALREADY_ALLOCATED;
@@ -414,4 +414,8 @@ return_code_t game_end_round(game_t *game) {
   game->turn++;
 
   return SUCCESS;
+}
+
+player_t *game_get_current_player(game_t *game) {
+  return &game->players[game->current_player];
 }

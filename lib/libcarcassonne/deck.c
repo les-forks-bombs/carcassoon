@@ -108,3 +108,22 @@ void deck_defausser(deck_t* deck, const tile_t* tile) {
       prng_mersenne_twister_random(&deck->state) % list_size(&deck->list);
   list_insert(&deck->list, &tile, index);
 }
+
+const tile_t* deck_find_tile(deck_t* deck, char* family, bool blason) {
+  list_node_t* curr = list_head(&deck->list);
+
+  while (curr != NULL &&
+         (strcmp((*list_value(&deck->list, curr))->family, family) != 0 ||
+          (*list_value(&deck->list, curr))->blason != blason)) {
+    curr = curr->next;
+  }
+
+  if (curr == NULL) {
+    return NULL;
+  }
+
+  const tile_t* tile = *list_value(&deck->list, curr);
+  list_remove(&deck->list, curr);
+
+  return tile;
+}

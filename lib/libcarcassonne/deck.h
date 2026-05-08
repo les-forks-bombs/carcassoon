@@ -39,3 +39,5 @@ const tile_t* deck_pick(deck_t* deck);
 /// @param tile La tile a remettre dans la pile
 /// @relates deck
 void deck_defausser(deck_t* deck, const tile_t* tile);
+
+const tile_t* deck_find_tile(deck_t* deck, char* family, bool blason);

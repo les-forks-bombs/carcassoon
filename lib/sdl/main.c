@@ -60,10 +60,10 @@ static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
       as->camera->zoom -= 0.1f;
       break;
     case SDLK_A:
-      as->test_banner->score+=1;
+      as->test_banner->score += 1;
       break;
     case SDLK_Z:
-      toggle_banner(as->test_banner2,as->renderer);
+      toggle_banner(as->test_banner2, as->renderer);
     default:
       break;
   }
@@ -135,8 +135,8 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
   SDL_RenderRect(as->renderer, &as->map_viewport);
 
-  render_banner(as->test_banner,as->renderer);
-  render_banner(as->test_banner2,as->renderer);
+  render_banner(as->test_banner, as->renderer);
+  render_banner(as->test_banner2, as->renderer);
 
   SDL_RenderPresent(as->renderer);
   return SDL_APP_CONTINUE;
@@ -210,12 +210,12 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   as->map_viewport.w = 800;
   as->map_viewport.h = 400;
 
-  SDL_Color blue = {0,0,255,255};
-  banner_t *test_banner = create_banner(as->renderer,blue,1);
-  banner_t *test_banner2 = create_banner(as->renderer,blue,2);
+  SDL_Color blue         = {0, 0, 255, 255};
+  banner_t *test_banner  = create_banner(as->renderer, blue, 1);
+  banner_t *test_banner2 = create_banner(as->renderer, blue, 2);
 
-  as->test_banner=test_banner;
-  as->test_banner2=test_banner2;
+  as->test_banner  = test_banner;
+  as->test_banner2 = test_banner2;
 
   as->last_step = SDL_GetTicks();
   return SDL_APP_CONTINUE;
