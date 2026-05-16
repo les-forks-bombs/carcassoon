@@ -3,6 +3,7 @@
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/ext_base_game_hooks.h>
 #include <libcarcassonne/game.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,7 +12,10 @@
 
 #include "libcarcassonne/dispatch.h"
 #include "libcarcassonne/forward.h"
+#include "libcarcassonne/meeple.h"
 #include "libcarcassonne/placed_tile.h"
+#include "libcarcassonne/player.h"
+#include "libutils/lc.h"
 #include "libutils/vector.h"
 
 return_code_t meeple_place_fw(void **state_store, engine_t *engine,
@@ -48,6 +52,44 @@ return_code_t meeple_place_free(void **state_store, engine_t *engine) {
   return SUCCESS;
 }
 
+return_code_t meeple_place_list_actions(action_vector_t *actions, engine_t *engine) {
+  player_t *player = game_get_current_player(&engine->game);
+
+  actions = malloc(sizeof(action_vector_t));
+
+  action_t action_none = {.order={0}, .type=LIBCARCASSONNE_ACTION_NONE};
+
+  if(!player_has_meeple_to_place(player)){
+    // If player does not have meeple left
+    // We return only action none
+    vector_alloc(actions, 1);
+
+    vector_append(actions, &action_none);
+
+    return SUCCESS;
+  }
+  
+  // Looking for the tile placed this turn
+  size_t index = vector_size(&engine->dispatchs)-1;
+  dispatch_t *dispatch = vector_nth(&engine->dispatchs, index);
+
+  while(dispatch->action->type!=LIBCARCASSONNE_ACTION_PLACE_TILE){
+    index--;
+    dispatch = vector_nth(&engine->dispatchs, index);
+    if(dispatch->action->type==LIBCARCASSONNE_ACTION_END_PLAYER_TURN){
+      return INVALID_ACTION;
+    }
+  }
+
+  placed_tile_t **tile = game_tile_at(&engine->game, dispatch->action->order.place_tile.x, dispatch->action->order.place_tile.y);
+
+  if(tile==NULL || *tile==NULL){
+    return NO_TILE;
+  }
+
+  return SUCCESS;
+}
+
 return_code_t tile_place_fw(void **state_store, engine_t *engine,
                             action_t *action) {
   *state_store                   = malloc(sizeof(tile_place_hook_state_t));
@@ -75,6 +117,23 @@ return_code_t tile_place_free(void **state_store, engine_t *engine) {
   tile_place_hook_state_t *state = *state_store;
 
   free(state);
+
+  return SUCCESS;
+}
+
+return_code_t tile_place_list_actions(action_vector_t *actions,
+                                       engine_t         *engine) {
+  
+  
+                                        
+
+                                        
+  vector_alloc(actions, 0);
+
+  action_t action = {0};
+  action.type = LIBCARCASSONNE_ACTION_NONE;
+
+  vector_append(actions, &action);
 
   return SUCCESS;
 }
@@ -245,6 +304,20 @@ return_code_t give_back_meeples_free(void **state_store, engine_t *engine) {
   return SUCCESS;
 }
 
+return_code_t give_back_meeples_list_actions(action_vector_t *actions,
+                                       engine_t         *engine) {
+  
+  
+  vector_alloc(actions, 1);
+
+  action_t action = {0};
+  action.type = LIBCARCASSONNE_ACTION_NONE;
+
+  vector_append(actions, &action);
+
+  return SUCCESS;
+}
+
 return_code_t next_player_fw(void **state_store, engine_t *engine,
                              action_t *action) {
   (void)state_store;
@@ -272,5 +345,20 @@ return_code_t next_player_bw(void **state_store, engine_t *engine) {
 }
 
 return_code_t next_player_free(void **state_store, engine_t *engine) {
+  return SUCCESS;
+}
+
+return_code_t next_player_list_actions(action_vector_t *actions,
+                                       engine_t         *engine) {
+  
+  actions = calloc(1,sizeof(action_vector_t));
+  
+  vector_alloc(actions, 1);
+
+  action_t action = {0};
+  action.type = LIBCARCASSONNE_ACTION_NONE;
+
+  vector_append(actions, &action);
+
   return SUCCESS;
 }

@@ -1,8 +1,11 @@
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/game.h>
+#include <malloc.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "libcarcassonne/action.h"
@@ -152,4 +155,19 @@ return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
 
 action_type_t engine_wanted_action(engine_t *engine) {
   return (*vector_nth(&engine->hooks, engine->current_hook))->needed_action;
+}
+
+action_vector_t* engine_list_possible_places(engine_t *engine,tile_t *tile){
+  action_vector_t *actions = calloc(1, sizeof(action_vector_t));
+
+  vector_alloc(actions, 1);
+
+  //TODO : Check empty valid place, do not iterate through open_tiles its dumb
+  list_node_t *node = list_head(&engine->game.open_tiles);
+  while (node!=NULL) {
+
+    node = node->next;
+  }
+
+  return actions;
 }
