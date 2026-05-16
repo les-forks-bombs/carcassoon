@@ -45,7 +45,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = true,
          .amount       = 1,
          .texture = "tile_11.svg",
-         .slots{
+         .slots = {
             {
                 .x= 0.5,
                 .y= 0.5,
@@ -74,7 +74,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = true,
          .amount       = 1,
         .texture = "tile_13.svg",
-        .slots{
+        .slots = {
             {
                 .x= 0.5,
                 .y= 0.35,
@@ -106,7 +106,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = false,
          .amount       = 3,
         .texture = "tile_12.svg",
-        .slots{
+        .slots = {
             {
                 .x= 0.5,
                 .y= 0.35,
@@ -140,7 +140,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = true,
          .amount       = 2,
         .texture = "tile_15.svg",
-        .slots{
+        .slots = {
             {
                 .x= 0.5,
                 .y= 0.35,
@@ -182,7 +182,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = false,
          .amount       = 1,
         .texture = "tile_14.svg",
-        .slots{
+        .slots = {
             {
                 .x= 0.5,
                 .y= 0.35,
@@ -228,7 +228,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = false,
          .amount       = 2,
          .texture = "tile_16.svg",
-         .slots{
+         .slots = {
             {
                 .x= 0.5,
                 .y= 0.1,
@@ -276,7 +276,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
                 .y = 0.7,
                 .group = A
             }
-        }
+        },
         .nb_slots = 2
         },
 
@@ -308,7 +308,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
                 .y = 0.7,
                 .group = A
             }
-        }
+        },
         .nb_slots = 2
     },
 
@@ -357,9 +357,9 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .parts = {FIELD, TOWN, FIELD, FIELD, FIELD, FIELD, FIELD, TOWN, FIELD},
          .parts_groups = {A, C, A, A, 0, A, A, B, A},
          .blason       = false,
-         .amount       = 3
+         .amount       = 3,
          .texture = "tile_04.svg",
-         .slots{
+         .slots = {
             {
                 .x = 0.5,
                 .y = 0.1,
@@ -436,7 +436,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = false,
          .amount       = 5,
         .texture = "tile_17.svg",
-        .slots{
+        .slots = {
             {
                 .x= 0.5,
                 .y= 0.1,
@@ -448,7 +448,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
                 .group = A
             }
         },
-        nb_slots=2
+        .nb_slots=2
     },
 
         // CFRR
@@ -491,7 +491,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = false,
          .amount       = 3,
         .texture = "tile_18.svg",
-        .slots{
+        .slots = {
             {
                 .x= 0.5,
                 .y= 0.1,
@@ -552,9 +552,9 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
              },
          .parts_groups = {G, A, G, B, 0, C, F, D, E},
          .blason       = false,
-         .amount       = 3
+         .amount       = 3,
          .texture = "tile_03.svg",
-         .slots{
+         .slots = {
                         {
                 .x = 0.8,
                 .y = 0.8,
@@ -588,7 +588,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
             {
                 .x = 0.5,
                 .y = 0.82,
-                .group =
+                .group = D
             }
          },
          .nb_slots = 7
@@ -643,7 +643,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
              },
          .parts_groups = {A, A, A, B, 0, A, A, A, A},
          .blason       = false,
-         .amount       = 2
+         .amount       = 2,
          .texture = "tile_06.svg",
         .slots = {
             {
@@ -658,7 +658,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
             },
             {
                 .x = 0.5,
-                .y = 0.82
+                .y = 0.82,
                 .group = B
             }
          },
@@ -684,7 +684,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = false,
          .amount       = 9,
          .texture = "tile_08.svg",
-         .slots{
+         .slots = {
             {
                 .x= 0.35,
                 .y= 0.65,
@@ -718,7 +718,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = false,
          .amount       = 8,
          .texture = "tile_09.svg",
-         .slots{
+         .slots = {
             {
                 .x= 0.5,
                 .y= 0.5,
@@ -734,7 +734,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
                 .y= 0.79,
                 .group = C
             }
-         }
+         },
          .nb_slots=3
         },
 
