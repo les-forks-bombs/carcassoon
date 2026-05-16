@@ -43,7 +43,7 @@ typedef enum tile_part_group  tile_part_group_t;
 typedef enum tile_orientation tile_orientation_t;
 
 struct tile_slot {
-  float x,y;
+  double x,y;
   tile_part_group_t group;
   //mask
 };
