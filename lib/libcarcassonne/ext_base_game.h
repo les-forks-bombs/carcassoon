@@ -73,7 +73,21 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .parts_groups = {A, A, A, A, 0, A, B, B, B},
          .blason       = true,
          .amount       = 1,
-        .texture = "tile_13.svg"},
+        .texture = "tile_13.svg",
+        .slots{
+            {
+                .x= 0.5,
+                .y= 0.35,
+                .group = A
+            },
+            {
+                .x= 0.5,
+                .y= 0.9,
+                .group = B
+            }
+        },
+        .nb_slots = 2
+    },
 
         {.family = "CCFC",
          .parts =
@@ -125,7 +139,30 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .parts_groups = {A, A, A, A, 0, A, B, C, D},
          .blason       = true,
          .amount       = 2,
-        .texture = "tile_15.svg"
+        .texture = "tile_15.svg",
+        .slots{
+            {
+                .x= 0.5,
+                .y= 0.35,
+                .group = A
+            },
+            {
+                .x= 0.5,
+                .y= 0.9,
+                .group = C
+            },
+            {
+                .x= 0.28,
+                .y= 0.92,
+                .group = B
+            },
+            {
+                .x= 0.72,
+                .y= 0.92,
+                .group = D
+            }
+        },
+        .nb_slots = 4
     },
 
         {.family = "CCRC",
@@ -144,7 +181,30 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .parts_groups = {A, A, A, A, 0, A, B, C, D},
          .blason       = false,
          .amount       = 1,
-        .texture = "tile_14.svg"
+        .texture = "tile_14.svg",
+        .slots{
+            {
+                .x= 0.5,
+                .y= 0.35,
+                .group = A
+            },
+            {
+                .x= 0.5,
+                .y= 0.9,
+                .group = C
+            },
+            {
+                .x= 0.28,
+                .y= 0.92,
+                .group = B
+            },
+            {
+                .x= 0.72,
+                .y= 0.92,
+                .group = D
+            }
+        },
+        .nb_slots = 4
     },
 
         // CCFF
@@ -167,7 +227,25 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .parts_groups = {C, A, 0, C, 0, B, C, C, C},
          .blason       = false,
          .amount       = 2,
-         .texture = "tile_16.svg"
+         .texture = "tile_16.svg",
+         .slots{
+            {
+                .x= 0.5,
+                .y= 0.1,
+                .group = A
+            },
+            {
+                .x= 0.3,
+                .y= 0.7,
+                .group = C
+            },
+            {
+                .x= 0.9,
+                .y= 0.5,
+                .group = B
+            }
+         },
+         .nb_slots = 3
     },
 
         {.family = "CCFF",
@@ -357,7 +435,20 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .parts_groups = {A, B, A, A, 0, A, A, A, A},
          .blason       = false,
          .amount       = 5,
-        .texture = "tile_17.svg"
+        .texture = "tile_17.svg",
+        .slots{
+            {
+                .x= 0.5,
+                .y= 0.1,
+                .group = B
+            },
+            {
+                .x= 0.5,
+                .y= 0.65,
+                .group = A
+            }
+        },
+        nb_slots=2
     },
 
         // CFRR
@@ -399,7 +490,30 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .parts_groups = {A, D, A, B, 0, B, C, C, C},
          .blason       = false,
          .amount       = 3,
-        .texture = "tile_18.svg"
+        .texture = "tile_18.svg",
+        .slots{
+            {
+                .x= 0.5,
+                .y= 0.1,
+                .group = D
+            },
+            {
+                .x= 0.2,
+                .y= 0.3,
+                .group = A
+            },
+            {
+                .x= 0.5,
+                .y= 0.5,
+                .group = B
+            },
+            {
+                .x= 0.5,
+                .y= 0.79,
+                .group = C
+            }
+        },
+        .nb_slots = 4
     },
 
         // CRRF
