@@ -643,7 +643,30 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .parts_groups = {A, D, A, A, 0, B, A, B, C},
          .blason       = false,
          .amount       = 3,
-        .texture = "tile_19.svg"
+        .texture = "tile_19.svg",
+        .slots = {
+            {
+            .x= 0.5,
+            .y= 0.1,
+            .group = D
+            },
+            {
+            .x= 0.25,
+            .y= 0.5,
+            .group = A
+            },
+            {
+            .x= 0.65,
+            .y= 0.65,
+            .group = B
+            },
+            {
+            .x= 0.83,
+            .y= 0.83,
+            .group = C
+            },
+        },
+        .nb_slots = 4
     },
 
         // CRRR
@@ -804,9 +827,14 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
                 .x= 0.7,
                 .y= 0.3,
                 .group = A
+            },
+            {
+                .x = 0.17,
+                .y = 0.83,
+                .group = C
             }
          },
-         .nb_slots=2
+         .nb_slots=3
         },
 
         // FRFR
@@ -866,7 +894,7 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = false,
          .amount       = 4,
          .texture = "tile_10.svg",
-         .slots{
+         .slots = {
             {
                 .x = 0.8,
                 .y = 0.8,
@@ -990,7 +1018,31 @@ const static tile_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[] = {
      .parts_groups = {D, A, D, B, 0, B, C, C, C},
      .blason       = false,
      .amount       = 1,
-     .texture      = "tile_18.png"}};
+     .texture      = "tile_18.png",
+    .slots = {
+    {
+            .x= 0.5,
+            .y= 0.1,
+            .group = A
+        },
+    {
+            .x= 0.2,
+            .y= 0.3,
+            .group = D
+        },
+    {
+            .x= 0.5,
+            .y= 0.5,
+            .group = B
+        },
+    {
+            .x= 0.5,
+            .y= 0.79,
+            .group = C
+        },
+    },
+    .nb_slots=4
+}};
 
 static const tile_vector_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
     .meta = {
