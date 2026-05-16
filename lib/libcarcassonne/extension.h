@@ -13,6 +13,7 @@ struct extension_process_hook {
   const extension_forward_t  fw;
   const extension_backward_t bw;
   const extension_free_t     free;
+  const extension_list_actions_t     list_actions;
   action_type_t              needed_action;
 };
 
@@ -34,9 +35,11 @@ void          destroy_extension_list(extension_vector_t *);
                           action_t *action);                       \
   return_code_t name##_bw(void **state_store, engine_t *engine);   \
   return_code_t name##_free(void **state_store, engine_t *engine); \
+  return_code_t name##_list_actions(action_vector_t *actions, engine_t *engine); \
   static const extension_process_hook_t hook_##name = {            \
       .fw            = &name##_fw,                                 \
       .bw            = &name##_bw,                                 \
       .free          = &name##_free,                               \
+      .list_actions  = &name##_list_actions,                       \
       .needed_action = (naction),                                  \
       .priority      = (pr)};

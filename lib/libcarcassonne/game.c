@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #include "libcarcassonne/forward.h"
+#include "libcarcassonne/player.h"
 
 return_code_t create_game(game_t *game, options_t *options) {
   if (game == NULL) {
