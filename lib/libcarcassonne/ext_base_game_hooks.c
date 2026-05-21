@@ -5,6 +5,7 @@
 #include <libcarcassonne/game.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -54,11 +55,29 @@ return_code_t meeple_place_free(void **state_store, engine_t *engine) {
   return SUCCESS;
 }
 
+static dispatch_t *find_last_place_tile_dispatch(engine_t *engine) {
+  int index = vector_size(&engine->dispatchs) - 1;
+
+  while (index >= 0) {
+    dispatch_t *dispatch = vector_nth(&engine->dispatchs, index);
+
+    if (dispatch->action->type == LIBCARCASSONNE_ACTION_END_PLAYER_TURN) {
+      return NULL;
+    }
+
+    if (dispatch->action->type == LIBCARCASSONNE_ACTION_PLACE_TILE) {
+      return dispatch;
+    }
+
+    index--;
+  }
+
+  return NULL;
+}
+
 return_code_t meeple_place_list_actions(action_vector_t *actions,
                                         engine_t        *engine) {
   player_t *player = game_get_current_player(&engine->game);
-
-  actions = malloc(sizeof(action_vector_t));
 
   action_t action_none = {.order = {0}, .type = LIBCARCASSONNE_ACTION_NONE};
 
@@ -72,16 +91,10 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
     return SUCCESS;
   }
 
-  // Looking for the tile placed this turn
-  size_t      index    = vector_size(&engine->dispatchs) - 1;
-  dispatch_t *dispatch = vector_nth(&engine->dispatchs, index);
+  dispatch_t *dispatch = find_last_place_tile_dispatch(engine);
 
-  while (dispatch->action->type != LIBCARCASSONNE_ACTION_PLACE_TILE) {
-    index--;
-    dispatch = vector_nth(&engine->dispatchs, index);
-    if (dispatch->action->type == LIBCARCASSONNE_ACTION_END_PLAYER_TURN) {
-      return INVALID_ACTION;
-    }
+  if (!dispatch) {
+    return INVALID_ACTION;
   }
 
   placed_tile_t **tile =
@@ -91,6 +104,41 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
   if (tile == NULL || *tile == NULL) {
     return NO_TILE;
   }
+
+  bool visited[9] = {0};
+
+  vector_alloc(actions, 4);
+
+  for (unsigned int i = 0; i < PLACED_TILE_GROUP_NUMBER; i++) {
+    placed_tile_group_t *group = (*tile)->groups[i];
+
+    tile_part_group_t id = (*tile)->parent->parts_groups[i];
+    if (!visited[id]) {
+      visited[id] = true;
+      placed_tile_group_eval_points_t eval =
+          placed_tile_group_eval_points(group);
+
+      if (vector_size(&eval.meeples) == 0) {
+        for (meeple_type_t meeple_type = BASIC; meeple_type < 3;
+             meeple_type++) {
+          meeple_count_t count =
+              *vector_nth(&player->meeples_count, meeple_type);
+          if (count.count > 0) {
+            action_t action = {
+                .type               = LIBCARCASSONNE_ACTION_PLACE_MEEPLE,
+                .order.place_meeple = {.part_group  = id,
+                                       .x           = (*tile)->x,
+                                       .y           = (*tile)->y,
+                                       .tile        = (*tile),
+                                       .meeple_type = meeple_type}};
+            vector_append(actions, &action);
+          }
+        }
+      }
+    }
+  }
+
+  vector_append(actions, &action_none);
 
   return SUCCESS;
 }
