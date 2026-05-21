@@ -32,12 +32,11 @@ void free_player(player_t *player) {
   vector_free(&player->meeples_count);
 }
 
-bool player_has_meeple_to_place(player_t *player){
-  
-  meeple_count_t* meeple_count;
-  for (unsigned int i=0; i<vector_size(&player->meeples_count); i++) {
+bool player_has_meeple_to_place(player_t *player) {
+  meeple_count_t *meeple_count;
+  for (unsigned int i = 0; i < vector_size(&player->meeples_count); i++) {
     meeple_count = vector_nth(&player->meeples_count, i);
-    if(meeple_count->count>0){
+    if (meeple_count->count > 0) {
       return true;
     }
   }
