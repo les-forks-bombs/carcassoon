@@ -10,11 +10,13 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "libcarcassonne/deck.h"
 #include "libcarcassonne/dispatch.h"
 #include "libcarcassonne/forward.h"
 #include "libcarcassonne/meeple.h"
 #include "libcarcassonne/placed_tile.h"
 #include "libcarcassonne/player.h"
+#include "libcarcassonne/tile.h"
 #include "libutils/lc.h"
 #include "libutils/vector.h"
 
@@ -52,14 +54,15 @@ return_code_t meeple_place_free(void **state_store, engine_t *engine) {
   return SUCCESS;
 }
 
-return_code_t meeple_place_list_actions(action_vector_t *actions, engine_t *engine) {
+return_code_t meeple_place_list_actions(action_vector_t *actions,
+                                        engine_t        *engine) {
   player_t *player = game_get_current_player(&engine->game);
 
   actions = malloc(sizeof(action_vector_t));
 
-  action_t action_none = {.order={0}, .type=LIBCARCASSONNE_ACTION_NONE};
+  action_t action_none = {.order = {0}, .type = LIBCARCASSONNE_ACTION_NONE};
 
-  if(!player_has_meeple_to_place(player)){
+  if (!player_has_meeple_to_place(player)) {
     // If player does not have meeple left
     // We return only action none
     vector_alloc(actions, 1);
@@ -68,22 +71,24 @@ return_code_t meeple_place_list_actions(action_vector_t *actions, engine_t *engi
 
     return SUCCESS;
   }
-  
+
   // Looking for the tile placed this turn
-  size_t index = vector_size(&engine->dispatchs)-1;
+  size_t      index    = vector_size(&engine->dispatchs) - 1;
   dispatch_t *dispatch = vector_nth(&engine->dispatchs, index);
 
-  while(dispatch->action->type!=LIBCARCASSONNE_ACTION_PLACE_TILE){
+  while (dispatch->action->type != LIBCARCASSONNE_ACTION_PLACE_TILE) {
     index--;
     dispatch = vector_nth(&engine->dispatchs, index);
-    if(dispatch->action->type==LIBCARCASSONNE_ACTION_END_PLAYER_TURN){
+    if (dispatch->action->type == LIBCARCASSONNE_ACTION_END_PLAYER_TURN) {
       return INVALID_ACTION;
     }
   }
 
-  placed_tile_t **tile = game_tile_at(&engine->game, dispatch->action->order.place_tile.x, dispatch->action->order.place_tile.y);
+  placed_tile_t **tile =
+      game_tile_at(&engine->game, dispatch->action->order.place_tile.x,
+                   dispatch->action->order.place_tile.y);
 
-  if(tile==NULL || *tile==NULL){
+  if (tile == NULL || *tile == NULL) {
     return NO_TILE;
   }
 
@@ -122,18 +127,30 @@ return_code_t tile_place_free(void **state_store, engine_t *engine) {
 }
 
 return_code_t tile_place_list_actions(action_vector_t *actions,
-                                       engine_t         *engine) {
-  
-  
-                                        
+                                      engine_t        *engine) {
+  const tile_t *tile = deck_pick(&engine->game.deck);
 
-                                        
-  vector_alloc(actions, 0);
+  vector_alloc(actions, 5);
 
-  action_t action = {0};
-  action.type = LIBCARCASSONNE_ACTION_NONE;
+  vector2d_vector_t vec = game_get_available_space(&engine->game);
 
-  vector_append(actions, &action);
+  for (unsigned int i = 0; i < vector_size(&vec); i++) {
+    vector2d_t spot = *vector_nth(&vec, i);
+
+    for (tile_orientation_t orientation = 0; i < 4; i++) {
+      if (game_is_tile_placeable(&engine->game, tile, spot.x, spot.y,
+                                 orientation)) {
+        action_t action = {.type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
+                           .order = {.place_tile = {.orientation = orientation,
+                                                    .x           = spot.x,
+                                                    .y           = spot.y,
+                                                    .tile        = tile}}};
+        vector_append(actions, &action);
+      }
+    }
+  }
+
+  vector_free(&vec);
 
   return SUCCESS;
 }
@@ -305,13 +322,11 @@ return_code_t give_back_meeples_free(void **state_store, engine_t *engine) {
 }
 
 return_code_t give_back_meeples_list_actions(action_vector_t *actions,
-                                       engine_t         *engine) {
-  
-  
+                                             engine_t        *engine) {
   vector_alloc(actions, 1);
 
   action_t action = {0};
-  action.type = LIBCARCASSONNE_ACTION_NONE;
+  action.type     = LIBCARCASSONNE_ACTION_NONE;
 
   vector_append(actions, &action);
 
@@ -349,14 +364,13 @@ return_code_t next_player_free(void **state_store, engine_t *engine) {
 }
 
 return_code_t next_player_list_actions(action_vector_t *actions,
-                                       engine_t         *engine) {
-  
-  actions = calloc(1,sizeof(action_vector_t));
-  
+                                       engine_t        *engine) {
+  actions = calloc(1, sizeof(action_vector_t));
+
   vector_alloc(actions, 1);
 
   action_t action = {0};
-  action.type = LIBCARCASSONNE_ACTION_NONE;
+  action.type     = LIBCARCASSONNE_ACTION_NONE;
 
   vector_append(actions, &action);
 
