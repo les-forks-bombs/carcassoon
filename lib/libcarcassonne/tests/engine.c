@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "libcarcassonne/action.h"
 #include "libcarcassonne/consts.h"
@@ -30,7 +31,7 @@ void engine_short_play_test(void** state) {
 
   const tile_t* tile;
 
-  tile = deck_find_tile(&engine.game.deck, "CFCF", false);
+  tile = deck_find_tile(&engine.game.deck, "CFCF", true);
   assert_ptr_not_equal(tile, NULL);
   action_t action = {
       .type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
@@ -52,19 +53,68 @@ void engine_short_play_test(void** state) {
 
   action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
 
+  placed_tile_t** placed_tile = game_tile_at(&engine.game, -1, 0);
+
+  assert_non_null(placed_tile);
+  assert_non_null(*placed_tile);
+
   action.order.place_meeple.meeple_type = BASIC;
   action.order.place_meeple.part_group  = B;
-  action.order.place_meeple.tile        = *game_tile_at(&engine.game, -1, 0);
+  action.order.place_meeple.tile        = *placed_tile;
   action.order.place_meeple.x           = -1;
   action.order.place_meeple.y           = 0;
+
+  action_vector_t meeple_actions = engine_get_actions(&engine);
+
+  assert_int_equal(vector_size(&meeple_actions), 4);
+
+  action_t correct_place_meeple_actions[] = {
+      // CHAMP GAUCHE
+      {.order.place_meeple = {.tile        = *placed_tile,
+                              .part_group  = A,
+                              .meeple_type = BASIC,
+                              .x           = -1,
+                              .y           = 0},
+       .type               = LIBCARCASSONNE_ACTION_PLACE_MEEPLE},
+      // VILLE
+      {.order.place_meeple = {.tile        = *placed_tile,
+                              .part_group  = B,
+                              .meeple_type = BASIC,
+                              .x           = -1,
+                              .y           = 0},
+       .type               = LIBCARCASSONNE_ACTION_PLACE_MEEPLE},
+      // CHAMP DROIT
+      {.order.place_meeple = {.tile        = *placed_tile,
+                              .part_group  = C,
+                              .meeple_type = BASIC,
+                              .x           = -1,
+                              .y           = 0},
+       .type               = LIBCARCASSONNE_ACTION_PLACE_MEEPLE},
+      // NONE
+      {.order = {0}, .type = LIBCARCASSONNE_ACTION_NONE},
+  };
+
+  for (unsigned int i = 0; i < vector_size(&meeple_actions); i++) {
+    action_t a1 = *vector_nth(&meeple_actions, i);
+    action_t a2 = correct_place_meeple_actions[i];
+
+    assert_int_equal(a1.order.place_tile.x, a2.order.place_tile.x);
+    assert_int_equal(a1.order.place_tile.y, a2.order.place_tile.y);
+    assert_int_equal(a1.order.place_tile.orientation,
+                     a2.order.place_tile.orientation);
+    assert_ptr_equal(a1.order.place_tile.tile, a2.order.place_tile.tile);
+    assert_int_equal(a1.type, a2.type);
+  }
+
+  vector_free(&meeple_actions);
 
   assert_int_equal(dispatch_action(&engine, action), SUCCESS);
   assert_int_equal(engine.current_hook, 0);
 
-  action_vector_t actions = engine_get_actions(&engine);
+  action_vector_t tile_actions = engine_get_actions(&engine);
 
-  tile                       = deck_find_tile(&engine.game.deck, "CFCF", false);
-  action_t correct_actions[] = {
+  tile = deck_find_tile(&engine.game.deck, "CFCF", false);
+  action_t correct_place_tile_actions[] = {
       // -1, 1 : HAUT DROIT
       {.order.place_tile = {.tile = tile,
                             .orientation =
@@ -116,9 +166,9 @@ void engine_short_play_test(void** state) {
                             .y           = 0},
        .type             = LIBCARCASSONNE_ACTION_PLACE_TILE}};
 
-  for (unsigned int i = 0; i < vector_size(&actions); i++) {
-    action_t a1 = *vector_nth(&actions, i);
-    action_t a2 = correct_actions[i];
+  for (unsigned int i = 0; i < vector_size(&tile_actions); i++) {
+    action_t a1 = *vector_nth(&tile_actions, i);
+    action_t a2 = correct_place_tile_actions[i];
 
     assert_int_equal(a1.order.place_tile.x, a2.order.place_tile.x);
     assert_int_equal(a1.order.place_tile.y, a2.order.place_tile.y);
@@ -128,7 +178,7 @@ void engine_short_play_test(void** state) {
     assert_int_equal(a1.type, a2.type);
   }
 
-  vector_free(&actions);
+  vector_free(&tile_actions);
 
   engine_revert(&engine, 0);
 
