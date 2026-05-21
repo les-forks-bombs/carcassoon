@@ -1,8 +1,11 @@
+#include <assert.h>
+#include <cmocka.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/forward.h>
 #include <libcarcassonne/tests/tests.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "libcarcassonne/action.h"
 #include "libcarcassonne/consts.h"
@@ -11,6 +14,7 @@
 #include "libcarcassonne/game.h"
 #include "libcarcassonne/meeple.h"
 #include "libcarcassonne/tile.h"
+#include "libutils/vector.h"
 
 void engine_builds(void** state) {
   (void)state;
@@ -56,6 +60,75 @@ void engine_short_play_test(void** state) {
 
   assert_int_equal(dispatch_action(&engine, action), SUCCESS);
   assert_int_equal(engine.current_hook, 0);
+
+  action_vector_t actions = engine_get_actions(&engine);
+
+  tile                       = deck_find_tile(&engine.game.deck, "CFCF", false);
+  action_t correct_actions[] = {
+      // -1, 1 : HAUT DROIT
+      {.order.place_tile = {.tile = tile,
+                            .orientation =
+                                LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                            .x = -1,
+                            .y = 1},
+       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
+      {.order.place_tile = {.tile = tile,
+                            .orientation =
+                                LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                            .x = -1,
+                            .y = 1},
+       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
+      // -1, -1 : HAUT GAUCHE
+      {.order.place_tile = {.tile = tile,
+                            .orientation =
+                                LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                            .x = -1,
+                            .y = -1},
+       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
+      {.order.place_tile = {.tile = tile,
+                            .orientation =
+                                LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                            .x = -1,
+                            .y = 1},
+       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
+      // -2, 0 : HAUT HAUT
+      {.order.place_tile = {.tile = tile,
+                            .orientation =
+                                LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                            .x = -2,
+                            .y = 0},
+       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
+      {.order.place_tile = {.tile = tile,
+                            .orientation =
+                                LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                            .x = -2,
+                            .y = 0},
+       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
+      // 1, 0 : BAS
+      {.order.place_tile = {.tile        = tile,
+                            .orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+                            .x           = 1,
+                            .y           = 0},
+       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
+      {.order.place_tile = {.tile        = tile,
+                            .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                            .x           = 1,
+                            .y           = 0},
+       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE}};
+
+  for (unsigned int i = 0; i < vector_size(&actions); i++) {
+    action_t a1 = *vector_nth(&actions, i);
+    action_t a2 = correct_actions[i];
+
+    assert_int_equal(a1.order.place_tile.x, a2.order.place_tile.x);
+    assert_int_equal(a1.order.place_tile.y, a2.order.place_tile.y);
+    assert_int_equal(a1.order.place_tile.orientation,
+                     a2.order.place_tile.orientation);
+    assert_ptr_equal(a1.order.place_tile.tile, a2.order.place_tile.tile);
+    assert_int_equal(a1.type, a2.type);
+  }
+
+  vector_free(&actions);
 
   engine_revert(&engine, 0);
 

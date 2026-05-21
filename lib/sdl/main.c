@@ -18,13 +18,13 @@
 #include <stdlib.h>
 
 typedef struct {
-  SDL_Window     *window;
-  SDL_Renderer   *renderer;
-  map_t          *map;
-  camera_t       *camera;
-  SDL_FRect       map_viewport;
-  Uint64          last_step;
-  text_object_t  *text;
+  SDL_Window    *window;
+  SDL_Renderer  *renderer;
+  map_t         *map;
+  camera_t      *camera;
+  SDL_FRect      map_viewport;
+  Uint64         last_step;
+  text_object_t *text;
 
   banner_t *test_banner, *test_banner2;
 } AppState;

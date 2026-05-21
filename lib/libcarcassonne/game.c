@@ -9,10 +9,12 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "libcarcassonne/forward.h"
 #include "libcarcassonne/player.h"
+#include "libutils/lc.h"
 
 return_code_t create_game(game_t *game, options_t *options) {
   if (game == NULL) {
@@ -374,10 +376,10 @@ bool game_is_tile_placeable(game_t *game, const tile_t *tile, int x, int y,
 }
 
 bool game_is_place_open(game_t *game, int x, int y) {
-  if (game_tile_at(game, x + 1, y) != NULL &&
-      game_tile_at(game, x - 1, y) != NULL &&
-      game_tile_at(game, x, y + 1) != NULL &&
-      game_tile_at(game, x, y - 1) != NULL) {
+  if (!game_is_space_available(game, x + 1, y) &&
+      !game_is_space_available(game, x - 1, y) &&
+      !game_is_space_available(game, x, y + 1) &&
+      !game_is_space_available(game, x, y - 1)) {
     return false;
   }
 
@@ -419,4 +421,52 @@ return_code_t game_end_round(game_t *game) {
 
 player_t *game_get_current_player(game_t *game) {
   return &game->players[game->current_player];
+}
+
+vector2d_vector_t game_get_available_space(game_t *game) {
+  vector2d_vector_t vec = {0};
+  vector_alloc(&vec, list_size(&game->open_tiles));
+  vec.meta.size = 0;
+
+  list_node_t *current = list_head(&game->open_tiles);
+
+  while (current != NULL) {
+    placed_tile_t *current_tile = *list_value(&game->open_tiles, current);
+
+    if (game_is_space_available(game, current_tile->x + 1, current_tile->y)) {
+      vector2d_t spot = {.x = current_tile->x + 1, .y = current_tile->y};
+      if (!vector_contains(&vec, &spot)) {
+        vector_append(&vec, &spot);
+      }
+    }
+
+    if (game_is_space_available(game, current_tile->x - 1, current_tile->y)) {
+      vector2d_t spot = {.x = current_tile->x - 1, .y = current_tile->y};
+      if (!vector_contains(&vec, &spot)) {
+        vector_append(&vec, &spot);
+      }
+    }
+
+    if (game_is_space_available(game, current_tile->x, current_tile->y + 1)) {
+      vector2d_t spot = {.x = current_tile->x, .y = current_tile->y + 1};
+      if (!vector_contains(&vec, &spot)) {
+        vector_append(&vec, &spot);
+      }
+    }
+
+    if (game_is_space_available(game, current_tile->x, current_tile->y - 1)) {
+      vector2d_t spot = {.x = current_tile->x, .y = current_tile->y - 1};
+      if (!vector_contains(&vec, &spot)) {
+        vector_append(&vec, &spot);
+      }
+    }
+
+    current = current->next;
+  }
+
+  return vec;
+}
+
+bool game_is_space_available(game_t *game, int x, int y) {
+  return *game_tile_at(game, x, y) == NULL;
 }

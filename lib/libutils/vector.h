@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,6 +25,8 @@ void *utils_vector_nth(const vector_t *list, unsigned int index, size_t size);
 void  utils_vector_free(vector_t *list);
 void  utils_vector_remove(vector_t *list, unsigned int index, size_t size);
 void  utils_vector_remove_value(vector_t *list, const void *data, size_t size);
+
+bool utils_vector_contains(vector_t *list, const void *data, size_t size);
 
 #define vector_append(list, item)                                      \
   utils_vector_append(&((list)->meta),                                 \
@@ -50,3 +53,8 @@ void  utils_vector_remove_value(vector_t *list, const void *data, size_t size);
   utils_vector_remove_value(&((list)->meta),                                 \
                             (const void *)(1 ? (item) : (list)->type_ghost), \
                             sizeof(*(list)->type_ghost))
+
+#define vector_contains(list, item)                                      \
+  utils_vector_contains(&((list)->meta),                                 \
+                        (const void *)(1 ? (item) : (list)->type_ghost), \
+                        sizeof(*(list)->type_ghost))

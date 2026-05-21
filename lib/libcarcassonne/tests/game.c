@@ -2,9 +2,12 @@
 #include <libcarcassonne/options.h>
 #include <libcarcassonne/tests/tests.h>
 #include <libutils/cmocka.h>
+#include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "libcarcassonne/forward.h"
+#include "libutils/vector.h"
 
 /** create_game */
 
@@ -273,6 +276,99 @@ void game_place_tile_do_not_work_because_tiles_are_incompatible(void** state) {
   assert_int_equal(game_place_tile(&game, tile2, -1, 0,
                                    LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
                    INVALID_PLACEMENT);
+
+  destroy_game(&game);
+}
+
+void game_get_available_space_works(void** state) {
+  (void)state;
+  game_t game;
+  assert_int_equal(create_game(&game, &options), SUCCESS);
+
+  const tile_t* tile = deck_pick(&game.deck);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(
+      game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+      SUCCESS);
+
+  /** AJOUT BAS */
+  tile = deck_find_tile(&game.deck, "CFCF", false);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(
+      game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST),
+      SUCCESS);
+
+  /** AJOUT HAUT */
+  tile = deck_find_tile(&game.deck, "CFCF", true);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(game_place_tile(&game, tile, -1, 0,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+                   SUCCESS);
+
+  /** AJOUT DROITE */
+  tile = deck_find_tile(&game.deck, "CCRR", true);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(
+      game_place_tile(&game, tile, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+      SUCCESS);
+
+  /** AJOUT GAUCHE */
+  tile = deck_find_tile(&game.deck, "FFFR", false);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(game_place_tile(&game, tile, 0, -1,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
+                   SUCCESS);
+
+  /** AJOUT HAUT GAUCHE */
+  tile = deck_find_tile(&game.deck, "FFRR", false);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(game_place_tile(&game, tile, -1, -1,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_WEST),
+                   SUCCESS);
+
+  /** AJOUT HAUT DROIT */
+  tile = deck_find_tile(&game.deck, "CFFF", false);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(game_place_tile(&game, tile, -1, 1,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
+                   SUCCESS);
+
+  /** AJOUT BAS GAUCHE */
+  tile = deck_find_tile(&game.deck, "CFFF", false);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(
+      game_place_tile(&game, tile, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_WEST),
+      SUCCESS);
+
+  /** AJOUT BAS DROIT */
+  tile = deck_find_tile(&game.deck, "CRRR", false);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(
+      game_place_tile(&game, tile, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_EAST),
+      SUCCESS);
+
+  /** AJOUT DROIT DROIT */
+  tile = deck_find_tile(&game.deck, "CCCC", true);
+  assert_ptr_not_equal(tile, NULL);
+  assert_int_equal(
+      game_place_tile(&game, tile, 0, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST),
+      SUCCESS);
+
+  vector2d_vector_t vec = game_get_available_space(&game);
+
+  vector2d_t correct_vec[12] = {
+      {.x = 2, .y = 0},   {.x = -2, .y = 0},  {.x = 0, .y = -2},
+      {.x = -2, .y = -1}, {.x = -1, .y = -2}, {.x = -2, .y = 1},
+      {.x = -1, .y = 2},  {.x = 2, .y = -1},  {.x = 1, .y = -2},
+      {.x = 2, .y = 1},   {.x = 1, .y = 2},   {.x = 0, .y = 3}};
+
+  for (unsigned int i = 0; i < vector_size(&vec); i++) {
+    vector2d_t spot = *vector_nth(&vec, i);
+    assert_int_equal(spot.x, correct_vec[i].x);
+    assert_int_equal(spot.y, correct_vec[i].y);
+  }
+
+  vector_free(&vec);
 
   destroy_game(&game);
 }
