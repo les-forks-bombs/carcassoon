@@ -52,15 +52,11 @@ stages:
 'Coverage':
   stage: test
   needs:
-    - job: 'Build'
+    - job: 'Test'
       parallel:
         matrix:
-          - TARGET: ['$[[ matrix.TARGET ]]']
-            PROFILE: ['$[[ matrix.PROFILE ]]']
-  parallel:
-    matrix:
-      - TARGET: ['x86_64-redhat-linux-gnu']
-        PROFILE: ['debug']
+          - TARGET: ['x86_64-redhat-linux-gnu']
+            PROFILE: ['debug']
 
   script:
     - make coverage-xml -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
