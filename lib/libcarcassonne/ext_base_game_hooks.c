@@ -61,7 +61,7 @@ static dispatch_t *find_last_place_tile_dispatch(engine_t *engine) {
   while (index >= 0) {
     dispatch_t *dispatch = vector_nth(&engine->dispatchs, index);
 
-    if (dispatch->action->type == LIBCARCASSONNE_ACTION_END_PLAYER_TURN) {
+    if (dispatch->hook == &hook_next_player) {
       return NULL;
     }
 

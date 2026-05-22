@@ -232,6 +232,12 @@ void engine_long_play_test(void** state) {
                {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A}};
 
   for (int i = 0; i < 10; i++) {
+    if (i != 0) {
+      int         size      = vector_size(&engine.dispatchs);
+      dispatch_t* next_turn = vector_nth(&engine.dispatchs, size - 1);
+      assert_ptr_equal(next_turn->hook, &hook_next_player);
+    }
+
     tile = deck_find_tile(&engine.game.deck, turns[i].tile_id, turns[i].blason);
     assert_ptr_not_equal(tile, NULL);
 
