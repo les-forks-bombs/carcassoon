@@ -179,7 +179,7 @@ static void placed_tile_group_collect_meeples_inner(
 placed_tile_group_eval_points_t placed_tile_group_eval_points(
     placed_tile_group_t *group) {
   int                             search_marker = dfs_counter++;
-  placed_tile_group_eval_points_t points;
+  placed_tile_group_eval_points_t points        = {0};
 
   placed_tile_group_collect_meeples_inner(group, &points, search_marker);
 
