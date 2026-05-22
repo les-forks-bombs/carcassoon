@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "forward.h"
 #include "libcarcassonne/action.h"
 #include "libcarcassonne/forward.h"
 #include "libutils/lc.h"
@@ -92,6 +93,9 @@ return_code_t start_game(engine_t *engine) {
 }
 
 return_code_t dispatch_action(engine_t *engine, action_t action) {
+  bool     first_ite   = true;
+  action_t action_none = {0};
+
   do {
     const extension_process_hook_t *current_hook =
         (*vector_nth(&engine->hooks, engine->current_hook));
@@ -107,15 +111,25 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     dispatch_t *store =
         vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1);
 
-    store->action = calloc(1, sizeof(action_t));
+    action_none.type = LIBCARCASSONNE_ACTION_NONE;
+    store->action    = calloc(1, sizeof(action_t));
     memcpy(store->action, &action, sizeof(action_t));
     store->hook        = current_hook;
     store->state_store = NULL;
+
+#ifdef DEBUG
+    printf("Exécution du hook: %s\n", current_hook->label);
+#endif
 
     current_hook->fw(&(store->state_store), engine, &action);
 
     engine->current_hook =
         (engine->current_hook + 1) % vector_size(&engine->hooks);
+
+#ifdef DEBUG
+    printf("Prochain du hook: %s\n",
+           (*vector_nth(&engine->hooks, engine->current_hook))->label);
+#endif
 
   } while (engine->current_hook != 0);
 
