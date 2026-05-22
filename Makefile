@@ -66,7 +66,8 @@ TESTS_COVE := $(addsuffix .profraw,$(TESTS))
 %.xml %.profraw: %
 	@CMOCKA_XML_FILE='$*.xml' \
 		LLVM_PROFILE_FILE="$*.profraw" \
-		CMOCKA_MESSAGE_OUTPUT=xml \
+		CMOCKA_MESSAGE_OUTPUT=xml,stdout \
+		CMOCKA_ERROR_OUTPUT=stdout \
 		$(RUNNER) $<
 
 test: $(TESTS_XMLS) $(TESTS_COVE)
