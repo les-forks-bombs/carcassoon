@@ -113,7 +113,7 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
     placed_tile_group_t *group = (*tile)->groups[i];
 
     tile_part_group_t id = (*tile)->parent->parts_groups[i];
-    if (!visited[id]) {
+    if (group != NULL && !visited[id]) {
       visited[id] = true;
       placed_tile_group_eval_points_t eval =
           placed_tile_group_eval_points(group);
@@ -135,6 +135,8 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
           }
         }
       }
+
+      vector_free(&eval.meeples);
     }
   }
 
