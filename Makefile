@@ -25,7 +25,7 @@ LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --libs)
 CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --cflags)
 
 ifeq "$(PROFILE)" "debug"
-	CFLAGS += -O0 -g
+	CFLAGS += -O0 -g -D DEBUG
 	ifeq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
 	    CFLAGS += -fsanitize=address
 	    LFLAGS += -fsanitize=address
