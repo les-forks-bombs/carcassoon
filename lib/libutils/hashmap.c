@@ -37,7 +37,8 @@ void utils_hashmap_set(hashmap_t *map, const void *key, size_t key_size,
   list_node_t *list_node = list->head;
   while (list_node != NULL) {
     hashmap_node_t *current = (hashmap_node_t *)list_node->value;
-    if (current->key_size == key_size && memcmp(current->key, key, key_size) == 0) {
+    if (current->key_size == key_size &&
+        memcmp(current->key, key, key_size) == 0) {
       free(current->value);
       current->value = malloc(data_size);
       memcpy(current->value, data, data_size);
@@ -71,7 +72,8 @@ void *utils_hashmap_get(const hashmap_t *map, const void *key,
   list_node_t *list_node = list->head;
   while (list_node != NULL) {
     hashmap_node_t *current = (hashmap_node_t *)list_node->value;
-    if (current->key_size == key_size && memcmp(current->key, key, key_size) == 0) {
+    if (current->key_size == key_size &&
+        memcmp(current->key, key, key_size) == 0) {
       return current->value;
     }
     list_node = list_node->next;
@@ -105,7 +107,8 @@ void utils_hashmap_remove(hashmap_t *map, const void *key, size_t key_size) {
   list_node_t *list_node = list->head;
   while (list_node != NULL) {
     hashmap_node_t *current = (hashmap_node_t *)list_node->value;
-    if (current->key_size == key_size && memcmp(current->key, key, key_size) == 0) {
+    if (current->key_size == key_size &&
+        memcmp(current->key, key, key_size) == 0) {
       free(current->key);
       free(current->value);
       utils_list_remove(list, list_node);

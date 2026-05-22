@@ -10,8 +10,8 @@
 #define LIBUTILS_HASHMAP_SEED 67
 
 typedef struct hashmap_node {
-  void *key;
-  void *value;
+  void  *key;
+  void  *value;
   size_t key_size;
 } hashmap_node_t;
 
@@ -43,13 +43,13 @@ void  utils_hashmap_remove(hashmap_t *map, const void *key, size_t key_size);
 #define hashmap_create(map, number_of_buckets) \
   utils_hashmap_create(&((map)->meta), number_of_buckets)
 
-#define hashmap_set(map, key, key_size, value, value_size)              \
+#define hashmap_set(map, key, key_size, value, value_size) \
   utils_hashmap_set(&((map)->meta), (key), (key_size), (value), (value_size))
 
-#define hashmap_get(map, key, key_size)                                \
+#define hashmap_get(map, key, key_size) \
   utils_hashmap_get(&((map)->meta), (key), (key_size))
 
-#define hashmap_remove(map, key, key_size)                              \
+#define hashmap_remove(map, key, key_size) \
   utils_hashmap_remove(&((map)->meta), (key), (key_size))
 
 #define hashmap_free(map) utils_hashmap_free(&((map)->meta))
