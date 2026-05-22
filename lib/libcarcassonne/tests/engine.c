@@ -26,7 +26,7 @@ void engine_short_play_test(void** state) {
 
   const tile_t* tile;
 
-  tile = deck_find_tile(&engine.game.deck, "CFCF", false);
+  tile = deck_find_tile(&engine.game.deck, "FCFC", false);
   assert_ptr_not_equal(tile, NULL);
   action_t action = {
       .type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
@@ -86,7 +86,7 @@ void engine_long_play_test(void** state) {
 
   /** Tour 1 Bastien */
 
-  tile = deck_find_tile(&engine.game.deck, "CFCF", true);
+  tile = deck_find_tile(&engine.game.deck, "FCFC", true);
 
   int x = 0;
   int y = 1;

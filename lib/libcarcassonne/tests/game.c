@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "libcarcassonne/forward.h"
+#include "libcarcassonne/tile.h"
 
 /** create_game */
 
@@ -193,17 +194,17 @@ void game_place_multiple_tile_works(void** state) {
       SUCCESS);
 
   /** AJOUT BAS */
-  tile = deck_find_tile(&game.deck, "CFCF", false);
+  tile = deck_find_tile(&game.deck, "FCFC", false);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(
-      game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST),
+      game_place_tile(&game, tile, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
       SUCCESS);
 
   /** AJOUT HAUT */
-  tile = deck_find_tile(&game.deck, "CFCF", true);
+  tile = deck_find_tile(&game.deck, "FCFC", true);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(game_place_tile(&game, tile, -1, 0,
-                                   LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+                                   LIBCARCASSONNE_TILE_ORIENTATION_WEST),
                    SUCCESS);
 
   /** AJOUT DROITE */
@@ -214,10 +215,10 @@ void game_place_multiple_tile_works(void** state) {
       SUCCESS);
 
   /** AJOUT GAUCHE */
-  tile = deck_find_tile(&game.deck, "FFFR", false);
+  tile = deck_find_tile(&game.deck, "FFRF", false);
   assert_ptr_not_equal(tile, NULL);
   assert_int_equal(game_place_tile(&game, tile, 0, -1,
-                                   LIBCARCASSONNE_TILE_ORIENTATION_SOUTH),
+                                   LIBCARCASSONNE_TILE_ORIENTATION_EAST),
                    SUCCESS);
 
   /** AJOUT HAUT GAUCHE */
