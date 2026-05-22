@@ -17,7 +17,7 @@ $(OUT)/bin/sdl$(EXT): $(SDL_OBJS) $(OUT)/bin/assets \
     $(OUT)/libutils.a \
     $(OUT)/libai.a
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -o $@ $(SDL_OBJS) $(LFLAGS) -lai -lutils -lcarcassonne
+	@$(CC) $(CFLAGS) -o $@ $(SDL_OBJS) -lai -lutils -lcarcassonne $(LFLAGS)
 	@case "$(TARGET)" in \
 	        (x86_64-w64-mingw64|x86_64-w64-mingw32) \
 	            $(UTIL_DIR)/copy_dlls.sh $@; \
