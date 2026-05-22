@@ -73,7 +73,7 @@ stages:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: ./out/$PROFILE/$TARGET/coverage.xml
+        path: ./out/debug/x86_64-redhat-linux-gnu/coverage.xml
   
 'Test':
   stage: test
