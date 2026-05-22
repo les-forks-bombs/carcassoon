@@ -397,16 +397,18 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .blason       = false,
          .amount       = 9},
 
-        // FRFR
-        {.family = "FRFR",
+        // RFRF
+        {.family = "RFRF",
          .parts =
              {
                  FIELD,
                  ROAD,
                  FIELD,
+
                  FIELD,
                  ROAD,
                  FIELD,
+
                  FIELD,
                  ROAD,
                  FIELD,
