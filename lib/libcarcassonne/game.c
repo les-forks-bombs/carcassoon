@@ -40,7 +40,7 @@ return_code_t create_game(game_t *game, options_t *options) {
   game->map =
       (placed_tile_t **)calloc(largeur * largeur, sizeof(placed_tile_t *));
 
-  meeple_count_vector_t meeples_count;
+  meeple_count_vector_t meeples_count = {0};
 
   meeples_count.meta.data = NULL;
   vector_alloc(&meeples_count, 3);
