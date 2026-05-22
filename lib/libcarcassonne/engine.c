@@ -182,6 +182,7 @@ action_vector_t engine_get_actions(engine_t *engine) {
       *vector_nth(&engine->hooks, engine->current_hook);
 
   current_hook->list_actions(&vec, engine);
+  printf("computed size: %d\n", vector_size(&vec));
 
   return vec;
 }

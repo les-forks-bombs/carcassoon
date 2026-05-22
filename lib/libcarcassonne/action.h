@@ -21,7 +21,7 @@ struct action_place_tile {
   /// @brief Coordonné en ordonnée
   int y;
   /// @brief Le prototype de tuile à placer
-  tile_t *tile;
+  const tile_t *tile;
   /// @brief L'orientation de la tuile à placer
   tile_orientation_t orientation;
 };
