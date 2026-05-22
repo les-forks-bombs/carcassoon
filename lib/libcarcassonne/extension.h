@@ -10,6 +10,7 @@
 
 struct extension_process_hook {
   const unsigned int             priority;
+  const char                     label[50];
   const extension_forward_t      fw;
   const extension_backward_t     bw;
   const extension_free_t         free;
@@ -38,6 +39,7 @@ void          destroy_extension_list(extension_vector_t *);
   return_code_t name##_list_actions(action_vector_t *actions,      \
                                     engine_t        *engine);      \
   static const extension_process_hook_t hook_##name = {            \
+      .label         = #name,                                      \
       .fw            = &name##_fw,                                 \
       .bw            = &name##_bw,                                 \
       .free          = &name##_free,                               \
