@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <cmocka.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/forward.h>
 #include <libcarcassonne/tests/tests.h>
