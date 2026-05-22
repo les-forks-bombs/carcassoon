@@ -22,13 +22,16 @@ struct placed_tile_group {
   int marker;
 };
 
+/// @brief Nombre de sous-groupes dans une tuile
+#define PLACED_TILE_GROUP_NUMBER 9
+
 /// @brief Représentation d'une tile qui a été placée
 struct placed_tile {
   /// @brief Pointeur vers la définition de la tile
   const tile_t *parent;
   /// @brief Groupes présents a l'intérieur de la tile
   /// @remark On peut au maximum avoir 9 groupes dans une tile
-  placed_tile_group_t *groups[9];
+  placed_tile_group_t *groups[PLACED_TILE_GROUP_NUMBER];
   /// @brief Orientation de placement de la tile
   tile_orientation_t orientation;
   int                x;

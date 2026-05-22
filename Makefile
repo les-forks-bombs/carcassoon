@@ -15,7 +15,7 @@ CFLAGS += --target=$(TARGET)
 
 CFLAGS += -I$(DIR)/lib
 CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
-LFLAGS += -L$(OUT) -lm -lcarcassonne -lutils -lai
+LFLAGS += -L$(OUT) -lm
 
 LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --libs)
 CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --cflags)
@@ -25,7 +25,7 @@ LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --libs)
 CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --cflags)
 
 ifeq "$(PROFILE)" "debug"
-	CFLAGS += -O0 -g
+	CFLAGS += -O0 -g -D DEBUG
 	ifeq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
 	    CFLAGS += -fsanitize=address
 	    LFLAGS += -fsanitize=address
@@ -66,7 +66,8 @@ TESTS_COVE := $(addsuffix .profraw,$(TESTS))
 %.xml %.profraw: %
 	@CMOCKA_XML_FILE='$*.xml' \
 		LLVM_PROFILE_FILE="$*.profraw" \
-		CMOCKA_MESSAGE_OUTPUT=xml \
+		CMOCKA_MESSAGE_OUTPUT=xml,stdout \
+		CMOCKA_ERROR_OUTPUT=stdout \
 		$(RUNNER) $<
 
 test: $(TESTS_XMLS) $(TESTS_COVE)
