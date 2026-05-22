@@ -57,14 +57,9 @@ stages:
         matrix:
           - TARGET: ['x86_64-redhat-linux-gnu']
             PROFILE: ['debug']
-    - job: 'Build'
-      parallel:
-        matrix:
-          - TARGET: ['x86_64-redhat-linux-gnu']
-            PROFILE: ['debug']
 
   script:
-    - make coverage-xml -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make coverage-xml -j$(nproc) TARGETx86_64-redhat-linux-gnu PROFILE=debug
   
   coverage: '/TOTAL.*\s+(\d+\.\d+)\%/'
   artifacts:
