@@ -1,4 +1,5 @@
 #include <libutils/vector.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -75,4 +76,14 @@ void utils_vector_remove_value(vector_t *list, const void *data, size_t size) {
       return;
     }
   }
+}
+
+bool utils_vector_contains(vector_t *list, const void *data, size_t size) {
+  for (unsigned int i = 0; i < list->size; i++) {
+    if (memcmp(data, utils_vector_nth(list, i, size), size) == 0) {
+      return true;
+    }
+  }
+
+  return false;
 }

@@ -1,8 +1,11 @@
 #include <libcarcassonne/consts.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/game.h>
+#include <malloc.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "libcarcassonne/action.h"
@@ -62,6 +65,7 @@ return_code_t destroy_engine(engine_t *engine) {
   for (size_t i = 0; i < vector_size(&engine->dispatchs); i++) {
     dispatch_t *dispatch = vector_nth(&engine->dispatchs, i);
     dispatch->hook->free(&dispatch->state_store, engine);
+    free(dispatch->action);
   }
 
   vector_free(&engine->dispatchs);
@@ -103,7 +107,8 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     dispatch_t *store =
         vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1);
 
-    store->action      = &action;
+    store->action = calloc(1, sizeof(action_t));
+    memcpy(store->action, &action, sizeof(action_t));
     store->hook        = current_hook;
     store->state_store = NULL;
 
@@ -129,6 +134,8 @@ return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
     current_hook->bw(&store->state_store, engine);
     current_hook->free(&store->state_store, engine);
 
+    free(store->action);
+
     vector_remove(&engine->dispatchs, vector_size(&engine->dispatchs) - 1);
 
     i--;
@@ -152,4 +159,29 @@ return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
 
 action_type_t engine_wanted_action(engine_t *engine) {
   return (*vector_nth(&engine->hooks, engine->current_hook))->needed_action;
+}
+
+action_vector_t *engine_list_possible_places(engine_t *engine, tile_t *tile) {
+  action_vector_t *actions = calloc(1, sizeof(action_vector_t));
+
+  vector_alloc(actions, 1);
+
+  // TODO : Check empty valid place, do not iterate through open_tiles its dumb
+  list_node_t *node = list_head(&engine->game.open_tiles);
+  while (node != NULL) {
+    node = node->next;
+  }
+
+  return actions;
+}
+
+action_vector_t engine_get_actions(engine_t *engine) {
+  action_vector_t vec = {0};
+
+  const extension_process_hook_t *current_hook =
+      *vector_nth(&engine->hooks, engine->current_hook);
+
+  current_hook->list_actions(&vec, engine);
+
+  return vec;
 }

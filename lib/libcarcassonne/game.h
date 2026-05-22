@@ -10,6 +10,7 @@
 #include <libcarcassonne/vector2d.h>
 #include <libutils/lc.h>
 #include <libutils/vector.h>
+#include <stdbool.h>
 
 #include "libcarcassonne/forward.h"
 
@@ -107,3 +108,7 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int part_group,
 return_code_t game_remove_meeple(game_t *game, int x, int y, int part_group);
 
 player_t *game_get_current_player(game_t *game);
+
+vector2d_vector_t game_get_available_space(game_t *game);
+
+bool game_is_space_available(game_t *game, int x, int y);

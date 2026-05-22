@@ -43,3 +43,5 @@ return_code_t dispatch_action(engine_t *engine, action_t action);
 return_code_t engine_revert(engine_t *engine, unsigned int epoch);
 
 action_type_t engine_wanted_action(engine_t *engine);
+
+action_vector_t engine_get_actions(engine_t *engine);

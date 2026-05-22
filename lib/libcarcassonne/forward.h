@@ -35,6 +35,7 @@ ForwardDefinition(struct, tile_slot);
 typedef List(const tile_t *) deck_list_t;
 typedef List(placed_tile_t *) placed_tile_list_t;
 typedef List(const extension_process_hook_t *) extension_process_hooks_list_t;
+typedef Vector(action_t) action_vector_t;
 typedef Vector(const extension_process_hook_t *)
     extension_process_hooks_vector_t;
 typedef Vector(extension_t *) extension_vector_t;
@@ -45,6 +46,7 @@ typedef Vector(meeple_t *) meeple_vector_t;
 typedef Vector(dispatch_t) dispatch_vector_t;
 typedef Vector(placed_tile_group_eval_points_t)
     placed_tile_group_eval_points_vector_t;
+typedef Vector(vector2d_t) vector2d_vector_t;
 
 typedef enum return_code return_code_t;
 
@@ -52,3 +54,5 @@ typedef return_code_t (*extension_forward_t)(void    **state, engine_t *,
                                              action_t *action);
 typedef return_code_t (*extension_backward_t)(void **state, engine_t *);
 typedef return_code_t (*extension_free_t)(void **state, engine_t *);
+typedef return_code_t (*extension_list_actions_t)(action_vector_t *actions,
+                                                  engine_t *);
