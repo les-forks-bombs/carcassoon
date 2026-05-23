@@ -24,7 +24,8 @@ enum tile_part_group {
   LIBCARCASSONNE_TILE_PART_E = 4,
   LIBCARCASSONNE_TILE_PART_F = 5,
   LIBCARCASSONNE_TILE_PART_G = 6,
-  LIBCARCASSONNE_TILE_PART_H = 7
+  LIBCARCASSONNE_TILE_PART_H = 7,
+  LIBCARCASSONNE_TILE_PART_I = 8
 };
 
 /// @brief Les orientations possibles pour les tiles

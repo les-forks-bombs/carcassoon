@@ -1,3 +1,4 @@
+#include <SDL3/SDL_init.h>
 #include <SDL3/SDL_render.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -24,12 +25,12 @@
 typedef struct {
   SDL_Window     *window;
   SDL_Renderer   *renderer;
-  map_t          *map;
   camera_t       *camera;
   SDL_FRect       map_viewport;
   Uint64          last_step;
   text_object_t  *text;
   engine_t engine;
+  SDL_Texture *temp_tex;
 
   banner_t *test_banner, *test_banner2;
 } AppState;
@@ -123,7 +124,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
                 (int)as->map_viewport.w, (int)as->map_viewport.h};
   SDL_SetRenderViewport(as->renderer, &v);
 
-  render_map(as->map, as->renderer, as->camera);
+  render_map(&as->engine.game, as->renderer, as->camera,as->temp_tex);
 
   SDL_SetRenderViewport(as->renderer, NULL);
 
@@ -142,6 +143,100 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   return SDL_APP_CONTINUE;
 }
 
+
+static void init_game(AppState *as){
+  const tile_t* tile;
+
+  /** Tour 1 Bastien */
+
+  tile = deck_find_tile(&as->engine.game.deck, "FCFC", true);
+
+  int x = 0;
+  int y = 1;
+
+  action_t action = {
+      .type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
+      .order = {
+          .place_tile = {.tile        = tile,
+                         .x           = x,
+                         .y           = y,
+                         .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST}}};
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+
+  action.order.place_meeple.meeple_type = BASIC;
+  action.order.place_meeple.part_group  = tile->parts_groups[1];
+  action.order.place_meeple.tile        = *game_tile_at(&as->engine.game, x, y);
+  action.order.place_meeple.x           = x;
+  action.order.place_meeple.y           = y;
+
+  /** Tour 1 Damien */
+
+  tile = deck_find_tile(&as->engine.game.deck, "FRRR", false);
+
+  x = 1;
+  y = 0;
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_TILE;
+
+  action.order.place_tile.tile        = tile;
+  action.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_NORTH;
+  action.order.place_tile.x           = x;
+  action.order.place_tile.y           = y;
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+
+  action.order.place_meeple.meeple_type = BASIC;
+  action.order.place_meeple.part_group  = tile->parts_groups[1];
+  action.order.place_meeple.tile        = *game_tile_at(&as->engine.game, x, y);
+  action.order.place_meeple.x           = x;
+  action.order.place_meeple.y           = y;
+
+  /** Tour 1 Matthieu */
+
+  tile = deck_find_tile(&as->engine.game.deck, "FFRR", false);
+
+  x = 1;
+  y = -1;
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_TILE;
+
+  action.order.place_tile.tile        = tile;
+  action.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST;
+  action.order.place_tile.x           = x;
+  action.order.place_tile.y           = y;
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+
+  action.order.place_meeple.meeple_type = BASIC;
+  action.order.place_meeple.part_group  = tile->parts_groups[3];
+  action.order.place_meeple.tile        = *game_tile_at(&as->engine.game, x, y);
+  action.order.place_meeple.x           = x;
+  action.order.place_meeple.y           = y;
+
+  /** Tour 2 Bastien */
+
+  tile = deck_find_tile(&as->engine.game.deck, "FRFR", false);
+
+  x = 2;
+  y = 0;
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_TILE;
+
+  action.order.place_tile.tile        = tile;
+  action.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST;
+  action.order.place_tile.x           = x;
+  action.order.place_tile.y           = y;
+
+  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+
+  action.order.place_meeple.meeple_type = BASIC;
+  action.order.place_meeple.part_group  = tile->parts_groups[3];
+  action.order.place_meeple.tile        = *game_tile_at(&as->engine.game, -1, 0);
+  action.order.place_meeple.x           = x;
+  action.order.place_meeple.y           = y;
+}
+
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
   create_path_resolver(&resolver);
@@ -149,11 +244,17 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
   if (!SDL_Init(SDL_INIT_VIDEO)) return SDL_APP_FAILURE;
 
-  AppState *as = (AppState *)SDL_malloc(sizeof(AppState));
+  AppState *as = (AppState *)SDL_calloc(1,sizeof(AppState));
   if (!as) return SDL_APP_FAILURE;
   *appstate = as;
 
-  create_engine(&as->engine, options);
+  return_code_t init = create_engine(&as->engine, options);
+
+  if (init!=0){
+    return SDL_APP_FAILURE;
+  }
+
+  init_game(as);
 
   // pour resolve:
   char *path = path_resolver_resolve(&resolver, "assets/img/carcassonne.jpg");
@@ -180,35 +281,20 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
                               "Ici c'est Carcassonne !", white_text);
   free(path);
 
-  as->map    = create_map();
   as->camera = create_camera();
 
-  if (as->map == NULL || as->camera == NULL) {
+  if (as->camera == NULL) {
     return SDL_APP_FAILURE;
-  }
-
-  int map_width_temp = 5;
-
-  for (int i = 0; i < 10; i++) {
-    int col = i % map_width_temp;
-    int row = i / map_width_temp;
-
-    path = path_resolver_resolve(&resolver, "assets/img/tiles_png/tile_05.png");
-    printf("path relatif: %s\n", path);
-
-    as->map->tiles[i] = create_tt(as->renderer, path);
-    free(path);
-
-    if (as->map->tiles[i]) {
-      as->map->tiles[i]->world_x = (col * MAP_TILE_SIZE);
-      as->map->tiles[i]->world_y = (row * MAP_TILE_SIZE);
-    }
   }
 
   as->map_viewport.x = 100;
   as->map_viewport.y = 150;
   as->map_viewport.w = 800;
   as->map_viewport.h = 400;
+
+  path = path_resolver_resolve(&resolver, "assets/img/tiles/tile_01.svg");
+  SDL_Texture *tex = IMG_LoadTexture(as->renderer, path);
+  as->temp_tex = tex;
 
   SDL_Color blue         = {0, 0, 255, 255};
   banner_t *test_banner  = create_banner(as->renderer, blue, 1);
@@ -250,6 +336,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     TTF_Quit();
     free_options(&as->engine.config);
     destroy_engine(&as->engine);
+    SDL_DestroyTexture(as->temp_tex);
     SDL_free(as);
   }
 }
