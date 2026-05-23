@@ -30,7 +30,7 @@ void engine_short_play_test(void** state) {
 
   const tile_t* tile;
 
-  tile = deck_find_tile(&engine.game.deck, "CFCF", true);
+  tile = deck_find_tile(&engine.game.deck, "FCFC", true);
   assert_ptr_not_equal(tile, NULL);
   action_t action = {
       .type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
@@ -38,7 +38,7 @@ void engine_short_play_test(void** state) {
                     .tile        = tile,
                     .x           = -1,
                     .y           = 0,
-                    .orientation = LIBCARCASSONNE_TILE_ORIENTATION_NORTH}}};
+                    .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST}}};
 
   // assert_int_equal(engine.current_hook, 0);
   // assert_int_equal(dispatch_action(&engine, action), NO_PROGRESS);
@@ -65,7 +65,7 @@ void engine_short_play_test(void** state) {
 
   action_vector_t meeple_actions = engine_get_actions(&engine);
 
-  assert_int_equal(vector_size(&meeple_actions), 4);
+  assert_int_equal(vector_size(&meeple_actions), 1);
 
   action_t correct_place_meeple_actions[] = {
       // CHAMP GAUCHE
@@ -155,12 +155,12 @@ void engine_short_play_test(void** state) {
        .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
       // 1, 0 : BAS
       {.order.place_tile = {.tile        = tile,
-                            .orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+                            .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST,
                             .x           = 1,
                             .y           = 0},
        .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
       {.order.place_tile = {.tile        = tile,
-                            .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                            .orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST,
                             .x           = 1,
                             .y           = 0},
        .type             = LIBCARCASSONNE_ACTION_PLACE_TILE}};
@@ -217,15 +217,15 @@ void engine_long_play_test(void** state) {
     int         x, y, orientation;
     int         part_group;
   } turns[] = {// Tour 1 - 3 joueurs
-               {"CFCF", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, B},
+               {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
                {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
                {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A},
                // Tour 2
-               {"RFRF", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C},
-               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, D},
-               {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, D},
+               {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A},
+               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A},
+               {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
                // Tour 3
-               {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, D},
+               {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
                {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
                {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C},
                // Tour 4
