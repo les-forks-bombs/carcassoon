@@ -6,6 +6,7 @@
 #include <libcarcassonne/forward.h>
 #include <sdl/resolver.h>
 #include <stdio.h>
+#include "sdl/consts.h"
 
 void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture *test_tex) {
   for (int i = 0; i < MAP_TABLE_SIZE * MAP_TABLE_SIZE; i++) {
@@ -18,8 +19,8 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
     SDL_Texture *texture = test_tex;
     // = MAP(ptt->texture);
 
-    float world_x = table_y * MAP_TILE_SIZE;
-    float world_y = table_x * MAP_TILE_SIZE;
+    float world_x = ((float)MAP_TABLE_SIZE-1-table_y) * MAP_TILE_SIZE;
+    float world_y = ((float)MAP_TABLE_SIZE-1-table_x) * MAP_TILE_SIZE;
 
     float x_render    = (world_x - cam->x) * cam->zoom;
     float y_render    = (world_y - cam->y) * cam->zoom;
