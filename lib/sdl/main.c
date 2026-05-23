@@ -20,7 +20,8 @@
 #include <sdl/text.h>
 #include <sdl/tile_temp.h>
 #include <stdlib.h>
-#include "libcarcassonne/engine.h"
+#include <libcarcassonne/engine.h>
+#include <libcarcassonne/ext_base_game.h>
 
 typedef struct {
   SDL_Window     *window;
@@ -146,95 +147,61 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
 static void init_game(AppState *as){
   const tile_t* tile;
+  action_t      action = {0};
 
-  /** Tour 1 Bastien */
+  // 10 tours avec tuiles, positions, orientations et part_groups valides
+  // Basé sur l'ancien long_play_test qui fonctionnait
+  struct {
+    const char* tile_id;
+    bool        blason;
+    int         x, y, orientation;
+    int         part_group;
+  } turns[] = {// Tour 1 - 3 joueurs
+               {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
+               {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
+               {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A},
+               // Tour 2
+               {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A},
+               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A},
+               {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
+               // Tour 3
+               {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
+               {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
+               {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C},
+               // Tour 4
+               {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A}};
 
-  tile = deck_find_tile(&as->engine.game.deck, "FCFC", true);
+  for (int i = 0; i < 10; i++) {
+    if (i != 0) {
+      int         size      = vector_size(&as->engine.dispatchs);
+      dispatch_t* next_turn = vector_nth(&as->engine.dispatchs, size - 1);
+    }
 
-  int x = 0;
-  int y = 1;
+    tile = deck_find_tile(&as->engine.game.deck, turns[i].tile_id, turns[i].blason);
 
-  action_t action = {
-      .type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
-      .order = {
-          .place_tile = {.tile        = tile,
-                         .x           = x,
-                         .y           = y,
-                         .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST}}};
+    // Placement de la tuile
+    action.type                         = LIBCARCASSONNE_ACTION_PLACE_TILE;
+    action.order.place_tile.tile        = tile;
+    action.order.place_tile.x           = turns[i].x;
+    action.order.place_tile.y           = turns[i].y;
+    action.order.place_tile.orientation = turns[i].orientation;
 
-  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+    // Vérification des actions de meeple disponibles
+    action_vector_t meeple_actions = engine_get_actions(&as->engine);
 
-  action.order.place_meeple.meeple_type = BASIC;
-  action.order.place_meeple.part_group  = tile->parts_groups[1];
-  action.order.place_meeple.tile        = *game_tile_at(&as->engine.game, x, y);
-  action.order.place_meeple.x           = x;
-  action.order.place_meeple.y           = y;
+    // Placement du meeple
+    action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+    placed_tile_t** placed_tile =
+        game_tile_at(&as->engine.game, turns[i].x, turns[i].y);
 
-  /** Tour 1 Damien */
+    action.order.place_meeple.meeple_type = BASIC;
+    action.order.place_meeple.part_group  = turns[i].part_group;
+    action.order.place_meeple.tile        = *placed_tile;
+    action.order.place_meeple.x           = turns[i].x;
+    action.order.place_meeple.y           = turns[i].y;
 
-  tile = deck_find_tile(&as->engine.game.deck, "FRRR", false);
-
-  x = 1;
-  y = 0;
-
-  action.type = LIBCARCASSONNE_ACTION_PLACE_TILE;
-
-  action.order.place_tile.tile        = tile;
-  action.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_NORTH;
-  action.order.place_tile.x           = x;
-  action.order.place_tile.y           = y;
-
-  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
-
-  action.order.place_meeple.meeple_type = BASIC;
-  action.order.place_meeple.part_group  = tile->parts_groups[1];
-  action.order.place_meeple.tile        = *game_tile_at(&as->engine.game, x, y);
-  action.order.place_meeple.x           = x;
-  action.order.place_meeple.y           = y;
-
-  /** Tour 1 Matthieu */
-
-  tile = deck_find_tile(&as->engine.game.deck, "FFRR", false);
-
-  x = 1;
-  y = -1;
-
-  action.type = LIBCARCASSONNE_ACTION_PLACE_TILE;
-
-  action.order.place_tile.tile        = tile;
-  action.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST;
-  action.order.place_tile.x           = x;
-  action.order.place_tile.y           = y;
-
-  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
-
-  action.order.place_meeple.meeple_type = BASIC;
-  action.order.place_meeple.part_group  = tile->parts_groups[3];
-  action.order.place_meeple.tile        = *game_tile_at(&as->engine.game, x, y);
-  action.order.place_meeple.x           = x;
-  action.order.place_meeple.y           = y;
-
-  /** Tour 2 Bastien */
-
-  tile = deck_find_tile(&as->engine.game.deck, "FRFR", false);
-
-  x = 2;
-  y = 0;
-
-  action.type = LIBCARCASSONNE_ACTION_PLACE_TILE;
-
-  action.order.place_tile.tile        = tile;
-  action.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST;
-  action.order.place_tile.x           = x;
-  action.order.place_tile.y           = y;
-
-  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
-
-  action.order.place_meeple.meeple_type = BASIC;
-  action.order.place_meeple.part_group  = tile->parts_groups[3];
-  action.order.place_meeple.tile        = *game_tile_at(&as->engine.game, -1, 0);
-  action.order.place_meeple.x           = x;
-  action.order.place_meeple.y           = y;
+    vector_free(&meeple_actions);
+  }
 }
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
