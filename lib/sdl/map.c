@@ -18,8 +18,8 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
     SDL_Texture *texture = test_tex;
     // = MAP(ptt->texture);
 
-    float world_x = table_x * MAP_TILE_SIZE;
-    float world_y = table_y * MAP_TILE_SIZE;
+    float world_x = table_y * MAP_TILE_SIZE;
+    float world_y = table_x * MAP_TILE_SIZE;
 
     float x_render    = (world_x - cam->x) * cam->zoom;
     float y_render    = (world_y - cam->y) * cam->zoom;
@@ -41,8 +41,8 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
       default: angle = 0.0;
     }
 
-    if (x_render + size_zoomed > 0 && x_render < WINDOW_WIDTH &&
-        y_render + size_zoomed > 0 && y_render < WINDOW_HEIGHT) {
+    if (x_render + size_zoomed > 0 && x_render < WINDOW_HEIGHT &&
+        y_render + size_zoomed > 0 && y_render < WINDOW_WIDTH) {
       SDL_FRect dest = {x_render, y_render, size_zoomed, size_zoomed};
       SDL_RenderTextureRotated(renderer, texture, NULL, &dest, angle, NULL, SDL_FLIP_NONE);
     }
