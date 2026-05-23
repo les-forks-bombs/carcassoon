@@ -30,13 +30,13 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
     double angle = 0.0;
 
     switch(ptt->orientation) {
-      case LIBCARCASSONNE_TILE_ORIENTATION_EAST:
+      case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
         angle = 90.0;
         break;
       case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH:
         angle = 180.0;
         break;
-      case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
+      case LIBCARCASSONNE_TILE_ORIENTATION_EAST:
         angle = 270.0;
         break;
       default: angle = 0.0;
