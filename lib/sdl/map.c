@@ -11,7 +11,6 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
   for (int i = 0; i < MAP_TABLE_SIZE * MAP_TABLE_SIZE; i++) {
     placed_tile_t *ptt = game->map[i];
     if (ptt == NULL) continue;
-    printf("%d", i);
 
     int table_x = i % MAP_TABLE_SIZE;
     int table_y = i / MAP_TABLE_SIZE;
@@ -47,18 +46,6 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
       SDL_FRect dest = {x_render, y_render, size_zoomed, size_zoomed};
       SDL_RenderTextureRotated(renderer, texture, NULL, &dest, angle, NULL, SDL_FLIP_NONE);
     }
-    printf("Tile %d, %d chargée",table_x,table_y);
   }
 }
 
-void update_camera(camera_t *cam) {
-  if (cam->x < 0) cam->x = 0;
-
-  float max_x = (MAP_TABLE_SIZE * MAP_TILE_SIZE) - (WINDOW_WIDTH / cam->zoom);
-  if (cam->x > max_x) cam->x = max_x;
-
-  if (cam->y < 0) cam->y = 0;
-
-  float max_y = (MAP_TABLE_SIZE * MAP_TILE_SIZE) - (WINDOW_HEIGHT / cam->zoom);
-  if (cam->y > max_y) cam->y = max_y;
-}
