@@ -184,7 +184,7 @@ static void init_game(AppState *as){
     dispatch_action(&as->engine, action);
 
     // Placement du meeple
-    /*action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+    action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
     placed_tile_t** placed_tile =
         game_tile_at(&as->engine.game, turns[i].x, turns[i].y);
 
@@ -194,10 +194,6 @@ static void init_game(AppState *as){
     action.order.place_meeple.x           = turns[i].x;
     action.order.place_meeple.y           = turns[i].y;
 
-    dispatch_action(&as->engine, action);*/
-
-    action.type = LIBCARCASSONNE_ACTION_NONE;
-    action.order = (action_order_t){0};
     dispatch_action(&as->engine, action);
   }
 }
