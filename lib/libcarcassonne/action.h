@@ -10,8 +10,6 @@ typedef enum action_type {
   LIBCARCASSONNE_ACTION_PLACE_TILE = 1,
   /// @brief Poser un meeple
   LIBCARCASSONNE_ACTION_PLACE_MEEPLE = 2,
-  /// @brief Mettre fin au tour du joueur courant
-  LIBCARCASSONNE_ACTION_END_PLAYER_TURN = 3,
 } action_type_t;
 
 /// @brief Action de placement de tuile
