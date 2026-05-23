@@ -172,11 +172,6 @@ static void init_game(AppState *as){
                {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A}};
 
   for (int i = 0; i < 10; i++) {
-    if (i != 0) {
-      int         size      = vector_size(&as->engine.dispatchs);
-      dispatch_t* next_turn = vector_nth(&as->engine.dispatchs, size - 1);
-    }
-
     tile = deck_find_tile(&as->engine.game.deck, turns[i].tile_id, turns[i].blason);
 
     // Placement de la tuile
@@ -186,11 +181,10 @@ static void init_game(AppState *as){
     action.order.place_tile.y           = turns[i].y;
     action.order.place_tile.orientation = turns[i].orientation;
 
-    // Vérification des actions de meeple disponibles
-    action_vector_t meeple_actions = engine_get_actions(&as->engine);
+    dispatch_action(&as->engine, action);
 
     // Placement du meeple
-    action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+    /*action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
     placed_tile_t** placed_tile =
         game_tile_at(&as->engine.game, turns[i].x, turns[i].y);
 
@@ -200,7 +194,11 @@ static void init_game(AppState *as){
     action.order.place_meeple.x           = turns[i].x;
     action.order.place_meeple.y           = turns[i].y;
 
-    vector_free(&meeple_actions);
+    dispatch_action(&as->engine, action);*/
+
+    action.type = LIBCARCASSONNE_ACTION_NONE;
+    action.order = (action_order_t){0};
+    dispatch_action(&as->engine, action);
   }
 }
 
@@ -220,6 +218,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   if (init!=0){
     return SDL_APP_FAILURE;
   }
+
+  start_game(&as->engine);
 
   init_game(as);
 
@@ -259,7 +259,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   as->map_viewport.w = 800;
   as->map_viewport.h = 400;
 
-  path = path_resolver_resolve(&resolver, "assets/img/tiles/tile_01.svg");
+  center_camera_on_start(as->camera,&as->map_viewport);
+
+  path = path_resolver_resolve(&resolver, "assets/img/carcassonne.jpg");
   SDL_Texture *tex = IMG_LoadTexture(as->renderer, path);
   as->temp_tex = tex;
 
