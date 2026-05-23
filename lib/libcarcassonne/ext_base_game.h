@@ -837,13 +837,12 @@ static const tile_t LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
          .nb_slots=3
         },
 
-        // RFRF
-        {.family = "RFRF",
+        // FRFR
+        {.family = "FRFR",
          .parts =
              {
                  FIELD,
                  FIELD,
-
                  FIELD,
                  ROAD,
                  ROAD,
@@ -1082,7 +1081,7 @@ static const extension_t LIBCARCASSONNE_EXT_BASE_GAME = {
     .start_tiles          = &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES,
     .start_tiles_priority = 0,
     .required             = &LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS,
-    .meeples_count        = meeples_count};
+};
 
 #undef VILLAGE
 #undef FIELD
