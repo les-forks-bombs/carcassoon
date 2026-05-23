@@ -1,24 +1,53 @@
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_render.h>
 #include <sdl/map.h>
+#include <libcarcassonne/placed_tile.h>
+#include <libcarcassonne/game.h>
+#include <libcarcassonne/forward.h>
+#include <sdl/resolver.h>
+#include <stdio.h>
 
-map_t *create_map(void) {
-  map_t *map = SDL_calloc(1, sizeof(map_t));
-  return map;
-}
-
-void render_map(map_t *map, SDL_Renderer *renderer, camera_t *cam) {
+void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture *test_tex) {
   for (int i = 0; i < MAP_TABLE_SIZE * MAP_TABLE_SIZE; i++) {
-    if (map->tiles[i] == NULL) continue;
+    placed_tile_t *ptt = game->map[i];
+    if (ptt == NULL) continue;
+    printf("%d", i);
 
-    float x_render    = (map->tiles[i]->world_x - cam->x) * cam->zoom;
-    float y_render    = (map->tiles[i]->world_y - cam->y) * cam->zoom;
+    int table_x = i % MAP_TABLE_SIZE;
+    int table_y = i / MAP_TABLE_SIZE;
+
+    SDL_Texture *texture = test_tex;
+    // = MAP(ptt->texture);
+
+    float world_x = table_x * MAP_TILE_SIZE;
+    float world_y = table_y * MAP_TILE_SIZE;
+
+    float x_render    = (world_x - cam->x) * cam->zoom;
+    float y_render    = (world_y - cam->y) * cam->zoom;
+
     float size_zoomed = MAP_TILE_SIZE * cam->zoom;
+
+    double angle = 0.0;
+
+    switch(ptt->orientation) {
+      case LIBCARCASSONNE_TILE_ORIENTATION_EAST:
+        angle = 90.0;
+        break;
+      case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH:
+        angle = 180.0;
+        break;
+      case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
+        angle = 270.0;
+        break;
+      default: angle = 0.0;
+    }
 
     if (x_render + size_zoomed > 0 && x_render < WINDOW_WIDTH &&
         y_render + size_zoomed > 0 && y_render < WINDOW_HEIGHT) {
       SDL_FRect dest = {x_render, y_render, size_zoomed, size_zoomed};
-      SDL_RenderTexture(renderer, map->tiles[i]->texture, NULL, &dest);
+      SDL_RenderTextureRotated(renderer, texture, NULL, &dest, angle, NULL, SDL_FLIP_NONE);
     }
+    printf("Tile %d, %d chargée",table_x,table_y);
   }
 }
 
