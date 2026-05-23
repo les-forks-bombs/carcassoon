@@ -9,6 +9,7 @@
 #include "libcarcassonne/forward.h"
 #include "libcarcassonne/tile.h"
 #include "libutils/vector.h"
+#include "libcarcassonne/tile.h"
 
 /** create_game */
 
