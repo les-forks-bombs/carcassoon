@@ -18,6 +18,7 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
 
     SDL_Texture *texture = test_tex;
     // = MAP(ptt->texture);
+    SDL_Texture *meeple_tex = test_tex;
 
     float world_x = ((float)MAP_TABLE_SIZE-1-table_y) * MAP_TILE_SIZE;
     float world_y = ((float)MAP_TABLE_SIZE-1-table_x) * MAP_TILE_SIZE;
@@ -46,7 +47,7 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
         y_render + size_zoomed > 0 && y_render < WINDOW_WIDTH) {
       SDL_FRect dest = {x_render, y_render, size_zoomed, size_zoomed};
       SDL_RenderTextureRotated(renderer, texture, NULL, &dest, angle, NULL, SDL_FLIP_NONE);
+      render_placed_meeple(ptt, renderer, x_render, y_render, size_zoomed, angle, meeple_tex);
     }
   }
 }
-

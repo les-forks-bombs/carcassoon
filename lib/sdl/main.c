@@ -18,10 +18,10 @@
 #include <sdl/consts.h>
 #include <sdl/map.h>
 #include <sdl/text.h>
-#include <sdl/tile_temp.h>
 #include <stdlib.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/ext_base_game.h>
+#include <sdl/meeple.h>
 
 typedef struct {
   SDL_Window     *window;
@@ -162,7 +162,7 @@ static void init_game(AppState *as){
                {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A},
                // Tour 2
                {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A},
-               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A},
+               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, D},
                {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
                // Tour 3
                {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},

@@ -222,7 +222,7 @@ void engine_long_play_test(void** state) {
                {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A},
                // Tour 2
                {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A},
-               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A},
+               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, D},
                {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
                // Tour 3
                {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
