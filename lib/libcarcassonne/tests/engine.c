@@ -34,11 +34,11 @@ void engine_short_play_test(void** state) {
   assert_ptr_not_equal(tile, NULL);
   action_t action = {
       .type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
-      .order = {.place_tile = {
-                    .tile        = tile,
-                    .x           = 0,
-                    .y           = 1,
-                    .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST}}};
+      .order = {
+          .place_tile = {.tile        = tile,
+                         .x           = 0,
+                         .y           = 1,
+                         .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST}}};
 
   assert_int_equal(start_game(&engine), SUCCESS);
 
@@ -208,24 +208,26 @@ void engine_long_play_test(void** state) {
   // 10 tours avec tuiles, positions, orientations et part_groups valides
   // Basé sur l'ancien long_play_test qui fonctionnait
   struct {
-    const char* tile_id;
-    bool        blason;
-    int         x, y, orientation;
-    int         part_group;
-  } turns[] = {// Tour 1 - 3 joueurs
-               {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
-               {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
-               {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A},
-               // Tour 2
-               {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A},
-               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A},
-               {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
-               // Tour 3
-               {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
-               {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
-               {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C},
-               // Tour 4
-               {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A}};
+    const char*   tile_id;
+    bool          blason;
+    int           x, y, orientation;
+    int           part_group;
+    meeple_type_t meeple_type;
+  } turns[] = {
+      // Tour 1 - 3 joueurs
+      {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
+      {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
+      {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A, BASIC},
+      // Tour 2
+      {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A, BASIC},
+      {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, NONE},
+      {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
+      // Tour 3
+      {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
+      {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
+      {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C, NONE},
+      // Tour 4
+      {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, BASIC}};
 
   for (int i = 0; i < 10; i++) {
     if (i != 0) {
@@ -259,7 +261,7 @@ void engine_long_play_test(void** state) {
     assert_non_null(placed_tile);
     assert_non_null(*placed_tile);
 
-    action.order.place_meeple.meeple_type = BASIC;
+    action.order.place_meeple.meeple_type = turns[i].meeple_type;
     action.order.place_meeple.part_group  = turns[i].part_group;
     action.order.place_meeple.tile        = *placed_tile;
     action.order.place_meeple.x           = turns[i].x;
