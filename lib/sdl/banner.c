@@ -1,5 +1,6 @@
 #include "banner.h"
 
+#include <SDL3/SDL_render.h>
 #include <stdlib.h>
 
 #include "libutils/path.h"
@@ -67,7 +68,7 @@ void render_banner(banner_t *banner, SDL_Renderer *renderer) {
 }
 
 void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
-  banner->area.h = banner->is_open ? 90.0f : 120.0f;
+  banner->area.h = banner->is_open ? 120.0f : 90.0f;
 
   banner->is_open = !banner->is_open;
 
@@ -79,11 +80,11 @@ void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
           : path_resolver_resolve(&resolver, "assets/img/banner_tall.svg");
   ;
   banner->banner_texture = IMG_LoadTexture(renderer, path);
-  // free(path);
+  free(path);
 }
 
 void destroy_banner(banner_t *banner) {
   destroy_text_object(banner->score_object);
-  free(banner->banner_texture);
+  SDL_DestroyTexture(banner->banner_texture);
   free(banner);
 }
