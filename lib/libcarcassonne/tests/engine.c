@@ -65,7 +65,7 @@ void engine_short_play_test(void** state) {
 
   action_vector_t meeple_actions = engine_get_actions(&engine);
 
-  assert_int_equal(vector_size(&meeple_actions), 1);
+  assert_int_equal(vector_size(&meeple_actions), 4);
 
   action_t correct_place_meeple_actions[] = {
       // CHAMP GAUCHE
