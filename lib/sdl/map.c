@@ -47,7 +47,7 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
         y_render + size_zoomed > 0 && y_render < WINDOW_WIDTH) {
       SDL_FRect dest = {x_render, y_render, size_zoomed, size_zoomed};
       SDL_RenderTextureRotated(renderer, texture, NULL, &dest, angle, NULL, SDL_FLIP_NONE);
-      render_placed_meeple(game, ptt, renderer, x_render, y_render, size_zoomed, angle, meeple_tex);
+      render_placed_meeple(ptt, renderer, x_render, y_render, size_zoomed, angle, meeple_tex);
     }
   }
 }
