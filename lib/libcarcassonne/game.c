@@ -30,6 +30,7 @@ return_code_t create_game(game_t *game, options_t *options) {
   game->current_player = 0;
   game->deck           = create_deck(options->seed, &options->extensions);
   game->options        = options;
+  game->state          = GAME_STATE_NOT_STARTED;
 
   game->open_tiles.meta.head = NULL;
   game->open_tiles.meta.tail = NULL;
