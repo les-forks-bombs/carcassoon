@@ -14,6 +14,7 @@
 #include <unistd.h>
 
 #include "libcarcassonne/forward.h"
+#include "libcarcassonne/meeple.h"
 #include "libcarcassonne/player.h"
 #include "libutils/lc.h"
 
@@ -259,6 +260,10 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
                                 meeple_type_t meeple_type, player_t *player) {
   if (game == NULL || player == NULL) {
     return ERROR;
+  }
+
+  if (meeple_type == NONE) {
+    return SUCCESS;
   }
 
   placed_tile_t **tile_ref = game_tile_at(game, x, y);
