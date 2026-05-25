@@ -1,6 +1,7 @@
 #include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/tile.h>
 #include <libutils/vector.h>
+#include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -160,7 +161,7 @@ void placed_tile_group_destory(placed_tile_group_t *group) {
 
 static void placed_tile_group_collect_meeples_inner(
     placed_tile_group_t *group, placed_tile_group_eval_points_t *points,
-    int marker) {
+    int marker, bool is_completed) {
   if (group->marker == marker) {
     return;
   }
@@ -168,12 +169,22 @@ static void placed_tile_group_collect_meeples_inner(
   // on le marque pour éviter de le re-visiter
   group->marker = marker;
 
-  if (group->type==LIBCARCASSONNE_TILE_PART_ROAD || group->type==LIBCARCASSONNE_TILE_PART_TOWN) {
-    points->points++;
+  unsigned int value = 0;
+  if(group->type==LIBCARCASSONNE_TILE_PART_ROAD){
+    value = 1;
+  }
+  else if (group->type==LIBCARCASSONNE_TILE_PART_TOWN) {
+    value = 1;
     if (group->tile->parent->blason) {
-      points->points++;
+      value++;
+    }
+
+    if(is_completed){
+      value*=2;
     }
   }
+
+  points->points+=value;
 
   if (group->meeple != NULL) {
     vector_append(&points->meeples, &group->meeple);
@@ -181,7 +192,7 @@ static void placed_tile_group_collect_meeples_inner(
 
   for (unsigned int i = 0; i < vector_size(&group->neighbors); i++) {
     placed_tile_group_collect_meeples_inner(*vector_nth(&group->neighbors, i),
-                                            points, marker);
+                                            points, marker, is_completed);
   }
 }
 
@@ -191,11 +202,11 @@ static void placed_tile_group_collect_meeples_inner(
  * @param group Un noeud du groupe
  */
 placed_tile_group_eval_points_t placed_tile_group_eval_points(
-    placed_tile_group_t *group) {
+    placed_tile_group_t *group, bool is_completed) {
   int                             search_marker = dfs_counter++;
   placed_tile_group_eval_points_t points        = {0};
 
-  placed_tile_group_collect_meeples_inner(group, &points, search_marker);
+  placed_tile_group_collect_meeples_inner(group, &points, search_marker, is_completed);
 
   return points;
 }
