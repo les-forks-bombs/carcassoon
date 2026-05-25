@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "sdl/consts.h"
 
-void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture *test_tex) {
+void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture *test_tex, placed_tile_t *current_tile) {
   for (int i = 0; i < MAP_TABLE_SIZE * MAP_TABLE_SIZE; i++) {
     placed_tile_t *ptt = game->map[i];
     if (ptt == NULL) continue;
@@ -47,6 +47,20 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
         y_render + size_zoomed > 0 && y_render < WINDOW_WIDTH) {
       SDL_FRect dest = {x_render, y_render, size_zoomed, size_zoomed};
       SDL_RenderTextureRotated(renderer, texture, NULL, &dest, angle, NULL, SDL_FLIP_NONE);
+      if (ptt == current_tile) {
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        for (int t = 0; t < 3; t++) {
+          SDL_FRect border_rect = {
+            dest.x + (float)t, 
+            dest.y + (float)t, 
+            dest.w - (float)(t * 2), 
+            dest.h - (float)(t * 2)
+          };
+        SDL_RenderRect(renderer, &border_rect);
+        }
+      }
       render_placed_meeple(ptt, renderer, x_render, y_render, size_zoomed, angle, meeple_tex);
     }
   }
