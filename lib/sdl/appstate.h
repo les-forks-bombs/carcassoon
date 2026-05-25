@@ -5,6 +5,7 @@
 #include <libutils/hashmap.h>
 #include <sdl/banner.h>
 #include <sdl/camera.h>
+#include "libcarcassonne/forward.h"
 
 typedef HashMap(char *, SDL_Texture *) textures_hashmap_t;
 
@@ -19,6 +20,7 @@ typedef struct {
   SDL_Texture       *temp_tex;
   placed_tile_t     *current_tile;
   textures_hashmap_t textures;
+  vector2d_vector_t possibles_places;
 
   banner_t **banners;
 } AppState;
