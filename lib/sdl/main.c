@@ -130,6 +130,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
   for (int nb_players = 0; nb_players < as->engine.game.options->players;
        nb_players++) {
+    as->banners[nb_players]->score = as->engine.game.players[nb_players].score;
     render_banner(as->banners[nb_players], as->renderer);
   }
   SDL_RenderPresent(as->renderer);
