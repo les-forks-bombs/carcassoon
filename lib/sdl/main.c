@@ -32,6 +32,7 @@ typedef struct {
   text_object_t  *text;
   engine_t engine;
   SDL_Texture *temp_tex;
+  placed_tile_t *current_tile;
 
   banner_t **banners;
 } AppState;
@@ -125,7 +126,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
                 (int)as->map_viewport.w, (int)as->map_viewport.h};
   SDL_SetRenderViewport(as->renderer, &v);
 
-  render_map(&as->engine.game, as->renderer, as->camera,as->temp_tex);
+  render_map(&as->engine.game, as->renderer, as->camera,as->temp_tex,as->current_tile);
 
   SDL_SetRenderViewport(as->renderer, NULL);
 
@@ -197,6 +198,8 @@ static void init_game(AppState *as){
     action.order.place_meeple.y           = turns[i].y;
 
     dispatch_action(&as->engine, action);
+
+    as->current_tile = *placed_tile;
   }
 }
 
