@@ -8,6 +8,7 @@
 
 #include "libcarcassonne/forward.h"
 #include "libcarcassonne/tile.h"
+#include "libutils/hashmap.h"
 #include "libutils/vector.h"
 #include "libcarcassonne/tile.h"
 
