@@ -2,6 +2,7 @@
 #include <SDL3/SDL_render.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "libcarcassonne/forward.h"
 #include "libcarcassonne/options.h"
@@ -13,8 +14,10 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <dirent.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/ext_base_game.h>
+#include <sdl/appstate.h>
 #include <sdl/banner.h>
 #include <sdl/camera.h>
 #include <sdl/consts.h>
@@ -22,23 +25,7 @@
 #include <sdl/meeple.h>
 #include <sdl/text.h>
 #include <stdlib.h>
-
-typedef HashMap(char *, ) textures_hashmap_t;
-
-typedef struct {
-  SDL_Window    *window;
-  SDL_Renderer  *renderer;
-  camera_t      *camera;
-  SDL_FRect      map_viewport;
-  Uint64         last_step;
-  text_object_t *text;
-  engine_t       engine;
-  SDL_Texture   *temp_tex;
-  placed_tile_t *current_tile;
-
-  banner_t **banners;
-
-} AppState;
+#include <sys/stat.h>
 
 path_resolver_t resolver;
 
@@ -129,8 +116,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
                 (int)as->map_viewport.w, (int)as->map_viewport.h};
   SDL_SetRenderViewport(as->renderer, &v);
 
-  render_map(&as->engine.game, as->renderer, as->camera, as->temp_tex,
-             as->current_tile);
+  render_map(as);
 
   SDL_SetRenderViewport(as->renderer, NULL);
 
@@ -146,9 +132,50 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
        nb_players++) {
     render_banner(as->banners[nb_players], as->renderer);
   }
-
   SDL_RenderPresent(as->renderer);
   return SDL_APP_CONTINUE;
+}
+
+void load_texture(AppState *state, char *name, char* path) {
+  SDL_Texture *texture = IMG_LoadTexture(state->renderer, path);
+  
+  hashmap_set(&state->textures, name, strlen(name) + 1, &texture,
+              sizeof(SDL_Texture *));
+}
+
+void load_textures(AppState *appstate, char* directory, char* assets) {
+  DIR *dossier = opendir(directory);
+  if (dossier == NULL) {
+    perror("Erreur lors de l'ouverture du dossier");
+    return;
+  }
+
+  struct dirent *entree;
+  char           chemin_complet[LIBUTILS_PATH_BUF];
+
+  while ((entree = readdir(dossier)) != NULL) {
+    if (strcmp(entree->d_name, ".") == 0 || strcmp(entree->d_name, "..") == 0) {
+      continue;
+    }
+    snprintf(chemin_complet, sizeof(chemin_complet), "%s/%s", directory,
+             entree->d_name);
+
+    struct stat info_chemin;
+    if (stat(chemin_complet, &info_chemin) == 0) {
+      if (S_ISDIR(info_chemin.st_mode)) {
+        // printf("[DOSSIER] %s\n", chemin_complet);
+        load_textures(appstate, chemin_complet, assets);
+      } else if (S_ISREG(info_chemin.st_mode)) {
+        // printf("[FICHIER] %s\n", chemin_complet);
+            
+    char* start = &chemin_complet[strlen(assets)];
+    printf("loading texture %s at %s\n", start, chemin_complet);
+
+    load_texture(appstate, start, chemin_complet);
+      }
+    }
+  }
+  closedir(dossier);
 }
 
 static void init_game(AppState *as) {
@@ -230,9 +257,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   init_game(as);
 
   // pour resolve:
-  char *path = path_resolver_resolve(&resolver, "assets/img/carcassonne.jpg");
-  printf("path relatif: %s\n", path);
-  free(path);
+  char *path;
 
   if (!SDL_CreateWindowAndRenderer("Carcassonne Test", WINDOW_WIDTH,
                                    WINDOW_HEIGHT, 0, &as->window,
@@ -265,11 +290,19 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   as->map_viewport.w = 800;
   as->map_viewport.h = 400;
 
-  center_camera_on_start(as->camera, &as->map_viewport);
+  hashmap_create(&as->textures, 256);
 
-  path = path_resolver_resolve(&resolver, "assets/img/carcassonne.jpg");
-  SDL_Texture *tex = IMG_LoadTexture(as->renderer, path);
-  as->temp_tex     = tex;
+  path = path_resolver_resolve(&resolver, "assets/img/tiles/tile_00.png");
+  SDL_Texture *temp_tex = IMG_LoadTexture(as->renderer, path);
+  hashmap_set(&as->textures,"test",sizeof("test"),&temp_tex,sizeof(SDL_Texture*));
+  as->temp_tex = temp_tex;
+  
+  char* assets = path_resolver_resolve(&resolver, "assets");
+  char* img = path_resolver_resolve(&resolver, "assets/img");
+  load_textures(as, img,assets);
+  free(assets);
+
+  center_camera_on_start(as->camera, &as->map_viewport);
 
   as->banners = create_banner_for_each_player(as->renderer,
                                               as->engine.game.options->players);
