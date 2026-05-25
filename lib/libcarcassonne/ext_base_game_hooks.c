@@ -199,7 +199,7 @@ return_code_t tile_place_list_actions(action_vector_t *actions,
   for (unsigned int i = 0; i < vector_size(&vec); i++) {
     vector2d_t spot = *vector_nth(&vec, i);
 
-    for (tile_orientation_t orientation = 0; i < 4; i++) {
+    for (tile_orientation_t orientation = 0; orientation < 4; orientation++) {
       if (game_is_tile_placeable(&engine->game, tile, spot.x, spot.y,
                                  orientation)) {
         action_t action = {.type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
