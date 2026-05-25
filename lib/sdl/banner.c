@@ -35,6 +35,29 @@ banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
   return banner;
 }
 
+banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb) {
+  if (nb<=0) return NULL;
+
+  banner_t **banners = SDL_calloc(nb,sizeof(banner_t *));
+  if (banners == NULL) return NULL;
+  
+  SDL_Color colors[] = {
+    {255,0,0,255},
+    {0,255,0,255},
+    {0,0,255,255},
+    {255,255,0,255},
+    {255,0,255,255},
+    {0,255,255,255}
+  };
+
+  banner_t *new_banner;
+  for (int i = 0; i<nb; i++){
+    new_banner = create_banner(renderer,colors[i],i);
+    banners[i] = new_banner;
+  }
+  return banners;
+}
+
 void render_banner(banner_t *banner, SDL_Renderer *renderer) {
   if (!banner) return;
 
@@ -68,7 +91,7 @@ void render_banner(banner_t *banner, SDL_Renderer *renderer) {
 }
 
 void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
-  banner->area.h = banner->is_open ? 120.0f : 90.0f;
+  banner->area.h = banner->is_open ? 90.0f : 120.0f;
 
   banner->is_open = !banner->is_open;
 
@@ -76,8 +99,8 @@ void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
 
   char *path =
       banner->is_open
-          ? path_resolver_resolve(&resolver, "assets/img/banner.svg")
-          : path_resolver_resolve(&resolver, "assets/img/banner_tall.svg");
+          ? path_resolver_resolve(&resolver, "assets/img/banner_tall.svg")
+          : path_resolver_resolve(&resolver, "assets/img/banner.svg");
   ;
   banner->banner_texture = IMG_LoadTexture(renderer, path);
   free(path);

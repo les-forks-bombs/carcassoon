@@ -33,7 +33,7 @@ typedef struct {
   engine_t engine;
   SDL_Texture *temp_tex;
 
-  banner_t *test_banner, *test_banner2;
+  banner_t **banners;
 } AppState;
 
 path_resolver_t resolver;
@@ -62,10 +62,10 @@ static SDL_AppResult handle_key_event_(void *appstate, SDL_Keycode key_val) {
       as->camera->zoom -= 0.1f;
       break;
     case SDLK_A:
-      as->test_banner->score += 1;
+      as->banners[0]->score += 1;
       break;
     case SDLK_Z:
-      toggle_banner(as->test_banner2, as->renderer);
+      toggle_banner(as->banners[1], as->renderer);
     default:
       break;
   }
@@ -137,8 +137,9 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
   SDL_RenderRect(as->renderer, &as->map_viewport);
 
-  render_banner(as->test_banner, as->renderer);
-  render_banner(as->test_banner2, as->renderer);
+  for (int nb_players = 0; nb_players<as->engine.game.options->players;nb_players++){
+    render_banner(as->banners[nb_players], as->renderer);
+  }
 
   SDL_RenderPresent(as->renderer);
   return SDL_APP_CONTINUE;
@@ -156,20 +157,21 @@ static void init_game(AppState *as){
     bool        blason;
     int         x, y, orientation;
     int         part_group;
+    meeple_type_t meeple_type;
   } turns[] = {// Tour 1 - 3 joueurs
-               {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
-               {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
-               {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A},
-               // Tour 2
-               {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A},
-               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, D},
-               {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B},
-               // Tour 3
-               {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
-               {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C},
-               {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C},
-               // Tour 4
-               {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A}};
+               {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
+      {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
+      {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A, BASIC},
+      // Tour 2
+      {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A, BASIC},
+      {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, D, NONE},
+      {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
+      // Tour 3
+      {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
+      {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
+      {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C, NONE},
+      // Tour 4
+      {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, BASIC}};
 
   for (int i = 0; i < 10; i++) {
     tile = deck_find_tile(&as->engine.game.deck, turns[i].tile_id, turns[i].blason);
@@ -260,13 +262,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   path = path_resolver_resolve(&resolver, "assets/img/carcassonne.jpg");
   SDL_Texture *tex = IMG_LoadTexture(as->renderer, path);
   as->temp_tex = tex;
-
-  SDL_Color blue         = {0, 0, 255, 255};
-  banner_t *test_banner  = create_banner(as->renderer, blue, 1);
-  banner_t *test_banner2 = create_banner(as->renderer, blue, 2);
-
-  as->test_banner  = test_banner;
-  as->test_banner2 = test_banner2;
+  
+  as->banners = create_banner_for_each_player(as->renderer, as->engine.game.options->players);
 
   as->last_step = SDL_GetTicks();
   return SDL_APP_CONTINUE;
@@ -302,6 +299,10 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     free_options(&as->engine.config);
     destroy_engine(&as->engine);
     SDL_DestroyTexture(as->temp_tex);
+      for (int nb_players = 0; nb_players<as->engine.game.options->players;nb_players++){
+        destroy_banner(as->banners[nb_players]);
+    }
+    SDL_free(as->banners);
     SDL_free(as);
   }
 }

@@ -17,6 +17,7 @@ typedef struct banner {
 } banner_t;
 
 banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb);
+banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb);
 void      render_banner(banner_t *banner, SDL_Renderer *renderer);
 void      toggle_banner(banner_t *banner, SDL_Renderer *renderer);
 void      destroy_banner(banner_t *banner);
