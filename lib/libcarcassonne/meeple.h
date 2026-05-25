@@ -3,7 +3,12 @@
 #include <libcarcassonne/player.h>
 #include <libcarcassonne/tile.h>
 
-typedef enum meeple_type { BASIC = 0, LARGE = 1, ABBOT = 2 } meeple_type_t;
+typedef enum meeple_type {
+  NONE  = -1,
+  BASIC = 0,
+  LARGE = 1,
+  ABBOT = 2
+} meeple_type_t;
 
 struct meeple {
   player_t*            player;
