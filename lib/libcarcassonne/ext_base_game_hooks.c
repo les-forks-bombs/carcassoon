@@ -397,10 +397,13 @@ return_code_t next_player_fw(void **state_store, engine_t *engine,
   (void)state_store;
   (void)action;
 
-  engine->game.current_player =
-      (engine->game.current_player + 1) % engine->config.players;
+  return_code_t code = game_end_player_turn(&engine->game);
 
-  return SUCCESS;
+  if (code == NO_MORE_PLAYER) {
+    return game_end_round(&engine->game);
+  }
+
+  return code;
 }
 return_code_t next_player_bw(void **state_store, engine_t *engine) {
   (void)state_store;
@@ -409,8 +412,13 @@ return_code_t next_player_bw(void **state_store, engine_t *engine) {
     return ERROR;
   }
 
+  // Si on était au premier joueur avant le bw, c'est qu'on avait fini un tour
+  // Donc il faut décrémenter game.turn
   if (engine->game.current_player == 0) {
-    engine->game.current_player = engine->config.players;
+    engine->game.turn--;
+    engine->game.current_player = engine->config.players - 1;
+  } else {
+    engine->game.current_player--;
   }
 
   engine->game.current_player--;
