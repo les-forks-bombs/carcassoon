@@ -27,6 +27,10 @@ return_code_t meeple_place_fw(void **state_store, engine_t *engine,
   *state_store                     = malloc(sizeof(meeple_place_hook_state_t));
   meeple_place_hook_state_t *state = *state_store;
 
+  if (action->order.place_meeple.meeple_type == NONE) {
+    return SUCCESS;
+  }
+
   state->x           = action->order.place_meeple.x;
   state->y           = action->order.place_meeple.y;
   state->group       = action->order.place_meeple.part_group;
@@ -34,14 +38,17 @@ return_code_t meeple_place_fw(void **state_store, engine_t *engine,
 
   // on place le meeple
   game_place_meeple(&engine->game, state->x, state->y, state->group,
-                    action->order.place_meeple.meeple_type,
-                    game_get_current_player(&engine->game));
+                    state->meeple_type, game_get_current_player(&engine->game));
 
   return SUCCESS;
 }
 
 return_code_t meeple_place_bw(void **state_store, engine_t *engine) {
   meeple_place_hook_state_t *state = *state_store;
+
+  if (state->meeple_type == NONE) {
+    return SUCCESS;
+  }
 
   game_remove_meeple(&engine->game, state->x, state->y, state->group);
 
@@ -80,7 +87,9 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
                                         engine_t        *engine) {
   player_t *player = game_get_current_player(&engine->game);
 
-  action_t action_none = {.order = {0}, .type = LIBCARCASSONNE_ACTION_NONE};
+  action_t action_none = {.order.place_meeple = {0},
+                          .type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
+  action_none.order.place_meeple.meeple_type = NONE;
 
   if (!player_has_meeple_to_place(player)) {
     // If player does not have meeple left
