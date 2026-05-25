@@ -3,9 +3,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-
 #include "libcarcassonne/forward.h"
 #include "libcarcassonne/options.h"
+#include "libutils/hashmap.h"
 #include "libutils/path.h"
 #include "sdl/resolver.h"
 #define SDL_MAIN_USE_CALLBACKS 1
@@ -13,28 +13,31 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <libcarcassonne/engine.h>
+#include <libcarcassonne/ext_base_game.h>
 #include <sdl/banner.h>
 #include <sdl/camera.h>
 #include <sdl/consts.h>
 #include <sdl/map.h>
+#include <sdl/meeple.h>
 #include <sdl/text.h>
 #include <stdlib.h>
-#include <libcarcassonne/engine.h>
-#include <libcarcassonne/ext_base_game.h>
-#include <sdl/meeple.h>
+
+typedef HashMap(char *, ) textures_hashmap_t;
 
 typedef struct {
-  SDL_Window     *window;
-  SDL_Renderer   *renderer;
-  camera_t       *camera;
-  SDL_FRect       map_viewport;
-  Uint64          last_step;
-  text_object_t  *text;
-  engine_t engine;
-  SDL_Texture *temp_tex;
+  SDL_Window    *window;
+  SDL_Renderer  *renderer;
+  camera_t      *camera;
+  SDL_FRect      map_viewport;
+  Uint64         last_step;
+  text_object_t *text;
+  engine_t       engine;
+  SDL_Texture   *temp_tex;
   placed_tile_t *current_tile;
 
   banner_t **banners;
+
 } AppState;
 
 path_resolver_t resolver;
@@ -126,7 +129,8 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
                 (int)as->map_viewport.w, (int)as->map_viewport.h};
   SDL_SetRenderViewport(as->renderer, &v);
 
-  render_map(&as->engine.game, as->renderer, as->camera,as->temp_tex,as->current_tile);
+  render_map(&as->engine.game, as->renderer, as->camera, as->temp_tex,
+             as->current_tile);
 
   SDL_SetRenderViewport(as->renderer, NULL);
 
@@ -138,7 +142,8 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
   SDL_RenderRect(as->renderer, &as->map_viewport);
 
-  for (int nb_players = 0; nb_players<as->engine.game.options->players;nb_players++){
+  for (int nb_players = 0; nb_players < as->engine.game.options->players;
+       nb_players++) {
     render_banner(as->banners[nb_players], as->renderer);
   }
 
@@ -146,21 +151,21 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   return SDL_APP_CONTINUE;
 }
 
-
-static void init_game(AppState *as){
-  const tile_t* tile;
+static void init_game(AppState *as) {
+  const tile_t *tile;
   action_t      action = {0};
 
   // 10 tours avec tuiles, positions, orientations et part_groups valides
   // Basé sur l'ancien long_play_test qui fonctionnait
   struct {
-    const char* tile_id;
-    bool        blason;
-    int         x, y, orientation;
-    int         part_group;
+    const char   *tile_id;
+    bool          blason;
+    int           x, y, orientation;
+    int           part_group;
     meeple_type_t meeple_type;
-  } turns[] = {// Tour 1 - 3 joueurs
-               {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
+  } turns[] = {
+      // Tour 1 - 3 joueurs
+      {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
       {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
       {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A, BASIC},
       // Tour 2
@@ -175,7 +180,8 @@ static void init_game(AppState *as){
       {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, BASIC}};
 
   for (int i = 0; i < 10; i++) {
-    tile = deck_find_tile(&as->engine.game.deck, turns[i].tile_id, turns[i].blason);
+    tile = deck_find_tile(&as->engine.game.deck, turns[i].tile_id,
+                          turns[i].blason);
 
     // Placement de la tuile
     action.type                         = LIBCARCASSONNE_ACTION_PLACE_TILE;
@@ -188,7 +194,7 @@ static void init_game(AppState *as){
 
     // Placement du meeple
     action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
-    placed_tile_t** placed_tile =
+    placed_tile_t **placed_tile =
         game_tile_at(&as->engine.game, turns[i].x, turns[i].y);
 
     action.order.place_meeple.meeple_type = BASIC;
@@ -204,19 +210,18 @@ static void init_game(AppState *as){
 }
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
-
   create_path_resolver(&resolver);
-  options_t options = parse_options(argc,argv);
+  options_t options = parse_options(argc, argv);
 
   if (!SDL_Init(SDL_INIT_VIDEO)) return SDL_APP_FAILURE;
 
-  AppState *as = (AppState *)SDL_calloc(1,sizeof(AppState));
+  AppState *as = (AppState *)SDL_calloc(1, sizeof(AppState));
   if (!as) return SDL_APP_FAILURE;
   *appstate = as;
 
   return_code_t init = create_engine(&as->engine, options);
 
-  if (init!=0){
+  if (init != 0) {
     return SDL_APP_FAILURE;
   }
 
@@ -260,13 +265,14 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   as->map_viewport.w = 800;
   as->map_viewport.h = 400;
 
-  center_camera_on_start(as->camera,&as->map_viewport);
+  center_camera_on_start(as->camera, &as->map_viewport);
 
   path = path_resolver_resolve(&resolver, "assets/img/carcassonne.jpg");
   SDL_Texture *tex = IMG_LoadTexture(as->renderer, path);
-  as->temp_tex = tex;
-  
-  as->banners = create_banner_for_each_player(as->renderer, as->engine.game.options->players);
+  as->temp_tex     = tex;
+
+  as->banners = create_banner_for_each_player(as->renderer,
+                                              as->engine.game.options->players);
 
   as->last_step = SDL_GetTicks();
   return SDL_APP_CONTINUE;
@@ -302,8 +308,9 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     free_options(&as->engine.config);
     destroy_engine(&as->engine);
     SDL_DestroyTexture(as->temp_tex);
-      for (int nb_players = 0; nb_players<as->engine.game.options->players;nb_players++){
-        destroy_banner(as->banners[nb_players]);
+    for (int nb_players = 0; nb_players < as->engine.game.options->players;
+         nb_players++) {
+      destroy_banner(as->banners[nb_players]);
     }
     SDL_free(as->banners);
     SDL_free(as);

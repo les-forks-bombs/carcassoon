@@ -120,11 +120,12 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
   vector_alloc(actions, 4);
 
   for (unsigned int i = 0; i < PLACED_TILE_GROUP_NUMBER; i++) {
-    tile_part_group_t id = (*tile)->parent->parts_groups[i];
-    tile_part_type_t type = (*tile)->parent->parts[i];
+    tile_part_group_t    id    = (*tile)->parent->parts_groups[i];
+    tile_part_type_t     type  = (*tile)->parent->parts[i];
     placed_tile_group_t *group = (*tile)->groups[id];
 
-    if (group != NULL && !visited[id] && (i!=4 || type==LIBCARCASSONNE_TILE_PART_ABBEY)) {
+    if (group != NULL && !visited[id] &&
+        (i != 4 || type == LIBCARCASSONNE_TILE_PART_ABBEY)) {
       visited[id] = true;
       placed_tile_group_eval_points_t eval =
           placed_tile_group_eval_points(group);
