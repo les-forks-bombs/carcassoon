@@ -7,6 +7,7 @@
 #include <sdl/resolver.h>
 #include <stdio.h>
 #include "sdl/consts.h"
+#include "sdl/meeple.h"
 
 void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture *test_tex, placed_tile_t *current_tile) {
   for (int i = 0; i < MAP_TABLE_SIZE * MAP_TABLE_SIZE; i++) {
@@ -60,8 +61,9 @@ void render_map(game_t *game, SDL_Renderer *renderer, camera_t *cam,SDL_Texture 
           };
         SDL_RenderRect(renderer, &border_rect);
         }
+        render_possible_meeples(ptt, renderer,&dest, angle);
       }
-      render_placed_meeple(ptt, renderer, x_render, y_render, size_zoomed, angle, meeple_tex);
+      render_placed_meeple(ptt, renderer, &dest, angle);
     }
   }
 }
