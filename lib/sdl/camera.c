@@ -2,8 +2,8 @@
 #include <sdl/camera.h>
 #include <sdl/consts.h>
 
-camera_t* create_camera(void) {
-  camera_t* cam = SDL_calloc(1, sizeof(camera_t));
+camera_t *create_camera(void) {
+  camera_t *cam = SDL_calloc(1, sizeof(camera_t));
   if (cam) {
     cam->x    = 0.0f;
     cam->y    = 0.0f;
@@ -25,11 +25,8 @@ void update_camera(camera_t *cam) {
 }
 
 void center_camera_on_start(camera_t *cam, SDL_FRect *viewport) {
-  float center_table_x = (float)MAP_TABLE_SIZE / 2.0f;
-  float center_table_y = (float)MAP_TABLE_SIZE / 2.0f;
-
-  float world_center_x = center_table_x * MAP_TILE_SIZE;
-  float world_center_y = center_table_y * MAP_TILE_SIZE;
+  float world_center_x = 0.0f;
+  float world_center_y = 0.0f;
 
   cam->x = world_center_x - ((viewport->w / 2.0f) / cam->zoom);
   cam->y = world_center_y - ((viewport->h / 2.0f) / cam->zoom);

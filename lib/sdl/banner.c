@@ -36,23 +36,18 @@ banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
 }
 
 banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb) {
-  if (nb<=0) return NULL;
+  if (nb <= 0) return NULL;
 
-  banner_t **banners = SDL_calloc(nb,sizeof(banner_t *));
+  banner_t **banners = SDL_calloc(nb, sizeof(banner_t *));
   if (banners == NULL) return NULL;
-  
-  SDL_Color colors[] = {
-    {255,0,0,255},
-    {0,255,0,255},
-    {0,0,255,255},
-    {255,255,0,255},
-    {255,0,255,255},
-    {0,255,255,255}
-  };
+
+  SDL_Color colors[] = {{255, 0, 0, 255},   {0, 255, 0, 255},
+                        {0, 0, 255, 255},   {255, 255, 0, 255},
+                        {255, 0, 255, 255}, {0, 255, 255, 255}};
 
   banner_t *new_banner;
-  for (int i = 0; i<nb; i++){
-    new_banner = create_banner(renderer,colors[i],i);
+  for (int i = 0; i < nb; i++) {
+    new_banner = create_banner(renderer, colors[i], i);
     banners[i] = new_banner;
   }
   return banners;
