@@ -1,6 +1,7 @@
 #ifndef H_LIBSDL_CONSTS
 #define H_LIBSDL_CONSTS
 
+#include <SDL3/SDL_pixels.h>
 #include <libcarcassonne/consts.h>
 
 #define MAP_TILE_SIZE             64
@@ -11,5 +12,9 @@
 #define ZOOM_MAX                  10
 #define ZOOM_MIN                  0.1
 #define STEP_RATE_IN_MILLISECONDS 16
+
+static SDL_Color players_colors[] = {{255, 0, 0, 255},   {0, 255, 0, 255},
+                                     {0, 0, 255, 255},   {255, 255, 0, 255},
+                                     {255, 0, 255, 255}, {0, 255, 255, 255}};
 
 #endif

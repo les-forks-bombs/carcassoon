@@ -136,14 +136,14 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   return SDL_APP_CONTINUE;
 }
 
-void load_texture(AppState *state, char *name, char* path) {
+void load_texture(AppState *state, char *name, char *path) {
   SDL_Texture *texture = IMG_LoadTexture(state->renderer, path);
-  
+
   hashmap_set(&state->textures, name, strlen(name) + 1, &texture,
               sizeof(SDL_Texture *));
 }
 
-void load_textures(AppState *appstate, char* directory, char* assets) {
+void load_textures(AppState *appstate, char *directory, char *assets) {
   DIR *dossier = opendir(directory);
   if (dossier == NULL) {
     perror("Erreur lors de l'ouverture du dossier");
@@ -167,11 +167,11 @@ void load_textures(AppState *appstate, char* directory, char* assets) {
         load_textures(appstate, chemin_complet, assets);
       } else if (S_ISREG(info_chemin.st_mode)) {
         // printf("[FICHIER] %s\n", chemin_complet);
-            
-    char* start = &chemin_complet[strlen(assets)];
-    printf("loading texture %s at %s\n", start, chemin_complet);
 
-    load_texture(appstate, start, chemin_complet);
+        char *start = &chemin_complet[strlen(assets)];
+        // printf("loading texture %s at %s\n", start, chemin_complet);
+
+        load_texture(appstate, start, chemin_complet);
       }
     }
   }
@@ -273,7 +273,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
   SDL_Color white_text = {255, 255, 255, 255};
   path = path_resolver_resolve(&resolver, "assets/fonts/Orange.ttf");
-  printf("path relatif: %s\n", path);
+  // printf("path relatif: %s\n", path);
 
   as->text = init_text_object(as->renderer, path, 32.0f,
                               "Ici c'est Carcassonne !", white_text);
@@ -294,12 +294,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
   path = path_resolver_resolve(&resolver, "assets/img/tiles/tile_00.png");
   SDL_Texture *temp_tex = IMG_LoadTexture(as->renderer, path);
-  hashmap_set(&as->textures,"test",sizeof("test"),&temp_tex,sizeof(SDL_Texture*));
+  hashmap_set(&as->textures, "test", sizeof("test"), &temp_tex,
+              sizeof(SDL_Texture *));
   as->temp_tex = temp_tex;
-  
-  char* assets = path_resolver_resolve(&resolver, "assets");
-  char* img = path_resolver_resolve(&resolver, "assets/img");
-  load_textures(as, img,assets);
+
+  char *assets = path_resolver_resolve(&resolver, "assets");
+  char *img    = path_resolver_resolve(&resolver, "assets/img");
+  load_textures(as, img, assets);
   free(assets);
 
   center_camera_on_start(as->camera, &as->map_viewport);
