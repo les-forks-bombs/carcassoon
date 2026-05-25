@@ -132,7 +132,10 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     // printf("Exécution du hook: %s\n", current_hook->label);
 #endif
 
-    current_hook->fw(&(store->state_store), engine, &action);
+    return_code_t code = current_hook->fw(&(store->state_store), engine, &action);
+    if(code!=SUCCESS){
+      return code;
+    }
 
     engine->current_hook =
         (engine->current_hook + 1) % vector_size(&engine->hooks);

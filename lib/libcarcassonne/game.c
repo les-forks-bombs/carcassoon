@@ -146,7 +146,11 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
     }
 
     placed_tile_t *placed_tile = calloc(1, sizeof(placed_tile_t));
-    placed_tile_create(placed_tile, tile, orientation, x, y);
+    return_code_t code = placed_tile_create(placed_tile, tile, orientation, x, y);
+
+    if(code!=SUCCESS){
+      return code;
+    }
 
     *tile_ref = placed_tile;
 

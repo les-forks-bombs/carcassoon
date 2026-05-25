@@ -98,4 +98,4 @@ bool placed_tile_group_connected(placed_tile_group_t *a,
  * @return Les résultats de l'évaluation des points
  */
 placed_tile_group_eval_points_t placed_tile_group_eval_points(
-    placed_tile_group_t *group);
+    placed_tile_group_t *group, bool is_completed);
