@@ -1,12 +1,12 @@
 #include "banner.h"
 
 #include <SDL3/SDL_render.h>
+#include <sdl/consts.h>
 #include <stdlib.h>
 
 #include "libutils/path.h"
 #include "sdl/resolver.h"
 #include "text.h"
-#include <sdl/consts.h>
 
 banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
   banner_t *banner = SDL_malloc(sizeof(banner_t));
