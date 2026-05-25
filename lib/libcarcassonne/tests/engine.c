@@ -313,9 +313,10 @@ void engine_trigger_end_game(void** state) {
       // Tour 4
       {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, BASIC},
       {"CCRR", true, -1, 2, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, B, BASIC},
-      {"CCFF", true, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, B, BASIC}};
+      {"CCFF", true, 0, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, B, BASIC}
+    };
 
-  for (int i = 0; i<12; i++) {
+  for (int i = 0; i<SIZE(turns); i++) {
     if (i != 0) {
       int         size      = vector_size(&engine.dispatchs);
       dispatch_t* last_hook = vector_nth(&engine.dispatchs, size - 1);
