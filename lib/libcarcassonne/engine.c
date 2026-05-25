@@ -80,6 +80,9 @@ return_code_t start_game(engine_t *engine) {
   if (engine == NULL) {
     return NULL_POINTER;
   }
+  if (engine->game.state != GAME_STATE_NOT_STARTED) {
+    return GAME_NOT_STARTED;
+  }
 
   return_code_t code =
       game_place_tile(&engine->game, deck_pick(&engine->game.deck), 0, 0,
@@ -89,11 +92,19 @@ return_code_t start_game(engine_t *engine) {
     return code;
   }
 
+  engine->game.state = GAME_STATE_PLAYING;
   return SUCCESS;
 }
 
 return_code_t dispatch_action(engine_t *engine, action_t action) {
-  bool     first_ite   = true;
+  // 👇 Blocage si partie non démarrée ou terminée
+  if (engine->game.state == GAME_STATE_NOT_STARTED) {
+    return GAME_NOT_STARTED;
+  }
+  if (engine->game.state == GAME_STATE_FINISHED) {
+    return GAME_FINISHED;
+  }
+
   action_t action_none = {0};
 
   do {
@@ -118,7 +129,7 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     store->state_store = NULL;
 
 #ifdef DEBUG
-    printf("Exécution du hook: %s\n", current_hook->label);
+    // printf("Exécution du hook: %s\n", current_hook->label);
 #endif
 
     current_hook->fw(&(store->state_store), engine, &action);
@@ -127,8 +138,8 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
         (engine->current_hook + 1) % vector_size(&engine->hooks);
 
 #ifdef DEBUG
-    printf("Prochain du hook: %s\n",
-           (*vector_nth(&engine->hooks, engine->current_hook))->label);
+    // printf("Prochain du hook: %s\n",(*vector_nth(&engine->hooks,
+    // engine->current_hook))->label;
 #endif
 
   } while (engine->current_hook != 0);
