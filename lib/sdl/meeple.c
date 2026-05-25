@@ -1,10 +1,21 @@
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/tile.h>
+#include <sdl/appstate.h>
 #include <sdl/meeple.h>
 
-void render_placed_meeple(placed_tile_t *tile, SDL_Renderer *renderer,
+void render_placed_meeple(placed_tile_t *tile, AppState *as,
                           const SDL_FRect *tile_rect, double angle) {
+  SDL_Texture *texture;
+
+  SDL_Texture **texture_ptr = (SDL_Texture **)hashmap_get(
+      &as->textures, "/img/meeple.svg", sizeof("/img/meeple.svg"));
+  if (texture_ptr != NULL) {
+    texture = *texture_ptr;
+  } else {
+    texture = as->temp_tex;
+  }
+
   const tile_t *real_tile = tile->parent;
   if (real_tile == NULL || tile_rect == NULL) return;
 
@@ -16,14 +27,22 @@ void render_placed_meeple(placed_tile_t *tile, SDL_Renderer *renderer,
     if (ptg != NULL && ptg->meeple != NULL) {
       SDL_FRect meeple_dest = calc_meeple_rect(slot, tile_rect, angle);
 
-      SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-      SDL_RenderFillRect(renderer, &meeple_dest);
+      SDL_RenderTexture(as->renderer, texture, NULL, &meeple_dest);
     }
   }
 }
 // à modifier pour ne montrer que les meeples plaçables
-void render_possible_meeples(placed_tile_t *tile, SDL_Renderer *renderer,
+void render_possible_meeples(placed_tile_t *tile, AppState *as,
                              const SDL_FRect *tile_rect, double angle) {
+  SDL_Texture *texture;
+
+  SDL_Texture **texture_ptr = (SDL_Texture **)hashmap_get(
+      &as->textures, "/img/meeple.svg", sizeof("/img/meeple.svg"));
+  if (texture_ptr != NULL) {
+    texture = *texture_ptr;
+  } else {
+    texture = as->temp_tex;
+  }
   const tile_t *real_tile = tile->parent;
   if (real_tile == NULL || tile_rect == NULL) return;
 
@@ -35,8 +54,7 @@ void render_possible_meeples(placed_tile_t *tile, SDL_Renderer *renderer,
     if (ptg != NULL) {
       SDL_FRect meeple_dest = calc_meeple_rect(slot, tile_rect, angle);
 
-      SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
-      SDL_RenderFillRect(renderer, &meeple_dest);
+      SDL_RenderTexture(as->renderer, texture, NULL, &meeple_dest);
     }
   }
 }

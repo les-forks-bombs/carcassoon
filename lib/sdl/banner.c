@@ -6,6 +6,7 @@
 #include "libutils/path.h"
 #include "sdl/resolver.h"
 #include "text.h"
+#include <sdl/consts.h>
 
 banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
   banner_t *banner = SDL_malloc(sizeof(banner_t));
@@ -41,13 +42,9 @@ banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb) {
   banner_t **banners = SDL_calloc(nb, sizeof(banner_t *));
   if (banners == NULL) return NULL;
 
-  SDL_Color colors[] = {{255, 0, 0, 255},   {0, 255, 0, 255},
-                        {0, 0, 255, 255},   {255, 255, 0, 255},
-                        {255, 0, 255, 255}, {0, 255, 255, 255}};
-
   banner_t *new_banner;
   for (int i = 0; i < nb; i++) {
-    new_banner = create_banner(renderer, colors[i], i);
+    new_banner = create_banner(renderer, players_colors[i], i);
     banners[i] = new_banner;
   }
   return banners;
