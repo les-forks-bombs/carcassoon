@@ -23,6 +23,8 @@ typedef struct {
   vector2d_vector_t possibles_places;
 
   banner_t **banners;
+  placed_tile_t *preview_tile;
+  bool show_preview;
 } AppState;
 
 #endif
