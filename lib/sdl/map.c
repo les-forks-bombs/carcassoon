@@ -20,21 +20,6 @@ void render_map(AppState *as) {
   int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
   int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
 
-  action_vector_t actions = engine_get_actions(&as->engine);
-  vector2d_vector_t possibles_places = {0};
-  vector_alloc(&possibles_places, 5);
-
-  for (int i = 0; i < vector_size(&actions); i++) {
-    action_t *action = vector_nth(&actions, i);
-    if (action->type == LIBCARCASSONNE_ACTION_PLACE_TILE) {
-      vector2d_t pos = {.x = action->order.place_tile.x,
-                        .y = action->order.place_tile.y};
-      if (!vector_contains(&possibles_places, &pos)) {
-        vector_append(&possibles_places, &pos);
-      }
-    }
-  }
-
   for (int table_y = min_coord; table_y <= max_coord; table_y++) {
     for (int table_x = min_coord; table_x <= max_coord; table_x++) {
       float world_x = (float)(table_y)*MAP_TILE_SIZE;
@@ -50,7 +35,6 @@ void render_map(AppState *as) {
         placed_tile_t *ptt  = *game_tile_at(&as->engine.game, table_x, table_y);
 
         if (ptt != NULL) {
-          // --- Rendu de la tuile existante ---
           char *texturen    = ptt->parent->texture;
           char *prefix      = "/img/tiles";
           int   buffer_size = strlen(texturen) + strlen(prefix) + 2;
@@ -103,13 +87,12 @@ void render_map(AppState *as) {
         } else {
           vector2d_t pos = {.x = table_x, .y = table_y};
 
-          if (vector_contains(&possibles_places, &pos)) {
-            SDL_SetRenderDrawColor(as->renderer, 255, 0, 0, 255);
+          if (vector_contains(&as->possibles_places, &pos)) {
+            SDL_SetRenderDrawColor(as->renderer, 255, 255, 255, 150);
             SDL_RenderFillRect(as->renderer, &dest);
           }
         }
       }
     }
   }
-  vector_free(&possibles_places);
 }

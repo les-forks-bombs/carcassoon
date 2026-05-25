@@ -101,6 +101,24 @@ static SDL_AppResult handle_mouse_event_(void *appstate, SDL_Event *event) {
   return SDL_APP_CONTINUE;
 }
 
+void update_possible_places(AppState *as) {
+  vector_free(&as->possibles_places);
+  vector_alloc(&as->possibles_places, 5);
+
+  action_vector_t actions = engine_get_actions(&as->engine);
+
+  for (int i = 0; i < vector_size(&actions); i++) {
+    action_t *action = vector_nth(&actions, i);
+    if (action->type == LIBCARCASSONNE_ACTION_PLACE_TILE) {
+      vector2d_t pos = {.x = action->order.place_tile.x,
+                        .y = action->order.place_tile.y};
+      if (!vector_contains(&as->possibles_places, &pos)) {
+        vector_append(&as->possibles_places, &pos);
+      }
+    }
+  }
+}
+
 SDL_AppResult SDL_AppIterate(void *appstate) {
   AppState    *as  = (AppState *)appstate;
   const Uint64 now = SDL_GetTicks();
@@ -234,6 +252,7 @@ static void init_game(AppState *as) {
     dispatch_action(&as->engine, action);
 
     as->current_tile = *placed_tile;
+    update_possible_places(as);
   }
 }
 
@@ -348,6 +367,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
       destroy_banner(as->banners[nb_players]);
     }
     SDL_free(as->banners);
+    vector_free(&as->possibles_places);
     SDL_free(as);
   }
 }
