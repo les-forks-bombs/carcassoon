@@ -20,6 +20,7 @@ typedef struct {
   SDL_Texture       *temp_tex;
   textures_hashmap_t textures;
   vector2d_vector_t possibles_places;
+  bool *possible_meeples;
 
   banner_t **banners;
   action_t *current_action;

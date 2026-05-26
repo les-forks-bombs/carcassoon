@@ -17,4 +17,6 @@ int get_meeple_slot_at_position(const placed_tile_t *tile,
                                 const SDL_FRect *tile_rect, double angle,
                                 const SDL_MouseButtonEvent *event);
 
+void update_possible_meeples(AppState *as);
+
 #endif
