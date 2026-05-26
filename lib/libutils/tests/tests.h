@@ -4,11 +4,8 @@
 #include <libutils/lc.h>
 
 typedef List(int) int_list_t;
-typedef union {
-  hashmap_t meta;
-  char*     key_ghost;
-  int*      value_ghost;
-} map_t;
+typedef HashMap(char*, int*) char_int_map_t;
+typedef HashMap(char*, char*) char_char_map_t;
 
 void utils_list_append_prepend(void** state);
 void utils_vector_create(void** state);
