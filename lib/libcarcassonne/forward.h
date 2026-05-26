@@ -3,6 +3,7 @@
 #include <libcarcassonne/consts.h>
 #include <libutils/lc.h>
 #include <libutils/vector.h>
+#include <libutils/hashmap.h>
 
 #define ForwardDefinition(type, name) typedef type name name##_t
 
@@ -29,6 +30,7 @@ ForwardDefinition(struct, dispatch);
 ForwardDefinition(struct, tile_place_hook_state);
 ForwardDefinition(struct, rendre_meeple_hook_state);
 ForwardDefinition(struct, prochain_joueur_state);
+ForwardDefinition(struct, end_game_hook_state);
 ForwardDefinition(struct, placed_tile_group_eval_points);
 ForwardDefinition(struct, tile_slot);
 
@@ -47,6 +49,8 @@ typedef Vector(dispatch_t) dispatch_vector_t;
 typedef Vector(placed_tile_group_eval_points_t)
     placed_tile_group_eval_points_vector_t;
 typedef Vector(vector2d_t) vector2d_vector_t;
+
+typedef HashMap(unsigned int,unsigned int) players_scores_t;
 
 typedef enum return_code return_code_t;
 

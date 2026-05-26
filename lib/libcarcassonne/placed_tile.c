@@ -1,11 +1,14 @@
 #include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/tile.h>
 #include <libutils/vector.h>
+#include <stdarg.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
+#include "libcarcassonne/ext_base_game.h"
 #include "libcarcassonne/forward.h"
 
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
@@ -19,29 +22,26 @@ return_code_t placed_tile_create(placed_tile_t     *placed_tile,
   placed_tile->x = x;
   placed_tile->y = y;
 
-  for (int i = 0; i < 9; i++) {
+  unsigned int max = 0;
+
+  for (int i = 0; i < PLACED_TILE_GROUP_NUMBER; i++) {
     placed_tile_group_t **group =
         &placed_tile->groups[placed_tile->parent->parts_groups[i]];
     if (*group == NULL) {
-      *group         = calloc(1, sizeof(placed_tile_group_t));
-      (*group)->tile = placed_tile;
+      *group = calloc(1, sizeof(placed_tile_group_t));
+      vector_alloc(&(*group)->neighbors, 8);
+      (*group)->type = parent->parts[i];
+    }
 
-      // La tile numéro 4 est toujours le centre
-      // donc elle ne se connecte a rien, dont aucun slot
-      if (i != 4) (*group)->open_slots = 0;
+    if (placed_tile->parent->parts_groups[i] > max) {
+      max = placed_tile->parent->parts_groups[i];
+    }
 
-      // si on est un champ, on peux se connecter dans les coins
-      if (i == 0 || i == 2 || i == 6 || i == 8) {
-        if (placed_tile->parent->parts[i] == LIBCARCASSONNE_TILE_PART_FIELD) {
-          // représente deux faces
-          (*group)->open_slots = 2;
-        } else {
-          // sinon les coins ne comptent pas
-          (*group)->open_slots = 0;
-        }
-      }
+    (*group)->tile = placed_tile;
 
-      vector_alloc(&(*group)->neighbors, 0);
+    // si c'est pas un coin ou le centre
+    if (i != 0 && i != 2 && i != 4 && i != 6 && i != 8) {
+      (*group)->open_slots += 1;
     }
   }
 
@@ -102,17 +102,22 @@ void placed_tile_group_cut(placed_tile_group_t *a, placed_tile_group_t *b) {
   a->open_slots++;
   b->open_slots++;
 }
-void placed_tile_group_link(placed_tile_group_t *a, placed_tile_group_t *b) {
+bool placed_tile_group_link(placed_tile_group_t *a, placed_tile_group_t *b) {
   // On les lie dans le graphe
+  if (vector_contains(&a->neighbors, &b) ||
+      vector_contains(&b->neighbors, &a)) {
+    return false;
+  }
   vector_append(&a->neighbors, &b);
   vector_append(&b->neighbors, &a);
+  return true;
 }
 
 static int placed_tile_group_complete_inner(placed_tile_group_t *a,
                                             int                  marker) {
   // boucle
   if (a->marker == marker) {
-    return false;
+    return 0;
   }
 
   int total = a->open_slots;
@@ -148,7 +153,7 @@ void placed_tile_group_destory(placed_tile_group_t *group) {
 
 static void placed_tile_group_collect_meeples_inner(
     placed_tile_group_t *group, placed_tile_group_eval_points_t *points,
-    int marker) {
+    int marker, bool is_completed) {
   if (group->marker == marker) {
     return;
   }
@@ -156,10 +161,22 @@ static void placed_tile_group_collect_meeples_inner(
   // on le marque pour éviter de le re-visiter
   group->marker = marker;
 
-  points->points++;
-  if (group->tile->parent->blason) {
-    points->points++;
+  unsigned int value = 0;
+  if(group->type==LIBCARCASSONNE_TILE_PART_ROAD){
+    value = 1;
   }
+  else if (group->type==LIBCARCASSONNE_TILE_PART_TOWN) {
+    value = 1;
+    if (group->tile->parent->blason) {
+      value++;
+    }
+
+    if(is_completed){
+      value*=2;
+    }
+  }
+
+  points->points+=value;
 
   if (group->meeple != NULL) {
     vector_append(&points->meeples, &group->meeple);
@@ -167,7 +184,7 @@ static void placed_tile_group_collect_meeples_inner(
 
   for (unsigned int i = 0; i < vector_size(&group->neighbors); i++) {
     placed_tile_group_collect_meeples_inner(*vector_nth(&group->neighbors, i),
-                                            points, marker);
+                                            points, marker, is_completed);
   }
 }
 
@@ -177,11 +194,11 @@ static void placed_tile_group_collect_meeples_inner(
  * @param group Un noeud du groupe
  */
 placed_tile_group_eval_points_t placed_tile_group_eval_points(
-    placed_tile_group_t *group) {
+    placed_tile_group_t *group, bool is_completed) {
   int                             search_marker = dfs_counter++;
   placed_tile_group_eval_points_t points        = {0};
 
-  placed_tile_group_collect_meeples_inner(group, &points, search_marker);
+  placed_tile_group_collect_meeples_inner(group, &points, search_marker, is_completed);
 
   return points;
 }

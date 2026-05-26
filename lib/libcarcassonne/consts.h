@@ -19,4 +19,6 @@ enum return_code {
   PLAYER_NOT_CALLED    = 10,
   NO_PROGRESS          = 11,
   REMOVE_TILE_NOT_VOID = 12,
+  GAME_NOT_STARTED     = 13,
+  GAME_FINISHED        = 14,
 };

@@ -52,8 +52,18 @@ void test_tile_group_cut(void** state);
 void test_tile_group_merge_two_trees(void** state);
 
 void engine_builds(void** state);
-void engine_short_play_test(void** state);
 void engine_long_play_test(void** state);
+void engine_trigger_end_game(void** state);
+void engine_trigger_give_back_meeple(void** state);
+
+void placed_tile_open_slots_works(void** state);
+
+/* Tests pour placed_tile - propagation des groupes et complétude */
+void placed_tile_road_single_not_complete(void** state);
+void placed_tile_town_cccc_not_complete(void** state);
+void placed_tile_field_fcfc_not_complete(void** state);
+void placed_tile_road_link_propagates_completeness(void** state);
+void placed_tile_road_l_shape_not_complete(void** state);
 
 static const struct CMUnitTest tests[] = {
     cmocka_unit_test(deck_builds),
@@ -88,8 +98,16 @@ static const struct CMUnitTest tests[] = {
     cmocka_unit_test(test_tile_group_merge_two_trees),
 
     cmocka_unit_test(engine_builds),
-    cmocka_unit_test(engine_short_play_test),
     cmocka_unit_test(engine_long_play_test),
+    cmocka_unit_test(engine_trigger_end_game),
+
+    cmocka_unit_test(placed_tile_open_slots_works),
+    cmocka_unit_test(placed_tile_road_single_not_complete),
+    cmocka_unit_test(placed_tile_town_cccc_not_complete),
+    cmocka_unit_test(placed_tile_field_fcfc_not_complete),
+    cmocka_unit_test(placed_tile_road_link_propagates_completeness),
+    cmocka_unit_test(placed_tile_road_l_shape_not_complete),
+    cmocka_unit_test(engine_trigger_give_back_meeple),
 
 };
 
