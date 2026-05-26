@@ -103,7 +103,7 @@ static SDL_FRect calc_meeple_rect(tile_slot_t slot, const SDL_FRect *tile_rect,
   float final_local_x = rot_x + 0.5f;
   float final_local_y = rot_y + 0.5f;
 
-  float meeple_size = tile_rect->w * 0.15f;
+  float meeple_size = tile_rect->w * 0.25f;
 
   SDL_FRect meeple_dest = {
       .x = tile_rect->x + (final_local_x * tile_rect->w) - (meeple_size / 2.0f),
