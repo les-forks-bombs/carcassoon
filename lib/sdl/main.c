@@ -87,7 +87,6 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   start_game(&as->engine);
 
   init_game(as);
-  update_possible_places(as);
 
   // pour resolve:
   char *path;
