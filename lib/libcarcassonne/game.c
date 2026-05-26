@@ -30,6 +30,8 @@ return_code_t create_game(game_t *game, options_t *options) {
   game->current_player = 0;
   game->deck           = create_deck(options->seed, &options->extensions);
   game->options        = options;
+  game->state          = GAME_STATE_NOT_STARTED;
+  game->turns_limit    = options->max_turns;
 
   game->open_tiles.meta.head = NULL;
   game->open_tiles.meta.tail = NULL;
@@ -74,7 +76,7 @@ return_code_t create_game(game_t *game, options_t *options) {
     game->players[i] =
         create_player(i > game->options->ai ? LIBCARCASSONNE_PLAYER_HUMAN
                                             : LIBCARCASSONNE_PLAYER_AI,
-                      &meeples_count);
+                      &meeples_count,i);
   }
 
   vector_free(&meeples_count);
@@ -144,7 +146,11 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
     }
 
     placed_tile_t *placed_tile = calloc(1, sizeof(placed_tile_t));
-    placed_tile_create(placed_tile, tile, orientation, x, y);
+    return_code_t code = placed_tile_create(placed_tile, tile, orientation, x, y);
+
+    if(code!=SUCCESS){
+      return code;
+    }
 
     *tile_ref = placed_tile;
 
@@ -174,14 +180,18 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
 
       switch (orientation) {
         case LIBCARCASSONNE_TILE_ORIENTATION_NORTH:
+          // BAS
           neighbor = game_tile_at(game, x - 1, y);
           break;
+        // HAUT
         case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH:
           neighbor = game_tile_at(game, x + 1, y);
           break;
+        // DROITE
         case LIBCARCASSONNE_TILE_ORIENTATION_EAST:
           neighbor = game_tile_at(game, x, y + 1);
           break;
+        // GAUCHE
         case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
           neighbor = game_tile_at(game, x, y - 1);
           break;
@@ -204,12 +214,15 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
 
           if (rneighbor->parent->parts[values[nindex][i]] ==
               placed_tile->parent->parts[values[oindex][i]]) {
-            placed_tile_group_link(rneighbor->groups[ngroup],
-                                   placed_tile->groups[ogroup]);
+            if (placed_tile->parent->parts[values[oindex][i]] !=
+                    LIBCARCASSONNE_TILE_PART_FIELD && placed_tile->parent->parts[values[oindex][i]] !=
+                    LIBCARCASSONNE_TILE_PART_WALL &&
+                placed_tile_group_link(rneighbor->groups[ngroup],
+                                       placed_tile->groups[ogroup])) {
+              placed_tile->groups[ogroup]->open_slots--;
+              rneighbor->groups[ngroup]->open_slots--;
+            }
           }
-
-          rneighbor->groups[ngroup]->open_slots--;
-          placed_tile->groups[ogroup]->open_slots--;
         }
       }
     }
@@ -312,10 +325,10 @@ return_code_t game_remove_meeple(game_t *game, int x, int y, int part_group) {
     if (group_ref->meeple != NULL) {
       meeple_t *meeple = group_ref->meeple;
 
-      vector_remove_value(&meeple->player->meeples, &meeple);
-      (vector_nth(&game->players[game->current_player].meeples_count,
-                  meeple->meeple_type))
+      (vector_nth(&meeple->player->meeples_count, meeple->meeple_type))
           ->count++;
+
+      vector_remove_value(&meeple->player->meeples, &meeple);
       free(group_ref->meeple);
       group_ref->meeple = NULL;
     }
@@ -393,7 +406,8 @@ bool game_is_place_open(game_t *game, int x, int y) {
 }
 
 bool is_game_finished(game_t *game) {
-  return list_size(&game->deck.list) == 0 || game->turn == game->turns_limit;
+  return list_size(&game->deck.list) == 0 ||
+         (game->turns_limit != 0 && game->turn >= game->turns_limit);
 }
 
 return_code_t game_end_player_turn(game_t *game) {
@@ -401,7 +415,7 @@ return_code_t game_end_player_turn(game_t *game) {
     return NULL_POINTER;
   }
 
-  if (game->current_player + 1 >= game->current_player) {
+  if (game->current_player + 1 >= game->options->players) {
     return NO_MORE_PLAYER;
   }
 
@@ -415,7 +429,7 @@ return_code_t game_end_round(game_t *game) {
     return NULL_POINTER;
   }
 
-  if (game->current_player != game->options->players) {
+  if (game->current_player != game->options->players - 1) {
     return PLAYER_NOT_CALLED;
   }
 

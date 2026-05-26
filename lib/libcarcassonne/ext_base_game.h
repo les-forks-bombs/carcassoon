@@ -318,7 +318,7 @@ static const tile_t
                      FIELD,
                      FIELD,
                  },
-             .parts_groups = {A, A, A, B, D, B, C, C, C},
+             .parts_groups = {A, A, A, B, B, B, C, C, C},
              .blason       = true,
              .amount       = 2,
              .texture      = "tile_22.png",
@@ -636,7 +636,7 @@ const static tile_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[] = {
              FIELD,
              FIELD,
          },
-     .parts_groups = {D, A, D, B, E, B, C, C, C},
+     .parts_groups = {D, A, D, B, B, B, C, C, C},
      .blason       = false,
      .amount       = 1,
      .texture      = "tile_18.png",
@@ -658,7 +658,7 @@ static const tile_vector_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
 static const extension_process_hook_t*
     LIBCARCASSONNE_EXT_BASE_GAME_HOOKS_LIST[] = {
         &hook_meeple_place, &hook_tile_place, &hook_give_back_meeples,
-        &hook_next_player};
+        &hook_next_player, &hook_end_game};
 
 static const extension_process_hooks_vector_t
     LIBCARCASSONNE_EXT_BASE_GAME_HOOKS = {

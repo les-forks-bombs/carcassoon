@@ -1,7 +1,6 @@
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/tests/tests.h>
-#include <libutils/cmocka.h>
 #include <malloc.h>
 #include <stdio.h>
 
