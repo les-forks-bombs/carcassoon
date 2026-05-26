@@ -170,7 +170,6 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     SDL_DestroyRenderer(as->renderer);
     SDL_DestroyWindow(as->window);
     destroy_text_object(as->text);
-    TTF_Quit();
     free_options(&as->engine.config);
     destroy_engine(&as->engine);
     SDL_DestroyTexture(as->temp_tex);
@@ -181,5 +180,6 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     SDL_free(as->banners);
     vector_free(&as->possibles_places);
     SDL_free(as);
+    TTF_Quit();
   }
 }
