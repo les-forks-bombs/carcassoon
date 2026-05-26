@@ -1,6 +1,9 @@
 #include <sdl/game_test.h>
 #include <sdl/consts.h>
+#include "libcarcassonne/engine.h"
 #include "libcarcassonne/ext_base_game.h"
+#include "libcarcassonne/forward.h"
+#include "libutils/vector.h"
 
 void init_game(AppState *as) {
   const tile_t *tile;
@@ -55,6 +58,10 @@ void init_game(AppState *as) {
     action.order.place_meeple.y           = turns[i].y;
 
     dispatch_action(&as->engine, action);
+
+    action_vector_t actions = engine_get_actions(&as->engine);
+    as->next_action=vector_nth(&actions, 0);
+    as->is_waiting_for_tile=true;
   }
   
 }
