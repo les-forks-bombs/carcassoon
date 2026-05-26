@@ -45,34 +45,44 @@ void render_placed_meeple(placed_tile_t *tile, AppState *as,
 
 void render_possible_meeples(placed_tile_t *tile, AppState *as,
                              const SDL_FRect *tile_rect, double angle) {
+
   SDL_Texture *texture;
 
   SDL_Texture **texture_ptr = (SDL_Texture **)hashmap_get(
       &as->textures, "/img/meeple.svg", sizeof("/img/meeple.svg"));
-  if (texture_ptr != NULL) {
-    texture = *texture_ptr;
-  } else {
-    texture = as->temp_tex;
-  }
-  
+
+  texture = (texture_ptr != NULL) ? *texture_ptr : as->temp_tex;
+
   const tile_t *real_tile = tile->parent;
   if (real_tile == NULL || tile_rect == NULL) return;
 
-  SDL_SetTextureAlphaMod(texture, 100);
   for (unsigned int s = 0; s < real_tile->nb_slots; s++) {
-    tile_slot_t       slot       = real_tile->slots[s];
 
-    placed_tile_group_t *ptg = tile->groups[(int)slot.group];
-    if (ptg != NULL && as->possible_meeples[(int)slot.group]) {
-      SDL_SetTextureColorMod(texture, 255, 255, 255);
+    tile_slot_t slot = real_tile->slots[s];
+    int g = slot.group;
 
-      // printf("current player id : %d \n", as->engine.game.current_player);
+    placed_tile_group_t *ptg = tile->groups[g];
+
+    if (ptg != NULL && as->possible_meeples[g]) {
+
       SDL_Color c = players_colors[as->engine.game.current_player];
       SDL_SetTextureColorMod(texture, c.r, c.g, c.b);
+
+      int alpha = 100;
+      if (as->current_action &&
+          as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE &&
+          as->current_action->order.place_meeple.tile == tile &&
+          as->current_action->order.place_meeple.part_group == g) {
+        alpha = 255;
+      }
+
+      SDL_SetTextureAlphaMod(texture, alpha);
+
       SDL_FRect meeple_dest = calc_meeple_rect(slot, tile_rect, angle);
       SDL_RenderTexture(as->renderer, texture, NULL, &meeple_dest);
     }
   }
+
   SDL_SetTextureColorMod(texture, 255, 255, 255);
   SDL_SetTextureAlphaMod(texture, 255);
 }
