@@ -18,7 +18,6 @@ typedef struct {
   text_object_t     *text;
   engine_t           engine;
   SDL_Texture       *temp_tex;
-  placed_tile_t     *current_tile;
   textures_hashmap_t textures;
   vector2d_vector_t possibles_places;
 

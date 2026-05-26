@@ -74,7 +74,7 @@ static void render_occupied_cell(AppState *as, placed_tile_t *ptt, const SDL_FRe
   
   draw_tile(as, ptt->parent, dest, angle, 255);
 
-  if (ptt == as->current_tile) {
+  if (ptt == as->current_action->order.place_meeple.tile) {
     draw_selection_border(as->renderer, dest);
     render_possible_meeples(ptt, as, dest, angle);
   }
