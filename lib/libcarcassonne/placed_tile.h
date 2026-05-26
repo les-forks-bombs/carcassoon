@@ -3,6 +3,7 @@
 #include <libutils/vector.h>
 
 #include "libcarcassonne/forward.h"
+#include "libcarcassonne/tile.h"
 
 /// @brief Information des groupes de la sous-tile
 struct placed_tile_group {
@@ -11,7 +12,7 @@ struct placed_tile_group {
   /// @brief Référence vers l'éventuel meeple placé dans le groupe
   meeple_t *meeple;
 
-  /**
+  /**     
    * @brief Tableau des enfants au total
    * Utilisé pour le parcours "simple" depuis la racine
    */
@@ -20,6 +21,8 @@ struct placed_tile_group {
   unsigned int open_slots;
 
   int marker;
+
+  tile_part_type_t type;
 };
 
 /// @brief Nombre de sous-groupes dans une tuile
@@ -58,7 +61,7 @@ void placed_tile_group_destory(placed_tile_group_t *group);
  * @param a Le groupe a relier a "b"
  * @param b Le groupe a relier a "a"
  */
-void placed_tile_group_link(placed_tile_group_t *a, placed_tile_group_t *b);
+bool placed_tile_group_link(placed_tile_group_t *a, placed_tile_group_t *b);
 
 /**
  * @brief Coupe le lien entre deux groupes
@@ -95,4 +98,4 @@ bool placed_tile_group_connected(placed_tile_group_t *a,
  * @return Les résultats de l'évaluation des points
  */
 placed_tile_group_eval_points_t placed_tile_group_eval_points(
-    placed_tile_group_t *group);
+    placed_tile_group_t *group, bool is_completed);
