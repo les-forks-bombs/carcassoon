@@ -72,7 +72,5 @@ void init_game(AppState *as) {
 
   dispatch_action(&as->engine, action);
 
-  get_current_actions(as);
-  put_first_action_in_appstate(as);
-  update_possible_meeples(as);
+
 }

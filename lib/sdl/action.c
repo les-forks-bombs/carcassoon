@@ -1,5 +1,6 @@
 #include <sdl/action.h>
 #include "libutils/vector.h"
+#include "sdl/map.h"
 #include <stdio.h>
 
 void get_current_actions(AppState *as){
@@ -41,4 +42,16 @@ void pass_to_action(AppState *as, int increment) {
         as->current_action = vector_nth(&as->all_actions, as->action_index);
     }
     // printf("action changée\n");
+}
+
+void send_action_to_engine(AppState *as){
+    dispatch_action(&as->engine, *as->current_action);
+    get_current_actions(as);
+    put_first_action_in_appstate(as);
+    bool next_action_is_tile_placement = as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_TILE;
+    if (next_action_is_tile_placement) {
+        update_possible_places(as);
+    } else {
+        update_possible_meeples(as);
+    }
 }
