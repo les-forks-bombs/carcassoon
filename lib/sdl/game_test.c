@@ -35,7 +35,7 @@ void init_game(AppState *as) {
       // Tour 4
       {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, BASIC}};
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 9; i++) {
     tile = deck_find_tile(&as->engine.game.deck, turns[i].tile_id,
                           turns[i].blason);
 
@@ -61,6 +61,16 @@ void init_game(AppState *as) {
 
     dispatch_action(&as->engine, action);
   }
+  tile = deck_find_tile(&as->engine.game.deck, turns[9].tile_id,
+                          turns[9].blason);
+  action.type                         = LIBCARCASSONNE_ACTION_PLACE_TILE;
+  action.order.place_tile.tile        = tile;
+  action.order.place_tile.x           = turns[9].x;
+  action.order.place_tile.y           = turns[9].y;
+  action.order.place_tile.orientation = turns[9].orientation;
+
+  dispatch_action(&as->engine, action);
+
   get_current_actions(as);
   put_first_action_in_appstate(as);
   update_possible_places(as);
