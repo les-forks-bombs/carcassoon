@@ -215,7 +215,8 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
           if (rneighbor->parent->parts[values[nindex][i]] ==
               placed_tile->parent->parts[values[oindex][i]]) {
             if (placed_tile->parent->parts[values[oindex][i]] !=
-                    LIBCARCASSONNE_TILE_PART_FIELD &&
+                    LIBCARCASSONNE_TILE_PART_FIELD && placed_tile->parent->parts[values[oindex][i]] !=
+                    LIBCARCASSONNE_TILE_PART_WALL &&
                 placed_tile_group_link(rneighbor->groups[ngroup],
                                        placed_tile->groups[ogroup])) {
               placed_tile->groups[ogroup]->open_slots--;
