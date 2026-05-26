@@ -85,11 +85,11 @@ static void render_empty_cell(AppState *as, int table_x, int table_y, const SDL_
   vector2d_t pos = {.x = table_x, .y = table_y};
   if (!vector_contains(&as->possibles_places, &pos)) return;
 
-  if (as->is_waiting_for_tile && as->next_action->order.place_tile.tile != NULL && 
-      as->next_action->order.place_tile.x == table_x && as->next_action->order.place_tile.y == table_y) {
-    printf("dans la boucle\n");
-    double preview_angle = get_tile_angle(as->next_action->order.place_tile.orientation);
-    draw_tile(as, as->next_action->order.place_tile.tile, dest, preview_angle, 160);
+  if (as->is_waiting_for_tile && as->current_action->order.place_tile.tile != NULL && 
+      as->current_action->order.place_tile.x == table_x && as->current_action->order.place_tile.y == table_y) {
+    // printf("dans la boucle\n");
+    double preview_angle = get_tile_angle(as->current_action->order.place_tile.orientation);
+    draw_tile(as, as->current_action->order.place_tile.tile, dest, preview_angle, 160);
     /*SDL_SetRenderDrawBlendMode(as->renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(as->renderer, 255, 0, 0, 150);
     SDL_RenderFillRect(as->renderer, dest);*/
@@ -122,7 +122,7 @@ void render_map(AppState *as) {
         if (ptt != NULL) {
           render_occupied_cell(as, ptt, &dest);
         } else {
-          if(as->next_action->type==LIBCARCASSONNE_ACTION_PLACE_TILE){
+          if(as->current_action->type==LIBCARCASSONNE_ACTION_PLACE_TILE){
             render_empty_cell(as, table_x, table_y, &dest);
           }
         }

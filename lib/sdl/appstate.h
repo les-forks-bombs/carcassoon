@@ -23,8 +23,10 @@ typedef struct {
   vector2d_vector_t possibles_places;
 
   banner_t **banners;
-  action_t *next_action;
+  action_t *current_action;
+  action_vector_t all_actions;
   bool is_waiting_for_tile;
+  int action_index;
 } AppState;
 
 #endif
