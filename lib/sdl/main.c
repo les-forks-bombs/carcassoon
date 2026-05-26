@@ -29,6 +29,7 @@
 #include <sdl/events.h>
 #include <sdl/game_test.h>
 #include <sdl/load.h>
+#include <sdl/action.h>
 
 path_resolver_t resolver;
 
@@ -86,7 +87,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
   start_game(&as->engine);
 
-  init_game(as);
+  // init_game(as);
 
   // pour resolve:
   char *path;
@@ -140,6 +141,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   as->banners = create_banner_for_each_player(as->renderer,
                                               as->engine.game.options->players);
 
+  get_current_actions(as);
+  put_first_action_in_appstate(as);
+  update_possible_places(as);
   as->last_step = SDL_GetTicks();
   return SDL_APP_CONTINUE;
 }

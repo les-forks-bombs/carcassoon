@@ -67,6 +67,9 @@ SDL_AppResult handle_key_event_(AppState *as, SDL_Keycode key_val) {
     case SDLK_D:
       as->camera->x -= 10.0f;
       break;
+    case SDLK_RETURN:
+      send_action_to_engine(as);
+      break;
     default:
       break;
   }
