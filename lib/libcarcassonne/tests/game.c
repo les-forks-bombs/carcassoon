@@ -72,7 +72,7 @@ void game_tile_at_works(void** state) {
   game_t game;
   assert_int_equal(create_game(&game, &options), SUCCESS);
 
-  placed_tile_t** tile = game_tile_at(&game, 71, 71);
+  placed_tile_t** tile = game_tile_at(&game, -71, -71);
   assert_ptr_equal(tile, &game.map[0]);
 
   destroy_game(&game);
