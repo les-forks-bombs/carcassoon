@@ -3,7 +3,7 @@
 #include <string.h>
 
 void utils_hashmap_create_test(void** state) {
-  map_t map;
+  char_char_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
 
@@ -11,7 +11,7 @@ void utils_hashmap_create_test(void** state) {
 }
 
 void utils_hashmap_get_set_test(void** state) {
-  map_t map;
+  char_int_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
 
@@ -21,7 +21,7 @@ void utils_hashmap_get_set_test(void** state) {
 
   hashmap_set(&map, key1, sizeof(key1), &val1, sizeof(val1));
 
-  int* res = hashmap_get(&map, key1, sizeof(key1));
+  int *res = hashmap_get(&map, key1, sizeof(key1));
   assert_non_null(res);
   assert_int_equal(*res, val1);
 
@@ -29,7 +29,7 @@ void utils_hashmap_get_set_test(void** state) {
 }
 
 void utils_hashmap_string_test(void** state) {
-  map_t map;
+  char_char_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
 
@@ -57,7 +57,7 @@ void utils_hashmap_string_test(void** state) {
 }
 
 void utils_hashmap_pointer_test(void** state) {
-  map_t map;
+  char_int_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
 
@@ -83,7 +83,7 @@ void utils_hashmap_pointer_test(void** state) {
 }
 
 void utils_hashmap_update_test(void** state) {
-  map_t map;
+  char_int_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
 
@@ -109,7 +109,7 @@ void utils_hashmap_update_test(void** state) {
 }
 
 void utils_hashmap_remove_test(void** state) {
-  map_t map;
+  char_char_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
 
