@@ -61,8 +61,8 @@ return_code_t create_game(game_t *game, options_t *options) {
   for (unsigned int i = 0; i < vector_size(&options->extensions); i++) {
     extension_t          *extension = *vector_nth(&options->extensions, i);
     meeple_count_vector_t ext_meeple_count_list = extension->meeples_count;
-    for (unsigned int i = 0; i < vector_size(&ext_meeple_count_list); i++) {
-      meeple_count_t *ext_meeple_count = vector_nth(&ext_meeple_count_list, i);
+    for (unsigned int j = 0; j < vector_size(&ext_meeple_count_list); j++) {
+      meeple_count_t *ext_meeple_count = vector_nth(&ext_meeple_count_list, j);
 
       meeple_count_t *meeple_count =
           vector_nth(&meeples_count, ext_meeple_count->meeple_type);
@@ -123,7 +123,7 @@ placed_tile_t **game_tile_at(game_t *game, int colonne, int ligne) {
   int zero = LIBCARCASSONNE_TILES_COUNT - 1;
   int size = (LIBCARCASSONNE_TILES_COUNT * 2) - 1;
 
-  int index = ((zero + ligne) * size) + (zero + colonne);
+  int index = ((zero - ligne) * size) + (zero - colonne);
 
   return &game->map[index];
 }

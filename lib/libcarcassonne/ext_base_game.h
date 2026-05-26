@@ -45,7 +45,7 @@ static const tile_t
              .parts_groups = {A, A, A, A, B, A, A, A, A},
              .blason       = true,
              .amount       = 1,
-             .texture      = "tile_11.svg",
+             .texture      = "tile_11.png",
              .slots        = {{.x = 0.5, .y = 0.5, .group = A}},
              .nb_slots     = 1},
 
@@ -67,7 +67,7 @@ static const tile_t
              .parts_groups = {A, A, A, A, C, A, B, B, B},
              .blason       = true,
              .amount       = 1,
-             .texture      = "tile_13.svg",
+             .texture      = "tile_13.png",
              .slots        = {{.x = 0.5, .y = 0.35, .group = A},
                               {.x = 0.5, .y = 0.9, .group = B}},
              .nb_slots     = 2},
@@ -88,7 +88,7 @@ static const tile_t
              .parts_groups = {A, A, A, A, C, A, B, B, B},
              .blason       = false,
              .amount       = 3,
-             .texture      = "tile_12.svg",
+             .texture      = "tile_12.png",
              .slots        = {{.x = 0.5, .y = 0.35, .group = A},
                               {.x = 0.5, .y = 0.9, .group = B}},
              .nb_slots     = 2},
@@ -111,7 +111,7 @@ static const tile_t
              .parts_groups = {A, A, A, A, E, A, B, C, D},
              .blason       = true,
              .amount       = 2,
-             .texture      = "tile_15.svg",
+             .texture      = "tile_15.png",
              .slots        = {{.x = 0.5, .y = 0.35, .group = A},
                               {.x = 0.5, .y = 0.9, .group = C},
                               {.x = 0.28, .y = 0.92, .group = B},
@@ -134,7 +134,7 @@ static const tile_t
              .parts_groups = {A, A, A, A, E, A, B, C, D},
              .blason       = false,
              .amount       = 1,
-             .texture      = "tile_14.svg",
+             .texture      = "tile_14.png",
              .slots        = {{.x = 0.5, .y = 0.35, .group = A},
                               {.x = 0.5, .y = 0.9, .group = C},
                               {.x = 0.28, .y = 0.92, .group = B},
@@ -162,7 +162,7 @@ static const tile_t
                 .parts_groups = {C, A, D, C, E, B, C, C, C},
                 .blason       = false,
                 .amount       = 2,
-                .texture      = "tile_16.svg",
+                .texture      = "tile_16.png",
                 .slots        = {{.x = 0.5, .y = 0.1, .group = A},
                                  {.x = 0.3, .y = 0.7, .group = C},
                                  {.x = 0.9, .y = 0.5, .group = B}},
@@ -184,7 +184,7 @@ static const tile_t
              .parts_groups = {A, B, B, A, C, B, A, A, A},
              .blason       = true,
              .amount       = 2,
-             .texture      = "tile_02.svg",
+             .texture      = "tile_02.png",
              .slots        = {{.x = 0.77, .y = 0.23, .group = B},
                               {.x = 0.3, .y = 0.7, .group = A}},
              .nb_slots     = 2},
@@ -205,7 +205,7 @@ static const tile_t
              .parts_groups = {A, B, B, A, C, B, A, A, A},
              .blason       = false,
              .amount       = 3,
-             .texture      = "tile_01.svg",
+             .texture      = "tile_01.png",
              .slots        = {{.x = 0.77, .y = 0.23, .group = B},
                               {.x = 0.3, .y = 0.7, .group = A}},
              .nb_slots     = 2},
@@ -227,7 +227,7 @@ static const tile_t
              .parts_groups = {A, B, E, C, F, B, D, C, A},
              .blason       = true,
              .amount       = 2,
-             .texture      = "tile_24.svg",
+             .texture      = "tile_24.png",
              .slots =
                  {
                      {.x = 0.77, .y = 0.23, .group = B},
@@ -254,7 +254,7 @@ static const tile_t
              .parts_groups = {A, B, E, C, F, B, D, C, A},
              .blason       = false,
              .amount       = 3,
-             .texture      = "tile_23.svg",
+             .texture      = "tile_23.png",
              .slots =
                  {
                      {.x = 0.77, .y = 0.23, .group = B},
@@ -273,7 +273,7 @@ static const tile_t
              .parts_groups = {A, C, A, A, D, A, A, B, A},
              .blason       = false,
              .amount       = 3,
-             .texture      = "tile_04.svg",
+             .texture      = "tile_04.png",
              .slots        = {{.x = 0.5, .y = 0.1, .group = C},
                               {.x = 0.5, .y = 0.9, .group = B},
                               {.x = 0.5, .y = 0.5, .group = A}},
@@ -295,7 +295,7 @@ static const tile_t
              .parts_groups = {A, A, A, B, D, B, C, C, C},
              .blason       = false,
              .amount       = 1,
-             .texture      = "tile_21.svg",
+             .texture      = "tile_21.png",
              .slots =
                  {
                      {.x = 0.5, .y = 0.1, .group = A},
@@ -321,7 +321,7 @@ static const tile_t
              .parts_groups = {A, A, A, B, B, B, C, C, C},
              .blason       = true,
              .amount       = 2,
-             .texture      = "tile_22.svg",
+             .texture      = "tile_22.png",
              .slots =
                  {
                      {.x = 0.5, .y = 0.1, .group = A},
@@ -349,7 +349,7 @@ static const tile_t
              .parts_groups = {A, B, A, A, C, A, A, A, A},
              .blason       = false,
              .amount       = 5,
-             .texture      = "tile_17.svg",
+             .texture      = "tile_17.png",
              .slots        = {{.x = 0.5, .y = 0.1, .group = B},
                               {.x = 0.5, .y = 0.65, .group = A}},
              .nb_slots     = 2},
@@ -372,7 +372,7 @@ static const tile_t
              .parts_groups = {A, B, A, C, E, A, D, C, A},
              .blason       = false,
              .amount       = 3,
-             .texture      = "tile_20.svg",
+             .texture      = "tile_20.png",
              .slots        = {{.x = 0.5, .y = 0.1, .group = B},
                               {.x = 0.8, .y = 0.5, .group = A},
                               {.x = 0.35, .y = 0.65, .group = C},
@@ -399,7 +399,7 @@ static const tile_t
              .parts_groups = {A, D, A, B, D, B, C, C, C},
              .blason       = false,
              .amount       = 3,
-             .texture      = "tile_18.svg",
+             .texture      = "tile_18.png",
              .slots        = {{.x = 0.5, .y = 0.1, .group = D},
                               {.x = 0.2, .y = 0.3, .group = A},
                               {.x = 0.5, .y = 0.5, .group = B},
@@ -423,7 +423,7 @@ static const tile_t
              .parts_groups = {A, D, A, A, D, B, A, B, C},
              .blason       = false,
              .amount       = 3,
-             .texture      = "tile_19.svg",
+             .texture      = "tile_19.png",
              .slots =
                  {
                      {.x = 0.5, .y = 0.1, .group = D},
@@ -450,7 +450,7 @@ static const tile_t
              .parts_groups = {G, A, G, B, H, C, F, D, E},
              .blason       = false,
              .amount       = 3,
-             .texture      = "tile_03.svg",
+             .texture      = "tile_03.png",
              .slots        = {{.x = 0.8, .y = 0.8, .group = E},
                               {.x = 0.2, .y = 0.8, .group = F},
                               {.x = 0.5, .y = 0.1, .group = A},
@@ -477,7 +477,7 @@ static const tile_t
              .parts_groups = {A, A, A, A, B, A, A, A, A},
              .blason       = false,
              .amount       = 4,
-             .texture      = "tile_00.svg",
+             .texture      = "tile_00.png",
              .slots =
                  {
                      {.x = 0.5, .y = 0.5, .group = B},
@@ -502,7 +502,7 @@ static const tile_t
              .parts_groups = {A, A, A, A, C, A, A, B, A},
              .blason       = false,
              .amount       = 2,
-             .texture      = "tile_06.svg",
+             .texture      = "tile_06.png",
              .slots        = {{.x = 0.5, .y = 0.5, .group = 0},
                               {.x = 0.2, .y = 0.2, .group = A},
                               {.x = 0.5, .y = 0.82, .group = B}},
@@ -526,7 +526,7 @@ static const tile_t
              .parts_groups = {A, A, A, B, D, A, C, B, A},
              .blason       = false,
              .amount       = 9,
-             .texture      = "tile_08.svg",
+             .texture      = "tile_08.png",
              .slots        = {{.x = 0.35, .y = 0.65, .group = B},
                               {.x = 0.7, .y = 0.3, .group = A},
                               {.x = 0.17, .y = 0.83, .group = C}},
@@ -549,7 +549,7 @@ static const tile_t
              .parts_groups = {A, A, A, B, D, B, C, C, C},
              .blason       = false,
              .amount       = 8,
-             .texture      = "tile_09.svg",
+             .texture      = "tile_09.png",
              .slots        = {{.x = 0.5, .y = 0.5, .group = B},
                               {.x = 0.5, .y = 0.21, .group = A},
                               {.x = 0.5, .y = 0.79, .group = C}},
@@ -573,7 +573,7 @@ static const tile_t
              .parts_groups = {A, A, A, B, G, C, E, D, F},
              .blason       = false,
              .amount       = 4,
-             .texture      = "tile_10.svg",
+             .texture      = "tile_10.png",
              .slots        = {{.x = 0.8, .y = 0.8, .group = F},
                               {.x = 0.2, .y = 0.8, .group = E},
                               {.x = 0.5, .y = 0.21, .group = A},
@@ -600,7 +600,7 @@ static const tile_t
              .parts_groups = {E, A, F, B, I, C, G, D, H},
              .blason       = false,
              .amount       = 1,
-             .texture      = "tile_07.svg",
+             .texture      = "tile_07.png",
              .slots =
                  {
                      {.x = 0.5, .y = 0.18, .group = A},
@@ -686,7 +686,7 @@ static const extension_t LIBCARCASSONNE_EXT_BASE_GAME = {
     .start_tiles          = &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES,
     .start_tiles_priority = 0,
     .required             = &LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS,
-};
+    .meeples_count        = meeples_count};
 
 #undef VILLAGE
 #undef FIELD
