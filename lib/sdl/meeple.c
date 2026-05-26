@@ -3,6 +3,7 @@
 #include <libcarcassonne/tile.h>
 #include <sdl/appstate.h>
 #include <sdl/meeple.h>
+#include "sdl/consts.h"
 
 void render_placed_meeple(placed_tile_t *tile, AppState *as,
                           const SDL_FRect *tile_rect, double angle) {
@@ -27,10 +28,18 @@ void render_placed_meeple(placed_tile_t *tile, AppState *as,
     if (ptg != NULL && ptg->meeple != NULL) {
       SDL_FRect meeple_dest = calc_meeple_rect(slot, tile_rect, angle);
 
+      player_t *player = ptg->meeple->player;
+      
+      if (player != NULL) {
+        SDL_Color color = players_colors[player->id];
+        SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
+      }
       SDL_RenderTexture(as->renderer, texture, NULL, &meeple_dest);
     }
+    SDL_SetTextureColorMod(texture, 255, 255, 255);
   }
 }
+
 // à modifier pour ne montrer que les meeples plaçables
 void render_possible_meeples(placed_tile_t *tile, AppState *as,
                              const SDL_FRect *tile_rect, double angle) {
@@ -46,6 +55,7 @@ void render_possible_meeples(placed_tile_t *tile, AppState *as,
   const tile_t *real_tile = tile->parent;
   if (real_tile == NULL || tile_rect == NULL) return;
 
+  SDL_SetTextureAlphaMod(texture, 150);
   for (unsigned int s = 0; s < real_tile->nb_slots; s++) {
     tile_slot_t       slot       = real_tile->slots[s];
     tile_part_group_t slot_group = slot.group;
@@ -57,6 +67,7 @@ void render_possible_meeples(placed_tile_t *tile, AppState *as,
       SDL_RenderTexture(as->renderer, texture, NULL, &meeple_dest);
     }
   }
+  SDL_SetTextureAlphaMod(texture, 255);
 }
 
 static SDL_FRect calc_meeple_rect(tile_slot_t slot, const SDL_FRect *tile_rect,
