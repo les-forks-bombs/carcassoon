@@ -359,6 +359,10 @@ return_code_t give_back_meeples_free(void **state_store, engine_t *engine) {
     return SUCCESS;
   }
 
+  for (unsigned int i=0; i<vector_size(evals); i++) {
+    placed_tile_group_eval_points_t *eval = vector_nth(evals, i);
+    vector_free(&eval->meeples);
+  }
   vector_free(evals);
 
   free(evals);
@@ -462,6 +466,7 @@ static void compute_unfinished_points(
       meeple_t *meeple=*vector_nth(&player->meeples, 0);
       placed_tile_group_eval_points_t evaluation = placed_tile_group_eval_points(meeple->group_node, false);
       update_score(engine, &evaluation);
+      vector_free(&evaluation.meeples);
     }
   }
 }

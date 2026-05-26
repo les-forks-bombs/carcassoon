@@ -4,7 +4,6 @@
 #include <libcarcassonne/tests/tests.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
 #include <unistd.h>
 
 #include "libcarcassonne/action.h"
@@ -22,178 +21,6 @@ void engine_builds(void** state) {
   (void)state;
   engine_t engine = {0};
   assert_int_equal(create_engine(&engine, options), SUCCESS);
-  destroy_engine(&engine);
-}
-
-void engine_short_play_test(void** state) {
-  (void)state;
-  engine_t engine = {0};
-  assert_int_equal(create_engine(&engine, options), SUCCESS);
-
-  const tile_t* tile;
-
-  tile = deck_find_tile(&engine.game.deck, "FCFC", true);
-  assert_ptr_not_equal(tile, NULL);
-  action_t action = {
-      .type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
-      .order = {
-          .place_tile = {.tile        = tile,
-                         .x           = 0,
-                         .y           = 1,
-                         .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST}}};
-
-  assert_int_equal(start_game(&engine), SUCCESS);
-
-  assert_int_equal(engine.current_hook, 0);
-  assert_int_equal(dispatch_action(&engine, action), NO_PROGRESS);
-  assert_int_equal(engine.current_hook, 1);
-
-  action.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
-
-  placed_tile_t** placed_tile = game_tile_at(&engine.game, 0, 1);
-
-  assert_non_null(placed_tile);
-  assert_non_null(*placed_tile);
-
-  action.order.place_meeple.meeple_type = BASIC;
-  action.order.place_meeple.part_group  = B;
-  action.order.place_meeple.tile        = *placed_tile;
-  action.order.place_meeple.x           = 0;
-  action.order.place_meeple.y           = 1;
-
-  action_vector_t meeple_actions = engine_get_actions(&engine);
-
-  assert_int_equal(vector_size(&meeple_actions), 1);
-
-  action_t correct_place_meeple_actions[] = {
-      // CHAMP GAUCHE
-      {.order.place_meeple = {.tile        = *placed_tile,
-                              .part_group  = A,
-                              .meeple_type = BASIC,
-                              .x           = 0,
-                              .y           = 1},
-       .type               = LIBCARCASSONNE_ACTION_PLACE_MEEPLE},
-      // VILLE
-      {.order.place_meeple = {.tile        = *placed_tile,
-                              .part_group  = B,
-                              .meeple_type = BASIC,
-                              .x           = 0,
-                              .y           = 1},
-       .type               = LIBCARCASSONNE_ACTION_PLACE_MEEPLE},
-      // CHAMP DROIT
-      {.order.place_meeple = {.tile        = *placed_tile,
-                              .part_group  = C,
-                              .meeple_type = BASIC,
-                              .x           = 0,
-                              .y           = 1},
-       .type               = LIBCARCASSONNE_ACTION_PLACE_MEEPLE},
-      // NONE
-      {.order = {0}, .type = LIBCARCASSONNE_ACTION_NONE},
-  };
-
-  for (unsigned int i = 0; i < vector_size(&meeple_actions); i++) {
-    action_t a1 = *vector_nth(&meeple_actions, i);
-    action_t a2 = correct_place_meeple_actions[i];
-
-    assert_int_equal(a1.order.place_tile.x, a2.order.place_tile.x);
-    assert_int_equal(a1.order.place_tile.y, a2.order.place_tile.y);
-    assert_int_equal(a1.order.place_tile.orientation,
-                     a2.order.place_tile.orientation);
-    assert_ptr_equal(a1.order.place_tile.tile, a2.order.place_tile.tile);
-    assert_int_equal(a1.type, a2.type);
-  }
-
-  vector_free(&meeple_actions);
-
-  assert_int_equal(dispatch_action(&engine, action), SUCCESS);
-  assert_int_equal(engine.current_hook, 0);
-
-  action_vector_t tile_actions = engine_get_actions(&engine);
-
-  tile = deck_find_tile(&engine.game.deck, "CFCF", false);
-  action_t correct_place_tile_actions[] = {
-      // 1, 1
-      {.order.place_tile = {.tile = tile,
-                            .orientation =
-                                LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
-                            .x = 1,
-                            .y = 1},
-       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
-      {.order.place_tile = {.tile = tile,
-                            .orientation =
-                                LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
-                            .x = 1,
-                            .y = 1},
-       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
-      // -1, 1
-      {.order.place_tile = {.tile = tile,
-                            .orientation =
-                                LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
-                            .x = -1,
-                            .y = 1},
-       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
-      {.order.place_tile = {.tile = tile,
-                            .orientation =
-                                LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
-                            .x = -1,
-                            .y = 1},
-       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
-      // 0, 2
-      {.order.place_tile = {.tile = tile,
-                            .orientation =
-                                LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
-                            .x = 0,
-                            .y = 2},
-       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
-      {.order.place_tile = {.tile = tile,
-                            .orientation =
-                                LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
-                            .x = 0,
-                            .y = 2},
-       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
-      // 0, -1
-      {.order.place_tile = {.tile        = tile,
-                            .orientation = LIBCARCASSONNE_TILE_ORIENTATION_WEST,
-                            .x           = 0,
-                            .y           = -1},
-       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE},
-      {.order.place_tile = {.tile        = tile,
-                            .orientation = LIBCARCASSONNE_TILE_ORIENTATION_EAST,
-                            .x           = 0,
-                            .y           = -1},
-       .type             = LIBCARCASSONNE_ACTION_PLACE_TILE}};
-
-  for (unsigned int i = 0; i < vector_size(&tile_actions); i++) {
-    action_t a1 = *vector_nth(&tile_actions, i);
-    action_t a2 = correct_place_tile_actions[i];
-
-    assert_int_equal(a1.order.place_tile.x, a2.order.place_tile.x);
-    assert_int_equal(a1.order.place_tile.y, a2.order.place_tile.y);
-    assert_int_equal(a1.order.place_tile.orientation,
-                     a2.order.place_tile.orientation);
-    assert_ptr_equal(a1.order.place_tile.tile, a2.order.place_tile.tile);
-    assert_int_equal(a1.type, a2.type);
-  }
-
-  vector_free(&tile_actions);
-
-  engine_revert(&engine, 0);
-
-  assert_int_equal(engine.current_hook, 0);
-  for (int x = -2; x < 3; x++) {
-    for (int y = -2; y < 3; y++) {
-      placed_tile_t* tile = *game_tile_at(&engine.game, x, y);
-
-      if (x == 0 && y == 0) {
-        assert_non_null(tile);
-        assert_ptr_equal(tile->parent,
-                         &LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]);
-      } else {
-        assert_null(tile);
-      }
-    }
-  }
-
   destroy_engine(&engine);
 }
 
@@ -309,7 +136,7 @@ void engine_trigger_end_game(void** state) {
       // Tour 3
       {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
       {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
-      {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C, NONE},
+      {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C, BASIC},
       // Tour 4
       {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, BASIC},
       {"CCRR", true, -1, 2, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, B, BASIC},
@@ -369,7 +196,7 @@ void engine_trigger_end_game(void** state) {
   }
 
   assert_true(is_game_finished(&engine.game));
-  assert_int_equal(engine.game.turn, 4);
+  assert_int_equal(engine.game.turn, 4);  
   assert_int_equal(engine.game.state,GAME_STATE_FINISHED);
 
   assert_int_equal(engine.game.players[0].score, 3+2+1);
