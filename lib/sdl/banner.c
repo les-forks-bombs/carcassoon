@@ -1,5 +1,7 @@
 #include "banner.h"
 
+#include <SDL3/SDL_render.h>
+#include <sdl/consts.h>
 #include <stdlib.h>
 
 #include "libutils/path.h"
@@ -32,6 +34,20 @@ banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
   free(img_path);
 
   return banner;
+}
+
+banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb) {
+  if (nb <= 0) return NULL;
+
+  banner_t **banners = SDL_calloc(nb, sizeof(banner_t *));
+  if (banners == NULL) return NULL;
+
+  banner_t *new_banner;
+  for (int i = 0; i < nb; i++) {
+    new_banner = create_banner(renderer, players_colors[i], i);
+    banners[i] = new_banner;
+  }
+  return banners;
 }
 
 void render_banner(banner_t *banner, SDL_Renderer *renderer) {
@@ -75,15 +91,15 @@ void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
 
   char *path =
       banner->is_open
-          ? path_resolver_resolve(&resolver, "assets/img/banner.svg")
-          : path_resolver_resolve(&resolver, "assets/img/banner_tall.svg");
+          ? path_resolver_resolve(&resolver, "assets/img/banner_tall.svg")
+          : path_resolver_resolve(&resolver, "assets/img/banner.svg");
   ;
   banner->banner_texture = IMG_LoadTexture(renderer, path);
-  // free(path);
+  free(path);
 }
 
 void destroy_banner(banner_t *banner) {
   destroy_text_object(banner->score_object);
-  free(banner->banner_texture);
+  SDL_DestroyTexture(banner->banner_texture);
   free(banner);
 }

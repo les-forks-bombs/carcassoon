@@ -19,17 +19,17 @@ struct engine {
 };
 
 /// @brief Permet de créer une instance d'un moteur
-/// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
+/// @return Le code de statut, SUCCESS si l'opération a réussi, autre sinon
 return_code_t create_engine(engine_t *engine, options_t options);
 
 /// @brief Permet de désallouer une instance de moteur
 /// @param engine Le moteur à détruire
-/// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
+/// @return Le code de statut, SUCCESS si l'opération a réussi, autre sinon
 return_code_t destroy_engine(engine_t *engine);
 
 /// @brief Permet de commencer une partie
 /// @param engine Le moteur de jeu qui utilisera la partie
-/// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
+/// @return Le code de statut, SUCCESS si l'opération a réussi, autre sinon
 return_code_t start_game(engine_t *engine);
 
 /// @brief Permet au joueur courant d'appliquer une action sur la partie
@@ -37,7 +37,7 @@ return_code_t start_game(engine_t *engine);
 /// @param action L'action à appliquer
 /// @attention Si le dernier joueur demande à mettre fin à son tour, le moteur
 /// passe au tour suivant
-/// @return Le code de statut, SUCCESS si l'opération a réussit, autre sinon
+/// @return Le code de statut, SUCCESS si l'opération a réussi, autre sinon
 return_code_t dispatch_action(engine_t *engine, action_t action);
 
 return_code_t engine_revert(engine_t *engine, unsigned int epoch);
