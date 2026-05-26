@@ -44,9 +44,9 @@ typedef enum tile_part_group  tile_part_group_t;
 typedef enum tile_orientation tile_orientation_t;
 
 struct tile_slot {
-  double x,y;
+  double            x, y;
   tile_part_group_t group;
-  //mask
+  // mask
 };
 
 /// @brief Une tile est un élément de jeu de carcassonne
@@ -64,7 +64,7 @@ struct tile {
   /// @brief nom de l'image correspondante
   char* texture;
   /// @brief Emplacements possibles pour les meeples
-  tile_slot_t slots[9];
+  tile_slot_t  slots[9];
   unsigned int nb_slots;
 };
 

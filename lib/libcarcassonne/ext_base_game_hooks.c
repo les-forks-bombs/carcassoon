@@ -14,6 +14,7 @@
 
 #include "libcarcassonne/deck.h"
 #include "libcarcassonne/dispatch.h"
+#include "libcarcassonne/ext_base_game.h"
 #include "libcarcassonne/forward.h"
 #include "libcarcassonne/meeple.h"
 #include "libcarcassonne/placed_tile.h"
@@ -118,10 +119,12 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
   vector_alloc(actions, 4);
 
   for (unsigned int i = 0; i < PLACED_TILE_GROUP_NUMBER; i++) {
-    placed_tile_group_t *group = (*tile)->groups[i];
+    tile_part_group_t    id    = (*tile)->parent->parts_groups[i];
+    tile_part_type_t     type  = (*tile)->parent->parts[i];
+    placed_tile_group_t *group = (*tile)->groups[id];
 
-    tile_part_group_t id = (*tile)->parent->parts_groups[i];
-    if (group != NULL && !visited[id]) {
+    if (group != NULL && !visited[id] &&
+        (i != 4 || type == LIBCARCASSONNE_TILE_PART_ABBEY)) {
       visited[id] = true;
       placed_tile_group_eval_points_t eval =
           placed_tile_group_eval_points(group, false);
@@ -191,7 +194,7 @@ return_code_t tile_place_list_actions(action_vector_t *actions,
   for (unsigned int i = 0; i < vector_size(&vec); i++) {
     vector2d_t spot = *vector_nth(&vec, i);
 
-    for (tile_orientation_t orientation = 0; i < 4; i++) {
+    for (tile_orientation_t orientation = 0; orientation < 4; orientation++) {
       if (game_is_tile_placeable(&engine->game, tile, spot.x, spot.y,
                                  orientation)) {
         action_t action = {.type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
