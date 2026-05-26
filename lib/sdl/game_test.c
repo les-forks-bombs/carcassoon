@@ -4,6 +4,7 @@
 #include "libcarcassonne/ext_base_game.h"
 #include "libcarcassonne/forward.h"
 #include "libutils/vector.h"
+#include "sdl/map.h"
 #include <sdl/tile.h>
 
 void init_game(AppState *as) {
@@ -62,4 +63,5 @@ void init_game(AppState *as) {
   }
   get_current_actions(as);
   put_first_action_in_appstate(as);
+  update_possible_places(as);
 }
