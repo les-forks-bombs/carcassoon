@@ -5,7 +5,8 @@
 #include "libcarcassonne/forward.h"
 #include "libutils/vector.h"
 #include "sdl/map.h"
-#include <sdl/tile.h>
+#include <sdl/action.h>
+#include <sdl/meeple.h>
 
 void init_game(AppState *as) {
   const tile_t *tile;
@@ -73,5 +74,5 @@ void init_game(AppState *as) {
 
   get_current_actions(as);
   put_first_action_in_appstate(as);
-  update_possible_places(as);
+  update_possible_meeples(as);
 }

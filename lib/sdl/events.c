@@ -1,6 +1,6 @@
 #include <sdl/events.h>
 #include <sdl/consts.h>
-#include <sdl/tile.h>
+#include <sdl/action.h>
 
 SDL_AppResult handle_mouse_event_(AppState *as, SDL_Event *event) {
   float     mouseX, mouseY;
