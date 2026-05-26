@@ -148,9 +148,7 @@ void engine_trigger_end_game(void** state) {
       int         size      = vector_size(&engine.dispatchs);
       dispatch_t* last_hook = vector_nth(&engine.dispatchs, size - 1);
       assert_ptr_equal(last_hook->hook, &hook_end_game);
-      printf("%lu - %lu\n",last_hook->hook,&hook_end_game);
-    }
-    printf("Début : turn:%d, action: %d - player: %d - score: %d - is_game_finished: %s\n",engine.game.turn,i,i%3,engine.game.players[i%3].score, is_game_finished(&engine.game)?"true":"false");
+    }    
 
     tile = deck_find_tile(&engine.game.deck, turns[i].tile_id, turns[i].blason);
     assert_ptr_not_equal(tile, NULL);
@@ -187,12 +185,6 @@ void engine_trigger_end_game(void** state) {
     assert_int_equal(engine.current_hook, 0);
 
     vector_free(&meeple_actions);
-    printf("Fin : turn:%d, action: %d - player: %d - score: %d - is_game_finished: %s\n",engine.game.turn,i,i%3,engine.game.players[i%3].score, is_game_finished(&engine.game)?"true":"false");
-  }
-
-  for (unsigned int i=0; i<engine.config.players; i++) {
-    printf("player: %d - score: %d\n",i,engine.game.players[i].score);
-    
   }
 
   assert_true(is_game_finished(&engine.game));
@@ -241,9 +233,7 @@ void engine_trigger_give_back_meeple(void** state) {
       int         size      = vector_size(&engine.dispatchs);
       dispatch_t* last_hook = vector_nth(&engine.dispatchs, size - 1);
       assert_ptr_equal(last_hook->hook, &hook_end_game);
-      printf("%lu - %lu\n",last_hook->hook,&hook_end_game);
     }
-    printf("Début : turn:%d, action: %d - player: %d - score: %d - is_game_finished: %s\n",engine.game.turn,i,i%3,engine.game.players[i%3].score, is_game_finished(&engine.game)?"true":"false");
 
     tile = deck_find_tile(&engine.game.deck, turns[i].tile_id, turns[i].blason);
     assert_ptr_not_equal(tile, NULL);
@@ -280,14 +270,8 @@ void engine_trigger_give_back_meeple(void** state) {
     assert_int_equal(engine.current_hook, 0);
 
     vector_free(&meeple_actions);
-    printf("Fin : turn:%d, action: %d - player: %d - score: %d - is_game_finished: %s\n",engine.game.turn,i,i%3,engine.game.players[i%3].score, is_game_finished(&engine.game)?"true":"false");
   }
-
-  for (unsigned int i=0; i<engine.config.players; i++) {
-    printf("player: %d - score: %d\n",i,engine.game.players[i].score);
-    
-  }
-
+  
   assert_true(is_game_finished(&engine.game));
   assert_int_equal(engine.game.turn, max_turns);
   assert_int_equal(engine.game.state,GAME_STATE_FINISHED);

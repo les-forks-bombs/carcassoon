@@ -236,7 +236,6 @@ static void update_score(engine_t                        *engine,
   for (size_t i = 0; i < engine->config.players; i++) {
     unsigned int meeple_nb = player_score[i];
     if (meeple_nb == winner_nb_meeple) {
-      printf("Ajout de points au joueur: %d\n", i);
       engine->game.players[i].score += evaluation->points;
     }
   }
@@ -278,15 +277,11 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
     if (!visite[group]) {
       placed_tile_group_t *groupp = placed_tile->groups[group];
 
-      printf("Famille: %s,Open slots: %d, Group: %d\n", groupp->tile->parent,
-             groupp->open_slots, group);
       if (placed_tile_group_complete(groupp)) {
         placed_tile_group_eval_points_t evaluation =
             placed_tile_group_eval_points(groupp, true);
 
         vector_append(evals, &evaluation);
-        printf("points: %d, meeples: %d\n", evaluation.points,
-               vector_size(&evaluation.meeples));
 
         update_score(engine, &evaluation);
       }

@@ -45,14 +45,6 @@ return_code_t placed_tile_create(placed_tile_t     *placed_tile,
     }
   }
 
-  for (unsigned int i = 0; i <= max; i++) {
-    printf(
-        "Famille: %s,Groupe: %d, Open slots: %d, blason: %d\n",
-        placed_tile->parent->family, i,
-        (placed_tile->groups[placed_tile->parent->parts_groups[i]])->open_slots,
-        (int)placed_tile->parent->blason);
-  }
-
   return SUCCESS;
 }
 

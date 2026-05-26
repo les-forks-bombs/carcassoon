@@ -1,7 +1,6 @@
 #include "libcarcassonne/placed_tile.h"
 #include <libcarcassonne/deck.h>
 #include <libcarcassonne/tests/tests.h>
-#include <libutils/cmocka.h>
 #include "libcarcassonne/consts.h"
 #include "libcarcassonne/ext_base_game.h"
 #include "libcarcassonne/forward.h"

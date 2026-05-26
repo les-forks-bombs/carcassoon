@@ -1,7 +1,6 @@
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/options.h>
 #include <libcarcassonne/tests/tests.h>
-#include <libutils/cmocka.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
