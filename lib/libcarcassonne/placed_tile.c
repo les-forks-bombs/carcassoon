@@ -49,6 +49,9 @@ return_code_t placed_tile_create(placed_tile_t     *placed_tile,
 }
 
 void placed_tile_destroy(placed_tile_t *placed_tile) {
+  if(placed_tile == NULL) {
+    return;
+  }
   bool freed[9];
   memset(&freed, 0, sizeof(freed));
 

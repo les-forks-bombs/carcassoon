@@ -25,6 +25,9 @@ player_t create_player(player_type_t          type,
 }
 
 void free_player(player_t *player) {
+  if (player == NULL) {
+    return;
+  }
   for (size_t i = 0; i < vector_size(&player->meeples); i++) {
     meeple_t *meeple = *vector_nth(&player->meeples, i);
     free(meeple);
