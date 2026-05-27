@@ -1,9 +1,7 @@
 #pragma once
-#include <libcarcassonne/meeple.h>
 #include <libutils/vector.h>
 
 #include "libcarcassonne/forward.h"
-#include "libcarcassonne/tile.h"
 
 /// @brief Information des groupes de la sous-tile
 struct placed_tile_group {
@@ -24,9 +22,6 @@ struct placed_tile_group {
 
   tile_part_type_t type;
 };
-
-/// @brief Nombre de sous-groupes dans une tuile
-#define PLACED_TILE_GROUP_NUMBER 9
 
 /// @brief Représentation d'une tile qui a été placée
 struct placed_tile {
@@ -49,7 +44,7 @@ struct placed_tile_group_eval_points {
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
                                  tile_orientation_t orientation, int x, int y);
-void          placed_tile_destroy(placed_tile_t *);
+void          placed_tile_destroy(placed_tile_t          */*placed_tile*/);
 
 void placed_tile_group_create(placed_tile_group_t **group, meeple_t *meeple,
                               const placed_tile_t *tile);

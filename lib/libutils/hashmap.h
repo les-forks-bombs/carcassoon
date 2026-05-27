@@ -28,7 +28,7 @@ typedef struct hashmap {
     hashmap_t   meta;                 \
     key_type   *key_ghost;            \
     value_type *value_ghost;          \
-  }
+  }  // NOLINT(bugprone-macro-parentheses)
 
 unsigned int hash(const void *key, size_t key_size);
 

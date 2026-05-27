@@ -1,13 +1,7 @@
-#include "libcarcassonne/placed_tile.h"
-
-#include <libcarcassonne/deck.h>
-#include <libcarcassonne/game.h>
+#include <cmocka.h>
+#include <libcarcassonne/ext_base_game.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
-
-#include "libcarcassonne/consts.h"
-#include "libcarcassonne/ext_base_game.h"
-#include "libcarcassonne/forward.h"
-#include "libcarcassonne/tile.h"
 
 /* Vérifie l'instanciation d'un deck */
 void placed_tile_open_slots_works(void** state) {
@@ -47,14 +41,20 @@ void placed_tile_road_single_not_complete(void** state) {
 
   // RRRR: groupes A,B,C,D sont les routes sur les bords (positions 1,3,5,7)
   // Chaque a exactement 1 open_slot
-  assert_int_equal((*placed)->groups[A]->open_slots, 1);
-  assert_int_equal((*placed)->groups[B]->open_slots, 1);
-  assert_int_equal((*placed)->groups[C]->open_slots, 1);
-  assert_int_equal((*placed)->groups[D]->open_slots, 1);
+  assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_A]->open_slots,
+                   1);
+  assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_B]->open_slots,
+                   1);
+  assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_C]->open_slots,
+                   1);
+  assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_D]->open_slots,
+                   1);
 
   // Aucun groupe n'est complet
-  assert_false(placed_tile_group_complete((*placed)->groups[A]));
-  assert_false(placed_tile_group_complete((*placed)->groups[B]));
+  assert_false(placed_tile_group_complete(
+      (*placed)->groups[LIBCARCASSONNE_TILE_PART_A]));
+  assert_false(placed_tile_group_complete(
+      (*placed)->groups[LIBCARCASSONNE_TILE_PART_B]));
 
   destroy_game(&game);
 }
@@ -79,13 +79,17 @@ void placed_tile_town_cccc_not_complete(void** state) {
 
   // CCCC: groupe A = ville sur les bords (positions 1,3,5,7) = 4 open_slots
   // groupe B = centre (position 4) = 0 open_slots
-  assert_int_equal((*placed)->groups[A]->open_slots, 4);
-  assert_int_equal((*placed)->groups[B]->open_slots, 0);
+  assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_A]->open_slots,
+                   4);
+  assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_B]->open_slots,
+                   0);
 
   // Le groupe A (ville) n'est PAS complet car il a 4 faces ouvertes
-  assert_false(placed_tile_group_complete((*placed)->groups[A]));
+  assert_false(placed_tile_group_complete(
+      (*placed)->groups[LIBCARCASSONNE_TILE_PART_A]));
   // Le groupe B (centre) est complet car il n'a pas de faces
-  assert_true(placed_tile_group_complete((*placed)->groups[B]));
+  assert_true(placed_tile_group_complete(
+      (*placed)->groups[LIBCARCASSONNE_TILE_PART_B]));
 
   destroy_game(&game);
 }
@@ -109,16 +113,22 @@ void placed_tile_field_fcfc_not_complete(void** state) {
 
   // FCFC sans blason: parts_groups = {A,A,A,B,D,B,C,C,C}
   // Groupe A (champ): position 1 (bord) = 1 open_slot
-  assert_int_equal((*placed)->groups[A]->open_slots, 1);
-  assert_false(placed_tile_group_complete((*placed)->groups[A]));
+  assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_A]->open_slots,
+                   1);
+  assert_false(placed_tile_group_complete(
+      (*placed)->groups[LIBCARCASSONNE_TILE_PART_A]));
 
   // Groupe B (ville): positions 3,5 (bords) = 2 open_slots
-  assert_int_equal((*placed)->groups[B]->open_slots, 2);
-  assert_false(placed_tile_group_complete((*placed)->groups[B]));
+  assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_B]->open_slots,
+                   2);
+  assert_false(placed_tile_group_complete(
+      (*placed)->groups[LIBCARCASSONNE_TILE_PART_B]));
 
   // Groupe C (champ): position 7 (bord) = 1 open_slot
-  assert_int_equal((*placed)->groups[C]->open_slots, 1);
-  assert_false(placed_tile_group_complete((*placed)->groups[C]));
+  assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_C]->open_slots,
+                   1);
+  assert_false(placed_tile_group_complete(
+      (*placed)->groups[LIBCARCASSONNE_TILE_PART_C]));
 
   destroy_game(&game);
 }
@@ -151,9 +161,11 @@ void placed_tile_road_link_propagates_completeness(void** state) {
   // Lier les groupes de route EST (B) de p1 et OUEST (D) de p2
   // RRRR: NORD=A, EST=B, SUD=C, OUEST=D
   placed_tile_group_t* road1 =
-      (*p1)->groups[C];  // route EST de la première tuile
+      (*p1)->groups[LIBCARCASSONNE_TILE_PART_C];  // route EST de la première
+                                                  // tuile
   placed_tile_group_t* road2 =
-      (*p2)->groups[B];  // route OUEST de la deuxième tuile
+      (*p2)->groups[LIBCARCASSONNE_TILE_PART_B];  // route OUEST de la deuxième
+                                                  // tuile
 
   // Avant lien: chaque a 1 open_slot
   assert_int_equal(road1->open_slots, 0);
@@ -204,9 +216,9 @@ void placed_tile_road_l_shape_not_complete(void** state) {
   assert_non_null(*p2);
 
   // Groupe B de p1 (routes EST et SUD)
-  placed_tile_group_t* road1 = (*p1)->groups[B];
+  placed_tile_group_t* road1 = (*p1)->groups[LIBCARCASSONNE_TILE_PART_B];
   // Groupe B de p2 (routes... dépend de l'orientation)
-  placed_tile_group_t* road2 = (*p2)->groups[B];
+  placed_tile_group_t* road2 = (*p2)->groups[LIBCARCASSONNE_TILE_PART_B];
 
   // Avant lien: p1->B a 2 open_slots, p2->B a 2 open_slots
   assert_int_equal(road1->open_slots, 1);

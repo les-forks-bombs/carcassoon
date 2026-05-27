@@ -15,7 +15,8 @@ typedef struct {
   union {                \
     vector_t meta;       \
     type    *type_ghost; \
-  }
+  }  // NOLINT(bugprone-macro-parentheses)
+
 unsigned int utils_vector_alloc(vector_t *list, size_t capacity,
                                 size_t element);
 unsigned int utils_vector_grow(vector_t *list, size_t size, size_t element);

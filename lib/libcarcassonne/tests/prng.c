@@ -1,5 +1,5 @@
-#include <libcarcassonne/prng_mersenne_twister.h>
-#include <libcarcassonne/tests/tests.h>
+#include <cmocka.h>
+#include <libcarcassonne/libcarcassonne.h>
 
 void prng_create_with_seed_initializes_state(void** state) {
   (void)state;

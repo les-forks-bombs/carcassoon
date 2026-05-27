@@ -1,3 +1,4 @@
+#include <cmocka.h>
 #include <libutils/tests/tests.h>
 #include <libutils/vector.h>
 

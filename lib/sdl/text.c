@@ -1,10 +1,19 @@
+#include <SDL3/SDL_pixels.h>
+#include <SDL3/SDL_render.h>
+#include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_surface.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <sdl/text.h>
+
+#include "sdl/forward.h"
 
 text_object_t *init_text_object(SDL_Renderer *renderer, char *font_path,
                                 float font_size, const char *content,
                                 SDL_Color color) {
   text_object_t *to = SDL_malloc(sizeof(text_object_t));
-  if (!to) return NULL;
+  if (!to) {
+    return NULL;
+  }
   to->font = TTF_OpenFont(font_path, font_size);
   if (!to->font) {
     SDL_free(to);
@@ -19,11 +28,15 @@ text_object_t *init_text_object(SDL_Renderer *renderer, char *font_path,
 }
 
 void update_text_object(text_object_t *to, SDL_Renderer *renderer) {
-  if (!to || !to->font) return;
+  if (!to || !to->font) {
+    return;
+  }
 
   SDL_Surface *surf =
       TTF_RenderText_Blended(to->font, to->content, 0, to->color);
-  if (!surf) return;
+  if (!surf) {
+    return;
+  }
 
   if (to->texture) {
     SDL_DestroyTexture(to->texture);
@@ -37,14 +50,20 @@ void update_text_object(text_object_t *to, SDL_Renderer *renderer) {
   }
 
   SDL_DestroySurface(surf);
-
-  return;
 }
 
 void destroy_text_object(text_object_t *to) {
-  if (!to) return;
-  if (to->texture) SDL_DestroyTexture(to->texture);
-  if (to->font) TTF_CloseFont(to->font);
-  if (to->content) SDL_free(to->content);
+  if (!to) {
+    return;
+  }
+  if (to->texture) {
+    SDL_DestroyTexture(to->texture);
+  }
+  if (to->font) {
+    TTF_CloseFont(to->font);
+  }
+  if (to->content) {
+    SDL_free(to->content);
+  }
   SDL_free(to);
 }

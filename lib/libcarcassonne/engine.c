@@ -1,16 +1,10 @@
-#include <libcarcassonne/consts.h>
-#include <libcarcassonne/engine.h>
-#include <libcarcassonne/game.h>
-#include <malloc.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "forward.h"
-#include "libcarcassonne/action.h"
-#include "libcarcassonne/forward.h"
 #include "libutils/lc.h"
 #include "libutils/vector.h"
 
@@ -193,7 +187,7 @@ action_type_t engine_wanted_action(engine_t *engine) {
   return (*vector_nth(&engine->hooks, engine->current_hook))->needed_action;
 }
 
-action_vector_t *engine_list_possible_places(engine_t *engine, tile_t *tile) {
+static action_vector_t *engine_list_possible_places(engine_t *engine) {
   action_vector_t *actions = calloc(1, sizeof(action_vector_t));
 
   vector_alloc(actions, 1);

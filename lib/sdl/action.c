@@ -1,10 +1,12 @@
-#include "libcarcassonne/action.h"
+#include <libcarcassonne/libcarcassonne.h>
 #include <sdl/action.h>
 #include <stdio.h>
 
 #include "libcarcassonne/forward.h"
 #include "libutils/vector.h"
+#include "sdl/forward.h"
 #include "sdl/map.h"
+#include "sdl/meeple.h"
 
 void get_current_actions(appstate_t *as) {
   vector_free(&as->all_actions);
@@ -55,7 +57,7 @@ void pass_to_action(appstate_t *as, int increment) {
   if (total_actions == 0) {
     return;
   }
-  int next_index = (int)as->action_index + increment;
+  int next_index = as->action_index + increment;
 
   if (next_index >= (int)total_actions) {
     put_first_action_in_appstate(as);
