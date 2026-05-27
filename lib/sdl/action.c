@@ -4,7 +4,7 @@
 #include "libutils/vector.h"
 #include "sdl/map.h"
 
-void get_current_actions(AppState *as) {
+void get_current_actions(appstate_t *as) {
   action_vector_t actions     = engine_get_actions(&as->engine);
   action_t       *action_none = NULL;
 
@@ -44,13 +44,13 @@ void get_current_actions(AppState *as) {
   }
 }
 
-void put_first_action_in_appstate(AppState *as) {
+void put_first_action_in_appstate(appstate_t *as) {
   as->current_action      = vector_nth(&as->all_actions, 0);
   as->is_waiting_for_tile = true;
   as->action_index        = 0;
 }
 
-void pass_to_action(AppState *as, int increment) {
+void pass_to_action(appstate_t *as, int increment) {
   size_t total_actions = vector_size(&as->all_actions);
 
   if (total_actions == 0) {
@@ -70,7 +70,7 @@ void pass_to_action(AppState *as, int increment) {
   // printf("action changée\n");
 }
 
-void send_action_to_engine(AppState *as) {
+void send_action_to_engine(appstate_t *as) {
   printf("hook actuel: %s\n",
          (*vector_nth(&as->engine.hooks, as->engine.current_hook))->label);
   dispatch_action(&as->engine, *as->current_action);

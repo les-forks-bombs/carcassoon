@@ -2,7 +2,7 @@
 #include <sdl/consts.h>
 #include <sdl/events.h>
 
-SDL_AppResult handle_mouse_event_(AppState *as, SDL_Event *event) {
+SDL_AppResult handle_mouse_event_(appstate_t *as, SDL_Event *event) {
   float mouseX, mouseY;
   SDL_GetMouseState(&mouseX, &mouseY);
   const SDL_FPoint mouse_pos = {mouseX, mouseY};
@@ -39,7 +39,7 @@ SDL_AppResult handle_mouse_event_(AppState *as, SDL_Event *event) {
   return SDL_APP_CONTINUE;
 }
 
-SDL_AppResult handle_key_event_(AppState *as, SDL_Keycode key_val) {
+SDL_AppResult handle_key_event_(appstate_t *as, SDL_Keycode key_val) {
   switch (key_val) {
     case SDLK_ESCAPE:
       return SDL_APP_SUCCESS;

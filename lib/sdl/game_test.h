@@ -3,6 +3,6 @@
 
 #include <sdl/appstate.h>
 
-void init_game(AppState *as);
+void init_game(appstate_t *as);
 
 #endif

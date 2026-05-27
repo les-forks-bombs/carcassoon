@@ -1,5 +1,6 @@
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_render.h>
+#include <sdl/forward.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -34,8 +35,11 @@
 path_resolver_t resolver;
 
 SDL_AppResult SDL_AppIterate(void *appstate) {
-  AppState    *as  = (AppState *)appstate;
+  appstate_t  *as  = (appstate_t *)appstate;
   const Uint64 now = SDL_GetTicks();
+
+  as->window_width  = DEFAULT_WINDOW_WIDTH;
+  as->window_height = DEFAULT_WINDOW_HEIGHT;
 
   while ((now - as->last_step) >= STEP_RATE_IN_MILLISECONDS) {
     as->last_step += STEP_RATE_IN_MILLISECONDS;
@@ -82,7 +86,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
   if (!SDL_Init(SDL_INIT_VIDEO)) return SDL_APP_FAILURE;
 
-  AppState *as = (AppState *)SDL_calloc(1, sizeof(AppState));
+  appstate_t *as = (appstate_t *)SDL_calloc(1, sizeof(appstate_t));
   if (!as) return SDL_APP_FAILURE;
   *appstate = as;
 
@@ -99,9 +103,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   // pour resolve:
   char *path;
 
-  if (!SDL_CreateWindowAndRenderer("Carcassonne Test", WINDOW_WIDTH,
-                                   WINDOW_HEIGHT, 0, &as->window,
-                                   &as->renderer)) {
+  if (!SDL_CreateWindowAndRenderer("Carcassonne Test", DEFAULT_WINDOW_WIDTH,
+                                   DEFAULT_WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE,
+                                   &as->window, &as->renderer)) {
     return SDL_APP_FAILURE;
   }
 
@@ -111,13 +115,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     return SDL_APP_FAILURE;
   }
 
-  SDL_Color white_text = {255, 255, 255, 255};
+  /*SDL_Color white_text = {255, 255, 255, 255};
   path = path_resolver_resolve(&resolver, "assets/fonts/Orange.ttf");
   // printf("path relatif: %s\n", path);
 
   as->text = init_text_object(as->renderer, path, 32.0f,
                               "Ici c'est Carcassonne !", white_text);
-  free(path);
+  free(path);*/
 
   as->camera = create_camera();
 
@@ -127,8 +131,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
   as->map_viewport.x = 0;
   as->map_viewport.y = 0;
-  as->map_viewport.w = WINDOW_WIDTH;
-  as->map_viewport.h = WINDOW_HEIGHT;
+  as->map_viewport.w = DEFAULT_WINDOW_WIDTH;
+  as->map_viewport.h = DEFAULT_WINDOW_HEIGHT;
 
   hashmap_create(&as->textures, 256);
 
@@ -143,7 +147,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   load_textures(as, img, assets);
   free(assets);
 
-  center_camera_on_start(as->camera, &as->map_viewport);
+  center_camera_on_start(as);
 
   as->banners = create_banner_for_each_player(as->renderer,
                                               as->engine.game.options->players);
@@ -156,8 +160,22 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 }
 
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
-  AppState *as = (AppState *)appstate;
+  appstate_t *as = (appstate_t *)appstate;
   switch (event->type) {
+    case SDL_EVENT_WINDOW_RESIZED:
+      as->window_width  = event->window.data1;
+      as->window_height = event->window.data2;
+      break;
+    /*case SDL_EVENT_WINDOW_MAXIMIZED:
+    case SDL_EVENT_WINDOW_RESTORED:
+      int new_width, new_height;
+      SDL_GetCurrentRenderOutputSize(as->renderer, &new_width, &new_height);
+      as->window_width = (float)new_width;
+      as->window_height = (float)new_height;
+      printf("New window size: %d x %d\n", new_width, new_height);
+      as->map_viewport.w = as->window_width;
+      as->map_viewport.h = as->window_height;
+      break;*/
     case SDL_EVENT_QUIT:
       return SDL_APP_SUCCESS;
     case SDL_EVENT_KEY_DOWN:
@@ -177,7 +195,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
   (void)result;
 
   if (appstate != NULL) {
-    AppState *as = (AppState *)appstate;
+    appstate_t *as = (appstate_t *)appstate;
     SDL_DestroyRenderer(as->renderer);
     SDL_DestroyWindow(as->window);
     destroy_text_object(as->text);
@@ -190,6 +208,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     }
     SDL_free(as->banners);
     vector_free(&as->possibles_places);
+    hashmap_free(&as->textures);
     SDL_free(as);
     TTF_Quit();
   }
