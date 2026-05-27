@@ -50,7 +50,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
   render_map(as);
 
-  if(as->display_grid){
+  if (as->display_grid) {
     print_grid(as);
   }
 
@@ -150,7 +150,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   free(assets);
 
   center_camera_on_start(as);
-  as->display_grid=DISPLAY_GRID_BY_DEFAULT;
+  as->display_grid = DISPLAY_GRID_BY_DEFAULT;
 
   as->banners = create_banner_for_each_player(as->renderer,
                                               as->engine.game.options->players);

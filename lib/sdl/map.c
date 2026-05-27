@@ -67,13 +67,13 @@ static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
   SDL_SetTextureAlphaMod(texture, 255);
 }
 
-static void draw_selection_border(SDL_Renderer    *renderer,
-                                  const SDL_FRect *dest,appstate_t *as) {
+static void draw_selection_border(SDL_Renderer *renderer, const SDL_FRect *dest,
+                                  appstate_t *as) {
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  if (as->current_action->type==LIBCARCASSONNE_ACTION_PLACE_MEEPLE && as->current_action->order.place_meeple.meeple_type!=NONE){
+  if (as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE &&
+      as->current_action->order.place_meeple.meeple_type != NONE) {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-  }
-  else {
+  } else {
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
   }
   for (int t = 0; t < 3; t++) {
@@ -91,7 +91,7 @@ static void render_occupied_cell(appstate_t *as, placed_tile_t *ptt,
   draw_tile(as, ptt->parent, dest, angle, 255);
 
   if (ptt == as->current_action->order.place_meeple.tile) {
-    draw_selection_border(as->renderer, dest,as);
+    draw_selection_border(as->renderer, dest, as);
     render_possible_meeples(ptt, as, dest, angle);
   }
   render_placed_meeple(ptt, as, dest, angle);
@@ -170,38 +170,40 @@ void update_possible_places(appstate_t *as) {
 }
 
 void print_grid(appstate_t *as) {
-    int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
-    int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
+  int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
+  int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
 
-    // Détermination des limites géométriques du monde virtuel
-    float world_min_x = (float)min_coord * MAP_TILE_SIZE;
-    float world_max_x = (float)(max_coord + 1) * MAP_TILE_SIZE;
-    float world_min_y = (float)min_coord * MAP_TILE_SIZE;
-    float world_max_y = (float)(max_coord + 1) * MAP_TILE_SIZE;
+  // Détermination des limites géométriques du monde virtuel
+  float world_min_x = (float)min_coord * MAP_TILE_SIZE;
+  float world_max_x = (float)(max_coord + 1) * MAP_TILE_SIZE;
+  float world_min_y = (float)min_coord * MAP_TILE_SIZE;
+  float world_max_y = (float)(max_coord + 1) * MAP_TILE_SIZE;
 
-    // Conversion des limites mondiales en coordonnées écran pour le traçage
-    float screen_min_x = (world_min_x - as->camera->x) * as->camera->zoom;
-    float screen_max_x = (world_max_x - as->camera->x) * as->camera->zoom;
-    float screen_min_y = (world_min_y - as->camera->y) * as->camera->zoom;
-    float screen_max_y = (world_max_y - as->camera->y) * as->camera->zoom;
+  // Conversion des limites mondiales en coordonnées écran pour le traçage
+  float screen_min_x = (world_min_x - as->camera->x) * as->camera->zoom;
+  float screen_max_x = (world_max_x - as->camera->x) * as->camera->zoom;
+  float screen_min_y = (world_min_y - as->camera->y) * as->camera->zoom;
+  float screen_max_y = (world_max_y - as->camera->y) * as->camera->zoom;
 
-    SDL_SetRenderDrawColor(as->renderer, 150, 150, 150, 255);
+  SDL_SetRenderDrawColor(as->renderer, 150, 150, 150, 255);
 
-    for (int table_y = min_coord; table_y <= max_coord + 1; table_y++) {
-        float world_x = (float)table_y * MAP_TILE_SIZE;
-        float screen_x = (world_x - as->camera->x) * as->camera->zoom;
+  for (int table_y = min_coord; table_y <= max_coord + 1; table_y++) {
+    float world_x  = (float)table_y * MAP_TILE_SIZE;
+    float screen_x = (world_x - as->camera->x) * as->camera->zoom;
 
-        if (screen_x >= 0 && screen_x <= as->window_width) {
-            SDL_RenderLine(as->renderer, screen_x, screen_min_y, screen_x, screen_max_y);
-        }
+    if (screen_x >= 0 && screen_x <= as->window_width) {
+      SDL_RenderLine(as->renderer, screen_x, screen_min_y, screen_x,
+                     screen_max_y);
     }
+  }
 
-    for (int table_x = min_coord; table_x <= max_coord + 1; table_x++) {
-        float world_y = (float)table_x * MAP_TILE_SIZE;
-        float screen_y = (world_y - as->camera->y) * as->camera->zoom;
+  for (int table_x = min_coord; table_x <= max_coord + 1; table_x++) {
+    float world_y  = (float)table_x * MAP_TILE_SIZE;
+    float screen_y = (world_y - as->camera->y) * as->camera->zoom;
 
-        if (screen_y >= 0 && screen_y <= as->window_height) {
-            SDL_RenderLine(as->renderer, screen_min_x, screen_y, screen_max_x, screen_y);
-        }
+    if (screen_y >= 0 && screen_y <= as->window_height) {
+      SDL_RenderLine(as->renderer, screen_min_x, screen_y, screen_max_x,
+                     screen_y);
     }
+  }
 }

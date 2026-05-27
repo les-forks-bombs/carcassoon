@@ -68,7 +68,8 @@ void render_possible_meeples(placed_tile_t *tile, appstate_t *as,
 
     placed_tile_group_t *ptg = tile->groups[g];
 
-    if (ptg != NULL && as->possible_meeples[g] && as->current_action->order.place_meeple.meeple_type!=NONE) {
+    if (ptg != NULL && as->possible_meeples[g] &&
+        as->current_action->order.place_meeple.meeple_type != NONE) {
       SDL_Color c = players_colors[as->engine.game.current_player];
       SDL_SetTextureColorMod(texture, c.r, c.g, c.b);
 
@@ -121,7 +122,8 @@ void update_possible_meeples(appstate_t *as) {
 
   for (int i = 0; i < vector_size(&as->all_actions); i++) {
     action_t *action = vector_nth(&as->all_actions, i);
-    if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE && action->order.place_meeple.meeple_type!=NONE) {
+    if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE &&
+        action->order.place_meeple.meeple_type != NONE) {
       int group               = action->order.place_meeple.part_group;
       possible_meeples[group] = true;
     }

@@ -27,7 +27,7 @@ struct appstate {
   action_vector_t all_actions;
   bool            is_waiting_for_tile;
   int             action_index;
-  bool display_grid;
+  bool            display_grid;
 };
 
 #endif

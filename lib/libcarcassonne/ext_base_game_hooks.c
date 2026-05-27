@@ -121,7 +121,8 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
 
     if (group != NULL && !visited[id] &&
         (i != 4 || type == LIBCARCASSONNE_TILE_PART_ABBEY) &&
-        (type != LIBCARCASSONNE_TILE_PART_FIELD) && (type != LIBCARCASSONNE_TILE_PART_WALL)) {
+        (type != LIBCARCASSONNE_TILE_PART_FIELD) &&
+        (type != LIBCARCASSONNE_TILE_PART_WALL)) {
       visited[id] = true;
       placed_tile_group_eval_points_t eval =
           placed_tile_group_eval_points(group, false);
