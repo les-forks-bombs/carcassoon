@@ -13,7 +13,7 @@
 #define ZOOM_MIN                  0.1
 #define STEP_RATE_IN_MILLISECONDS 16
 
-static SDL_Color players_colors[] = {{255, 0, 0, 255},{0, 0, 255, 255},
-                                     {255, 0, 255, 255}, {0, 255, 255, 255}};
+static SDL_Color players_colors[] = {
+    {255, 0, 0, 255}, {0, 0, 255, 255}, {255, 0, 255, 255}, {0, 255, 255, 255}};
 
 #endif

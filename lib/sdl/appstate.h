@@ -20,14 +20,14 @@ typedef struct {
   engine_t           engine;
   SDL_Texture       *temp_tex;
   textures_hashmap_t textures;
-  vector2d_vector_t possibles_places;
-  bool *possible_meeples;
+  vector2d_vector_t  possibles_places;
+  bool              *possible_meeples;
 
-  banner_t **banners;
-  action_t *current_action;
+  banner_t      **banners;
+  action_t       *current_action;
   action_vector_t all_actions;
-  bool is_waiting_for_tile;
-  int action_index;
+  bool            is_waiting_for_tile;
+  int             action_index;
 } AppState;
 
 #endif
