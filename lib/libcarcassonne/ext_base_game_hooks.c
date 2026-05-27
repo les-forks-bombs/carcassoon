@@ -86,20 +86,6 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
                                         engine_t        *engine) {
   player_t *player = game_get_current_player(&engine->game);
 
-  action_t action_none = {.order.place_meeple = {0},
-                          .type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
-  action_none.order.place_meeple.meeple_type = NONE;
-
-  if (!player_has_meeple_to_place(player)) {
-    // If player does not have meeple left
-    // We return only action none
-    vector_alloc(actions, 1);
-
-    vector_append(actions, &action_none);
-
-    return SUCCESS;
-  }
-
   dispatch_t *dispatch = find_last_place_tile_dispatch(engine);
 
   if (!dispatch) {
@@ -112,6 +98,24 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
 
   if (tile == NULL || *tile == NULL) {
     return NO_TILE;
+  }
+
+  action_t action_none = {
+      .order.place_meeple = {.meeple_type = NONE,
+                             .x          = dispatch->action->order.place_tile.x,
+                             .y          = dispatch->action->order.place_tile.y,
+                             .tile       = *tile,
+                             .part_group = 0},
+      .type               = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
+
+  if (!player_has_meeple_to_place(player)) {
+    // If player does not have meeple left
+    // We return only action none
+    vector_alloc(actions, 1);
+
+    vector_append(actions, &action_none);
+
+    return SUCCESS;
   }
 
   bool visited[9] = {0};
