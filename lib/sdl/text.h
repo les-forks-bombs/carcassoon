@@ -4,14 +4,16 @@
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
-typedef struct {
+#include "sdl/forward.h"
+
+struct text_object {
   SDL_Texture *texture;
   float        font_size;
   SDL_Color    color;
   TTF_Font    *font;
   char        *content;
   float        w, h;
-} text_object_t;
+};
 
 text_object_t *init_text_object(SDL_Renderer *renderer, char *font_path,
                                 float font_size, const char *content,
