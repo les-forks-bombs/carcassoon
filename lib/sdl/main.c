@@ -57,8 +57,8 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     SDL_RenderTexture(as->renderer, as->text->texture, NULL, &dest);
   }
 
-  SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
-  SDL_RenderRect(as->renderer, &as->map_viewport);
+  /*SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
+  SDL_RenderRect(as->renderer, &as->map_viewport);*/
 
   for (int nb_players = 0; nb_players < as->engine.game.options->players;
        nb_players++) {
@@ -124,10 +124,10 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     return SDL_APP_FAILURE;
   }
 
-  as->map_viewport.x = 100;
-  as->map_viewport.y = 150;
-  as->map_viewport.w = 800;
-  as->map_viewport.h = 400;
+  as->map_viewport.x = 0;
+  as->map_viewport.y = 0;
+  as->map_viewport.w = WINDOW_WIDTH;
+  as->map_viewport.h = WINDOW_HEIGHT;
 
   hashmap_create(&as->textures, 256);
 
