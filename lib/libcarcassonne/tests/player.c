@@ -3,7 +3,6 @@
 #include <libcarcassonne/tests/tests.h>
 #include <stdlib.h>
 
-/// @brief Test que create_player initialise correctement les champs
 void player_create_initializes_fields(void** state) {
   (void)state;
 
@@ -25,7 +24,6 @@ void player_create_initializes_fields(void** state) {
   free_player(&player);
 }
 
-/// @brief Test que free_player libère correctement la mémoire
 void player_free_works(void** state) {
   (void)state;
 
@@ -43,13 +41,11 @@ void player_free_works(void** state) {
   vector_free(&meeples_count);
 }
 
-/// @brief Test que free_player gère NULL correctement
 void player_free_handles_null(void** state) {
   (void)state;
   free_player(NULL);
 }
 
-/// @brief Test que player_has_meeple_to_place retourne true quand des meeples sont disponibles
 void player_has_meeple_returns_true(void** state) {
   (void)state;
 
@@ -68,7 +64,6 @@ void player_has_meeple_returns_true(void** state) {
   free_player(&player);
 }
 
-/// @brief Test que player_has_meeple_to_place retourne false quand aucun meeple disponible
 void player_has_meeple_returns_false(void** state) {
   (void)state;
 

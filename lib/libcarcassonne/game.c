@@ -262,9 +262,24 @@ return_code_t game_remove_tile(game_t *game, int x, int y) {
     visite[group] = true;
   }
 
+  /* Retirer la tuile de open_tiles avant de la libérer (évite le dangling ptr). */
+  list_remove_value(&game->open_tiles, tile_ref);
+
   placed_tile_destroy(*tile_ref);
   free(*tile_ref);
   *tile_ref = NULL;
+
+  /* Les voisins posés ont maintenant (x,y) comme case libre :
+   * s'assurer qu'ils sont dans open_tiles (retirer-réinsérer est idempotent). */
+  const int dx[] = {1, -1, 0, 0};
+  const int dy[] = {0, 0, 1, -1};
+  for (int d = 0; d < 4; d++) {
+    placed_tile_t **nbr = game_tile_at(game, x + dx[d], y + dy[d]);
+    if (nbr != NULL && *nbr != NULL) {
+      list_remove_value(&game->open_tiles, nbr);
+      list_append(&game->open_tiles, nbr);
+    }
+  }
 
   return SUCCESS;
 }
