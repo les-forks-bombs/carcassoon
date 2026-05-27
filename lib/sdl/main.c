@@ -63,7 +63,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
   SDL_RenderRect(as->renderer, &as->map_viewport);*/
 
-  for (int nb_players = 0; nb_players < as->engine.game.options->players;
+  for (unsigned int nb_players = 0; nb_players < as->engine.game.options->players;
        nb_players++) {
     as->banners[nb_players]->score = as->engine.game.players[nb_players].score;
     if (as->engine.game.current_player == nb_players &&
@@ -199,7 +199,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     free_options(&as->engine.config);
     destroy_engine(&as->engine);
     SDL_DestroyTexture(as->temp_tex);
-    for (int nb_players = 0; nb_players < as->engine.game.options->players;
+    for (unsigned int nb_players = 0; nb_players < as->engine.game.options->players;
          nb_players++) {
       destroy_banner(as->banners[nb_players]);
     }

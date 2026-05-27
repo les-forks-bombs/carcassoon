@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <libcarcassonne/libcarcassonne.h>
 #include <sdl/action.h>
 #include <stdio.h>
@@ -36,7 +37,7 @@ void get_current_actions(appstate_t *as) {
   }
   printf("###### nombre d'actions possibles: %d\n",
          vector_size(&as->all_actions));
-  for (int i = 0; i < vector_size(&as->all_actions); i++) {
+  for (unsigned int i = 0; i < vector_size(&as->all_actions); i++) {
     action_t *action = vector_nth(&as->all_actions, i);
     if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE) {
       printf("[ACTION MEEPLE %d] type = %d, groupe = %d\n", i,
@@ -80,5 +81,6 @@ void send_action_to_engine(appstate_t *as) {
   // printf("hook actuel: %s\n", (*vector_nth(&as->engine.hooks,
   // as->engine.current_hook))->label);
   return_code_t result = dispatch_action(&as->engine, *as->current_action);
+  assert(result == SUCCESS);
   get_current_actions(as);
 }
