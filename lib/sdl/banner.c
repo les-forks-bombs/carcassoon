@@ -7,18 +7,18 @@
 #include <sdl/consts.h>
 #include <stdlib.h>
 
+#include "libcarcassonne/forward.h"
 #include "libutils/path.h"
+#include "sdl/forward.h"
 #include "sdl/resolver.h"
 #include "text.h"
+#include <stdio.h>
 
-banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
+banner_t *create_banner(appstate_t *as, SDL_Color color, int nb) {
   banner_t *banner = SDL_malloc(sizeof(banner_t));
-  if (!banner) {
-    return NULL;
-  }
+  if (!banner) return NULL;
+
   banner->is_open        = false;
-  banner->score          = 0;
-  banner->last_score     = -1;
   banner->banner_texture = NULL;
   banner->color          = color;
 
@@ -28,20 +28,21 @@ banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
   banner->area.h = 90.0F;
 
   SDL_Color white = {255, 255, 255, 255};
-
   char *font_path = path_resolver_resolve(&resolver, "assets/fonts/Orange.ttf");
-  banner->score_object =
-      init_text_object(renderer, font_path, 24.0F, "0", white);
+  
+  banner->score_object        = init_text_object(as->renderer, font_path, 24.0F, "0", white);
+  banner->meeple_count_object = init_text_object(as->renderer, font_path, 20.0F, "5", white);
   free(font_path);
 
   char *img_path = path_resolver_resolve(&resolver, "assets/img/banner.svg");
-  banner->banner_texture = IMG_LoadTexture(renderer, img_path);
+  banner->banner_texture = IMG_LoadTexture(as->renderer, img_path);
   free(img_path);
 
   return banner;
 }
 
-banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb) {
+banner_t **create_banner_for_each_player(appstate_t *as) {
+  int nb = as->engine.game.options->players;
   if (nb <= 0) {
     return NULL;
   }
@@ -53,43 +54,32 @@ banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb) {
 
   banner_t *new_banner;
   for (int i = 0; i < nb; i++) {
-    new_banner = create_banner(renderer, players_colors[i], i);
+    new_banner = create_banner(as, players_colors[i], i);
     banners[i] = new_banner;
   }
   return banners;
 }
 
 void render_banner(banner_t *banner, SDL_Renderer *renderer) {
-  if (!banner) {
-    return;
-  }
-
-  if (banner->score != banner->last_score) {
-    char buffer[4];
-    SDL_snprintf(buffer, sizeof(buffer), "%d", banner->score);
-
-    if (banner->score_object->content) {
-      SDL_free(banner->score_object->content);
-    }
-
-    banner->score_object->content = SDL_strdup(buffer);
-    update_text_object(banner->score_object, renderer);
-
-    banner->last_score = banner->score;
-  }
+  if (!banner) return;
 
   if (banner->banner_texture) {
-    SDL_SetTextureColorMod(banner->banner_texture, banner->color.r,
-                           banner->color.g, banner->color.b);
+    SDL_SetTextureColorMod(banner->banner_texture, banner->color.r, banner->color.g, banner->color.b);
     SDL_RenderTexture(renderer, banner->banner_texture, NULL, &banner->area);
   }
-
+  
   if (banner->score_object && banner->score_object->texture) {
     SDL_FRect text_pos = {
         banner->area.x + ((banner->area.w - banner->score_object->w) / 2.0F),
-        banner->area.y + 20.0F, banner->score_object->w,
-        banner->score_object->h};
+        banner->area.y + 20.0F, banner->score_object->w, banner->score_object->h};
     SDL_RenderTexture(renderer, banner->score_object->texture, NULL, &text_pos);
+  }
+
+  if (banner->meeple_count_object && banner->meeple_count_object->texture) {
+    SDL_FRect text_pos = {
+        banner->area.x + ((banner->area.w - banner->meeple_count_object->w) / 2.0F),
+        banner->area.y + 50.0F, banner->meeple_count_object->w, banner->meeple_count_object->h};
+    SDL_RenderTexture(renderer, banner->meeple_count_object->texture, NULL, &text_pos);
   }
 }
 
@@ -112,7 +102,41 @@ void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
 }
 
 void destroy_banner(banner_t *banner) {
+  if (!banner) return;
   destroy_text_object(banner->score_object);
+  destroy_text_object(banner->meeple_count_object);
   SDL_DestroyTexture(banner->banner_texture);
   free(banner);
+}
+
+static void update_text_value(text_object_t *text_obj, int value, SDL_Renderer *renderer) {
+  char buffer[6];
+  SDL_snprintf(buffer, sizeof(buffer), "%d", value);
+  
+  if (text_obj->content) {
+    SDL_free(text_obj->content);
+  }
+  text_obj->content = SDL_strdup(buffer);
+  update_text_object(text_obj, renderer);
+}
+
+void synchronize_banners(appstate_t *as) {
+  for (int i = 0; i < as->engine.game.options->players; i++) {
+    banner_t *banner = as->banners[i];
+
+    update_text_value(banner->score_object, as->engine.game.players[i].score, as->renderer);
+    
+    for(int j=0;j<vector_size(&as->engine.game.players[i].meeples_count);j++){
+      meeple_count_t meeple = *vector_nth(&as->engine.game.players[i].meeples_count,j);
+      if (meeple.meeple_type == BASIC){
+        printf("%d meeples\n",meeple.count);
+        update_text_value(banner->meeple_count_object, meeple.count, as->renderer);
+      }
+    }
+    if (as->engine.game.current_player == i && !banner->is_open) {
+      toggle_banner(banner, as->renderer);
+    } else if (as->engine.game.current_player != i && banner->is_open) {
+      toggle_banner(banner, as->renderer);
+    }
+  }
 }
