@@ -9,8 +9,8 @@
 #include <libcarcassonne/tests/tests.h>
 
 static options_t revert_opts(unsigned int players, unsigned int max_turns) {
-  static const extension_t*      ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
-  static const extension_vector_t ext = {
+  static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
+  static const extension_vector_t ext         = {
       .meta = {.size = 1, .caps = 1, .data = &ptr_table}};
   options_t o = {.mode       = CARCASSONNE_MODE_CLI,
                  .players    = players,
@@ -22,9 +22,9 @@ static options_t revert_opts(unsigned int players, unsigned int max_turns) {
 }
 
 static action_t tile_action(const tile_t* tile, int x, int y,
-                             tile_orientation_t ori) {
-  action_t a        = {0};
-  a.type            = LIBCARCASSONNE_ACTION_PLACE_TILE;
+                            tile_orientation_t ori) {
+  action_t a                     = {0};
+  a.type                         = LIBCARCASSONNE_ACTION_PLACE_TILE;
   a.order.place_tile.tile        = tile;
   a.order.place_tile.x           = x;
   a.order.place_tile.y           = y;
@@ -33,9 +33,9 @@ static action_t tile_action(const tile_t* tile, int x, int y,
 }
 
 static action_t none_meeple_action(void) {
-  action_t a                            = {0};
-  a.type                                = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
-  a.order.place_meeple.meeple_type      = NONE;
+  action_t a                       = {0};
+  a.type                           = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+  a.order.place_meeple.meeple_type = NONE;
   return a;
 }
 
@@ -77,8 +77,9 @@ void engine_revert_full_turn_clears_board(void** state) {
   assert_non_null(frfr);
 
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
   assert_int_equal(vector_size(&engine.dispatchs), 5);
@@ -105,8 +106,9 @@ void engine_revert_partial_keeps_tile(void** state) {
   assert_non_null(frfr);
 
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
 
@@ -132,8 +134,9 @@ void engine_revert_restores_player_index(void** state) {
   const tile_t* frfr = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr);
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
 
@@ -162,15 +165,16 @@ void engine_revert_restores_meeple_count(void** state) {
   const tile_t* frfr = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr);
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
 
-  action_t meeple        = {0};
-  meeple.type            = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
-  meeple.order.place_meeple.x          = 1;
-  meeple.order.place_meeple.y          = 0;
-  meeple.order.place_meeple.part_group = B;
+  action_t meeple                       = {0};
+  meeple.type                           = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+  meeple.order.place_meeple.x           = 1;
+  meeple.order.place_meeple.y           = 0;
+  meeple.order.place_meeple.part_group  = B;
   meeple.order.place_meeple.meeple_type = BASIC;
   assert_int_equal(dispatch_action(&engine, meeple), SUCCESS);
 
@@ -201,8 +205,9 @@ void engine_revert_dispatch_vector_size(void** state) {
   assert_non_null(frfr);
 
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(vector_size(&engine.dispatchs), 1);
 
@@ -229,8 +234,9 @@ void engine_revert_current_hook_zero_on_empty(void** state) {
   const tile_t* frfr = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr);
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   /* Après dispatch tile : current_hook = 1 (meeple_place) */
   assert_int_equal(engine.current_hook, 1);
@@ -253,8 +259,9 @@ void engine_revert_two_turns_to_epoch_five(void** state) {
   const tile_t* frfr1 = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr1);
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr1, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr1, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
   assert_int_equal(engine.game.current_player, 1);
@@ -264,8 +271,9 @@ void engine_revert_two_turns_to_epoch_five(void** state) {
   const tile_t* frfr2 = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr2);
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr2, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr2, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
   assert_int_equal(vector_size(&engine.dispatchs), 10);
@@ -297,8 +305,9 @@ void engine_revert_end_game_state_restored(void** state) {
   const tile_t* frfr1 = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr1);
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr1, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr1, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(dispatch_action(&engine, mn), SUCCESS);
 
@@ -306,8 +315,9 @@ void engine_revert_end_game_state_restored(void** state) {
   const tile_t* frfr2 = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr2);
   assert_int_equal(
-      dispatch_action(&engine,
-                      tile_action(frfr2, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(frfr2, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(dispatch_action(&engine, mn), SUCCESS);
 
@@ -344,8 +354,9 @@ void engine_revert_then_dispatch_works(void** state) {
 }
 
 /*
- * Test d'intégration : jouer 1 round complet (3 joueurs), puis engine_revert(0),
- * et vérifier que l'état est identique à celui juste après start_game.
+ * Test d'intégration : jouer 1 round complet (3 joueurs), puis
+ * engine_revert(0), et vérifier que l'état est identique à celui juste après
+ * start_game.
  *
  * Tuiles FRFR (FIELD/ROAD/FIELD/ROAD), meeples sur des groupes FIELD côté libre
  * (jamais complétés) → give_back_meeples toujours no-op → scores inchangés.
@@ -365,11 +376,17 @@ void engine_revert_long_play_with_revert(void** state) {
   unsigned int init_deck_size = engine.game.deck.list.meta.size;
 
   unsigned int init_meeples_p0 =
-      ((meeple_count_t *)vector_nth(&engine.game.players[0].meeples_count, BASIC))->count;
+      ((meeple_count_t*)vector_nth(&engine.game.players[0].meeples_count,
+                                   BASIC))
+          ->count;
   unsigned int init_meeples_p1 =
-      ((meeple_count_t *)vector_nth(&engine.game.players[1].meeples_count, BASIC))->count;
+      ((meeple_count_t*)vector_nth(&engine.game.players[1].meeples_count,
+                                   BASIC))
+          ->count;
   unsigned int init_meeples_p2 =
-      ((meeple_count_t *)vector_nth(&engine.game.players[2].meeples_count, BASIC))->count;
+      ((meeple_count_t*)vector_nth(&engine.game.players[2].meeples_count,
+                                   BASIC))
+          ->count;
 
   assert_int_equal(init_meeples_p0, 5);
   assert_int_equal(init_meeples_p1, 5);
@@ -377,13 +394,15 @@ void engine_revert_long_play_with_revert(void** state) {
 
   /* --- Tour du joueur 0 : FRFR en (1, 0) --------------------------------- */
 
-  const tile_t *t0 = deck_find_tile(&engine.game.deck, "FRFR", false);
+  const tile_t* t0 = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(t0);
   assert_int_equal(
-      dispatch_action(&engine, tile_action(t0, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(t0, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
 
-  action_t meeple0                       = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
+  action_t meeple0 = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
   meeple0.order.place_meeple.tile        = *game_tile_at(&engine.game, 1, 0);
   meeple0.order.place_meeple.x           = 1;
   meeple0.order.place_meeple.y           = 0;
@@ -393,13 +412,15 @@ void engine_revert_long_play_with_revert(void** state) {
 
   /* --- Tour du joueur 1 : FRFR en (0, 1) --------------------------------- */
 
-  const tile_t *t1 = deck_find_tile(&engine.game.deck, "FRFR", false);
+  const tile_t* t1 = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(t1);
   assert_int_equal(
-      dispatch_action(&engine, tile_action(t1, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(t1, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
 
-  action_t meeple1                       = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
+  action_t meeple1 = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
   meeple1.order.place_meeple.tile        = *game_tile_at(&engine.game, 0, 1);
   meeple1.order.place_meeple.x           = 0;
   meeple1.order.place_meeple.y           = 1;
@@ -409,13 +430,15 @@ void engine_revert_long_play_with_revert(void** state) {
 
   /* --- Tour du joueur 2 : FRFR en (0,-1) --------------------------------- */
 
-  const tile_t *t2 = deck_find_tile(&engine.game.deck, "FRFR", false);
+  const tile_t* t2 = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(t2);
   assert_int_equal(
-      dispatch_action(&engine, tile_action(t2, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(t2, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
 
-  action_t meeple2                       = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
+  action_t meeple2 = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
   meeple2.order.place_meeple.tile        = *game_tile_at(&engine.game, 0, -1);
   meeple2.order.place_meeple.x           = 0;
   meeple2.order.place_meeple.y           = -1;
@@ -428,9 +451,9 @@ void engine_revert_long_play_with_revert(void** state) {
   assert_int_equal(vector_size(&engine.dispatchs), 15);
   assert_int_equal(engine.game.turn, 1);
   assert_int_equal(engine.game.current_player, 0);
-  assert_non_null(*game_tile_at(&engine.game,  1,  0));
-  assert_non_null(*game_tile_at(&engine.game,  0,  1));
-  assert_non_null(*game_tile_at(&engine.game,  0, -1));
+  assert_non_null(*game_tile_at(&engine.game, 1, 0));
+  assert_non_null(*game_tile_at(&engine.game, 0, 1));
+  assert_non_null(*game_tile_at(&engine.game, 0, -1));
 
   /* --- Revert complet ----------------------------------------------------- */
 
@@ -453,23 +476,26 @@ void engine_revert_long_play_with_revert(void** state) {
   assert_int_equal(engine.game.players[2].score, 0);
 
   /* Meeples restaurés */
-  assert_int_equal(
-      ((meeple_count_t *)vector_nth(&engine.game.players[0].meeples_count, BASIC))->count,
-      init_meeples_p0);
-  assert_int_equal(
-      ((meeple_count_t *)vector_nth(&engine.game.players[1].meeples_count, BASIC))->count,
-      init_meeples_p1);
-  assert_int_equal(
-      ((meeple_count_t *)vector_nth(&engine.game.players[2].meeples_count, BASIC))->count,
-      init_meeples_p2);
+  assert_int_equal(((meeple_count_t*)vector_nth(
+                        &engine.game.players[0].meeples_count, BASIC))
+                       ->count,
+                   init_meeples_p0);
+  assert_int_equal(((meeple_count_t*)vector_nth(
+                        &engine.game.players[1].meeples_count, BASIC))
+                       ->count,
+                   init_meeples_p1);
+  assert_int_equal(((meeple_count_t*)vector_nth(
+                        &engine.game.players[2].meeples_count, BASIC))
+                       ->count,
+                   init_meeples_p2);
 
   /* Deck */
   assert_int_equal(engine.game.deck.list.meta.size, init_deck_size);
 
   /* Plateau */
-  assert_null(*game_tile_at(&engine.game,  1,  0));
-  assert_null(*game_tile_at(&engine.game,  0,  1));
-  assert_null(*game_tile_at(&engine.game,  0, -1));
+  assert_null(*game_tile_at(&engine.game, 1, 0));
+  assert_null(*game_tile_at(&engine.game, 0, 1));
+  assert_null(*game_tile_at(&engine.game, 0, -1));
   assert_non_null(*game_tile_at(&engine.game, 0, 0)); /* tuile de départ */
 
   destroy_engine(&engine);
@@ -491,20 +517,28 @@ void engine_revert_interleaved_revert_and_play(void** state) {
   assert_int_equal(start_game(&engine), SUCCESS);
 
   /* Snapshot initial */
-  unsigned int init_deck_size  = engine.game.deck.list.meta.size;
+  unsigned int init_deck_size = engine.game.deck.list.meta.size;
   unsigned int init_meeples_p0 =
-      ((meeple_count_t *)vector_nth(&engine.game.players[0].meeples_count, BASIC))->count;
+      ((meeple_count_t*)vector_nth(&engine.game.players[0].meeples_count,
+                                   BASIC))
+          ->count;
   unsigned int init_meeples_p1 =
-      ((meeple_count_t *)vector_nth(&engine.game.players[1].meeples_count, BASIC))->count;
+      ((meeple_count_t*)vector_nth(&engine.game.players[1].meeples_count,
+                                   BASIC))
+          ->count;
   unsigned int init_meeples_p2 =
-      ((meeple_count_t *)vector_nth(&engine.game.players[2].meeples_count, BASIC))->count;
+      ((meeple_count_t*)vector_nth(&engine.game.players[2].meeples_count,
+                                   BASIC))
+          ->count;
 
   /* --- 1. Pose tuile A en (1,0), puis revert ----------------------------- */
 
-  const tile_t *tile_a = deck_find_tile(&engine.game.deck, "FRFR", false);
+  const tile_t* tile_a = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(tile_a);
   assert_int_equal(
-      dispatch_action(&engine, tile_action(tile_a, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(tile_a, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
 
   assert_non_null(*game_tile_at(&engine.game, 1, 0));
@@ -518,10 +552,12 @@ void engine_revert_interleaved_revert_and_play(void** state) {
 
   /* --- 2. Pose tuile B en (0,1) + meeple NONE (tour complet joueur 0) --- */
 
-  const tile_t *tile_b = deck_find_tile(&engine.game.deck, "FRFR", false);
+  const tile_t* tile_b = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(tile_b);
   assert_int_equal(
-      dispatch_action(&engine, tile_action(tile_b, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(tile_b, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
 
   assert_non_null(*game_tile_at(&engine.game, 0, 1));
@@ -533,10 +569,12 @@ void engine_revert_interleaved_revert_and_play(void** state) {
 
   /* --- 3. Pose tuile C en (0,-1) (début du tour joueur 1) ---------------- */
 
-  const tile_t *tile_c = deck_find_tile(&engine.game.deck, "FRFR", false);
+  const tile_t* tile_c = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(tile_c);
   assert_int_equal(
-      dispatch_action(&engine, tile_action(tile_c, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
+      dispatch_action(
+          &engine,
+          tile_action(tile_c, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
 
   assert_non_null(*game_tile_at(&engine.game, 0, -1));
@@ -561,22 +599,25 @@ void engine_revert_interleaved_revert_and_play(void** state) {
   assert_int_equal(engine.game.players[2].score, 0);
 
   /* Meeples restaurés */
-  assert_int_equal(
-      ((meeple_count_t *)vector_nth(&engine.game.players[0].meeples_count, BASIC))->count,
-      init_meeples_p0);
-  assert_int_equal(
-      ((meeple_count_t *)vector_nth(&engine.game.players[1].meeples_count, BASIC))->count,
-      init_meeples_p1);
-  assert_int_equal(
-      ((meeple_count_t *)vector_nth(&engine.game.players[2].meeples_count, BASIC))->count,
-      init_meeples_p2);
+  assert_int_equal(((meeple_count_t*)vector_nth(
+                        &engine.game.players[0].meeples_count, BASIC))
+                       ->count,
+                   init_meeples_p0);
+  assert_int_equal(((meeple_count_t*)vector_nth(
+                        &engine.game.players[1].meeples_count, BASIC))
+                       ->count,
+                   init_meeples_p1);
+  assert_int_equal(((meeple_count_t*)vector_nth(
+                        &engine.game.players[2].meeples_count, BASIC))
+                       ->count,
+                   init_meeples_p2);
 
   /* Deck */
   assert_int_equal(engine.game.deck.list.meta.size, init_deck_size);
 
   /* Plateau */
-  assert_null(*game_tile_at(&engine.game, 1,  0));
-  assert_null(*game_tile_at(&engine.game, 0,  1));
+  assert_null(*game_tile_at(&engine.game, 1, 0));
+  assert_null(*game_tile_at(&engine.game, 0, 1));
   assert_null(*game_tile_at(&engine.game, 0, -1));
   assert_non_null(*game_tile_at(&engine.game, 0, 0)); /* tuile de départ */
 

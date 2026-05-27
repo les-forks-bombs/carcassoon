@@ -8,8 +8,8 @@
 #include <stdio.h>
 
 static options_t full_game_opts(void) {
-  static const extension_t*      ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
-  static const extension_vector_t ext = {
+  static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
+  static const extension_vector_t ext         = {
       .meta = {.size = 1, .caps = 1, .data = &ptr_table}};
   options_t o = {.mode       = CARCASSONNE_MODE_CLI,
                  .players    = 3,
@@ -116,7 +116,6 @@ void engine_full_game_with_reverts(void** state) {
   for (unsigned int i = 0; i < 3; i++) {
     printf("  Joueur %u : %u points\n", i, engine.game.players[i].score);
   }
-
 
   assert_int_equal(engine.game.state, GAME_STATE_FINISHED);
 

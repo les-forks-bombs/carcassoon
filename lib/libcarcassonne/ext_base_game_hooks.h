@@ -23,11 +23,11 @@ struct rendre_meeple_hook_state {
 
 /// @brief Informations pour restaurer un meeple retiré
 struct removed_meeple {
-  int x;                ///< Coordonnée X de la tuile
-  int y;                ///< Coordonnée Y de la tuile
-  int group;            ///< Groupe du meeple
-  meeple_type_t type;   ///< Type du meeple
-  player_t *player;     ///< Joueur propriétaire
+  int           x;       ///< Coordonnée X de la tuile
+  int           y;       ///< Coordonnée Y de la tuile
+  int           group;   ///< Groupe du meeple
+  meeple_type_t type;    ///< Type du meeple
+  player_t*     player;  ///< Joueur propriétaire
 };
 
 /// @brief Vecteur de meeples retirés pour end_game
@@ -37,14 +37,16 @@ typedef Vector(removed_meeple_t) end_game_removed_meeples_vector_t;
 struct end_game_hook_state {
   /// @brief Score avant calcul final
   unsigned int saved_scores[LIBCARCASSONNE_MAX_PLAYERS];
-  /// @brief Meeples retirés pour éviter les doublons (avec infos pour restauration)
+  /// @brief Meeples retirés pour éviter les doublons (avec infos pour
+  /// restauration)
   end_game_removed_meeples_vector_t removed_meeples;
 };
 
-/// @brief État sauvegardé pour un groupe complet avec meeples (give_back_meeples)
+/// @brief État sauvegardé pour un groupe complet avec meeples
+/// (give_back_meeples)
 struct give_back_scored_group {
-  unsigned int points;
-  bool         player_won[LIBCARCASSONNE_MAX_PLAYERS];
+  unsigned int                      points;
+  bool                              player_won[LIBCARCASSONNE_MAX_PLAYERS];
   end_game_removed_meeples_vector_t meeples;
 };
 ForwardDefinition(struct, give_back_scored_group);

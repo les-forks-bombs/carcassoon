@@ -21,6 +21,9 @@
 #include <sdl/banner.h>
 #include <sdl/camera.h>
 #include <sdl/consts.h>
+#include <sdl/events.h>
+#include <sdl/game_test.h>
+#include <sdl/load.h>
 #include <sdl/map.h>
 #include <sdl/meeple.h>
 #include <sdl/text.h>

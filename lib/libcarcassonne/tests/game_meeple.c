@@ -19,14 +19,15 @@ void game_place_meeple_success(void** state) {
       game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
       SUCCESS);
 
-  player_t* player  = &game.players[0];
-  int        before = ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
+  player_t* player = &game.players[0];
+  int       before =
+      ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
 
-  assert_int_equal(
-      game_place_meeple(&game, 0, 0, B, BASIC, player), SUCCESS);
+  assert_int_equal(game_place_meeple(&game, 0, 0, B, BASIC, player), SUCCESS);
 
   // Le compteur de meeples doit avoir diminué de 1
-  int after = ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
+  int after =
+      ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
   assert_int_equal(after, before - 1);
 
   // Le groupe doit contenir un meeple
@@ -52,8 +53,8 @@ void game_place_meeple_on_occupied_group_fails(void** state) {
   assert_int_equal(game_place_meeple(&game, 0, 0, B, BASIC, player), SUCCESS);
 
   // Deuxième placement sur le même groupe → doit échouer
-  assert_int_equal(
-      game_place_meeple(&game, 0, 0, B, BASIC, player), ALREADY_ALLOCATED);
+  assert_int_equal(game_place_meeple(&game, 0, 0, B, BASIC, player),
+                   ALREADY_ALLOCATED);
 
   destroy_game(&game);
 }
@@ -102,14 +103,16 @@ void game_remove_meeple_success(void** state) {
       game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
       SUCCESS);
 
-  player_t* player  = &game.players[0];
-  int        before = ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
+  player_t* player = &game.players[0];
+  int       before =
+      ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
 
   assert_int_equal(game_place_meeple(&game, 0, 0, B, BASIC, player), SUCCESS);
   assert_int_equal(game_remove_meeple(&game, 0, 0, B), SUCCESS);
 
   // Le meeple doit être rendu
-  int after = ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
+  int after =
+      ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
   assert_int_equal(after, before);
 
   placed_tile_t** p = game_tile_at(&game, 0, 0);

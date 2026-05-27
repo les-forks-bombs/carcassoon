@@ -1,19 +1,22 @@
 #include "libcarcassonne/placed_tile.h"
+
 #include <libcarcassonne/deck.h>
+#include <libcarcassonne/game.h>
 #include <libcarcassonne/tests/tests.h>
+
 #include "libcarcassonne/consts.h"
 #include "libcarcassonne/ext_base_game.h"
 #include "libcarcassonne/forward.h"
 #include "libcarcassonne/tile.h"
-
-#include <libcarcassonne/game.h>
 
 /* Vérifie l'instanciation d'un deck */
 void placed_tile_open_slots_works(void** state) {
   (void)state;
 
   placed_tile_t tile = {0};
-  return_code_t code = placed_tile_create(&tile, &LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[12], LIBCARCASSONNE_TILE_ORIENTATION_NORTH, 0, 1);
+  return_code_t code =
+      placed_tile_create(&tile, &LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[12],
+                         LIBCARCASSONNE_TILE_ORIENTATION_NORTH, 0, 1);
 
   assert_int_equal(code, SUCCESS);
   assert_int_equal(tile.groups[LIBCARCASSONNE_TILE_PART_A]->open_slots, 1);
@@ -25,7 +28,8 @@ void placed_tile_open_slots_works(void** state) {
 
 /* Tests pour la propagation des groupes et leur complétude */
 
-/// @brief Test qu'une route isolée (RRRR) a 1 open_slot par groupe et n'est pas complète
+/// @brief Test qu'une route isolée (RRRR) a 1 open_slot par groupe et n'est pas
+/// complète
 void placed_tile_road_single_not_complete(void** state) {
   (void)state;
   game_t game;
@@ -33,7 +37,9 @@ void placed_tile_road_single_not_complete(void** state) {
 
   const tile_t* tile = deck_find_tile(&game.deck, "RRRR", false);
   assert_ptr_not_equal(tile, NULL);
-  assert_int_equal(game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
+  assert_int_equal(
+      game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+      SUCCESS);
 
   placed_tile_t** placed = game_tile_at(&game, 0, 0);
   assert_non_null(placed);
@@ -53,7 +59,8 @@ void placed_tile_road_single_not_complete(void** state) {
   destroy_game(&game);
 }
 
-/// @brief Test qu'une ville CCCC (avec blason) a 4 open_slots et n'est pas complète
+/// @brief Test qu'une ville CCCC (avec blason) a 4 open_slots et n'est pas
+/// complète
 void placed_tile_town_cccc_not_complete(void** state) {
   (void)state;
   game_t game;
@@ -62,7 +69,9 @@ void placed_tile_town_cccc_not_complete(void** state) {
   // CCCC existe UNIQUEMENT avec blason=true
   const tile_t* tile = deck_find_tile(&game.deck, "CCCC", true);
   assert_ptr_not_equal(tile, NULL);
-  assert_int_equal(game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
+  assert_int_equal(
+      game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+      SUCCESS);
 
   placed_tile_t** placed = game_tile_at(&game, 0, 0);
   assert_non_null(placed);
@@ -90,7 +99,9 @@ void placed_tile_field_fcfc_not_complete(void** state) {
   // FCFC sans blason
   const tile_t* tile = deck_find_tile(&game.deck, "FCFC", false);
   assert_ptr_not_equal(tile, NULL);
-  assert_int_equal(game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
+  assert_int_equal(
+      game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+      SUCCESS);
 
   placed_tile_t** placed = game_tile_at(&game, 0, 0);
   assert_non_null(placed);
@@ -123,8 +134,12 @@ void placed_tile_road_link_propagates_completeness(void** state) {
   assert_ptr_not_equal(tile1, NULL);
   assert_ptr_not_equal(tile2, NULL);
 
-  assert_int_equal(game_place_tile(&game, tile1, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
-  assert_int_equal(game_place_tile(&game, tile2,0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
+  assert_int_equal(game_place_tile(&game, tile1, 0, 0,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+                   SUCCESS);
+  assert_int_equal(game_place_tile(&game, tile2, 0, 1,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+                   SUCCESS);
 
   placed_tile_t** p1 = game_tile_at(&game, 0, 0);
   placed_tile_t** p2 = game_tile_at(&game, 0, 1);
@@ -135,8 +150,10 @@ void placed_tile_road_link_propagates_completeness(void** state) {
 
   // Lier les groupes de route EST (B) de p1 et OUEST (D) de p2
   // RRRR: NORD=A, EST=B, SUD=C, OUEST=D
-  placed_tile_group_t* road1 = (*p1)->groups[C]; // route EST de la première tuile
-  placed_tile_group_t* road2 = (*p2)->groups[B]; // route OUEST de la deuxième tuile
+  placed_tile_group_t* road1 =
+      (*p1)->groups[C];  // route EST de la première tuile
+  placed_tile_group_t* road2 =
+      (*p2)->groups[B];  // route OUEST de la deuxième tuile
 
   // Avant lien: chaque a 1 open_slot
   assert_int_equal(road1->open_slots, 0);
@@ -150,7 +167,8 @@ void placed_tile_road_link_propagates_completeness(void** state) {
   destroy_game(&game);
 }
 
-/// @brief Test propagation: lier deux routes pour former un groupe non complet (L)
+/// @brief Test propagation: lier deux routes pour former un groupe non complet
+/// (L)
 void placed_tile_road_l_shape_not_complete(void** state) {
   (void)state;
   game_t game;
@@ -170,9 +188,13 @@ void placed_tile_road_l_shape_not_complete(void** state) {
   assert_ptr_not_equal(tile2, NULL);
 
   // Placer la première tuile
-  assert_int_equal(game_place_tile(&game, tile1, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
+  assert_int_equal(game_place_tile(&game, tile1, 0, 0,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+                   SUCCESS);
   // Placer la deuxième tuile à l'EST
-  assert_int_equal(game_place_tile(&game, tile2, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH), SUCCESS);
+  assert_int_equal(game_place_tile(&game, tile2, 0, 1,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+                   SUCCESS);
 
   placed_tile_t** p1 = game_tile_at(&game, 0, 0);
   placed_tile_t** p2 = game_tile_at(&game, 0, 1);

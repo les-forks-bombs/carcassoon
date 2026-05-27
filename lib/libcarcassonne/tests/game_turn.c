@@ -3,7 +3,8 @@
 #include <libcarcassonne/tests/tests.h>
 
 // Options locales pour que max_turns soit maîtrisé indépendamment du global
-static const extension_t* local_base_ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
+static const extension_t* local_base_ptr_table[] = {
+    &LIBCARCASSONNE_EXT_BASE_GAME};
 static const extension_vector_t local_base = {
     .meta = {.size = 1, .caps = 1, .data = &local_base_ptr_table}};
 

@@ -1,3 +1,4 @@
+#include <sdl/consts.h>
 #include <sdl/game_test.h>
 #include <sdl/consts.h>
 #include "libcarcassonne/engine.h"

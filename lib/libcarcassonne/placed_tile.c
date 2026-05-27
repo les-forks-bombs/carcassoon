@@ -49,7 +49,7 @@ return_code_t placed_tile_create(placed_tile_t     *placed_tile,
 }
 
 void placed_tile_destroy(placed_tile_t *placed_tile) {
-  if(placed_tile == NULL) {
+  if (placed_tile == NULL) {
     return;
   }
   bool freed[9];
@@ -165,21 +165,20 @@ static void placed_tile_group_collect_meeples_inner(
   group->marker = marker;
 
   unsigned int value = 0;
-  if(group->type==LIBCARCASSONNE_TILE_PART_ROAD){
+  if (group->type == LIBCARCASSONNE_TILE_PART_ROAD) {
     value = 1;
-  }
-  else if (group->type==LIBCARCASSONNE_TILE_PART_TOWN) {
+  } else if (group->type == LIBCARCASSONNE_TILE_PART_TOWN) {
     value = 1;
     if (group->tile->parent->blason) {
       value++;
     }
 
-    if(is_completed){
-      value*=2;
+    if (is_completed) {
+      value *= 2;
     }
   }
 
-  points->points+=value;
+  points->points += value;
 
   if (group->meeple != NULL) {
     vector_append(&points->meeples, &group->meeple);
@@ -201,7 +200,8 @@ placed_tile_group_eval_points_t placed_tile_group_eval_points(
   int                             search_marker = dfs_counter++;
   placed_tile_group_eval_points_t points        = {0};
 
-  placed_tile_group_collect_meeples_inner(group, &points, search_marker, is_completed);
+  placed_tile_group_collect_meeples_inner(group, &points, search_marker,
+                                          is_completed);
 
   return points;
 }
