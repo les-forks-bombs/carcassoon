@@ -116,7 +116,7 @@ void update_possible_meeples(appstate_t *as) {
 
   for (int i = 0; i < vector_size(&as->all_actions); i++) {
     action_t *action = vector_nth(&as->all_actions, i);
-    if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE) {
+    if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE && action->order.place_meeple.meeple_type!=NONE) {
       int group               = action->order.place_meeple.part_group;
       possible_meeples[group] = true;
     }
