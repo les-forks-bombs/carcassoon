@@ -1,9 +1,9 @@
-#define _POSIX_C_SOURCE 200809L
+#ifndef _WIN32
+#define _POSIX_C_SOURCE 200809L // NOLINT(bugprone-reserved-identifier)
+#endif
 
-#include <libcarcassonne/libcarcassonne.h>
 #ifndef _WIN32
 #endif
-#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/path.h>
 #include <stdlib.h>
 #include <string.h>
