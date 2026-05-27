@@ -2,17 +2,9 @@
 #include <stdio.h>
 
 #include "libcarcassonne/options.h"
-#include "libutils/path.h"
 
 int main(int argc, char* argv[]) {
   options_t config = parse_options(argc, argv);
-
-  path_resolver_t resolver;
-  create_path_resolver(&resolver);
-
-  char* path = path_resolver_resolve(&resolver, "test.txt");
-  printf("path: %s\n", path);
-
   char* reason = validate_options(&config);
   if (reason != NULL) {
     printf("Configuration invalide: %s\n", reason);
