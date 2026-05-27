@@ -14,7 +14,7 @@ static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile);
 static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
                       double angle, Uint8 alpha);
 static void draw_selection_border(SDL_Renderer    *renderer,
-                                  const SDL_FRect *dest);
+                                  const SDL_FRect *dest,appstate_t *as);
 static void render_occupied_cell(appstate_t *as, placed_tile_t *ptt,
                                  const SDL_FRect *dest);
 static void render_empty_cell(appstate_t *as, int table_x, int table_y,
