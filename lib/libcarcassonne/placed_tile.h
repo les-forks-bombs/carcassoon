@@ -12,7 +12,7 @@ struct placed_tile_group {
   /// @brief Référence vers l'éventuel meeple placé dans le groupe
   meeple_t *meeple;
 
-  /**     
+  /**
    * @brief Tableau des enfants au total
    * Utilisé pour le parcours "simple" depuis la racine
    */

@@ -76,7 +76,7 @@ return_code_t create_game(game_t *game, options_t *options) {
     game->players[i] =
         create_player(i > game->options->ai ? LIBCARCASSONNE_PLAYER_HUMAN
                                             : LIBCARCASSONNE_PLAYER_AI,
-                      &meeples_count,i);
+                      &meeples_count, i);
   }
 
   vector_free(&meeples_count);
@@ -146,9 +146,10 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
     }
 
     placed_tile_t *placed_tile = calloc(1, sizeof(placed_tile_t));
-    return_code_t code = placed_tile_create(placed_tile, tile, orientation, x, y);
+    return_code_t  code =
+        placed_tile_create(placed_tile, tile, orientation, x, y);
 
-    if(code!=SUCCESS){
+    if (code != SUCCESS) {
       return code;
     }
 
@@ -215,7 +216,8 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
           if (rneighbor->parent->parts[values[nindex][i]] ==
               placed_tile->parent->parts[values[oindex][i]]) {
             if (placed_tile->parent->parts[values[oindex][i]] !=
-                    LIBCARCASSONNE_TILE_PART_FIELD && placed_tile->parent->parts[values[oindex][i]] !=
+                    LIBCARCASSONNE_TILE_PART_FIELD &&
+                placed_tile->parent->parts[values[oindex][i]] !=
                     LIBCARCASSONNE_TILE_PART_WALL &&
                 placed_tile_group_link(rneighbor->groups[ngroup],
                                        placed_tile->groups[ogroup])) {
