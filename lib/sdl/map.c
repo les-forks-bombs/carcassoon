@@ -19,25 +19,30 @@
 
 static double get_tile_angle(int orientation) {
   switch (orientation) {
-    case LIBCARCASSONNE_TILE_ORIENTATION_WEST:  return 90.0;
-    case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH: return 180.0;
-    case LIBCARCASSONNE_TILE_ORIENTATION_EAST:  return 270.0;
-    default:                                    return 0.0;
+    case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
+      return 90.0;
+    case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH:
+      return 180.0;
+    case LIBCARCASSONNE_TILE_ORIENTATION_EAST:
+      return 270.0;
+    default:
+      return 0.0;
   }
 }
 
 static SDL_Texture *get_tile_texture(AppState *as, const tile_t *tile) {
   if (tile == NULL || tile->texture == NULL) return as->temp_tex;
 
-  char *texturen = tile->texture;
-  char *prefix = "/img/tiles";
-  int buffer_size = strlen(texturen) + strlen(prefix) + 2;
-  char name[buffer_size];
+  char *texturen    = tile->texture;
+  char *prefix      = "/img/tiles";
+  int   buffer_size = strlen(texturen) + strlen(prefix) + 2;
+  char  name[buffer_size];
 
   snprintf(name, buffer_size, "%s/%s", prefix, texturen);
   int key_size = strlen(name) + 1;
 
-  SDL_Texture **texture_ptr = (SDL_Texture **)hashmap_get(&as->textures, name, key_size);
+  SDL_Texture **texture_ptr =
+      (SDL_Texture **)hashmap_get(&as->textures, name, key_size);
   if (texture_ptr != NULL) {
     return *texture_ptr;
   }
@@ -46,19 +51,22 @@ static SDL_Texture *get_tile_texture(AppState *as, const tile_t *tile) {
   return as->temp_tex;
 }
 
-static void draw_tile(AppState *as, const tile_t *tile, const SDL_FRect *dest, double angle, Uint8 alpha) {
+static void draw_tile(AppState *as, const tile_t *tile, const SDL_FRect *dest,
+                      double angle, Uint8 alpha) {
   SDL_Texture *texture = get_tile_texture(as, tile);
   if (texture == NULL) return;
 
   SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
   SDL_SetTextureAlphaMod(texture, alpha);
 
-  SDL_RenderTextureRotated(as->renderer, texture, NULL, dest, angle, NULL, SDL_FLIP_NONE);
+  SDL_RenderTextureRotated(as->renderer, texture, NULL, dest, angle, NULL,
+                           SDL_FLIP_NONE);
 
   SDL_SetTextureAlphaMod(texture, 255);
 }
 
-static void draw_selection_border(SDL_Renderer *renderer, const SDL_FRect *dest) {
+static void draw_selection_border(SDL_Renderer    *renderer,
+                                  const SDL_FRect *dest) {
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
   for (int t = 0; t < 3; t++) {
@@ -69,9 +77,10 @@ static void draw_selection_border(SDL_Renderer *renderer, const SDL_FRect *dest)
   }
 }
 
-static void render_occupied_cell(AppState *as, placed_tile_t *ptt, const SDL_FRect *dest) {
+static void render_occupied_cell(AppState *as, placed_tile_t *ptt,
+                                 const SDL_FRect *dest) {
   double angle = get_tile_angle(ptt->orientation);
-  
+
   draw_tile(as, ptt->parent, dest, angle, 255);
 
   if (ptt == as->current_action->order.place_meeple.tile) {
@@ -81,15 +90,20 @@ static void render_occupied_cell(AppState *as, placed_tile_t *ptt, const SDL_FRe
   render_placed_meeple(ptt, as, dest, angle);
 }
 
-static void render_empty_cell(AppState *as, int table_x, int table_y, const SDL_FRect *dest) {
+static void render_empty_cell(AppState *as, int table_x, int table_y,
+                              const SDL_FRect *dest) {
   vector2d_t pos = {.x = table_x, .y = table_y};
   if (!vector_contains(&as->possibles_places, &pos)) return;
 
-  if (as->is_waiting_for_tile && as->current_action->order.place_tile.tile != NULL && 
-      as->current_action->order.place_tile.x == table_x && as->current_action->order.place_tile.y == table_y) {
+  if (as->is_waiting_for_tile &&
+      as->current_action->order.place_tile.tile != NULL &&
+      as->current_action->order.place_tile.x == table_x &&
+      as->current_action->order.place_tile.y == table_y) {
     // printf("dans la boucle\n");
-    double preview_angle = get_tile_angle(as->current_action->order.place_tile.orientation);
-    draw_tile(as, as->current_action->order.place_tile.tile, dest, preview_angle, 160);
+    double preview_angle =
+        get_tile_angle(as->current_action->order.place_tile.orientation);
+    draw_tile(as, as->current_action->order.place_tile.tile, dest,
+              preview_angle, 160);
     /*SDL_SetRenderDrawBlendMode(as->renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(as->renderer, 255, 0, 0, 150);
     SDL_RenderFillRect(as->renderer, dest);*/
@@ -106,8 +120,8 @@ void render_map(AppState *as) {
 
   for (int table_y = min_coord; table_y <= max_coord; table_y++) {
     for (int table_x = min_coord; table_x <= max_coord; table_x++) {
-      float world_x = (float)(table_y) * MAP_TILE_SIZE;
-      float world_y = (float)(table_x) * MAP_TILE_SIZE;
+      float world_x = (float)(table_y)*MAP_TILE_SIZE;
+      float world_y = (float)(table_x)*MAP_TILE_SIZE;
 
       float x_render    = (world_x - as->camera->x) * as->camera->zoom;
       float y_render    = (world_y - as->camera->y) * as->camera->zoom;
@@ -115,14 +129,13 @@ void render_map(AppState *as) {
 
       if (x_render + size_zoomed > 0 && x_render < WINDOW_WIDTH &&
           y_render + size_zoomed > 0 && y_render < WINDOW_HEIGHT) {
-        
-        SDL_FRect dest = {x_render, y_render, size_zoomed, size_zoomed};
-        placed_tile_t *ptt = *game_tile_at(&as->engine.game, table_x, table_y);
+        SDL_FRect      dest = {x_render, y_render, size_zoomed, size_zoomed};
+        placed_tile_t *ptt  = *game_tile_at(&as->engine.game, table_x, table_y);
 
         if (ptt != NULL) {
           render_occupied_cell(as, ptt, &dest);
         } else {
-          if(as->current_action->type==LIBCARCASSONNE_ACTION_PLACE_TILE){
+          if (as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_TILE) {
             render_empty_cell(as, table_x, table_y, &dest);
           }
         }

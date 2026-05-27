@@ -36,7 +36,7 @@ endif
 
 ifeq "$(PROFILE)" "release"
 	CFLAGS += -O3
-	LFLAGS += -g
+	LFLAGS += -s
 endif
 
 RUNNER := 
