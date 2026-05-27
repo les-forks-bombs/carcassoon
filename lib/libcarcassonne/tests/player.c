@@ -6,7 +6,7 @@
 void player_create_initializes_fields(void** state) {
   (void)state;
 
-  meeple_count_vector_t meeples_count;
+  meeple_count_vector_t meeples_count = {0};
   vector_alloc(&meeples_count, 1);
 
   meeple_count_t basic_meeple = {.meeple_type = BASIC, .count = 7};
@@ -27,7 +27,7 @@ void player_create_initializes_fields(void** state) {
 void player_free_works(void** state) {
   (void)state;
 
-  meeple_count_vector_t meeples_count;
+  meeple_count_vector_t meeples_count = {0};
   vector_alloc(&meeples_count, 1);
 
   meeple_count_t basic_meeple = {.meeple_type = BASIC, .count = 7};
@@ -49,7 +49,7 @@ void player_free_handles_null(void** state) {
 void player_has_meeple_returns_true(void** state) {
   (void)state;
 
-  meeple_count_vector_t meeples_count;
+  meeple_count_vector_t meeples_count = {0};
   vector_alloc(&meeples_count, 1);
 
   meeple_count_t basic_meeple = {.meeple_type = BASIC, .count = 3};
@@ -67,7 +67,7 @@ void player_has_meeple_returns_true(void** state) {
 void player_has_meeple_returns_false(void** state) {
   (void)state;
 
-  meeple_count_vector_t meeples_count;
+  meeple_count_vector_t meeples_count = {0};
   vector_alloc(&meeples_count, 2);
 
   meeple_count_t basic_meeple = {.meeple_type = BASIC, .count = 0};
