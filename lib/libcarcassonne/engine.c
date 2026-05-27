@@ -129,11 +129,12 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     store->state_store = NULL;
 
 #ifdef DEBUG
-    printf("Exécution du hook: %s\n", current_hook->label);
+    // printf("Exécution du hook: %s\n", current_hook->label);
 #endif
 
-    return_code_t code = current_hook->fw(&(store->state_store), engine, &action);
-    if(code!=SUCCESS){
+    return_code_t code =
+        current_hook->fw(&(store->state_store), engine, &action);
+    if (code != SUCCESS) {
       return code;
     }
 
@@ -141,7 +142,8 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
         (engine->current_hook + 1) % vector_size(&engine->hooks);
 
 #ifdef DEBUG
-    printf("Prochain du hook: %s\n",(*vector_nth(&engine->hooks,engine->current_hook))->label);
+    // printf("Prochain du hook:
+    // %s\n",(*vector_nth(&engine->hooks,engine->current_hook))->label);
 #endif
 
   } while (engine->current_hook != 0);
@@ -175,7 +177,10 @@ return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
       if ((*vector_nth(&engine->hooks, i)) ==
           (vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1))
               ->hook) {
-        engine->current_hook = i;
+        /* Si le dernier dispatch était le dernier hook du cycle (ex. end_game),
+         * on wrappe à 0 comme le fait dispatch_action en fin de tour. */
+        engine->current_hook =
+            (i + 1 < (unsigned int)vector_size(&engine->hooks)) ? i : 0;
         break;
       }
     }

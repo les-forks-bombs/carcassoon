@@ -3,8 +3,9 @@
 #include <libcarcassonne/tile.h>
 #include <sdl/appstate.h>
 #include <sdl/meeple.h>
-#include "sdl/consts.h"
 #include <stdio.h>
+
+#include "sdl/consts.h"
 
 void render_placed_meeple(placed_tile_t *tile, AppState *as,
                           const SDL_FRect *tile_rect, double angle) {
@@ -32,7 +33,7 @@ void render_placed_meeple(placed_tile_t *tile, AppState *as,
       SDL_FRect meeple_dest = calc_meeple_rect(slot, tile_rect, angle);
 
       player_t *player = ptg->meeple->player;
-      
+
       if (player != NULL) {
         SDL_Color color = players_colors[player->id];
         SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
@@ -45,7 +46,6 @@ void render_placed_meeple(placed_tile_t *tile, AppState *as,
 
 void render_possible_meeples(placed_tile_t *tile, AppState *as,
                              const SDL_FRect *tile_rect, double angle) {
-
   SDL_Texture *texture;
 
   SDL_Texture **texture_ptr = (SDL_Texture **)hashmap_get(
@@ -57,14 +57,12 @@ void render_possible_meeples(placed_tile_t *tile, AppState *as,
   if (real_tile == NULL || tile_rect == NULL) return;
 
   for (unsigned int s = 0; s < real_tile->nb_slots; s++) {
-
     tile_slot_t slot = real_tile->slots[s];
-    int g = slot.group;
+    int         g    = slot.group;
 
     placed_tile_group_t *ptg = tile->groups[g];
 
     if (ptg != NULL && as->possible_meeples[g]) {
-
       SDL_Color c = players_colors[as->engine.game.current_player];
       SDL_SetTextureColorMod(texture, c.r, c.g, c.b);
 
@@ -86,7 +84,6 @@ void render_possible_meeples(placed_tile_t *tile, AppState *as,
   SDL_SetTextureColorMod(texture, 255, 255, 255);
   SDL_SetTextureAlphaMod(texture, 255);
 }
-
 
 static SDL_FRect calc_meeple_rect(tile_slot_t slot, const SDL_FRect *tile_rect,
                                   double angle) {
@@ -115,14 +112,13 @@ static SDL_FRect calc_meeple_rect(tile_slot_t slot, const SDL_FRect *tile_rect,
 
 void update_possible_meeples(AppState *as) {
   bool *possible_meeples = SDL_calloc(10, sizeof(bool));
-  
+
   for (int i = 0; i < vector_size(&as->all_actions); i++) {
     action_t *action = vector_nth(&as->all_actions, i);
     if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE) {
-        int group = action->order.place_meeple.part_group;
-        possible_meeples[group] = true;
+      int group               = action->order.place_meeple.part_group;
+      possible_meeples[group] = true;
     }
   }
   as->possible_meeples = possible_meeples;
 }
-
