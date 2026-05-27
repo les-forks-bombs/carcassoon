@@ -10,7 +10,7 @@ CLEAN += $(SDL_OBJS) $(SDL_OBJS:.o=.d)
 $(OUT)/bin/assets: $(DIR)/assets
 	@mkdir -p $(dir $@)
 	@cp -r $< $@
-	$(info $(TAG)CP $<)
+	$(info $(TAB)CP $<)
 
 $(OUT)/bin/sdl$(EXT): $(SDL_OBJS) $(OUT)/bin/assets \
     $(OUT)/libcarcassonne.a \
