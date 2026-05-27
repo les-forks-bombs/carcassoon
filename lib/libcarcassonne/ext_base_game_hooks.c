@@ -256,9 +256,9 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
   dispatch_t *dispatch = find_last_place_tile_dispatch(engine);
   if (dispatch == NULL) return NULL_POINTER;
 
-  action_t      *place = dispatch->action;
-  placed_tile_t **tile = game_tile_at(&engine->game, place->order.place_tile.x,
-                                      place->order.place_tile.y);
+  action_t       *place = dispatch->action;
+  placed_tile_t **tile  = game_tile_at(&engine->game, place->order.place_tile.x,
+                                       place->order.place_tile.y);
   if (tile == NULL || *tile == NULL) return NULL_POINTER;
 
   placed_tile_t *placed_tile = *tile;
@@ -288,17 +288,18 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
           memset(scored.player_won, 0, sizeof(scored.player_won));
           vector_alloc(&scored.meeples, vector_size(&evaluation.meeples));
 
-          // Sauvegarder coords et gagnants AVANT que update_score libère les meeple_t
+          // Sauvegarder coords et gagnants AVANT que update_score libère les
+          // meeple_t
           unsigned int player_meeple_count[LIBCARCASSONNE_MAX_PLAYERS] = {0};
-          unsigned int max_count                                        = 0;
+          unsigned int max_count                                       = 0;
           for (size_t j = 0; j < vector_size(&evaluation.meeples); j++) {
-            meeple_t       *meeple = *vector_nth(&evaluation.meeples, j);
-            removed_meeple_t rm    = {
-                   .x      = meeple->group_node->tile->x,
-                   .y      = meeple->group_node->tile->y,
-                   .group  = meeple->group,
-                   .type   = meeple->meeple_type,
-                   .player = meeple->player,
+            meeple_t        *meeple = *vector_nth(&evaluation.meeples, j);
+            removed_meeple_t rm     = {
+                .x      = meeple->group_node->tile->x,
+                .y      = meeple->group_node->tile->y,
+                .group  = meeple->group,
+                .type   = meeple->meeple_type,
+                .player = meeple->player,
             };
             vector_append(&scored.meeples, &rm);
             for (unsigned int p = 0; p < engine->config.players; p++) {
@@ -317,7 +318,8 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
 
           vector_append(saved, &scored);
 
-          // update_score attribue les points et libère les meeple_t via game_remove_meeple
+          // update_score attribue les points et libère les meeple_t via
+          // game_remove_meeple
           update_score(engine, &evaluation);
           vector_free(&evaluation.meeples);
         }
@@ -345,8 +347,8 @@ return_code_t give_back_meeples_bw(void **state_store, engine_t *engine) {
     // Remettre les meeples sur le plateau (sera défait par meeple_place_bw)
     for (size_t j = 0; j < vector_size(&scored->meeples); j++) {
       removed_meeple_t *rm = vector_nth(&scored->meeples, j);
-      assert(game_place_meeple(&engine->game, rm->x, rm->y, rm->group,
-                               rm->type, rm->player) == SUCCESS);
+      assert(game_place_meeple(&engine->game, rm->x, rm->y, rm->group, rm->type,
+                               rm->player) == SUCCESS);
     }
   }
 
@@ -434,7 +436,6 @@ return_code_t next_player_list_actions(action_vector_t *actions,
 /// @param removed_meeples Vecteur où stocker les infos des meeples retirés
 static void compute_unfinished_points(
     engine_t *engine, end_game_removed_meeples_vector_t *removed_meeples) {
-      
   for (unsigned int p = 0; p < engine->game.options->players; p++) {
     player_t *player = &engine->game.players[p];
 
@@ -459,9 +460,10 @@ static void compute_unfinished_points(
   for (unsigned int p = 0; p < engine->game.options->players; p++) {
     player_t *player = &engine->game.players[p];
 
-    while (vector_size(&player->meeples)>0) {
-      meeple_t *meeple=*vector_nth(&player->meeples, 0);
-      placed_tile_group_eval_points_t evaluation = placed_tile_group_eval_points(meeple->group_node, false);
+    while (vector_size(&player->meeples) > 0) {
+      meeple_t                       *meeple = *vector_nth(&player->meeples, 0);
+      placed_tile_group_eval_points_t evaluation =
+          placed_tile_group_eval_points(meeple->group_node, false);
       update_score(engine, &evaluation);
       vector_free(&evaluation.meeples);
     }

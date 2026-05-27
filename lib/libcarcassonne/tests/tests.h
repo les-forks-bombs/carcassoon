@@ -56,7 +56,6 @@ void placed_tile_create_with_null(void** state);
 void placed_tile_group_connected_with_linked_frrr_tiles(void** state);
 void placed_tile_group_eval_points_single_road(void** state);
 
-
 void test_tile_group_builds(void** state);
 void test_tile_group_link(void** state);
 void test_tile_group_dynamic_connectivity(void** state);

@@ -1,9 +1,10 @@
+#include <sdl/consts.h>
 #include <sdl/events.h>
 #include <sdl/consts.h>
 #include <sdl/action.h>
 
 SDL_AppResult handle_mouse_event_(AppState *as, SDL_Event *event) {
-  float     mouseX, mouseY;
+  float mouseX, mouseY;
   SDL_GetMouseState(&mouseX, &mouseY);
   const SDL_FPoint mouse_pos = {mouseX, mouseY};
 

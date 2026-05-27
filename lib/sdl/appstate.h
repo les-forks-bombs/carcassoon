@@ -5,6 +5,7 @@
 #include <libutils/hashmap.h>
 #include <sdl/banner.h>
 #include <sdl/camera.h>
+
 #include "libcarcassonne/forward.h"
 
 typedef HashMap(char *, SDL_Texture *) textures_hashmap_t;

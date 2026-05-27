@@ -4,8 +4,8 @@
 void deck_pick_removes_tile(void** state) {
   (void)state;
 
-  deck_t deck = create_deck(42, &options.extensions);
-  int initial_size = list_size(&deck.list);
+  deck_t deck         = create_deck(42, &options.extensions);
+  int    initial_size = list_size(&deck.list);
 
   const tile_t* tile = deck_pick(&deck);
   assert_ptr_not_equal(tile, NULL);
@@ -32,8 +32,8 @@ void deck_pick_on_empty_returns_null(void** state) {
 void deck_defausser_adds_tile_back(void** state) {
   (void)state;
 
-  deck_t deck = create_deck(42, &options.extensions);
-  int initial_size = list_size(&deck.list);
+  deck_t deck         = create_deck(42, &options.extensions);
+  int    initial_size = list_size(&deck.list);
 
   const tile_t* tile = deck_pick(&deck);
   assert_ptr_not_equal(tile, NULL);
@@ -63,8 +63,8 @@ void deck_defausser_random_position(void** state) {
 void deck_find_tile_removes_match(void** state) {
   (void)state;
 
-  deck_t deck = create_deck(42, &options.extensions);
-  int initial_size = list_size(&deck.list);
+  deck_t deck         = create_deck(42, &options.extensions);
+  int    initial_size = list_size(&deck.list);
 
   const tile_t* tile = deck_find_tile(&deck, "FCFC", false);
   assert_ptr_not_equal(tile, NULL);
