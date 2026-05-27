@@ -448,7 +448,7 @@ return_code_t next_player_list_actions(action_vector_t *actions,
 }
 
 /// @brief Calcule les points des constructions inachevées, retire les meeples
-/// @param engine La partie
+/// @param engine Le moteur de jeu
 /// @param removed_meeples Vecteur où stocker les infos des meeples retirés
 static void compute_unfinished_points(
     engine_t *engine, end_game_removed_meeples_vector_t *removed_meeples) {
