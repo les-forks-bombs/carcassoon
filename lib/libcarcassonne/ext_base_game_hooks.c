@@ -172,7 +172,14 @@ return_code_t tile_place_fw(void **state_store, engine_t *engine,
 return_code_t tile_place_bw(void **state_store, engine_t *engine) {
   tile_place_hook_state_t *state = *state_store;
 
-  return game_remove_tile(&engine->game, state->x, state->y);
+  placed_tile_t **tile_ptr = game_tile_at(&engine->game, state->x, state->y);
+  const tile_t   *original = (*tile_ptr)->parent;
+
+  return_code_t code = game_remove_tile(&engine->game, state->x, state->y);
+  if (code == SUCCESS) {
+    deck_defausser(&engine->game.deck, original);
+  }
+  return code;
 }
 
 return_code_t tile_place_free(void **state_store, engine_t *engine) {
@@ -246,34 +253,22 @@ static void update_score(engine_t                        *engine,
 
 return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
                                    action_t *action) {
-  // on récupère la dernière action "place"
   dispatch_t *dispatch = find_last_place_tile_dispatch(engine);
+  if (dispatch == NULL) return NULL_POINTER;
 
-  if (dispatch == NULL) {
-    return NULL_POINTER;
-  }
-
-  action_t *place = dispatch->action;
-
+  action_t      *place = dispatch->action;
   placed_tile_t **tile = game_tile_at(&engine->game, place->order.place_tile.x,
                                       place->order.place_tile.y);
-  if (tile == NULL || *tile == NULL) {
-    return NULL_POINTER;
-  }
+  if (tile == NULL || *tile == NULL) return NULL_POINTER;
 
   placed_tile_t *placed_tile = *tile;
 
-  // pour chacun des groupes de la tile placée, si il y a des meeples, on les
-  // retire
   bool visite[9];
   memset(&visite, 0, sizeof(visite));
 
-  placed_tile_group_eval_points_vector_t *evals =
-      calloc(1, sizeof(placed_tile_group_eval_points_vector_t));
-  vector_alloc(evals, 9);
-  evals->meta.size = 0;
-
-  *state_store = evals;
+  give_back_state_vector_t *saved = calloc(1, sizeof(give_back_state_vector_t));
+  vector_alloc(saved, 4);
+  *state_store = saved;
 
   for (int i = 0; i < 9; i++) {
     int group = placed_tile->parent->parts_groups[i];
@@ -284,9 +279,47 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
         placed_tile_group_eval_points_t evaluation =
             placed_tile_group_eval_points(groupp, true);
 
-        vector_append(evals, &evaluation);
+        if (vector_size(&evaluation.meeples) == 0) {
+          // Aucun meeple : ni scoring ni restauration nécessaires
+          vector_free(&evaluation.meeples);
+        } else {
+          give_back_scored_group_t scored = {.points = evaluation.points};
+          memset(scored.player_won, 0, sizeof(scored.player_won));
+          vector_alloc(&scored.meeples, vector_size(&evaluation.meeples));
 
-        update_score(engine, &evaluation);
+          // Sauvegarder coords et gagnants AVANT que update_score libère les meeple_t
+          unsigned int player_meeple_count[LIBCARCASSONNE_MAX_PLAYERS] = {0};
+          unsigned int max_count                                        = 0;
+          for (size_t j = 0; j < vector_size(&evaluation.meeples); j++) {
+            meeple_t       *meeple = *vector_nth(&evaluation.meeples, j);
+            removed_meeple_t rm    = {
+                   .x      = meeple->group_node->tile->x,
+                   .y      = meeple->group_node->tile->y,
+                   .group  = meeple->group,
+                   .type   = meeple->meeple_type,
+                   .player = meeple->player,
+            };
+            vector_append(&scored.meeples, &rm);
+            for (unsigned int p = 0; p < engine->config.players; p++) {
+              if (meeple->player == &engine->game.players[p]) {
+                player_meeple_count[p]++;
+                if (player_meeple_count[p] > max_count)
+                  max_count = player_meeple_count[p];
+                break;
+              }
+            }
+          }
+          for (unsigned int p = 0; p < engine->config.players; p++) {
+            if (player_meeple_count[p] == max_count)
+              scored.player_won[p] = true;
+          }
+
+          vector_append(saved, &scored);
+
+          // update_score attribue les points et libère les meeple_t via game_remove_meeple
+          update_score(engine, &evaluation);
+          vector_free(&evaluation.meeples);
+        }
       }
     }
     visite[group] = true;
@@ -295,76 +328,41 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
   return SUCCESS;
 }
 
-static void revert_update_score(engine_t                        *engine,
-                                placed_tile_group_eval_points_t *evaluation) {
-  int players_meeple_count[LIBCARCASSONNE_MAX_PLAYERS] = {0};
-  int winner_score                                     = 0;
-
-  for (size_t i = 0; i < LIBCARCASSONNE_MAX_PLAYERS; i++) {
-    for (size_t j = 0; j < vector_size(&evaluation->meeples); j++) {
-      meeple_t *meeple = *vector_nth(&evaluation->meeples, j);
-
-      // Identifying meeple's player
-      if (&engine->game.players[i] == meeple->player) {
-        players_meeple_count[i]++;
-
-        placed_tile_t *meeple_tile = meeple->group_node->tile;
-        return_code_t  code        = game_place_meeple(
-            &engine->game, meeple_tile->x, meeple_tile->y, meeple->group,
-            meeple->meeple_type, meeple->player);
-
-        assert(code == SUCCESS);
-
-        // Giving back meeple to player
-        (*vector_nth(&engine->game.players[i].meeples_count,
-                     meeple->meeple_type))
-            .count--;
-
-        // Computing max
-        if (winner_score < players_meeple_count[i]) {
-          winner_score = players_meeple_count[i];
-        }
-      }
-    }
-  }
-
-  for (size_t i = 0; i < LIBCARCASSONNE_MAX_PLAYERS; i++) {
-    if (players_meeple_count[i] == winner_score) {
-      engine->game.players[i].score -= evaluation->points;
-    }
-  }
-}
-
 return_code_t give_back_meeples_bw(void **state_store, engine_t *engine) {
-  // annulation des meeples rendus
+  give_back_state_vector_t *saved = *state_store;
+  if (saved == NULL) return SUCCESS;
 
-  placed_tile_group_eval_points_vector_t *evals = (*state_store);
-  if (evals == NULL) {
-    return SUCCESS;
-  }
+  for (size_t i = 0; i < vector_size(saved); i++) {
+    give_back_scored_group_t *scored = vector_nth(saved, i);
 
-  for (size_t i = 0; i < vector_size(evals); i++) {
-    placed_tile_group_eval_points_t *eval = vector_nth(evals, i);
-    revert_update_score(engine, eval);
+    // Annuler les points des joueurs gagnants
+    for (unsigned int p = 0; p < engine->config.players; p++) {
+      if (scored->player_won[p])
+        engine->game.players[p].score -= scored->points;
+    }
+
+    // Remettre les meeples sur le plateau (sera défait par meeple_place_bw)
+    for (size_t j = 0; j < vector_size(&scored->meeples); j++) {
+      removed_meeple_t *rm = vector_nth(&scored->meeples, j);
+      assert(game_place_meeple(&engine->game, rm->x, rm->y, rm->group,
+                               rm->type, rm->player) == SUCCESS);
+    }
   }
 
   return SUCCESS;
 }
 
 return_code_t give_back_meeples_free(void **state_store, engine_t *engine) {
-  placed_tile_group_eval_points_vector_t *evals = (*state_store);
-  if (evals == NULL) {
-    return SUCCESS;
+  (void)engine;
+  give_back_state_vector_t *saved = *state_store;
+  if (saved == NULL) return SUCCESS;
+
+  for (size_t i = 0; i < vector_size(saved); i++) {
+    give_back_scored_group_t *scored = vector_nth(saved, i);
+    vector_free(&scored->meeples);
   }
-
-  for (unsigned int i=0; i<vector_size(evals); i++) {
-    placed_tile_group_eval_points_t *eval = vector_nth(evals, i);
-    vector_free(&eval->meeples);
-  }
-  vector_free(evals);
-
-  free(evals);
-
+  vector_free(saved);
+  free(saved);
   return SUCCESS;
 }
 
