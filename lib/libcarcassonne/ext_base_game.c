@@ -1,5 +1,3 @@
-#pragma once
-
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/meeple.h>
 #include <libcarcassonne/tile.h>
