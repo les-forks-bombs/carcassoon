@@ -1,5 +1,6 @@
 #include <sdl/events.h>
 #include <sdl/consts.h>
+#include <sdl/action.h>
 
 SDL_AppResult handle_mouse_event_(AppState *as, SDL_Event *event) {
   float     mouseX, mouseY;
@@ -42,17 +43,11 @@ SDL_AppResult handle_key_event_(AppState *as, SDL_Keycode key_val) {
   switch (key_val) {
     case SDLK_ESCAPE:
       return SDL_APP_SUCCESS;
-    case SDLK_UP:
-      as->camera->y += 10.0f;
-      break;
-    case SDLK_DOWN:
-      as->camera->y -= 10.0f;
-      break;
     case SDLK_LEFT:
-      as->camera->x += 10.0f;
+      pass_to_action(as,-1);
       break;
     case SDLK_RIGHT:
-      as->camera->x -= 10.0f;
+      pass_to_action(as,1);
       break;
     case SDLK_KP_PLUS:
       as->camera->zoom += 0.1f;
@@ -61,7 +56,20 @@ SDL_AppResult handle_key_event_(AppState *as, SDL_Keycode key_val) {
       as->camera->zoom -= 0.1f;
       break;
     case SDLK_Z:
-      toggle_banner(as->banners[1], as->renderer);
+      as->camera->y += 10.0f;
+      break;
+    case SDLK_Q:
+      as->camera->x += 10.0f;
+      break;
+    case SDLK_S:
+      as->camera->y -= 10.0f;
+      break;
+    case SDLK_D:
+      as->camera->x -= 10.0f;
+      break;
+    case SDLK_RETURN:
+      send_action_to_engine(as);
+      break;
     default:
       break;
   }

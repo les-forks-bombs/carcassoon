@@ -13,6 +13,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "libcarcassonne/action.h"
 #include "libutils/hashmap.h"
 #include "libutils/vector.h"
 
@@ -73,7 +74,7 @@ static void render_occupied_cell(AppState *as, placed_tile_t *ptt, const SDL_FRe
   
   draw_tile(as, ptt->parent, dest, angle, 255);
 
-  if (ptt == as->current_tile) {
+  if (ptt == as->current_action->order.place_meeple.tile) {
     draw_selection_border(as->renderer, dest);
     render_possible_meeples(ptt, as, dest, angle);
   }
@@ -84,11 +85,14 @@ static void render_empty_cell(AppState *as, int table_x, int table_y, const SDL_
   vector2d_t pos = {.x = table_x, .y = table_y};
   if (!vector_contains(&as->possibles_places, &pos)) return;
 
-  if (as->show_preview && as->preview_tile != NULL && 
-      as->preview_tile->x == table_x && as->preview_tile->y == table_y) {
-    
-    double preview_angle = get_tile_angle(as->preview_tile->orientation);
-    draw_tile(as, as->preview_tile->parent, dest, preview_angle, 160);
+  if (as->is_waiting_for_tile && as->current_action->order.place_tile.tile != NULL && 
+      as->current_action->order.place_tile.x == table_x && as->current_action->order.place_tile.y == table_y) {
+    // printf("dans la boucle\n");
+    double preview_angle = get_tile_angle(as->current_action->order.place_tile.orientation);
+    draw_tile(as, as->current_action->order.place_tile.tile, dest, preview_angle, 160);
+    /*SDL_SetRenderDrawBlendMode(as->renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(as->renderer, 255, 0, 0, 150);
+    SDL_RenderFillRect(as->renderer, dest);*/
   } else {
     SDL_SetRenderDrawBlendMode(as->renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(as->renderer, 255, 255, 255, 150);
@@ -118,7 +122,9 @@ void render_map(AppState *as) {
         if (ptt != NULL) {
           render_occupied_cell(as, ptt, &dest);
         } else {
-          render_empty_cell(as, table_x, table_y, &dest);
+          if(as->current_action->type==LIBCARCASSONNE_ACTION_PLACE_TILE){
+            render_empty_cell(as, table_x, table_y, &dest);
+          }
         }
       }
     }
@@ -129,10 +135,8 @@ void update_possible_places(AppState *as) {
   vector_free(&as->possibles_places);
   vector_alloc(&as->possibles_places, 5);
 
-  action_vector_t actions = engine_get_actions(&as->engine);
-
-  for (int i = 0; i < vector_size(&actions); i++) {
-    action_t *action = vector_nth(&actions, i);
+  for (int i = 0; i < vector_size(&as->all_actions); i++) {
+    action_t *action = vector_nth(&as->all_actions, i);
     if (action->type == LIBCARCASSONNE_ACTION_PLACE_TILE) {
       vector2d_t pos = {.x = action->order.place_tile.x,
                         .y = action->order.place_tile.y};
