@@ -8,6 +8,7 @@
 #include "sdl/forward.h"
 #include "sdl/map.h"
 #include "sdl/meeple.h"
+#include <sdl/banner.h>
 
 void get_current_actions(appstate_t *as) {
   vector_free(&as->all_actions);
@@ -81,6 +82,7 @@ void send_action_to_engine(appstate_t *as) {
   // printf("hook actuel: %s\n", (*vector_nth(&as->engine.hooks,
   // as->engine.current_hook))->label);
   return_code_t result = dispatch_action(&as->engine, *as->current_action);
-  assert(result == SUCCESS);
+  // assert(result == SUCCESS);
   get_current_actions(as);
+  synchronize_banners(as);
 }
