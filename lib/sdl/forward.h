@@ -8,7 +8,5 @@ ForwardDefinition(struct, appstate);
 ForwardDefinition(struct, banner);
 ForwardDefinition(struct, text_object);
 ForwardDefinition(struct, map);
-ForwardDefinition(struct, meeple);
-ForwardDefinition(struct, action);
 
 #endif

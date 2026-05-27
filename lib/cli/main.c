@@ -1,4 +1,4 @@
-#include <libcarcassonne/engine.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {

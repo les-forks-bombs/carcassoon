@@ -1,19 +1,16 @@
-#include <SDL3/SDL.h>
+#include <SDL3/SDL_blendmode.h>
+#include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
-#include <libcarcassonne/engine.h>
-#include <libcarcassonne/forward.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/placed_tile.h>
-#include <sdl/appstate.h>
+#include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_surface.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <sdl/consts.h>
 #include <sdl/map.h>
 #include <sdl/meeple.h>
-#include <sdl/resolver.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "libcarcassonne/action.h"
 #include "libutils/hashmap.h"
 #include "libutils/vector.h"
 #include "sdl/forward.h"
@@ -32,7 +29,9 @@ static double get_tile_angle(int orientation) {
 }
 
 static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
-  if (tile == NULL || tile->texture == NULL) return as->temp_tex;
+  if (tile == NULL || tile->texture == NULL) {
+    return as->temp_tex;
+  }
 
   char *texturen    = tile->texture;
   char *prefix      = "/img/tiles";
@@ -55,7 +54,9 @@ static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
 static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
                       double angle, Uint8 alpha) {
   SDL_Texture *texture = get_tile_texture(as, tile);
-  if (texture == NULL) return;
+  if (texture == NULL) {
+    return;
+  }
 
   SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
   SDL_SetTextureAlphaMod(texture, alpha);
@@ -66,13 +67,13 @@ static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
   SDL_SetTextureAlphaMod(texture, 255);
 }
 
-static void draw_selection_border(SDL_Renderer    *renderer,
-                                  const SDL_FRect *dest,appstate_t *as) {
+static void draw_selection_border(SDL_Renderer *renderer, const SDL_FRect *dest,
+                                  appstate_t *as) {
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  if (as->current_action->type==LIBCARCASSONNE_ACTION_PLACE_MEEPLE && as->current_action->order.place_meeple.meeple_type!=NONE){
+  if (as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE &&
+      as->current_action->order.place_meeple.meeple_type != NONE) {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-  }
-  else {
+  } else {
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
   }
   for (int t = 0; t < 3; t++) {
@@ -90,7 +91,7 @@ static void render_occupied_cell(appstate_t *as, placed_tile_t *ptt,
   draw_tile(as, ptt->parent, dest, angle, 255);
 
   if (ptt == as->current_action->order.place_meeple.tile) {
-    draw_selection_border(as->renderer, dest,as);
+    draw_selection_border(as->renderer, dest, as);
     render_possible_meeples(ptt, as, dest, angle);
   }
   render_placed_meeple(ptt, as, dest, angle);
@@ -99,7 +100,9 @@ static void render_occupied_cell(appstate_t *as, placed_tile_t *ptt,
 static void render_empty_cell(appstate_t *as, int table_x, int table_y,
                               const SDL_FRect *dest) {
   vector2d_t pos = {.x = table_x, .y = table_y};
-  if (!vector_contains(&as->possibles_places, &pos)) return;
+  if (!vector_contains(&as->possibles_places, &pos)) {
+    return;
+  }
 
   if (as->is_waiting_for_tile &&
       as->current_action->order.place_tile.tile != NULL &&
@@ -126,8 +129,8 @@ void render_map(appstate_t *as) {
 
   for (int table_y = min_coord; table_y <= max_coord; table_y++) {
     for (int table_x = min_coord; table_x <= max_coord; table_x++) {
-      float world_x = (float)(table_y)*MAP_TILE_SIZE;
-      float world_y = (float)(table_x)*MAP_TILE_SIZE;
+      float world_x = (float)table_y * MAP_TILE_SIZE;
+      float world_y = (float)table_x * MAP_TILE_SIZE;
 
       float x_render    = (world_x - as->camera->x) * as->camera->zoom;
       float y_render    = (world_y - as->camera->y) * as->camera->zoom;
@@ -167,38 +170,40 @@ void update_possible_places(appstate_t *as) {
 }
 
 void print_grid(appstate_t *as) {
-    int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
-    int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
+  int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
+  int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
 
-    // Détermination des limites géométriques du monde virtuel
-    float world_min_x = (float)min_coord * MAP_TILE_SIZE;
-    float world_max_x = (float)(max_coord + 1) * MAP_TILE_SIZE;
-    float world_min_y = (float)min_coord * MAP_TILE_SIZE;
-    float world_max_y = (float)(max_coord + 1) * MAP_TILE_SIZE;
+  // Détermination des limites géométriques du monde virtuel
+  float world_min_x = (float)min_coord * MAP_TILE_SIZE;
+  float world_max_x = (float)(max_coord + 1) * MAP_TILE_SIZE;
+  float world_min_y = (float)min_coord * MAP_TILE_SIZE;
+  float world_max_y = (float)(max_coord + 1) * MAP_TILE_SIZE;
 
-    // Conversion des limites mondiales en coordonnées écran pour le traçage
-    float screen_min_x = (world_min_x - as->camera->x) * as->camera->zoom;
-    float screen_max_x = (world_max_x - as->camera->x) * as->camera->zoom;
-    float screen_min_y = (world_min_y - as->camera->y) * as->camera->zoom;
-    float screen_max_y = (world_max_y - as->camera->y) * as->camera->zoom;
+  // Conversion des limites mondiales en coordonnées écran pour le traçage
+  float screen_min_x = (world_min_x - as->camera->x) * as->camera->zoom;
+  float screen_max_x = (world_max_x - as->camera->x) * as->camera->zoom;
+  float screen_min_y = (world_min_y - as->camera->y) * as->camera->zoom;
+  float screen_max_y = (world_max_y - as->camera->y) * as->camera->zoom;
 
-    SDL_SetRenderDrawColor(as->renderer, 150, 150, 150, 255);
+  SDL_SetRenderDrawColor(as->renderer, 150, 150, 150, 255);
 
-    for (int table_y = min_coord; table_y <= max_coord + 1; table_y++) {
-        float world_x = (float)table_y * MAP_TILE_SIZE;
-        float screen_x = (world_x - as->camera->x) * as->camera->zoom;
+  for (int table_y = min_coord; table_y <= max_coord + 1; table_y++) {
+    float world_x  = (float)table_y * MAP_TILE_SIZE;
+    float screen_x = (world_x - as->camera->x) * as->camera->zoom;
 
-        if (screen_x >= 0 && screen_x <= as->window_width) {
-            SDL_RenderLine(as->renderer, screen_x, screen_min_y, screen_x, screen_max_y);
-        }
+    if (screen_x >= 0 && screen_x <= as->window_width) {
+      SDL_RenderLine(as->renderer, screen_x, screen_min_y, screen_x,
+                     screen_max_y);
     }
+  }
 
-    for (int table_x = min_coord; table_x <= max_coord + 1; table_x++) {
-        float world_y = (float)table_x * MAP_TILE_SIZE;
-        float screen_y = (world_y - as->camera->y) * as->camera->zoom;
+  for (int table_x = min_coord; table_x <= max_coord + 1; table_x++) {
+    float world_y  = (float)table_x * MAP_TILE_SIZE;
+    float screen_y = (world_y - as->camera->y) * as->camera->zoom;
 
-        if (screen_y >= 0 && screen_y <= as->window_height) {
-            SDL_RenderLine(as->renderer, screen_min_x, screen_y, screen_max_x, screen_y);
-        }
+    if (screen_y >= 0 && screen_y <= as->window_height) {
+      SDL_RenderLine(as->renderer, screen_min_x, screen_y, screen_max_x,
+                     screen_y);
     }
+  }
 }
