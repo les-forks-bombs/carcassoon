@@ -1,4 +1,4 @@
-#include <cmocka.h>
+
 #include <libutils/lc.h>
 #include <libutils/tests/tests.h>
 

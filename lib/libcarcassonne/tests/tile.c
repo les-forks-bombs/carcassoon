@@ -1,5 +1,6 @@
-#include <cmocka.h>
+
 #include <libcarcassonne/libcarcassonne.h>
+#include <libcarcassonne/tests/tests.h>
 #include <stdio.h>
 
 void test_tile_group_builds(void** state) {

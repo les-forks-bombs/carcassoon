@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <cmocka.h>
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 #include <stdbool.h>

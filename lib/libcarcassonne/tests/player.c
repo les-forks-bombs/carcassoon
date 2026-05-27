@@ -1,5 +1,6 @@
-#include <cmocka.h>
+
 #include <libcarcassonne/libcarcassonne.h>
+#include <libcarcassonne/tests/tests.h>
 #include <stdlib.h>
 
 #include "libutils/vector.h"

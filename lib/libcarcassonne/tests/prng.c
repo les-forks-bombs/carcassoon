@@ -1,5 +1,6 @@
-#include <cmocka.h>
+
 #include <libcarcassonne/libcarcassonne.h>
+#include <libcarcassonne/tests/tests.h>
 
 void prng_create_with_seed_initializes_state(void** state) {
   (void)state;
