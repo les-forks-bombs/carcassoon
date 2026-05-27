@@ -149,3 +149,56 @@ void engine_get_actions_only_none_when_no_meeples(void** state) {
   vector_free(&meeple_actions);
   destroy_engine(&engine);
 }
+
+/* Un meeple posé dans un groupe FIELD coin (open_slots=0, donc toujours
+ * "complet") ne doit PAS être restitué en cours de partie.
+ * Les champs Carcassonne ne sont scorés qu'en fin de partie.
+ *
+ * Scénario : CRFR placée en (0,1) est de la tuile de départ CRFR(0,0).
+ *   - face W=ROAD compatible avec face E=ROAD de CRFR(0,0) ✓
+ *   - groupe A = FIELD coins NW+NE (positions 0 et 2, aucune face)
+ *     → open_slots=0 → placed_tile_group_complete() retourne true d'emblée
+ * Sans le correctif, give_back_meeples_fw retire immédiatement le meeple. */
+void engine_field_meeple_not_given_back_mid_game(void** state) {
+  (void)state;
+  options_t o      = engine_test_options();
+  engine_t  engine = {0};
+  assert_int_equal(create_engine(&engine, o), SUCCESS);
+  assert_int_equal(start_game(&engine), SUCCESS);
+
+  const tile_t* crfr = deck_find_tile(&engine.game.deck, "CRFR", false);
+  assert_non_null(crfr);
+
+  action_t tile_act                          = {0};
+  tile_act.type                              = LIBCARCASSONNE_ACTION_PLACE_TILE;
+  tile_act.order.place_tile.tile             = crfr;
+  tile_act.order.place_tile.x               = 0;
+  tile_act.order.place_tile.y               = 1;
+  tile_act.order.place_tile.orientation     = LIBCARCASSONNE_TILE_ORIENTATION_NORTH;
+  assert_int_equal(dispatch_action(&engine, tile_act), NO_PROGRESS);
+
+  player_t*    player       = game_get_current_player(&engine.game);
+  unsigned int before_count =
+      ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
+
+  action_t meeple_act                            = {0};
+  meeple_act.type                                = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+  meeple_act.order.place_meeple.x               = 0;
+  meeple_act.order.place_meeple.y               = 1;
+  meeple_act.order.place_meeple.part_group      = A;
+  meeple_act.order.place_meeple.meeple_type     = BASIC;
+  assert_int_equal(dispatch_action(&engine, meeple_act), SUCCESS);
+
+  /* Le meeple doit encore être dans le groupe FIELD après le tour complet */
+  placed_tile_t** p = game_tile_at(&engine.game, 0, 1);
+  assert_non_null(*p);
+  assert_non_null((*p)->groups[A]->meeple);
+
+  /* Le compteur doit avoir diminué de 1 (meeple posé, non restitué) */
+  unsigned int after_count =
+      ((meeple_count_t*)vector_nth(&engine.game.players[0].meeples_count,
+                                   BASIC))->count;
+  assert_int_equal(after_count, before_count - 1);
+
+  destroy_engine(&engine);
+}
