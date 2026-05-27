@@ -63,6 +63,12 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   for (int nb_players = 0; nb_players < as->engine.game.options->players;
        nb_players++) {
     as->banners[nb_players]->score = as->engine.game.players[nb_players].score;
+    if(as->engine.game.current_player == nb_players && !as->banners[nb_players]->is_open){
+      toggle_banner(as->banners[nb_players],as->renderer);
+    }
+    else if(as->engine.game.current_player != nb_players && as->banners[nb_players]->is_open){
+      toggle_banner(as->banners[nb_players],as->renderer);
+    }
     render_banner(as->banners[nb_players], as->renderer);
   }
   SDL_RenderPresent(as->renderer);
