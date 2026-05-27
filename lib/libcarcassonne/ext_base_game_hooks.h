@@ -41,6 +41,15 @@ struct end_game_hook_state {
   end_game_removed_meeples_vector_t removed_meeples;
 };
 
+/// @brief État sauvegardé pour un groupe complet avec meeples (give_back_meeples)
+struct give_back_scored_group {
+  unsigned int points;
+  bool         player_won[LIBCARCASSONNE_MAX_PLAYERS];
+  end_game_removed_meeples_vector_t meeples;
+};
+ForwardDefinition(struct, give_back_scored_group);
+typedef Vector(give_back_scored_group_t) give_back_state_vector_t;
+
 /**
  * @brief Définis le hook pour placer une tile
  *
