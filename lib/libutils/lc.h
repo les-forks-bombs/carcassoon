@@ -68,9 +68,10 @@ void utils_list_remove_value(list_t *list, const void *data, size_t size);
 /// @param list La liste dans laquelle récupérer le noeud
 /// @param index L'index auquel récupérer le noeud
 /// @return Le noeud de liste à l'index spécifié
-#define list_nth(list, index)  utils_list_nth(&((list)->meta), index)
+#define list_nth(list, index) utils_list_nth(&((list)->meta), index)
 
-/// @brief Récupère la valeur d'un noeud de liste dans la liste à l'index spécifié
+/// @brief Récupère la valeur d'un noeud de liste dans la liste à l'index
+/// spécifié
 /// @param list La liste dans laquelle récupérer le noeud
 /// @param index L'index auquel récupérer le noeud
 /// @return La valeur du noeud à l'index spécifié

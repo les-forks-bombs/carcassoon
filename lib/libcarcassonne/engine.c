@@ -1,12 +1,12 @@
 #include <libcarcassonne/libcarcassonne.h>
+#include <libutils/lc.h>
+#include <libutils/vector.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "forward.h"
-#include "libutils/lc.h"
-#include "libutils/vector.h"
 
 return_code_t create_engine(engine_t *engine, options_t options) {
   if (engine == NULL) {

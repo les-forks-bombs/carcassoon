@@ -1,14 +1,13 @@
 #include <assert.h>
+#include <libcarcassonne/forward.h>
 #include <libcarcassonne/libcarcassonne.h>
+#include <libutils/vector.h>
 #include <sdl/action.h>
-#include <stdio.h>
-
-#include "libcarcassonne/forward.h"
-#include "libutils/vector.h"
-#include "sdl/forward.h"
-#include "sdl/map.h"
-#include "sdl/meeple.h"
 #include <sdl/banner.h>
+#include <sdl/forward.h>
+#include <sdl/map.h>
+#include <sdl/meeple.h>
+#include <stdio.h>
 
 void get_current_actions(appstate_t *as) {
   vector_free(&as->all_actions);

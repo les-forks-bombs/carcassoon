@@ -2,9 +2,8 @@
 #include <libcarcassonne/ext_base_game.h>
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
+#include <libutils/vector.h>
 #include <stdio.h>
-
-#include "libutils/vector.h"
 
 static options_t full_game_opts(void) {
   static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};

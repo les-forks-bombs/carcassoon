@@ -18,30 +18,30 @@ enum tile_part_group {
 /// @remark Pour avoir le suivant (sens des aiguilles d'une montre on à) (n + 1)
 /// % 4
 enum tile_orientation {
-    /// @brief Orientation Nord
+  /// @brief Orientation Nord
   LIBCARCASSONNE_TILE_ORIENTATION_NORTH = 0,
-    /// @brief Orientation Est
-  LIBCARCASSONNE_TILE_ORIENTATION_EAST  = 1,
-    /// @brief Orientation Sud
+  /// @brief Orientation Est
+  LIBCARCASSONNE_TILE_ORIENTATION_EAST = 1,
+  /// @brief Orientation Sud
   LIBCARCASSONNE_TILE_ORIENTATION_SOUTH = 2,
-    /// @brief Orientation Ouest
-  LIBCARCASSONNE_TILE_ORIENTATION_WEST  = 3
+  /// @brief Orientation Ouest
+  LIBCARCASSONNE_TILE_ORIENTATION_WEST = 3
 };
 
 /// @brief Les différents types de sous-tiles
 enum tile_part_kind {
-    /// @brief Représente un village
+  /// @brief Représente un village
   LIBCARCASSONNE_TILE_PART_VILLAGE = 0,
-    /// @brief Représente un champ
-  LIBCARCASSONNE_TILE_PART_FIELD   = 1,
-    /// @brief Représente une route
-  LIBCARCASSONNE_TILE_PART_ROAD    = 2,
-    /// @brief Représente un mur
-  LIBCARCASSONNE_TILE_PART_WALL    = 3,
-    /// @brief Représente une abbaye
-  LIBCARCASSONNE_TILE_PART_ABBEY   = 4,
-    /// @brief Représente une ville
-  LIBCARCASSONNE_TILE_PART_TOWN    = 5
+  /// @brief Représente un champ
+  LIBCARCASSONNE_TILE_PART_FIELD = 1,
+  /// @brief Représente une route
+  LIBCARCASSONNE_TILE_PART_ROAD = 2,
+  /// @brief Représente un mur
+  LIBCARCASSONNE_TILE_PART_WALL = 3,
+  /// @brief Représente une abbaye
+  LIBCARCASSONNE_TILE_PART_ABBEY = 4,
+  /// @brief Représente une ville
+  LIBCARCASSONNE_TILE_PART_TOWN = 5
 };
 
 /// @brief Représente les différents types d'action possible
@@ -110,11 +110,11 @@ typedef enum {
   GAME_STATE_FINISHED = 2,
 } game_state_t;
 
-typedef enum return_code      return_code_t;
+typedef enum return_code return_code_t;
 /// @brief Les différents types de sous-tiles
-typedef enum tile_part_kind   tile_part_type_t;
+typedef enum tile_part_kind tile_part_type_t;
 /// @brief Les sous-groupes possibles [0-7]
-typedef enum tile_part_group  tile_part_group_t;
+typedef enum tile_part_group tile_part_group_t;
 
 /// @brief Les orientations possibles pour les tiles
 /// @remark Pour avoir l'opposé on a (n + 2) % 4

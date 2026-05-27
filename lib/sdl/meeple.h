@@ -4,8 +4,7 @@
 #include <SDL3/SDL.h>
 #include <libcarcassonne/libcarcassonne.h>
 #include <sdl/appstate.h>
-
-#include "sdl/camera.h"
+#include <sdl/camera.h>
 
 void render_possible_meeples(placed_tile_t *tile, appstate_t *as,
                              const SDL_FRect *tile_rect, double angle);

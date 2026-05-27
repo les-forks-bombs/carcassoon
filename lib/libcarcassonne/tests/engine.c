@@ -1,11 +1,10 @@
 #include <assert.h>
+#include <libcarcassonne/ext_base_game_hooks.h>
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
+#include <libutils/vector.h>
 #include <stdbool.h>
 #include <stdio.h>
-
-#include "libcarcassonne/ext_base_game_hooks.h"
-#include "libutils/vector.h"
 
 void engine_builds(void** state) {
   (void)state;

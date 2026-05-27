@@ -1,7 +1,6 @@
 #pragma once
+#include <libcarcassonne/forward.h>
 #include <libutils/vector.h>
-
-#include "libcarcassonne/forward.h"
 
 /// @brief Information des groupes de la sous-tile
 struct placed_tile_group {

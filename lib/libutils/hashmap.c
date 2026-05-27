@@ -1,14 +1,13 @@
 #include "hashmap.h"
 
+#include <libutils/hash.h>
 #include <libutils/hashmap.h>
+#include <libutils/lc.h>
+#include <libutils/vector.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "libutils/hash.h"
-#include "libutils/lc.h"
-#include "libutils/vector.h"
 
 void utils_hashmap_create(hashmap_t *map, size_t number_of_buckets) {
   if (map == NULL || number_of_buckets < 1) {

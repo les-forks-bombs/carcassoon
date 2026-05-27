@@ -1,20 +1,19 @@
 #pragma once
 
+#include <libutils/lc.h>
+#include <libutils/vector.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "libutils/lc.h"
-#include "libutils/vector.h"
 
 #define LIBUTILS_HASHMAP_SEED 67
 
 /// @brief Représente un couple (clé, valeur)
 typedef struct hashmap_node {
   /// @brief La clé
-  void  *key;
+  void *key;
   /// @brief La valeur
-  void  *value;
+  void *value;
   /// @brief La taille de la clé
   size_t key_size;
 } hashmap_node_t;
@@ -26,9 +25,9 @@ typedef struct hashmap {
   /// @brief Vecteur de bucket
   bucket_vector_t buckets;
   /// @brief Le nombre de buckets
-  unsigned int    size;
+  unsigned int size;
   /// @brief Le nombre d'éléments dans la hashmap
-  unsigned int    element_count;
+  unsigned int element_count;
 } hashmap_t;
 
 /// @brief Macro définissant une hashmap du type (clé, valeur) spécifié
