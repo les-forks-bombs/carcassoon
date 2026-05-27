@@ -65,14 +65,6 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
   for (unsigned int nb_players = 0; nb_players < as->engine.game.options->players;
        nb_players++) {
-    as->banners[nb_players]->score = as->engine.game.players[nb_players].score;
-    if (as->engine.game.current_player == nb_players &&
-        !as->banners[nb_players]->is_open) {
-      toggle_banner(as->banners[nb_players], as->renderer);
-    } else if (as->engine.game.current_player != nb_players &&
-               as->banners[nb_players]->is_open) {
-      toggle_banner(as->banners[nb_players], as->renderer);
-    }
     render_banner(as->banners[nb_players], as->renderer);
   }
   SDL_RenderPresent(as->renderer);
@@ -151,12 +143,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   center_camera_on_start(as);
   as->display_grid = DISPLAY_GRID_BY_DEFAULT;
 
-  as->banners = create_banner_for_each_player(as->renderer,
-                                              as->engine.game.options->players);
+  as->banners = create_banner_for_each_player(as);
 
   get_current_actions(as);
   put_first_action_in_appstate(as);
   update_possible_places(as);
+
+  synchronize_banners(as);
   as->last_step = SDL_GetTicks();
   return SDL_APP_CONTINUE;
 }
