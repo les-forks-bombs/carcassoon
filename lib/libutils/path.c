@@ -1,8 +1,9 @@
-
-#ifndef _WIN32
 #define _POSIX_C_SOURCE 200809L
+
+#include <libcarcassonne/libcarcassonne.h>
+#ifndef _WIN32
 #endif
-#include <libcarcassonne/consts.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/path.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,7 +17,6 @@
 #define LIBUTILS_DIR_DELIMITER "\\"
 #else
 #include <libgen.h>
-#include <linux/limits.h>
 #include <stdio.h>
 #define LIBUTILS_DIR_DELIMITER "/"
 #endif

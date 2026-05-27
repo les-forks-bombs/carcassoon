@@ -1,10 +1,11 @@
-#include <libcarcassonne/tile.h>
-#include <memory.h>
+#include <libcarcassonne/libcarcassonne.h>
 
 tile_part_type_t tile_get_family_face(const tile_t*      tile,
                                       tile_orientation_t orientation,
                                       tile_orientation_t connexion_face) {
-  if (tile == NULL) return 0;
+  if (tile == NULL) {
+    return 0;
+  }
 
   int              index     = (connexion_face + orientation) % 4;
   static const int values[4] = {1, 5, 7, 3};

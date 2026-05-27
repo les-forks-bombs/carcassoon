@@ -1,4 +1,7 @@
 #include <libutils/hash.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 static inline uint32_t murmur_32_scramble(uint32_t k) {
   k *= 0xcc9e2d51;
@@ -17,7 +20,7 @@ uint32_t murmur3_32(const uint8_t* key, size_t len, uint32_t seed) {
     key += sizeof(uint32_t);
     h   ^= murmur_32_scramble(k);
     h    = (h << 13) | (h >> 19);
-    h    = h * 5 + 0xe6546b64;
+    h    = (h * 5) + 0xe6546b64;
   }
   /* Read the rest. */
   k = 0;

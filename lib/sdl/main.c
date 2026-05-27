@@ -1,36 +1,32 @@
+#include <SDL3/SDL_events.h>
 #include <SDL3/SDL_init.h>
+#include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
+#include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_timer.h>
+#include <SDL3/SDL_video.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <sdl/forward.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <string.h>
 
-#include "libcarcassonne/forward.h"
-#include "libcarcassonne/options.h"
 #include "libutils/hashmap.h"
 #include "libutils/path.h"
+#include "libutils/vector.h"
 #include "sdl/resolver.h"
 #define SDL_MAIN_USE_CALLBACKS 1
-#include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
-#include <dirent.h>
-#include <libcarcassonne/engine.h>
-#include <libcarcassonne/ext_base_game.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <sdl/action.h>
-#include <sdl/appstate.h>
 #include <sdl/banner.h>
 #include <sdl/camera.h>
 #include <sdl/consts.h>
 #include <sdl/events.h>
-#include <sdl/game_test.h>
 #include <sdl/load.h>
 #include <sdl/map.h>
-#include <sdl/meeple.h>
 #include <sdl/text.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 
 path_resolver_t resolver;
 
@@ -54,7 +50,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
   render_map(as);
 
-  if(as->display_grid){
+  if (as->display_grid) {
     print_grid(as);
   }
 
@@ -88,10 +84,14 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   create_path_resolver(&resolver);
   options_t options = parse_options(argc, argv);
 
-  if (!SDL_Init(SDL_INIT_VIDEO)) return SDL_APP_FAILURE;
+  if (!SDL_Init(SDL_INIT_VIDEO)) {
+    return SDL_APP_FAILURE;
+  }
 
   appstate_t *as = (appstate_t *)SDL_calloc(1, sizeof(appstate_t));
-  if (!as) return SDL_APP_FAILURE;
+  if (!as) {
+    return SDL_APP_FAILURE;
+  }
   *appstate = as;
 
   return_code_t init = create_engine(&as->engine, options);
@@ -101,8 +101,6 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   }
 
   start_game(&as->engine);
-
-  // init_game(as);
 
   // pour resolve:
   char *path;
@@ -152,7 +150,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   free(assets);
 
   center_camera_on_start(as);
-  as->display_grid=DISPLAY_GRID_BY_DEFAULT;
+  as->display_grid = DISPLAY_GRID_BY_DEFAULT;
 
   as->banners = create_banner_for_each_player(as->renderer,
                                               as->engine.game.options->players);

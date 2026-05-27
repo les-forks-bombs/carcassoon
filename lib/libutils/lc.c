@@ -1,4 +1,5 @@
 #include <libutils/lc.h>
+#include <stdlib.h>
 #include <string.h>
 
 static list_node_t *utils_list_create_node(const void *data, size_t size) {
@@ -82,12 +83,20 @@ list_node_t *utils_list_insert(list_t *list, const void *data, size_t size,
 }
 
 void utils_list_remove(list_t *l, list_node_t *el) {
-  if (l->head == el) l->head = el->next;
+  if (l->head == el) {
+    l->head = el->next;
+  }
 
-  if (l->tail == el) l->tail = el->prev;
+  if (l->tail == el) {
+    l->tail = el->prev;
+  }
 
-  if (el->next != NULL) el->next->prev = el->prev;
-  if (el->prev != NULL) el->prev->next = el->next;
+  if (el->next != NULL) {
+    el->next->prev = el->prev;
+  }
+  if (el->prev != NULL) {
+    el->prev->next = el->next;
+  }
 
   l->size--;
 
@@ -95,7 +104,9 @@ void utils_list_remove(list_t *l, list_node_t *el) {
 }
 
 void utils_list_remove_value(list_t *l, const void *data, size_t size) {
-  if (!l || !l->head) return;
+  if (!l || !l->head) {
+    return;
+  }
 
   list_node_t *curr = l->head;
   while (curr) {
@@ -108,14 +119,20 @@ void utils_list_remove_value(list_t *l, const void *data, size_t size) {
 }
 
 list_node_t *utils_list_nth(list_t *l, unsigned int index) {
-  if (index < 0 || index > l->size) return NULL;
+  if (index < 0 || index > l->size) {
+    return NULL;
+  }
 
   list_node_t *current = l->head;
-  for (unsigned int i = 0; i != index; i++) current = current->next;
+  for (unsigned int i = 0; i != index; i++) {
+    current = current->next;
+  }
 
   return current;
 }
 
 void utils_list_free(list_t *l) {
-  while (l->size != 0) utils_list_remove(l, l->head);
+  while (l->size != 0) {
+    utils_list_remove(l, l->head);
+  }
 }

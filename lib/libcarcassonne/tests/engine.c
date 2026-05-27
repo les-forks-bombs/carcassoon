@@ -1,20 +1,10 @@
 #include <assert.h>
-#include <libcarcassonne/engine.h>
-#include <libcarcassonne/forward.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <unistd.h>
 
-#include "libcarcassonne/action.h"
-#include "libcarcassonne/consts.h"
-#include "libcarcassonne/deck.h"
-#include "libcarcassonne/ext_base_game.h"
 #include "libcarcassonne/ext_base_game_hooks.h"
-#include "libcarcassonne/game.h"
-#include "libcarcassonne/meeple.h"
-#include "libcarcassonne/options.h"
-#include "libcarcassonne/tile.h"
 #include "libutils/vector.h"
 
 void engine_builds(void** state) {
@@ -42,21 +32,30 @@ void engine_long_play_test(void** state) {
     int           x, y, orientation;
     int           part_group;
     meeple_type_t meeple_type;
-  } turns[] = {
-      // Tour 1 - 3 joueurs
-      {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
-      {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
-      {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A, BASIC},
-      // Tour 2
-      {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A, BASIC},
-      {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, NONE},
-      {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
-      // Tour 3
-      {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
-      {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
-      {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C, NONE},
-      // Tour 4
-      {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, BASIC}};
+  } turns[] = {// Tour 1 - 3 joueurs
+               {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                LIBCARCASSONNE_TILE_PART_B, BASIC},
+               {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                LIBCARCASSONNE_TILE_PART_C, BASIC},
+               {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                LIBCARCASSONNE_TILE_PART_A, BASIC},
+               // Tour 2
+               {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                LIBCARCASSONNE_TILE_PART_A, BASIC},
+               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                LIBCARCASSONNE_TILE_PART_A, NONE},
+               {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                LIBCARCASSONNE_TILE_PART_B, BASIC},
+               // Tour 3
+               {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                LIBCARCASSONNE_TILE_PART_C, BASIC},
+               {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                LIBCARCASSONNE_TILE_PART_C, BASIC},
+               {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+                LIBCARCASSONNE_TILE_PART_C, NONE},
+               // Tour 4
+               {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                LIBCARCASSONNE_TILE_PART_A, BASIC}};
 
   for (int i = 0; i < 10; i++) {
     if (i != 0) {
@@ -124,23 +123,34 @@ void engine_trigger_end_game(void** state) {
     int           x, y, orientation;
     int           part_group;
     meeple_type_t meeple_type;
-  } turns[] = {
-      // Tour 1 - 3 joueurs
-      {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
-      {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
-      {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A, BASIC},
-      // Tour 2
-      {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, A, BASIC},
-      {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, BASIC},
-      {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST, B, BASIC},
-      // Tour 3
-      {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
-      {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
-      {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, C, BASIC},
-      // Tour 4
-      {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST, A, BASIC},
-      {"CCRR", true, -1, 2, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, B, BASIC},
-      {"CCFF", true, 0, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST, B, NONE}};
+  } turns[] = {// Tour 1 - 3 joueurs
+               {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                LIBCARCASSONNE_TILE_PART_B, BASIC},
+               {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                LIBCARCASSONNE_TILE_PART_C, BASIC},
+               {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                LIBCARCASSONNE_TILE_PART_A, BASIC},
+               // Tour 2
+               {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                LIBCARCASSONNE_TILE_PART_A, BASIC},
+               {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                LIBCARCASSONNE_TILE_PART_A, BASIC},
+               {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                LIBCARCASSONNE_TILE_PART_B, BASIC},
+               // Tour 3
+               {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                LIBCARCASSONNE_TILE_PART_C, BASIC},
+               {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+                LIBCARCASSONNE_TILE_PART_C, BASIC},
+               {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+                LIBCARCASSONNE_TILE_PART_C, BASIC},
+               // Tour 4
+               {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
+                LIBCARCASSONNE_TILE_PART_A, BASIC},
+               {"CCRR", true, -1, 2, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+                LIBCARCASSONNE_TILE_PART_B, BASIC},
+               {"CCFF", true, 0, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+                LIBCARCASSONNE_TILE_PART_B, NONE}};
 
   for (int i = 0; i < SIZE(turns); i++) {
     if (i != 0) {
@@ -219,11 +229,16 @@ void engine_trigger_give_back_meeple(void** state) {
     meeple_type_t meeple_type;
   } turns[] = {
       // Tour 1 - 3 joueurs
-      {"CRRR", false, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A, BASIC},
-      {"RRRR", false, -1, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, C, BASIC},
-      {"FRRR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, B, BASIC},
-      {"CFFF", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_EAST, B, BASIC},
-      {"CRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH, A, BASIC},
+      {"CRRR", false, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+       LIBCARCASSONNE_TILE_PART_A, BASIC},
+      {"RRRR", false, -1, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+       LIBCARCASSONNE_TILE_PART_C, BASIC},
+      {"FRRR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
+       LIBCARCASSONNE_TILE_PART_B, BASIC},
+      {"CFFF", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
+       LIBCARCASSONNE_TILE_PART_B, BASIC},
+      {"CRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
+       LIBCARCASSONNE_TILE_PART_A, BASIC},
       {"CCRR", true, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, 0, NONE},
   };
 

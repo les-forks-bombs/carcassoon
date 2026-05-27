@@ -1,6 +1,9 @@
 #include "banner.h"
 
+#include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_render.h>
+#include <SDL3/SDL_stdinc.h>
+#include <SDL3_image/SDL_image.h>
 #include <sdl/consts.h>
 #include <stdlib.h>
 
@@ -10,23 +13,25 @@
 
 banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
   banner_t *banner = SDL_malloc(sizeof(banner_t));
-  if (!banner) return NULL;
+  if (!banner) {
+    return NULL;
+  }
   banner->is_open        = false;
   banner->score          = 0;
   banner->last_score     = -1;
   banner->banner_texture = NULL;
   banner->color          = color;
 
-  banner->area.x = 20.0f + (float)nb * 80.0f;
-  banner->area.y = 0.0f;
-  banner->area.w = 60.0f;
-  banner->area.h = 90.0f;
+  banner->area.x = 20.0F + ((float)nb * 80.0F);
+  banner->area.y = 0.0F;
+  banner->area.w = 60.0F;
+  banner->area.h = 90.0F;
 
   SDL_Color white = {255, 255, 255, 255};
 
   char *font_path = path_resolver_resolve(&resolver, "assets/fonts/Orange.ttf");
   banner->score_object =
-      init_text_object(renderer, font_path, 24.0f, "0", white);
+      init_text_object(renderer, font_path, 24.0F, "0", white);
   free(font_path);
 
   char *img_path = path_resolver_resolve(&resolver, "assets/img/banner.svg");
@@ -37,10 +42,14 @@ banner_t *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb) {
 }
 
 banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb) {
-  if (nb <= 0) return NULL;
+  if (nb <= 0) {
+    return NULL;
+  }
 
   banner_t **banners = SDL_calloc(nb, sizeof(banner_t *));
-  if (banners == NULL) return NULL;
+  if (banners == NULL) {
+    return NULL;
+  }
 
   banner_t *new_banner;
   for (int i = 0; i < nb; i++) {
@@ -51,7 +60,9 @@ banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb) {
 }
 
 void render_banner(banner_t *banner, SDL_Renderer *renderer) {
-  if (!banner) return;
+  if (!banner) {
+    return;
+  }
 
   if (banner->score != banner->last_score) {
     char buffer[4];
@@ -75,22 +86,24 @@ void render_banner(banner_t *banner, SDL_Renderer *renderer) {
 
   if (banner->score_object && banner->score_object->texture) {
     SDL_FRect text_pos = {
-        banner->area.x + (banner->area.w - banner->score_object->w) / 2.0f,
-        banner->area.y + 20.0f, banner->score_object->w,
+        banner->area.x + ((banner->area.w - banner->score_object->w) / 2.0F),
+        banner->area.y + 20.0F, banner->score_object->w,
         banner->score_object->h};
     SDL_RenderTexture(renderer, banner->score_object->texture, NULL, &text_pos);
   }
 }
 
 void toggle_banner(banner_t *banner, SDL_Renderer *renderer) {
-  banner->area.h = banner->is_open ? 90.0f : 120.0f;
+  banner->area.h = (int)banner->is_open ? 90.0F : 120.0F;
 
-  banner->is_open = !banner->is_open;
+  banner->is_open = ((!banner->is_open) != 0);
 
-  if (banner->banner_texture) SDL_DestroyTexture(banner->banner_texture);
+  if (banner->banner_texture) {
+    SDL_DestroyTexture(banner->banner_texture);
+  }
 
   char *path =
-      banner->is_open
+      (int)banner->is_open
           ? path_resolver_resolve(&resolver, "assets/img/banner_tall.svg")
           : path_resolver_resolve(&resolver, "assets/img/banner.svg");
   ;

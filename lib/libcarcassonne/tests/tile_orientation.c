@@ -1,5 +1,6 @@
+
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
-#include <libcarcassonne/tile.h>
 
 void tile_orientation_invert_north(void** state) {
   (void)state;
