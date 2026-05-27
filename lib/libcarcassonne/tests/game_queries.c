@@ -1,7 +1,6 @@
-#include <libcarcassonne/deck.h>
+#include <cmocka.h>
 #include <libcarcassonne/ext_base_game.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/placed_tile.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 
 void game_is_place_open_true_with_empty_neighbors(void** state) {

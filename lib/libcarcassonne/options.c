@@ -1,8 +1,6 @@
 #include <getopt.h>
-#include <libcarcassonne/consts.h>
 #include <libcarcassonne/ext_base_game.h>
-#include <libcarcassonne/extensions_list.h>
-#include <libcarcassonne/options.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/vector.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +8,7 @@
 #include <time.h>
 #include <unistd.h>
 
-const char* help_string =
+static const char* help_string =
     ""
     ""
     "Usage: %1$s [OPTIONS]\n"
@@ -64,7 +62,9 @@ options_t parse_options(int argc, char* argv[]) {
 
     c = getopt_long(argc, argv, "m:p:a:t:s:he:", long_options, &option_index);
 
-    if (c == -1) break;
+    if (c == -1) {
+      break;
+    }
 
     switch (c) {
       case 'm':
@@ -79,26 +79,32 @@ options_t parse_options(int argc, char* argv[]) {
         break;
       case 'p':
         config.players = strtod(optarg, &endPtr);
-        if (endPtr == optarg) goto bad_value;
+        if (endPtr == optarg) {
+          goto bad_value;
+        }
 
         break;
       case 'a':
         config.ai = strtod(optarg, &endPtr);
-        if (endPtr == optarg) goto bad_value;
+        if (endPtr == optarg) {
+          goto bad_value;
+        }
         break;
       case 't':
         config.max_turns = strtod(optarg, &endPtr);
-        if (endPtr == optarg) goto bad_value;
+        if (endPtr == optarg) {
+          goto bad_value;
+        }
         break;
       case 's':
         config.seed = strtod(optarg, &endPtr);
-        if (endPtr == optarg) goto bad_value;
+        if (endPtr == optarg) {
+          goto bad_value;
+        }
         break;
       case 'e':
         // trouver l'extension
-        for (unsigned int i = 0; i < sizeof(LIBCARCASSONNE_EXTENSIONS) /
-                                         sizeof(LIBCARCASSONNE_EXTENSIONS[0]);
-             i++) {
+        for (unsigned int i = 0; i < LIBCARCASSONNE_EXTENSIONS_SIZE; i++) {
           if (strcmp(LIBCARCASSONNE_EXTENSIONS[i]->name, optarg) == 0) {
             // todo: implement append to extension_list_t
             printf("Ajout de l'extension %s \n",

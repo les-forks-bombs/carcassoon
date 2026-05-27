@@ -1,28 +1,20 @@
 #include <assert.h>
-#include <libcarcassonne/action.h>
-#include <libcarcassonne/consts.h>
-#include <libcarcassonne/engine.h>
 #include <libcarcassonne/ext_base_game_hooks.h>
-#include <libcarcassonne/game.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h>
 
-#include "libcarcassonne/deck.h"
-#include "libcarcassonne/dispatch.h"
-#include "libcarcassonne/ext_base_game.h"
-#include "libcarcassonne/forward.h"
-#include "libcarcassonne/meeple.h"
-#include "libcarcassonne/placed_tile.h"
-#include "libcarcassonne/player.h"
-#include "libcarcassonne/tile.h"
-#include "libutils/hashmap.h"
-#include "libutils/lc.h"
 #include "libutils/vector.h"
+
+LIBCARCASSONNE_HOOK_IMPL(tile_place, 4, LIBCARCASSONNE_ACTION_PLACE_TILE)
+LIBCARCASSONNE_HOOK_IMPL(meeple_place, 5, LIBCARCASSONNE_ACTION_PLACE_MEEPLE)
+LIBCARCASSONNE_HOOK_IMPL(give_back_meeples, 6, LIBCARCASSONNE_ACTION_NONE)
+LIBCARCASSONNE_HOOK_IMPL(next_player, 7, LIBCARCASSONNE_ACTION_NONE)
+LIBCARCASSONNE_HOOK_IMPL(end_game, 10, LIBCARCASSONNE_ACTION_NONE)
 
 return_code_t meeple_place_fw(void **state_store, engine_t *engine,
                               action_t *action) {
@@ -118,7 +110,7 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
     return SUCCESS;
   }
 
-  bool visited[9] = {0};
+  bool visited[9] = {false};
 
   vector_alloc(actions, 4);
 
@@ -259,12 +251,16 @@ static void update_score(engine_t                        *engine,
 return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
                                    action_t *action) {
   dispatch_t *dispatch = find_last_place_tile_dispatch(engine);
-  if (dispatch == NULL) return NULL_POINTER;
+  if (dispatch == NULL) {
+    return NULL_POINTER;
+  }
 
   action_t       *place = dispatch->action;
   placed_tile_t **tile  = game_tile_at(&engine->game, place->order.place_tile.x,
                                        place->order.place_tile.y);
-  if (tile == NULL || *tile == NULL) return NULL_POINTER;
+  if (tile == NULL || *tile == NULL) {
+    return NULL_POINTER;
+  }
 
   placed_tile_t *placed_tile = *tile;
 
@@ -310,15 +306,17 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
             for (unsigned int p = 0; p < engine->config.players; p++) {
               if (meeple->player == &engine->game.players[p]) {
                 player_meeple_count[p]++;
-                if (player_meeple_count[p] > max_count)
+                if (player_meeple_count[p] > max_count) {
                   max_count = player_meeple_count[p];
+                }
                 break;
               }
             }
           }
           for (unsigned int p = 0; p < engine->config.players; p++) {
-            if (player_meeple_count[p] == max_count)
+            if (player_meeple_count[p] == max_count) {
               scored.player_won[p] = true;
+            }
           }
 
           vector_append(saved, &scored);
@@ -338,15 +336,18 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
 
 return_code_t give_back_meeples_bw(void **state_store, engine_t *engine) {
   give_back_state_vector_t *saved = *state_store;
-  if (saved == NULL) return SUCCESS;
+  if (saved == NULL) {
+    return SUCCESS;
+  }
 
   for (size_t i = 0; i < vector_size(saved); i++) {
     give_back_scored_group_t *scored = vector_nth(saved, i);
 
     // Annuler les points des joueurs gagnants
     for (unsigned int p = 0; p < engine->config.players; p++) {
-      if (scored->player_won[p])
+      if (scored->player_won[p]) {
         engine->game.players[p].score -= scored->points;
+      }
     }
 
     // Remettre les meeples sur le plateau (sera défait par meeple_place_bw)
@@ -363,7 +364,9 @@ return_code_t give_back_meeples_bw(void **state_store, engine_t *engine) {
 return_code_t give_back_meeples_free(void **state_store, engine_t *engine) {
   (void)engine;
   give_back_state_vector_t *saved = *state_store;
-  if (saved == NULL) return SUCCESS;
+  if (saved == NULL) {
+    return SUCCESS;
+  }
 
   for (size_t i = 0; i < vector_size(saved); i++) {
     give_back_scored_group_t *scored = vector_nth(saved, i);
@@ -437,7 +440,7 @@ return_code_t next_player_list_actions(action_vector_t *actions,
 }
 
 /// @brief Calcule les points des constructions inachevées, retire les meeples
-/// @param game La partie
+/// @param engine La partie
 /// @param removed_meeples Vecteur où stocker les infos des meeples retirés
 static void compute_unfinished_points(
     engine_t *engine, end_game_removed_meeples_vector_t *removed_meeples) {

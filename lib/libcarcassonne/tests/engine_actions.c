@@ -1,11 +1,9 @@
-#include <libcarcassonne/action.h>
-#include <libcarcassonne/deck.h>
-#include <libcarcassonne/engine.h>
+#include <cmocka.h>
 #include <libcarcassonne/ext_base_game.h>
-#include <libcarcassonne/ext_base_game_hooks.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/meeple.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
+
+#include "libutils/vector.h"
 
 // Utilise des options locales pour éviter la pollution de max_turns
 static options_t engine_test_options(void) {
@@ -186,14 +184,14 @@ void engine_field_meeple_not_given_back_mid_game(void** state) {
   meeple_act.type                          = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
   meeple_act.order.place_meeple.x          = 0;
   meeple_act.order.place_meeple.y          = 1;
-  meeple_act.order.place_meeple.part_group = A;
+  meeple_act.order.place_meeple.part_group = LIBCARCASSONNE_TILE_PART_A;
   meeple_act.order.place_meeple.meeple_type = BASIC;
   assert_int_equal(dispatch_action(&engine, meeple_act), SUCCESS);
 
   /* Le meeple doit encore être dans le groupe FIELD après le tour complet */
   placed_tile_t** p = game_tile_at(&engine.game, 0, 1);
   assert_non_null(*p);
-  assert_non_null((*p)->groups[A]->meeple);
+  assert_non_null((*p)->groups[LIBCARCASSONNE_TILE_PART_A]->meeple);
 
   /* Le compteur doit avoir diminué de 1 (meeple posé, non restitué) */
   unsigned int after_count = ((meeple_count_t*)vector_nth(

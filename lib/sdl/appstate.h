@@ -2,11 +2,9 @@
 #define APPSTATE_H
 
 #include <SDL3/SDL.h>
-#include <libcarcassonne/engine.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/hashmap.h>
 #include <sdl/forward.h>
-
-#include "libcarcassonne/forward.h"
 
 typedef HashMap(char *, SDL_Texture *) textures_hashmap_t;
 

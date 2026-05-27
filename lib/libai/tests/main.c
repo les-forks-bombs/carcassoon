@@ -1,3 +1,4 @@
+#include <cmocka.h>
 #include <libai/libai.h>
 #include <libutils/cmocka.h>
 

@@ -1,7 +1,4 @@
-#include <libcarcassonne/deck.h>
-#include <libcarcassonne/extension.h>
-#include <libcarcassonne/prng_mersenne_twister.h>
-#include <libcarcassonne/tile.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/lc.h>
 #include <libutils/vector.h>
 #include <unistd.h>
@@ -93,7 +90,9 @@ deck_t create_deck(int seed, extension_vector_t* extensions) {
 void free_deck(deck_t deck) { list_free(&deck.list); }
 
 const tile_t* deck_pick(deck_t* deck) {
-  if (list_size(&deck->list) == 0) return NULL;
+  if (list_size(&deck->list) == 0) {
+    return NULL;
+  }
 
   list_node_t*  el   = list_head(&deck->list);
   const tile_t* tile = *list_value(&deck->list, el);

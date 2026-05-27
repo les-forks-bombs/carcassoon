@@ -1,7 +1,5 @@
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/placed_tile.h>
-#include <libcarcassonne/tests/tests.h>
-#include <malloc.h>
+#include <cmocka.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <stdio.h>
 
 void test_tile_group_builds(void** state) {
@@ -128,7 +126,7 @@ void test_tile_group_merge_two_trees(void** state) {
 void tile_get_family_face_works(void** state) {
   (void)state;
   tile_t tile = {.amount       = 1,
-                 .blason       = 0,
+                 .blason       = false,
                  .family       = "AAAA",
                  .parts        = {0, 1, 2, 3, 4, 5, 0, 1, 2},
                  .parts_groups = {1, 2, 3, 4, 5, 6, 1, 2, 7}};

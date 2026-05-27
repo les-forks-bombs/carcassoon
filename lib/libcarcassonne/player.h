@@ -1,16 +1,10 @@
 #pragma once
 
-#include <libcarcassonne/meeple.h>
 #include <stdbool.h>
 
+#include "libcarcassonne/enums.h"
 #include "libcarcassonne/forward.h"
 
-enum player_type {
-  LIBCARCASSONNE_PLAYER_AI    = 0,
-  LIBCARCASSONNE_PLAYER_HUMAN = 1
-};
-
-typedef enum player_type player_type_t;
 struct player {
   unsigned int          id;
   player_type_t         player_type;

@@ -1,12 +1,8 @@
-#include <libcarcassonne/action.h>
-#include <libcarcassonne/consts.h>
-#include <libcarcassonne/deck.h>
-#include <libcarcassonne/engine.h>
+#include <cmocka.h>
 #include <libcarcassonne/ext_base_game.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/meeple.h>
-#include <libcarcassonne/player.h>
-#include <libcarcassonne/tests/tests.h>
+#include <libcarcassonne/libcarcassonne.h>
+
+#include "libutils/vector.h"
 
 static options_t revert_opts(unsigned int players, unsigned int max_turns) {
   static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
@@ -174,7 +170,7 @@ void engine_revert_restores_meeple_count(void** state) {
   meeple.type                           = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
   meeple.order.place_meeple.x           = 1;
   meeple.order.place_meeple.y           = 0;
-  meeple.order.place_meeple.part_group  = B;
+  meeple.order.place_meeple.part_group  = LIBCARCASSONNE_TILE_PART_B;
   meeple.order.place_meeple.meeple_type = BASIC;
   assert_int_equal(dispatch_action(&engine, meeple), SUCCESS);
 
@@ -403,10 +399,11 @@ void engine_revert_long_play_with_revert(void** state) {
       NO_PROGRESS);
 
   action_t meeple0 = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
-  meeple0.order.place_meeple.tile        = *game_tile_at(&engine.game, 1, 0);
-  meeple0.order.place_meeple.x           = 1;
-  meeple0.order.place_meeple.y           = 0;
-  meeple0.order.place_meeple.part_group  = C; /* FIELD sud, côté libre */
+  meeple0.order.place_meeple.tile = *game_tile_at(&engine.game, 1, 0);
+  meeple0.order.place_meeple.x    = 1;
+  meeple0.order.place_meeple.y    = 0;
+  meeple0.order.place_meeple.part_group =
+      LIBCARCASSONNE_TILE_PART_C; /* FIELD sud, côté libre */
   meeple0.order.place_meeple.meeple_type = BASIC;
   assert_int_equal(dispatch_action(&engine, meeple0), SUCCESS);
 
@@ -421,10 +418,11 @@ void engine_revert_long_play_with_revert(void** state) {
       NO_PROGRESS);
 
   action_t meeple1 = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
-  meeple1.order.place_meeple.tile        = *game_tile_at(&engine.game, 0, 1);
-  meeple1.order.place_meeple.x           = 0;
-  meeple1.order.place_meeple.y           = 1;
-  meeple1.order.place_meeple.part_group  = A; /* FIELD nord, côté libre */
+  meeple1.order.place_meeple.tile = *game_tile_at(&engine.game, 0, 1);
+  meeple1.order.place_meeple.x    = 0;
+  meeple1.order.place_meeple.y    = 1;
+  meeple1.order.place_meeple.part_group =
+      LIBCARCASSONNE_TILE_PART_A; /* FIELD nord, côté libre */
   meeple1.order.place_meeple.meeple_type = BASIC;
   assert_int_equal(dispatch_action(&engine, meeple1), SUCCESS);
 
@@ -439,10 +437,11 @@ void engine_revert_long_play_with_revert(void** state) {
       NO_PROGRESS);
 
   action_t meeple2 = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
-  meeple2.order.place_meeple.tile        = *game_tile_at(&engine.game, 0, -1);
-  meeple2.order.place_meeple.x           = 0;
-  meeple2.order.place_meeple.y           = -1;
-  meeple2.order.place_meeple.part_group  = C; /* FIELD sud, côté libre */
+  meeple2.order.place_meeple.tile = *game_tile_at(&engine.game, 0, -1);
+  meeple2.order.place_meeple.x    = 0;
+  meeple2.order.place_meeple.y    = -1;
+  meeple2.order.place_meeple.part_group =
+      LIBCARCASSONNE_TILE_PART_C; /* FIELD sud, côté libre */
   meeple2.order.place_meeple.meeple_type = BASIC;
   assert_int_equal(dispatch_action(&engine, meeple2), SUCCESS);
 

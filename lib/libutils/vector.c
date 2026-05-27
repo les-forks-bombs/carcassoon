@@ -9,7 +9,9 @@
 
 unsigned int utils_vector_alloc(vector_t *list, size_t capacity,
                                 size_t element) {
-  if (list->caps >= capacity && list->data != NULL) return list->caps;
+  if (list->caps >= capacity && list->data != NULL) {
+    return list->caps;
+  }
 
   list->caps = capacity <= 1 ? 1 : capacity;
   list->data = realloc(list->data, list->caps * element);

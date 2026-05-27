@@ -1,3 +1,4 @@
+#include <cmocka.h>
 #include <libutils/lc.h>
 #include <libutils/tests/tests.h>
 
@@ -16,8 +17,9 @@ void utils_list_append_prepend(void** state) {
   list_append(&list, &ints[3]);
   list_append(&list, &ints[4]);
 
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 4; i++) {
     assert_int_equal(*list_value(&list, list_nth(&list, i)), i);
+  }
 
   list_prepend(&list, &ints[2]);
   assert_int_equal(*list_value(&list, list_head(&list)), 2);

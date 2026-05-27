@@ -1,7 +1,6 @@
-#include <libcarcassonne/deck.h>
+#include <cmocka.h>
 #include <libcarcassonne/ext_base_game.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/placed_tile.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 
 void placed_tile_destroy_handles_null(void** state) {
@@ -42,8 +41,8 @@ void placed_tile_group_connected_with_linked_frrr_tiles(void** state) {
   assert_non_null(p2);
   assert_non_null(*p2);
 
-  placed_tile_group_t* road_p1_east = (*p1)->groups[C];
-  placed_tile_group_t* road_p2_west = (*p2)->groups[B];
+  placed_tile_group_t* road_p1_east = (*p1)->groups[LIBCARCASSONNE_TILE_PART_C];
+  placed_tile_group_t* road_p2_west = (*p2)->groups[LIBCARCASSONNE_TILE_PART_B];
 
   assert_true(placed_tile_group_connected(road_p1_east, road_p2_west));
 
@@ -66,7 +65,7 @@ void placed_tile_group_eval_points_single_road(void** state) {
   assert_non_null(p);
   assert_non_null(*p);
 
-  placed_tile_group_t* road_group = (*p)->groups[B];
+  placed_tile_group_t* road_group = (*p)->groups[LIBCARCASSONNE_TILE_PART_B];
   assert_non_null(road_group);
 
   placed_tile_group_eval_points_t eval =

@@ -1,8 +1,5 @@
-#include <libcarcassonne/deck.h>
-#include <libcarcassonne/ext_base_game.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/meeple.h>
-#include <libcarcassonne/placed_tile.h>
+#include <cmocka.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 
 void game_remove_tile_success(void** state) {
@@ -59,13 +56,16 @@ void game_remove_tile_with_meeple_fails(void** state) {
 
   // Placer un meeple dans le groupe B (ROAD, face ouest)
   player_t* player = &game.players[0];
-  assert_int_equal(game_place_meeple(&game, 0, 0, B, BASIC, player), SUCCESS);
+  assert_int_equal(
+      game_place_meeple(&game, 0, 0, LIBCARCASSONNE_TILE_PART_B, BASIC, player),
+      SUCCESS);
 
   // Retrait interdit si un meeple est présent
   assert_int_equal(game_remove_tile(&game, 0, 0), REMOVE_TILE_NOT_VOID);
 
   // Nettoyage : retirer le meeple avant destroy_game
-  assert_int_equal(game_remove_meeple(&game, 0, 0, B), SUCCESS);
+  assert_int_equal(game_remove_meeple(&game, 0, 0, LIBCARCASSONNE_TILE_PART_B),
+                   SUCCESS);
 
   destroy_game(&game);
 }

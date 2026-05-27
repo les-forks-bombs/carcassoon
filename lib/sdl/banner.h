@@ -7,14 +7,14 @@
 
 #include "text.h"
 
-typedef struct banner {
+struct banner {
   text_object_t *score_object;
   int            score, last_score;
   SDL_Color      color;
   SDL_Texture   *banner_texture;
   SDL_FRect      area;
   bool           is_open;
-} banner_t;
+};
 
 banner_t  *create_banner(SDL_Renderer *renderer, SDL_Color color, int nb);
 banner_t **create_banner_for_each_player(SDL_Renderer *renderer, int nb);

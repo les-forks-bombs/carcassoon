@@ -1,10 +1,14 @@
+#include <SDL3/SDL_render.h>
 #include <SDL3_image/SDL_image.h>
 #include <dirent.h>
 #include <sdl/appstate.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 
+#include "libutils/hashmap.h"
 #include "libutils/path.h"
+#include "sdl/forward.h"
 
 void load_texture(appstate_t *state, char *name, char *path) {
   SDL_Texture *texture = IMG_LoadTexture(state->renderer, path);

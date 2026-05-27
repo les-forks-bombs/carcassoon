@@ -1,19 +1,16 @@
-#include <SDL3/SDL.h>
+#include <SDL3/SDL_blendmode.h>
+#include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
-#include <libcarcassonne/engine.h>
-#include <libcarcassonne/forward.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/placed_tile.h>
-#include <sdl/appstate.h>
+#include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_surface.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <sdl/consts.h>
 #include <sdl/map.h>
 #include <sdl/meeple.h>
-#include <sdl/resolver.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "libcarcassonne/action.h"
 #include "libutils/hashmap.h"
 #include "libutils/vector.h"
 #include "sdl/forward.h"
@@ -32,7 +29,9 @@ static double get_tile_angle(int orientation) {
 }
 
 static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
-  if (tile == NULL || tile->texture == NULL) return as->temp_tex;
+  if (tile == NULL || tile->texture == NULL) {
+    return as->temp_tex;
+  }
 
   char *texturen    = tile->texture;
   char *prefix      = "/img/tiles";
@@ -55,7 +54,9 @@ static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
 static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
                       double angle, Uint8 alpha) {
   SDL_Texture *texture = get_tile_texture(as, tile);
-  if (texture == NULL) return;
+  if (texture == NULL) {
+    return;
+  }
 
   SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
   SDL_SetTextureAlphaMod(texture, alpha);
@@ -99,7 +100,9 @@ static void render_occupied_cell(appstate_t *as, placed_tile_t *ptt,
 static void render_empty_cell(appstate_t *as, int table_x, int table_y,
                               const SDL_FRect *dest) {
   vector2d_t pos = {.x = table_x, .y = table_y};
-  if (!vector_contains(&as->possibles_places, &pos)) return;
+  if (!vector_contains(&as->possibles_places, &pos)) {
+    return;
+  }
 
   if (as->is_waiting_for_tile &&
       as->current_action->order.place_tile.tile != NULL &&
@@ -126,8 +129,8 @@ void render_map(appstate_t *as) {
 
   for (int table_y = min_coord; table_y <= max_coord; table_y++) {
     for (int table_x = min_coord; table_x <= max_coord; table_x++) {
-      float world_x = (float)(table_y)*MAP_TILE_SIZE;
-      float world_y = (float)(table_x)*MAP_TILE_SIZE;
+      float world_x = (float)table_y * MAP_TILE_SIZE;
+      float world_y = (float)table_x * MAP_TILE_SIZE;
 
       float x_render    = (world_x - as->camera->x) * as->camera->zoom;
       float y_render    = (world_y - as->camera->y) * as->camera->zoom;

@@ -1,13 +1,11 @@
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/options.h>
+#include <cmocka.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "libcarcassonne/forward.h"
-#include "libcarcassonne/tile.h"
-#include "libutils/hashmap.h"
+#include "libutils/lc.h"
 #include "libutils/vector.h"
 
 /** create_game */

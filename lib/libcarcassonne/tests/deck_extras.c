@@ -1,5 +1,8 @@
-#include <libcarcassonne/deck.h>
+#include <cmocka.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
+
+#include "libutils/lc.h"
 
 void deck_pick_removes_tile(void** state) {
   (void)state;
