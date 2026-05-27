@@ -8,6 +8,7 @@
 #include <libcarcassonne/libcarcassonne.h>
 #include <sdl/forward.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "libutils/hashmap.h"
 #include "libutils/path.h"
@@ -17,7 +18,6 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
-#include <libcarcassonne/libcarcassonne.h>
 #include <sdl/action.h>
 #include <sdl/banner.h>
 #include <sdl/camera.h>
