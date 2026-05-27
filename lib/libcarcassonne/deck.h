@@ -1,10 +1,8 @@
 #pragma once
 
-#include <libcarcassonne/consts.h>
-#include <libcarcassonne/extension.h>
-#include <libcarcassonne/prng_mersenne_twister.h>
-#include <libcarcassonne/tile.h>
+#include <libcarcassonne/forward.h>
 #include <libutils/lc.h>
+#include <libutils/prng_mersenne_twister.h>
 
 /// @brief Le deck permet de piocher et défausser des tiles
 struct deck {

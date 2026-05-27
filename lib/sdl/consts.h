@@ -2,7 +2,7 @@
 #define H_LIBSDL_CONSTS
 
 #include <SDL3/SDL_pixels.h>
-#include <libcarcassonne/consts.h>
+#include <libcarcassonne/libcarcassonne.h>
 
 #define MAP_TILE_SIZE             64
 #define MAP_TABLE_SIZE            (LIBCARCASSONNE_TILES_COUNT * 2 - 1)

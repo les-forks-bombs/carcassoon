@@ -1,47 +1,8 @@
 #pragma once
 
-#include <libcarcassonne/consts.h>
-#include <libcarcassonne/forward.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/vector.h>
 #include <stdbool.h>
-
-/// @brief Les différents types de sous-tiles
-enum tile_part_kind {
-  LIBCARCASSONNE_TILE_PART_VILLAGE = 0,
-  LIBCARCASSONNE_TILE_PART_FIELD   = 1,
-  LIBCARCASSONNE_TILE_PART_ROAD    = 2,
-  LIBCARCASSONNE_TILE_PART_WALL    = 3,
-  LIBCARCASSONNE_TILE_PART_ABBEY   = 4,
-  LIBCARCASSONNE_TILE_PART_TOWN    = 5
-};
-
-/// @brief Les sous-groupes possibles [0-7]
-enum tile_part_group {
-  LIBCARCASSONNE_TILE_PART_A = 0,
-  LIBCARCASSONNE_TILE_PART_B = 1,
-  LIBCARCASSONNE_TILE_PART_C = 2,
-  LIBCARCASSONNE_TILE_PART_D = 3,
-  LIBCARCASSONNE_TILE_PART_E = 4,
-  LIBCARCASSONNE_TILE_PART_F = 5,
-  LIBCARCASSONNE_TILE_PART_G = 6,
-  LIBCARCASSONNE_TILE_PART_H = 7,
-  LIBCARCASSONNE_TILE_PART_I = 8
-};
-
-/// @brief Les orientations possibles pour les tiles
-/// @remark Pour avoir l'opposé on a (n + 2) % 4
-/// @remark Pour avoir le suivant (sens des aiguilles d'une montre on à) (n + 1)
-/// % 4
-enum tile_orientation {
-  LIBCARCASSONNE_TILE_ORIENTATION_NORTH = 0,
-  LIBCARCASSONNE_TILE_ORIENTATION_EAST  = 1,
-  LIBCARCASSONNE_TILE_ORIENTATION_SOUTH = 2,
-  LIBCARCASSONNE_TILE_ORIENTATION_WEST  = 3
-};
-
-typedef enum tile_part_kind   tile_part_type_t;
-typedef enum tile_part_group  tile_part_group_t;
-typedef enum tile_orientation tile_orientation_t;
 
 struct tile_slot {
   double            x, y;

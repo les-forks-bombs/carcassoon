@@ -1,12 +1,8 @@
 #pragma once
 
-#include <libcarcassonne/action.h>
-#include <libcarcassonne/consts.h>
-#include <libcarcassonne/dispatch.h>
+#include <libcarcassonne/forward.h>
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/options.h>
-
-#include "libcarcassonne/forward.h"
 
 /// @brief Représente un moteur pour une partie de carcassonne
 struct engine {
