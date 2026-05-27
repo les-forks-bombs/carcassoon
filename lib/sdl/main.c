@@ -17,6 +17,7 @@
 #include <dirent.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/ext_base_game.h>
+#include <sdl/action.h>
 #include <sdl/appstate.h>
 #include <sdl/banner.h>
 #include <sdl/camera.h>
@@ -29,10 +30,6 @@
 #include <sdl/text.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <sdl/events.h>
-#include <sdl/game_test.h>
-#include <sdl/load.h>
-#include <sdl/action.h>
 
 path_resolver_t resolver;
 
@@ -66,11 +63,12 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   for (int nb_players = 0; nb_players < as->engine.game.options->players;
        nb_players++) {
     as->banners[nb_players]->score = as->engine.game.players[nb_players].score;
-    if(as->engine.game.current_player == nb_players && !as->banners[nb_players]->is_open){
-      toggle_banner(as->banners[nb_players],as->renderer);
-    }
-    else if(as->engine.game.current_player != nb_players && as->banners[nb_players]->is_open){
-      toggle_banner(as->banners[nb_players],as->renderer);
+    if (as->engine.game.current_player == nb_players &&
+        !as->banners[nb_players]->is_open) {
+      toggle_banner(as->banners[nb_players], as->renderer);
+    } else if (as->engine.game.current_player != nb_players &&
+               as->banners[nb_players]->is_open) {
+      toggle_banner(as->banners[nb_players], as->renderer);
     }
     render_banner(as->banners[nb_players], as->renderer);
   }
