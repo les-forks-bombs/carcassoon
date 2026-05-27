@@ -3,17 +3,28 @@
 #include <libcarcassonne/extension.h>
 #include <libcarcassonne/libcarcassonne.h>
 
+/// @brief Informations pour restaurer la pose d'un meeple
 struct meeple_place_hook_state {
-  int               x, y;
+  /// @brief Composante en x
+  int x;
+  /// @brief Composante en y
+  int y;
+  /// @brief Groupe sur lequel poser le meeple
   tile_part_group_t group;
-  meeple_type_t     meeple_type;
+  /// @brief Type du meeple à poser
+  meeple_type_t meeple_type;
 };
 
+/// @brief Informations pour restaurer la pose d'une tuile
 struct tile_place_hook_state {
-  int x, y;
+  /// @brief Composante en x
+  int x;
+  /// @brief Composante en y
+  int y;
 };
 
-struct rendre_meeple_hook_state {
+/// @brief Informations pour restaurer le rendu de meeple
+struct give_back_meeple_hook_state {
   meeple_vector_t* meeples;
 };
 

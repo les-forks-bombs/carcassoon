@@ -53,9 +53,25 @@ void destroy_game(game_t *game);
 /// @related game_t
 placed_tile_t **game_tile_at(game_t *game, int colonne, int ligne);
 
-return_code_t game_place_tile(game_t * /*game*/, const tile_t *tile, int x,
-                              int y, tile_orientation_t orientation);
-return_code_t game_remove_tile(game_t * /*game*/, int x, int y);
+/// @brief Créer et place une tuile en fonction des paramètres
+/// @param game La partie dans laquelle placer la tuile
+/// @param tile Le prototype de tuile à placer
+/// @param x La cordonnée en x de la tuile
+/// @param y La cordonnée en y de la tuile
+/// @param orientation L'orientation de la tuile
+/// @return Un code de retour, SUCCESS si réussite
+/// @related game_t
+return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
+                              tile_orientation_t orientation);
+
+/// @brief Retire une tuile présente à la position désignée
+/// @param game La partie dans laquelle placer la tuile
+/// @param x La cordonnée en x de la tuile
+/// @param y La cordonnée en y de la tuile
+/// @attention Signale si l'emplacement est vide ou hors-jeu
+/// @return Un code de retour, SUCCESS si réussite
+/// @related game_t
+return_code_t game_remove_tile(game_t *game, int x, int y);
 
 /// @brief Détermine si une tuile peut être placé à l'emplacement désigné
 /// @param game Le jeu dans lequel placer la tuile
@@ -76,14 +92,17 @@ bool game_is_tile_placeable(game_t *game, const tile_t *tile, int x, int y,
 bool game_is_place_open(game_t *game, int x, int y);
 
 /// @brief Permet de savoir si une partie est terminée ou non
+/// @param game La partie à regarder
 /// @return Vrai si la partie est terminé, Faux sinon
 bool is_game_finished(game_t *game);
 
 /// @brief Termine le tour du joueur du courant
+/// @param game La partie utilisée
 /// @return Le code de statut de l'opération, SUCCESS en cas de réussite
 return_code_t game_end_player_turn(game_t *game);
 
 /// @brief Termine le tour de table
+/// @param game La partie utilisée
 /// @return Le code de statut de l'opération, SUCCESS en cas de réussite
 return_code_t game_end_round(game_t *game);
 
@@ -98,10 +117,30 @@ return_code_t game_end_round(game_t *game);
 return_code_t game_place_meeple(game_t *game, int x, int y, int part_group,
                                 meeple_type_t meeple_type, player_t *player);
 
+/// @brief Retire un meeple de l'emplacement désigné
+/// @param game La partie dans laquelle retirer le meeple
+/// @param x La cordonnée en x de la tuile
+/// @param y La cordonnée en y de la tuile
+/// @param part_group Le groupe auquel retirer un meeple
+/// @return Un code de retour, SUCCESS si réussite
+/// @related game_t
 return_code_t game_remove_meeple(game_t *game, int x, int y, int part_group);
 
+/// @brief Permet de récupérer une référence vers le joueur courant
+/// @param game La partie utilisée
+/// @return Une référence vers le joueur courant de la partie
+/// @related game_t
 player_t *game_get_current_player(game_t *game);
 
+/// @brief Génère un vecteur contenant les positions candidats (à valider donc) pour le placement d'une tuile 
+/// @param game La partie utilisée
+/// @attention Pensez à libérer ce vecteur correctement !!
+/// @return Un vecteur de position déjà alloué
+/// @related game_t
 vector2d_vector_t game_get_available_space(game_t *game);
 
+/// @brief Vérifie si l'empacement désigné est disponible
+/// @param game La partie utilisée
+/// @return true si l'emplacement ne contient pas déjà une tuile, false sinon
+/// @related game_t
 bool game_is_space_available(game_t *game, int x, int y);
