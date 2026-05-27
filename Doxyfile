@@ -2960,13 +2960,13 @@ PLANTUML_CFG_FILE      =
 # When using PlantUML, the specified paths are searched for files specified by
 # the !include statement in a PlantUML block.
 
-PLANTUML_INCLUDE_PATH  =
+PLANTUML_INCLUDE_PATH  = .
 
 # The PLANTUMLFILE_DIRS tag can be used to specify one or more directories that
 # contain PlantUml files that are included in the documentation (see the
 # \plantumlfile command).
 
-PLANTUMLFILE_DIRS      =
+PLANTUMLFILE_DIRS      = .
 
 # The DOT_GRAPH_MAX_NODES tag can be used to set the maximum number of nodes
 # that will be shown in the graph. If the number of nodes in a graph becomes
