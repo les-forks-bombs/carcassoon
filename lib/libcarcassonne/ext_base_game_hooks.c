@@ -357,7 +357,7 @@ return_code_t give_back_meeples_free(void **state_store, engine_t *engine) {
     return SUCCESS;
   }
 
-  for (unsigned int i=0; i<vector_size(evals); i++) {
+  for (unsigned int i = 0; i < vector_size(evals); i++) {
     placed_tile_group_eval_points_t *eval = vector_nth(evals, i);
     vector_free(&eval->meeples);
   }
@@ -435,7 +435,6 @@ return_code_t next_player_list_actions(action_vector_t *actions,
 /// @param removed_meeples Vecteur où stocker les infos des meeples retirés
 static void compute_unfinished_points(
     engine_t *engine, end_game_removed_meeples_vector_t *removed_meeples) {
-      
   for (unsigned int p = 0; p < engine->game.options->players; p++) {
     player_t *player = &engine->game.players[p];
 
@@ -460,9 +459,10 @@ static void compute_unfinished_points(
   for (unsigned int p = 0; p < engine->game.options->players; p++) {
     player_t *player = &engine->game.players[p];
 
-    while (vector_size(&player->meeples)>0) {
-      meeple_t *meeple=*vector_nth(&player->meeples, 0);
-      placed_tile_group_eval_points_t evaluation = placed_tile_group_eval_points(meeple->group_node, false);
+    while (vector_size(&player->meeples) > 0) {
+      meeple_t                       *meeple = *vector_nth(&player->meeples, 0);
+      placed_tile_group_eval_points_t evaluation =
+          placed_tile_group_eval_points(meeple->group_node, false);
       update_score(engine, &evaluation);
       vector_free(&evaluation.meeples);
     }

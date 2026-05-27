@@ -132,8 +132,9 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     printf("Exécution du hook: %s\n", current_hook->label);
 #endif
 
-    return_code_t code = current_hook->fw(&(store->state_store), engine, &action);
-    if(code!=SUCCESS){
+    return_code_t code =
+        current_hook->fw(&(store->state_store), engine, &action);
+    if (code != SUCCESS) {
       return code;
     }
 
@@ -141,7 +142,8 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
         (engine->current_hook + 1) % vector_size(&engine->hooks);
 
 #ifdef DEBUG
-    printf("Prochain du hook: %s\n",(*vector_nth(&engine->hooks,engine->current_hook))->label);
+    printf("Prochain du hook: %s\n",
+           (*vector_nth(&engine->hooks, engine->current_hook))->label);
 #endif
 
   } while (engine->current_hook != 0);

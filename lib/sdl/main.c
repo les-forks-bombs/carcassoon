@@ -1,11 +1,11 @@
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_render.h>
+#include <sdl/forward.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "libcarcassonne/forward.h"
-#include <sdl/forward.h>
 #include "libcarcassonne/options.h"
 #include "libutils/hashmap.h"
 #include "libutils/path.h"
@@ -18,27 +18,27 @@
 #include <dirent.h>
 #include <libcarcassonne/engine.h>
 #include <libcarcassonne/ext_base_game.h>
+#include <sdl/action.h>
 #include <sdl/appstate.h>
 #include <sdl/banner.h>
 #include <sdl/camera.h>
 #include <sdl/consts.h>
+#include <sdl/events.h>
+#include <sdl/game_test.h>
+#include <sdl/load.h>
 #include <sdl/map.h>
 #include <sdl/meeple.h>
 #include <sdl/text.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <sdl/events.h>
-#include <sdl/game_test.h>
-#include <sdl/load.h>
-#include <sdl/action.h>
 
 path_resolver_t resolver;
 
 SDL_AppResult SDL_AppIterate(void *appstate) {
-  appstate_t    *as  = (appstate_t *)appstate;
+  appstate_t  *as  = (appstate_t *)appstate;
   const Uint64 now = SDL_GetTicks();
 
-  as->window_width = DEFAULT_WINDOW_WIDTH;
+  as->window_width  = DEFAULT_WINDOW_WIDTH;
   as->window_height = DEFAULT_WINDOW_HEIGHT;
 
   while ((now - as->last_step) >= STEP_RATE_IN_MILLISECONDS) {
@@ -67,11 +67,12 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   for (int nb_players = 0; nb_players < as->engine.game.options->players;
        nb_players++) {
     as->banners[nb_players]->score = as->engine.game.players[nb_players].score;
-    if(as->engine.game.current_player == nb_players && !as->banners[nb_players]->is_open){
-      toggle_banner(as->banners[nb_players],as->renderer);
-    }
-    else if(as->engine.game.current_player != nb_players && as->banners[nb_players]->is_open){
-      toggle_banner(as->banners[nb_players],as->renderer);
+    if (as->engine.game.current_player == nb_players &&
+        !as->banners[nb_players]->is_open) {
+      toggle_banner(as->banners[nb_players], as->renderer);
+    } else if (as->engine.game.current_player != nb_players &&
+               as->banners[nb_players]->is_open) {
+      toggle_banner(as->banners[nb_players], as->renderer);
     }
     render_banner(as->banners[nb_players], as->renderer);
   }
@@ -103,8 +104,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   char *path;
 
   if (!SDL_CreateWindowAndRenderer("Carcassonne Test", DEFAULT_WINDOW_WIDTH,
-                                   DEFAULT_WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE, &as->window,
-                                   &as->renderer)) {
+                                   DEFAULT_WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE,
+                                   &as->window, &as->renderer)) {
     return SDL_APP_FAILURE;
   }
 
@@ -162,7 +163,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
   appstate_t *as = (appstate_t *)appstate;
   switch (event->type) {
     case SDL_EVENT_WINDOW_RESIZED:
-      as->window_width = event->window.data1;
+      as->window_width  = event->window.data1;
       as->window_height = event->window.data2;
       break;
     /*case SDL_EVENT_WINDOW_MAXIMIZED:
@@ -210,6 +211,5 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     hashmap_free(&as->textures);
     SDL_free(as);
     TTF_Quit();
-
   }
 }
