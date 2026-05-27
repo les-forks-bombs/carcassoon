@@ -23,13 +23,13 @@ void get_current_actions(AppState *as){
             action_none = a;
         }
     }
-    if(vector_size(&as->all_actions)==0){
-        printf("Pas de placement de meeple possible, passer au placement de tile\n");
+    if(vector_size(&as->all_actions)==0 && action_none!=NULL){
+        // printf("Pas de placement de meeple possible, passer au placement de tile\n");
         dispatch_action(&as->engine, *action_none);
         get_current_actions(as);
         put_first_action_in_appstate(as);
-        printf("prochain hook: %s\n", (*vector_nth(&as->engine.hooks,as->engine.current_hook))->label);
-        printf("current_action: %d\n", as->current_action==NULL);
+        // printf("prochain hook: %s\n", (*vector_nth(&as->engine.hooks,as->engine.current_hook))->label);
+        // printf("current_action: %d\n", as->current_action==NULL);
         bool next_action_is_tile_placement = as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_TILE;
         if (next_action_is_tile_placement) {
             update_possible_places(as);
