@@ -1,10 +1,10 @@
-#include <dirent.h>
-#include <stdio.h>
-#include "libutils/path.h"
-#include <sys/stat.h>
-#include <sdl/appstate.h>
 #include <SDL3_image/SDL_image.h>
+#include <dirent.h>
+#include <sdl/appstate.h>
+#include <stdio.h>
+#include <sys/stat.h>
 
+#include "libutils/path.h"
 
 void load_texture(appstate_t *state, char *name, char *path) {
   SDL_Texture *texture = IMG_LoadTexture(state->renderer, path);
@@ -13,7 +13,7 @@ void load_texture(appstate_t *state, char *name, char *path) {
               sizeof(SDL_Texture *));
 }
 
-void load_textures(appstate_t*appstate, char *directory, char *assets) {
+void load_textures(appstate_t *appstate, char *directory, char *assets) {
   DIR *dossier = opendir(directory);
   if (dossier == NULL) {
     perror("Erreur lors de l'ouverture du dossier");

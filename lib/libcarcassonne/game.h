@@ -16,9 +16,9 @@
 
 /// @brief État de la partie
 typedef enum {
-  GAME_STATE_NOT_STARTED=0,  // Partie non démarrée
-  GAME_STATE_PLAYING=1,      // Partie en cours
-  GAME_STATE_FINISHED=2,     // Partie terminée
+  GAME_STATE_NOT_STARTED = 0,  // Partie non démarrée
+  GAME_STATE_PLAYING     = 1,  // Partie en cours
+  GAME_STATE_FINISHED    = 2,  // Partie terminée
 } game_state_t;
 
 /// @brief Représente une partie
