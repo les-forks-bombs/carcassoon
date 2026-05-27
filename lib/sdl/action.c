@@ -1,47 +1,24 @@
 #include <sdl/action.h>
 #include <stdio.h>
 
+#include "libcarcassonne/forward.h"
 #include "libutils/vector.h"
 #include "sdl/map.h"
 
 void get_current_actions(appstate_t *as) {
-  action_vector_t actions     = engine_get_actions(&as->engine);
-  action_t       *action_none = NULL;
+  vector_free(&as->all_actions);
+  as->all_actions = engine_get_actions(&as->engine);
 
-  if (actions.meta.size == 0) {
+  if (as->all_actions.meta.size == 0) {
     printf("Aucune action possible\n");
     return;
   }
-  vector_free(&as->all_actions);
 
-  for (int i = 0; i < vector_size(&actions); i++) {
-    action_t *a = vector_nth(&actions, i);
-    if (a->type == LIBCARCASSONNE_ACTION_PLACE_TILE ||
-        a->order.place_meeple.tile != NULL) {
-      vector_append(&as->all_actions, a);
-    } else if (a->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE &&
-               a->order.place_meeple.tile == NULL) {
-      printf("Meeple none ajouté\n");
-      action_none = a;
-    }
+  if (vector_size(&as->all_actions)==1 && as->current_action->type==LIBCARCASSONNE_ACTION_PLACE_MEEPLE) {
+    printf("Pas possible de placer un meeple, on dispatch\n");
+    send_action_to_engine(as);
   }
-  if (vector_size(&as->all_actions) == 0 && action_none != NULL) {
-    // printf("Pas de placement de meeple possible, passer au placement de
-    // tile\n");
-    dispatch_action(&as->engine, *action_none);
-    get_current_actions(as);
-    put_first_action_in_appstate(as);
-    // printf("prochain hook: %s\n",
-    // (*vector_nth(&as->engine.hooks,as->engine.current_hook))->label);
-    // printf("current_action: %d\n", as->current_action==NULL);
-    bool next_action_is_tile_placement =
-        as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_TILE;
-    if (next_action_is_tile_placement) {
-      update_possible_places(as);
-    } else {
-      update_possible_meeples(as);
-    }
-  }
+  printf("nombre d'actions possibles: %d\n",vector_size(&as->all_actions));
 }
 
 void put_first_action_in_appstate(appstate_t *as) {
@@ -71,9 +48,8 @@ void pass_to_action(appstate_t *as, int increment) {
 }
 
 void send_action_to_engine(appstate_t *as) {
-  printf("hook actuel: %s\n",
-         (*vector_nth(&as->engine.hooks, as->engine.current_hook))->label);
-  dispatch_action(&as->engine, *as->current_action);
+  // printf("hook actuel: %s\n", (*vector_nth(&as->engine.hooks, as->engine.current_hook))->label);
+  return_code_t result = dispatch_action(&as->engine, *as->current_action);
   get_current_actions(as);
   put_first_action_in_appstate(as);
   printf("prochain hook: %s\n",
