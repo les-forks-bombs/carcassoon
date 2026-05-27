@@ -8,7 +8,7 @@ SDL_AppResult handle_mouse_event_(AppState *as, SDL_Event *event) {
   const SDL_FPoint mouse_pos = {mouseX, mouseY};
 
   switch (event->type) {
-    /*case SDL_EVENT_MOUSE_WHEEL:
+    case SDL_EVENT_MOUSE_WHEEL:
       if (SDL_PointInRectFloat(&mouse_pos, &as->map_viewport)) {
         float localX = mouseX - as->map_viewport.x;
         float localY = mouseY - as->map_viewport.y;
@@ -32,7 +32,7 @@ SDL_AppResult handle_mouse_event_(AppState *as, SDL_Event *event) {
         as->camera->x -= event->motion.xrel / as->camera->zoom;
         as->camera->y -= event->motion.yrel / as->camera->zoom;
       }
-      break;*/
+      break;
     default:
       break;
   }
