@@ -147,6 +147,7 @@ void engine_get_actions_not_empty_at_start(void** state);
 void engine_wanted_action_is_place_meeple_after_tile(void** state);
 void engine_get_actions_meeple_includes_none_option(void** state);
 void engine_get_actions_only_none_when_no_meeples(void** state);
+void engine_field_meeple_not_given_back_mid_game(void** state);
 
 /* Tests pour engine_revert */
 void engine_revert_after_tile_removes_tile(void** state);
@@ -288,6 +289,7 @@ static const struct CMUnitTest tests[] = {
     cmocka_unit_test(engine_wanted_action_is_place_meeple_after_tile),
     cmocka_unit_test(engine_get_actions_meeple_includes_none_option),
     cmocka_unit_test(engine_get_actions_only_none_when_no_meeples),
+    cmocka_unit_test(engine_field_meeple_not_given_back_mid_game),
 
     /* engine_revert */
     cmocka_unit_test(engine_revert_after_tile_removes_tile),

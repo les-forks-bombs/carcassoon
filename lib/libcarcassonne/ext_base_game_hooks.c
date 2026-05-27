@@ -275,7 +275,8 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
     if (!visite[group]) {
       placed_tile_group_t *groupp = placed_tile->groups[group];
 
-      if (placed_tile_group_complete(groupp)) {
+      if (placed_tile_group_complete(groupp) &&
+          groupp->type != LIBCARCASSONNE_TILE_PART_FIELD) {
         placed_tile_group_eval_points_t evaluation =
             placed_tile_group_eval_points(groupp, true);
 
