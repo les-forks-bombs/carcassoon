@@ -8,7 +8,7 @@
 #include <sdl/action.h>
 #include <sdl/meeple.h>
 
-void init_game(AppState *as) {
+void init_game(appstate_t *as) {
   const tile_t *tile;
   action_t      action = {0};
 
