@@ -1,20 +1,17 @@
-#include <libcarcassonne/placed_tile.h>
-#include <libcarcassonne/tile.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/vector.h>
 #include <stdarg.h>
 #include <stddef.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "libcarcassonne/ext_base_game.h"
-#include "libcarcassonne/forward.h"
-
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
                                  tile_orientation_t orientation, int x, int y) {
-  if (placed_tile == NULL || parent == NULL) return ERROR;
+  if (placed_tile == NULL || parent == NULL) {
+    return ERROR;
+  }
 
   placed_tile->parent      = parent;
   placed_tile->orientation = orientation;
@@ -73,15 +70,18 @@ static bool placed_tile_group_connected_inner(placed_tile_group_t *a,
     return false;
   }
 
-  if (a == b) return true;
+  if (a == b) {
+    return true;
+  }
 
   // on le marque pour éviter de le re-visiter
   a->marker = marker;
 
   for (unsigned int i = 0; i < vector_size(&a->neighbors); i++) {
     if (placed_tile_group_connected_inner(*vector_nth(&a->neighbors, i), b,
-                                          marker))
+                                          marker)) {
       return true;
+    }
   }
 
   return false;

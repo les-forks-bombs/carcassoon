@@ -1,9 +1,17 @@
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_init.h>
+#include <SDL3/SDL_keycode.h>
+#include <SDL3/SDL_mouse.h>
+#include <SDL3/SDL_rect.h>
 #include <sdl/action.h>
 #include <sdl/consts.h>
 #include <sdl/events.h>
 
+#include "sdl/forward.h"
+
 SDL_AppResult handle_mouse_event_(appstate_t *as, SDL_Event *event) {
-  float mouseX, mouseY;
+  float mouseX;
+  float mouseY;
   SDL_GetMouseState(&mouseX, &mouseY);
   const SDL_FPoint mouse_pos = {mouseX, mouseY};
 
@@ -17,9 +25,13 @@ SDL_AppResult handle_mouse_event_(appstate_t *as, SDL_Event *event) {
         float worldMouseY = (localY / as->camera->zoom) + as->camera->y;
 
         if (event->wheel.y > 0) {
-          if (as->camera->zoom < ZOOM_MAX) as->camera->zoom *= 1.1f;
+          if (as->camera->zoom < ZOOM_MAX) {
+            as->camera->zoom *= 1.1F;
+          }
         } else {
-          if (as->camera->zoom > ZOOM_MIN) as->camera->zoom *= 0.9f;
+          if (as->camera->zoom > ZOOM_MIN) {
+            as->camera->zoom *= 0.9F;
+          }
         }
 
         as->camera->x = worldMouseX - (localX / as->camera->zoom);
@@ -42,7 +54,7 @@ SDL_AppResult handle_mouse_event_(appstate_t *as, SDL_Event *event) {
 SDL_AppResult handle_key_event_(appstate_t *as, SDL_Keycode key_val) {
   switch (key_val) {
     case SDLK_G:
-      as->display_grid=!as->display_grid;
+      as->display_grid = !as->display_grid;
       break;
     case SDLK_ESCAPE:
       return SDL_APP_SUCCESS;
@@ -53,22 +65,22 @@ SDL_AppResult handle_key_event_(appstate_t *as, SDL_Keycode key_val) {
       pass_to_action(as, 1);
       break;
     case SDLK_KP_PLUS:
-      as->camera->zoom += 0.1f;
+      as->camera->zoom += 0.1F;
       break;
     case SDLK_KP_MINUS:
-      as->camera->zoom -= 0.1f;
+      as->camera->zoom -= 0.1F;
       break;
     case SDLK_Z:
-      as->camera->y += 10.0f;
+      as->camera->y += 10.0F;
       break;
     case SDLK_Q:
-      as->camera->x += 10.0f;
+      as->camera->x += 10.0F;
       break;
     case SDLK_S:
-      as->camera->y -= 10.0f;
+      as->camera->y -= 10.0F;
       break;
     case SDLK_D:
-      as->camera->x -= 10.0f;
+      as->camera->x -= 10.0F;
       break;
     case SDLK_RETURN:
       send_action_to_engine(as);

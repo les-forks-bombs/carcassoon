@@ -1,14 +1,6 @@
 #pragma once
 
-#include <libcarcassonne/player.h>
-#include <libcarcassonne/tile.h>
-
-typedef enum meeple_type {
-  NONE  = -1,
-  BASIC = 0,
-  LARGE = 1,
-  ABBOT = 2
-} meeple_type_t;
+#include <libcarcassonne/libcarcassonne.h>
 
 struct meeple {
   player_t*            player;

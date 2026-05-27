@@ -2,7 +2,7 @@
 #define SDL_MEEPLE_H
 
 #include <SDL3/SDL.h>
-#include <libcarcassonne/forward.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <sdl/appstate.h>
 
 #include "sdl/camera.h"

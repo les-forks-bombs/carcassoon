@@ -1,5 +1,6 @@
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/options.h>
+
+#include <libcarcassonne/ext_base_game.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 
 // Options locales pour que max_turns soit maîtrisé indépendamment du global
