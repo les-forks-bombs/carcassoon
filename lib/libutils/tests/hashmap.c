@@ -1,3 +1,4 @@
+
 #include <libutils/hashmap.h>
 #include <libutils/tests/tests.h>
 #include <string.h>
@@ -62,7 +63,8 @@ void utils_hashmap_pointer_test(void** state) {
   hashmap_create(&map, 5);
 
   // Test avec des pointeurs comme clés
-  int  a = 10, b = 20;
+  int  a    = 10;
+  int  b    = 20;
   int* key1 = &a;
   int* key2 = &b;
   int  val1 = 100;

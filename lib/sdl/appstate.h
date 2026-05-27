@@ -2,11 +2,9 @@
 #define APPSTATE_H
 
 #include <SDL3/SDL.h>
-#include <libcarcassonne/engine.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/hashmap.h>
 #include <sdl/forward.h>
-
-#include "libcarcassonne/forward.h"
 
 typedef HashMap(char *, SDL_Texture *) textures_hashmap_t;
 
@@ -29,7 +27,7 @@ struct appstate {
   action_vector_t all_actions;
   bool            is_waiting_for_tile;
   int             action_index;
-  bool display_grid;
+  bool            display_grid;
 };
 
 #endif

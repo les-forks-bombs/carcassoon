@@ -1,8 +1,8 @@
-#include <libcarcassonne/deck.h>
-#include <libcarcassonne/ext_base_game.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/placed_tile.h>
+
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
+
+#include "libutils/vector.h"
 
 // FRFR : parts_groups = {A,A,A,B,D,B,C,C,C}
 //   Groupe B = ROAD (faces ouest+est, positions 3 et 5)
@@ -41,7 +41,7 @@ void scoring_road_two_tiles_two_points(void** state) {
   // Groupe B de (0,0) est lié au groupe B de (0,1) → 2 nœuds, 2 points
   placed_tile_t** p = game_tile_at(&game, 0, 0);
   assert_non_null(*p);
-  placed_tile_group_t*            road = (*p)->groups[B];
+  placed_tile_group_t* road = (*p)->groups[LIBCARCASSONNE_TILE_PART_B];
   placed_tile_group_eval_points_t eval =
       placed_tile_group_eval_points(road, false);
 
@@ -63,9 +63,9 @@ void scoring_town_incomplete_one_point(void** state) {
       SUCCESS);
 
   // CFFF : groupe B = TOWN, pas de blason, non complétée
-  placed_tile_t**                 p = game_tile_at(&game, 0, 0);
-  placed_tile_group_eval_points_t eval =
-      placed_tile_group_eval_points((*p)->groups[B], false);
+  placed_tile_t**                 p    = game_tile_at(&game, 0, 0);
+  placed_tile_group_eval_points_t eval = placed_tile_group_eval_points(
+      (*p)->groups[LIBCARCASSONNE_TILE_PART_B], false);
 
   assert_int_equal(eval.points, 1);
   vector_free(&eval.meeples);
@@ -85,9 +85,9 @@ void scoring_town_with_blason_incomplete(void** state) {
       game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
       SUCCESS);
 
-  placed_tile_t**                 p = game_tile_at(&game, 0, 0);
-  placed_tile_group_eval_points_t eval =
-      placed_tile_group_eval_points((*p)->groups[A], false);
+  placed_tile_t**                 p    = game_tile_at(&game, 0, 0);
+  placed_tile_group_eval_points_t eval = placed_tile_group_eval_points(
+      (*p)->groups[LIBCARCASSONNE_TILE_PART_A], false);
 
   assert_int_equal(eval.points, 2);
   vector_free(&eval.meeples);
@@ -107,9 +107,9 @@ void scoring_town_complete_flag_doubles_value(void** state) {
       game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
       SUCCESS);
 
-  placed_tile_t**                 p = game_tile_at(&game, 0, 0);
-  placed_tile_group_eval_points_t eval =
-      placed_tile_group_eval_points((*p)->groups[A], true);
+  placed_tile_t**                 p    = game_tile_at(&game, 0, 0);
+  placed_tile_group_eval_points_t eval = placed_tile_group_eval_points(
+      (*p)->groups[LIBCARCASSONNE_TILE_PART_A], true);
 
   assert_int_equal(eval.points, 4);
   vector_free(&eval.meeples);
@@ -129,9 +129,9 @@ void scoring_field_zero_points(void** state) {
       SUCCESS);
 
   // FFFF : groupe A = FIELD → 0 point
-  placed_tile_t**                 p = game_tile_at(&game, 0, 0);
-  placed_tile_group_eval_points_t eval =
-      placed_tile_group_eval_points((*p)->groups[A], false);
+  placed_tile_t**                 p    = game_tile_at(&game, 0, 0);
+  placed_tile_group_eval_points_t eval = placed_tile_group_eval_points(
+      (*p)->groups[LIBCARCASSONNE_TILE_PART_A], false);
 
   assert_int_equal(eval.points, 0);
   vector_free(&eval.meeples);
@@ -151,9 +151,9 @@ void scoring_village_zero_points(void** state) {
       SUCCESS);
 
   // FRRR : groupe G = VILLAGE (centre, position 4) → 0 point
-  placed_tile_t**                 p = game_tile_at(&game, 0, 0);
-  placed_tile_group_eval_points_t eval =
-      placed_tile_group_eval_points((*p)->groups[G], false);
+  placed_tile_t**                 p    = game_tile_at(&game, 0, 0);
+  placed_tile_group_eval_points_t eval = placed_tile_group_eval_points(
+      (*p)->groups[LIBCARCASSONNE_TILE_PART_G], false);
 
   assert_int_equal(eval.points, 0);
   vector_free(&eval.meeples);
