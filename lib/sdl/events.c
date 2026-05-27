@@ -41,6 +41,9 @@ SDL_AppResult handle_mouse_event_(appstate_t *as, SDL_Event *event) {
 
 SDL_AppResult handle_key_event_(appstate_t *as, SDL_Keycode key_val) {
   switch (key_val) {
+    case SDLK_G:
+      as->display_grid=!as->display_grid;
+      break;
     case SDLK_ESCAPE:
       return SDL_APP_SUCCESS;
     case SDLK_LEFT:
