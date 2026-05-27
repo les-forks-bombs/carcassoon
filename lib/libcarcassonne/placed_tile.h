@@ -16,10 +16,13 @@ struct placed_tile_group {
    */
   placed_tile_group_neighbors_t neighbors;
 
+  /// @brief Nombre d'emplacements ouverts du groupe
   unsigned int open_slots;
 
+  /// @brief Identifiant de parcours
   int marker;
 
+  /// @brief Type de structure
   tile_part_type_t type;
 };
 
@@ -32,12 +35,17 @@ struct placed_tile {
   placed_tile_group_t *groups[PLACED_TILE_GROUP_NUMBER];
   /// @brief Orientation de placement de la tile
   tile_orientation_t orientation;
-  int                x;
-  int                y;
+  /// @brief Composante en x
+  int x;
+  /// @brief Composante en y
+  int y;
 };
 
+/// @brief Représente le calculs des scores pour un groupe de tuiles
 struct placed_tile_group_eval_points {
-  unsigned int    points;
+  /// @brief Le nombre de points à attribuer
+  unsigned int points;
+  /// @brief Les meeples concernés par l'évaluation
   meeple_vector_t meeples;
 };
 
