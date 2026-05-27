@@ -1,8 +1,9 @@
 #include <dirent.h>
 #include <sdl/load.h>
 #include <stdio.h>
-#include "libutils/path.h"
 #include <sys/stat.h>
+
+#include "libutils/path.h"
 
 void load_texture(AppState *state, char *name, char *path) {
   SDL_Texture *texture = IMG_LoadTexture(state->renderer, path);

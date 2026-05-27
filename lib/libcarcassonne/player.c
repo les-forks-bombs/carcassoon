@@ -9,12 +9,12 @@
 #include "libcarcassonne/meeple.h"
 #include "libutils/vector.h"
 
-player_t create_player(player_type_t          type,
-                       meeple_count_vector_t *meeples_count, unsigned int id) {
+player_t create_player(player_type_t type, meeple_count_vector_t *meeples_count,
+                       unsigned int id) {
   player_t player;
   memset(&player, 0, sizeof(player_t));
   player.player_type = type;
-  player.id = id;
+  player.id          = id;
 
   for (unsigned int i = 0; i < vector_size(meeples_count); i++) {
     meeple_count_t *current = vector_nth(meeples_count, i);

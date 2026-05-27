@@ -34,7 +34,7 @@ void player_free_works(void** state) {
   vector_append(&meeples_count, &basic_meeple);
 
   player_t* player = malloc(sizeof(player_t));
-  *player = create_player(LIBCARCASSONNE_PLAYER_AI, &meeples_count, 1);
+  *player          = create_player(LIBCARCASSONNE_PLAYER_AI, &meeples_count, 1);
 
   free_player(player);
   free(player);

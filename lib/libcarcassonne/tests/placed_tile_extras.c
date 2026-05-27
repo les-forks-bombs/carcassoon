@@ -1,8 +1,8 @@
 #include <libcarcassonne/deck.h>
+#include <libcarcassonne/ext_base_game.h>
 #include <libcarcassonne/game.h>
 #include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/tests/tests.h>
-#include <libcarcassonne/ext_base_game.h>
 
 void placed_tile_destroy_handles_null(void** state) {
   (void)state;
@@ -25,15 +25,15 @@ void placed_tile_group_connected_with_linked_frrr_tiles(void** state) {
 
   const tile_t* tile1 = deck_find_tile(&game.deck, "FRRR", false);
   assert_ptr_not_equal(tile1, NULL);
-  assert_int_equal(
-      game_place_tile(&game, tile1, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
-      SUCCESS);
+  assert_int_equal(game_place_tile(&game, tile1, 0, 0,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+                   SUCCESS);
 
   const tile_t* tile2 = deck_find_tile(&game.deck, "FRRR", false);
   assert_ptr_not_equal(tile2, NULL);
-  assert_int_equal(
-      game_place_tile(&game, tile2, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
-      SUCCESS);
+  assert_int_equal(game_place_tile(&game, tile2, 0, 1,
+                                   LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
+                   SUCCESS);
 
   placed_tile_t** p1 = game_tile_at(&game, 0, 0);
   placed_tile_t** p2 = game_tile_at(&game, 0, 1);
@@ -49,7 +49,6 @@ void placed_tile_group_connected_with_linked_frrr_tiles(void** state) {
 
   destroy_game(&game);
 }
-
 
 void placed_tile_group_eval_points_single_road(void** state) {
   (void)state;
@@ -69,10 +68,10 @@ void placed_tile_group_eval_points_single_road(void** state) {
 
   placed_tile_group_t* road_group = (*p)->groups[B];
   assert_non_null(road_group);
-  
+
   placed_tile_group_eval_points_t eval =
       placed_tile_group_eval_points(road_group, false);
-  
+
   assert_int_equal(eval.points, 1);
 
   destroy_game(&game);

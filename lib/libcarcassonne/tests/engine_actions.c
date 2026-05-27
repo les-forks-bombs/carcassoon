@@ -9,8 +9,8 @@
 
 // Utilise des options locales pour éviter la pollution de max_turns
 static options_t engine_test_options(void) {
-  static const extension_t* ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
-  static const extension_vector_t ext = {
+  static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
+  static const extension_vector_t ext         = {
       .meta = {.size = 1, .caps = 1, .data = &ptr_table}};
   options_t o = {.mode       = CARCASSONNE_MODE_CLI,
                  .players    = 3,
@@ -23,7 +23,7 @@ static options_t engine_test_options(void) {
 
 void engine_wanted_action_is_place_tile_at_start(void** state) {
   (void)state;
-  options_t o = engine_test_options();
+  options_t o      = engine_test_options();
   engine_t  engine = {0};
   assert_int_equal(create_engine(&engine, o), SUCCESS);
   assert_int_equal(start_game(&engine), SUCCESS);
@@ -37,7 +37,7 @@ void engine_wanted_action_is_place_tile_at_start(void** state) {
 
 void engine_get_actions_not_empty_at_start(void** state) {
   (void)state;
-  options_t o = engine_test_options();
+  options_t o      = engine_test_options();
   engine_t  engine = {0};
   assert_int_equal(create_engine(&engine, o), SUCCESS);
   assert_int_equal(start_game(&engine), SUCCESS);
@@ -58,17 +58,18 @@ void engine_get_actions_not_empty_at_start(void** state) {
 
 void engine_wanted_action_is_place_meeple_after_tile(void** state) {
   (void)state;
-  options_t o = engine_test_options();
+  options_t o      = engine_test_options();
   engine_t  engine = {0};
   assert_int_equal(create_engine(&engine, o), SUCCESS);
   assert_int_equal(start_game(&engine), SUCCESS);
 
   // Après start_game, la tuile de départ CRFR est en (0,0) orientation NORTH.
-  // FRFR à (1,0) NORTH : face nord = FIELD, compatible avec face sud de CRFR = FIELD.
+  // FRFR à (1,0) NORTH : face nord = FIELD, compatible avec face sud de CRFR =
+  // FIELD.
   const tile_t* frfr = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr);
 
-  action_t action = {0};
+  action_t action                     = {0};
   action.type                         = LIBCARCASSONNE_ACTION_PLACE_TILE;
   action.order.place_tile.tile        = frfr;
   action.order.place_tile.x           = 1;
@@ -87,7 +88,7 @@ void engine_wanted_action_is_place_meeple_after_tile(void** state) {
 
 void engine_get_actions_meeple_includes_none_option(void** state) {
   (void)state;
-  options_t o = engine_test_options();
+  options_t o      = engine_test_options();
   engine_t  engine = {0};
   assert_int_equal(create_engine(&engine, o), SUCCESS);
   assert_int_equal(start_game(&engine), SUCCESS);
@@ -95,7 +96,7 @@ void engine_get_actions_meeple_includes_none_option(void** state) {
   const tile_t* frfr = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr);
 
-  action_t action = {0};
+  action_t action                     = {0};
   action.type                         = LIBCARCASSONNE_ACTION_PLACE_TILE;
   action.order.place_tile.tile        = frfr;
   action.order.place_tile.x           = 1;
@@ -117,7 +118,7 @@ void engine_get_actions_meeple_includes_none_option(void** state) {
 
 void engine_get_actions_only_none_when_no_meeples(void** state) {
   (void)state;
-  options_t o = engine_test_options();
+  options_t o      = engine_test_options();
   engine_t  engine = {0};
   assert_int_equal(create_engine(&engine, o), SUCCESS);
   assert_int_equal(start_game(&engine), SUCCESS);
@@ -125,7 +126,7 @@ void engine_get_actions_only_none_when_no_meeples(void** state) {
   const tile_t* frfr = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(frfr);
 
-  action_t action = {0};
+  action_t action                     = {0};
   action.type                         = LIBCARCASSONNE_ACTION_PLACE_TILE;
   action.order.place_tile.tile        = frfr;
   action.order.place_tile.x           = 1;
@@ -169,24 +170,24 @@ void engine_field_meeple_not_given_back_mid_game(void** state) {
   const tile_t* crfr = deck_find_tile(&engine.game.deck, "CRFR", false);
   assert_non_null(crfr);
 
-  action_t tile_act                          = {0};
-  tile_act.type                              = LIBCARCASSONNE_ACTION_PLACE_TILE;
-  tile_act.order.place_tile.tile             = crfr;
-  tile_act.order.place_tile.x               = 0;
-  tile_act.order.place_tile.y               = 1;
-  tile_act.order.place_tile.orientation     = LIBCARCASSONNE_TILE_ORIENTATION_NORTH;
+  action_t tile_act                     = {0};
+  tile_act.type                         = LIBCARCASSONNE_ACTION_PLACE_TILE;
+  tile_act.order.place_tile.tile        = crfr;
+  tile_act.order.place_tile.x           = 0;
+  tile_act.order.place_tile.y           = 1;
+  tile_act.order.place_tile.orientation = LIBCARCASSONNE_TILE_ORIENTATION_NORTH;
   assert_int_equal(dispatch_action(&engine, tile_act), NO_PROGRESS);
 
-  player_t*    player       = game_get_current_player(&engine.game);
+  player_t*    player = game_get_current_player(&engine.game);
   unsigned int before_count =
       ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
 
-  action_t meeple_act                            = {0};
-  meeple_act.type                                = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
-  meeple_act.order.place_meeple.x               = 0;
-  meeple_act.order.place_meeple.y               = 1;
-  meeple_act.order.place_meeple.part_group      = A;
-  meeple_act.order.place_meeple.meeple_type     = BASIC;
+  action_t meeple_act                      = {0};
+  meeple_act.type                          = LIBCARCASSONNE_ACTION_PLACE_MEEPLE;
+  meeple_act.order.place_meeple.x          = 0;
+  meeple_act.order.place_meeple.y          = 1;
+  meeple_act.order.place_meeple.part_group = A;
+  meeple_act.order.place_meeple.meeple_type = BASIC;
   assert_int_equal(dispatch_action(&engine, meeple_act), SUCCESS);
 
   /* Le meeple doit encore être dans le groupe FIELD après le tour complet */
@@ -195,9 +196,9 @@ void engine_field_meeple_not_given_back_mid_game(void** state) {
   assert_non_null((*p)->groups[A]->meeple);
 
   /* Le compteur doit avoir diminué de 1 (meeple posé, non restitué) */
-  unsigned int after_count =
-      ((meeple_count_t*)vector_nth(&engine.game.players[0].meeples_count,
-                                   BASIC))->count;
+  unsigned int after_count = ((meeple_count_t*)vector_nth(
+                                  &engine.game.players[0].meeples_count, BASIC))
+                                 ->count;
   assert_int_equal(after_count, before_count - 1);
 
   destroy_engine(&engine);

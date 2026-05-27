@@ -100,9 +100,8 @@ void game_is_space_available_false_when_occupied(void** state) {
 void game_is_tile_placeable_null_game_returns_false(void** state) {
   (void)state;
   const tile_t* tile = &LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0];
-  assert_false(
-      game_is_tile_placeable(NULL, tile, 0, 0,
-                             LIBCARCASSONNE_TILE_ORIENTATION_NORTH));
+  assert_false(game_is_tile_placeable(NULL, tile, 0, 0,
+                                      LIBCARCASSONNE_TILE_ORIENTATION_NORTH));
 }
 
 void game_is_tile_placeable_null_tile_returns_false(void** state) {
@@ -110,9 +109,8 @@ void game_is_tile_placeable_null_tile_returns_false(void** state) {
   game_t game;
   assert_int_equal(create_game(&game, &options), SUCCESS);
 
-  assert_false(
-      game_is_tile_placeable(&game, NULL, 0, 0,
-                             LIBCARCASSONNE_TILE_ORIENTATION_NORTH));
+  assert_false(game_is_tile_placeable(&game, NULL, 0, 0,
+                                      LIBCARCASSONNE_TILE_ORIENTATION_NORTH));
 
   destroy_game(&game);
 }
