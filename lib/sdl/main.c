@@ -38,9 +38,6 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   appstate_t  *as  = (appstate_t *)appstate;
   const Uint64 now = SDL_GetTicks();
 
-  as->window_width  = DEFAULT_WINDOW_WIDTH;
-  as->window_height = DEFAULT_WINDOW_HEIGHT;
-
   while ((now - as->last_step) >= STEP_RATE_IN_MILLISECONDS) {
     as->last_step += STEP_RATE_IN_MILLISECONDS;
   }
@@ -48,6 +45,8 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderDrawColor(as->renderer, 164, 116, 73, 255);
   SDL_RenderClear(as->renderer);
 
+  /*as->map_viewport.w=as->window_width;
+  as->map_viewport.h=as->window_height;*/
   SDL_Rect v = {(int)as->map_viewport.x, (int)as->map_viewport.y,
                 (int)as->map_viewport.w, (int)as->map_viewport.h};
   SDL_SetRenderViewport(as->renderer, &v);
@@ -167,20 +166,15 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
   appstate_t *as = (appstate_t *)appstate;
   switch (event->type) {
-    case SDL_EVENT_WINDOW_RESIZED:
-      as->window_width  = event->window.data1;
-      as->window_height = event->window.data2;
-      break;
-    /*case SDL_EVENT_WINDOW_MAXIMIZED:
-    case SDL_EVENT_WINDOW_RESTORED:
-      int new_width, new_height;
-      SDL_GetCurrentRenderOutputSize(as->renderer, &new_width, &new_height);
-      as->window_width = (float)new_width;
-      as->window_height = (float)new_height;
-      printf("New window size: %d x %d\n", new_width, new_height);
+  case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+      as->window_width   = (float)event->window.data1;
+      as->window_height  = (float)event->window.data2;
       as->map_viewport.w = as->window_width;
       as->map_viewport.h = as->window_height;
-      break;*/
+      printf("Nouvelle taille de rendu en pixels : %d x %d\n", event->window.data1, event->window.data2);
+      // printf("Viewport size : x = %f, y = %f, w = %f, h = %f\n",as->map_viewport.x,as->map_viewport.y,as->map_viewport.w,as->map_viewport.h);
+      center_camera_on_start(as);
+      break;
     case SDL_EVENT_QUIT:
       return SDL_APP_SUCCESS;
     case SDL_EVENT_KEY_DOWN:
