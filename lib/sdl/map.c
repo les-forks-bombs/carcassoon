@@ -16,6 +16,7 @@
 #include "libcarcassonne/action.h"
 #include "libutils/hashmap.h"
 #include "libutils/vector.h"
+#include "sdl/forward.h"
 
 static double get_tile_angle(int orientation) {
   switch (orientation) {
@@ -66,9 +67,14 @@ static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
 }
 
 static void draw_selection_border(SDL_Renderer    *renderer,
-                                  const SDL_FRect *dest) {
+                                  const SDL_FRect *dest,appstate_t *as) {
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+  if (as->current_action->type==LIBCARCASSONNE_ACTION_PLACE_MEEPLE && as->current_action->order.place_meeple.meeple_type!=NONE){
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+  }
+  else {
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+  }
   for (int t = 0; t < 3; t++) {
     SDL_FRect border_rect = {dest->x + (float)t, dest->y + (float)t,
                              dest->w - (float)(t * 2),
@@ -84,7 +90,7 @@ static void render_occupied_cell(appstate_t *as, placed_tile_t *ptt,
   draw_tile(as, ptt->parent, dest, angle, 255);
 
   if (ptt == as->current_action->order.place_meeple.tile) {
-    draw_selection_border(as->renderer, dest);
+    draw_selection_border(as->renderer, dest,as);
     render_possible_meeples(ptt, as, dest, angle);
   }
   render_placed_meeple(ptt, as, dest, angle);
