@@ -24,10 +24,10 @@ void update_camera(camera_t *cam) {
   if (cam->y > max_y) cam->y = max_y;
 }
 
-void center_camera_on_start(camera_t *cam, SDL_Renderer *renderer) {
-  /*float world_center_x = 0.0f;
+void center_camera_on_start(camera_t *cam, SDL_FRect *viewport) {
+  float world_center_x = 0.0f;
   float world_center_y = 0.0f;
 
-  cam->x = world_center_x - ((SDL_GetCurrentRenderOutputSize(renderer, &cam->y) / 2.0f) / cam->zoom);
-  cam->y = world_center_y - ((SDL_GetCurrentRenderOutputSize(renderer, &cam->y) / 2.0f) / cam->zoom);*/
+  cam->x = world_center_x - ((viewport->w / 2.0f) / cam->zoom);
+  cam->y = world_center_y - ((viewport->h / 2.0f) / cam->zoom);
 }

@@ -13,7 +13,7 @@ typedef struct {
   SDL_Window        *window;
   SDL_Renderer      *renderer;
   camera_t          *camera;
-  // SDL_FRect          map_viewport;
+  SDL_FRect          map_viewport;
   Uint64             last_step;
   text_object_t     *text;
   engine_t           engine;
