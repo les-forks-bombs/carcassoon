@@ -25,7 +25,6 @@ static options_t options = {
 
 void deck_builds(void** state);
 void deck_seed_consistent(void** state);
-/* Deck extras tests */
 void deck_pick_removes_tile(void** state);
 void deck_pick_on_empty_returns_null(void** state);
 void deck_defausser_adds_tile_back(void** state);
@@ -52,11 +51,11 @@ void game_place_tile_do_not_work_because_tiles_are_incompatible(void** state);
 
 void game_get_available_space_works(void** state);
 
-/* Placed tile extras tests */
 void placed_tile_destroy_handles_null(void** state);
 void placed_tile_create_with_null(void** state);
 void placed_tile_group_connected_with_linked_frrr_tiles(void** state);
 void placed_tile_group_eval_points_single_road(void** state);
+
 
 void test_tile_group_builds(void** state);
 void test_tile_group_link(void** state);
@@ -69,21 +68,17 @@ void engine_long_play_test(void** state);
 void engine_trigger_end_game(void** state);
 void engine_trigger_give_back_meeple(void** state);
 
-/* Tests pour prng_mersenne_twister */
 void prng_create_with_seed_initializes_state(void** state);
 void prng_random_consistent_sequence(void** state);
 void prng_random_different_seeds_different_sequence(void** state);
 void prng_random_values_in_valid_range(void** state);
 
-/* Tests pour tile_orientation */
 void tile_orientation_invert_north(void** state);
 void tile_orientation_invert_east(void** state);
 void tile_orientation_invert_south(void** state);
 void tile_orientation_invert_west(void** state);
 
 void placed_tile_open_slots_works(void** state);
-
-/* Tests pour player */
 void player_create_initializes_fields(void** state);
 void player_free_works(void** state);
 void player_free_handles_null(void** state);
@@ -149,6 +144,9 @@ void engine_get_actions_meeple_includes_none_option(void** state);
 void engine_get_actions_only_none_when_no_meeples(void** state);
 void engine_field_meeple_not_given_back_mid_game(void** state);
 
+/* Test de partie complète avec reverts */
+void engine_full_game_with_reverts(void** state);
+
 /* Tests pour engine_revert */
 void engine_revert_after_tile_removes_tile(void** state);
 void engine_revert_full_turn_clears_board(void** state);
@@ -194,7 +192,6 @@ static const struct CMUnitTest tests[] = {
 
     cmocka_unit_test(game_get_available_space_works),
 
-    /* Placed tile extras */
     cmocka_unit_test(placed_tile_destroy_handles_null),
     cmocka_unit_test(placed_tile_create_with_null),
     cmocka_unit_test(placed_tile_group_connected_with_linked_frrr_tiles),
@@ -220,19 +217,15 @@ static const struct CMUnitTest tests[] = {
     cmocka_unit_test(placed_tile_road_l_shape_not_complete),
     cmocka_unit_test(engine_trigger_give_back_meeple),
 
-    /* PRNG tests */
     cmocka_unit_test(prng_create_with_seed_initializes_state),
     cmocka_unit_test(prng_random_consistent_sequence),
     cmocka_unit_test(prng_random_different_seeds_different_sequence),
     cmocka_unit_test(prng_random_values_in_valid_range),
 
-    /* Tile orientation tests */
     cmocka_unit_test(tile_orientation_invert_north),
     cmocka_unit_test(tile_orientation_invert_east),
     cmocka_unit_test(tile_orientation_invert_south),
     cmocka_unit_test(tile_orientation_invert_west),
-
-    /* Player tests */
     cmocka_unit_test(player_create_initializes_fields),
     cmocka_unit_test(player_free_works),
     cmocka_unit_test(player_free_handles_null),
@@ -290,6 +283,9 @@ static const struct CMUnitTest tests[] = {
     cmocka_unit_test(engine_get_actions_meeple_includes_none_option),
     cmocka_unit_test(engine_get_actions_only_none_when_no_meeples),
     cmocka_unit_test(engine_field_meeple_not_given_back_mid_game),
+
+    /* engine_full_game */
+    cmocka_unit_test(engine_full_game_with_reverts),
 
     /* engine_revert */
     cmocka_unit_test(engine_revert_after_tile_removes_tile),

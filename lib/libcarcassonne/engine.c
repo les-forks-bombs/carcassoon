@@ -175,7 +175,10 @@ return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
       if ((*vector_nth(&engine->hooks, i)) ==
           (vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1))
               ->hook) {
-        engine->current_hook = i;
+        /* Si le dernier dispatch était le dernier hook du cycle (ex. end_game),
+         * on wrappe à 0 comme le fait dispatch_action en fin de tour. */
+        engine->current_hook =
+            (i + 1 < (unsigned int)vector_size(&engine->hooks)) ? i : 0;
         break;
       }
     }
