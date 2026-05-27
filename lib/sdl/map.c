@@ -157,7 +157,7 @@ void update_possible_places(appstate_t *as) {
   vector_free(&as->possibles_places);
   vector_alloc(&as->possibles_places, 5);
 
-  for (int i = 0; i < vector_size(&as->all_actions); i++) {
+  for (unsigned int i = 0; i < vector_size(&as->all_actions); i++) {
     action_t *action = vector_nth(&as->all_actions, i);
     if (action->type == LIBCARCASSONNE_ACTION_PLACE_TILE) {
       vector2d_t pos = {.x = action->order.place_tile.x,
