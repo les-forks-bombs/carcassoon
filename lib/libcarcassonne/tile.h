@@ -4,6 +4,7 @@
 #include <libutils/vector.h>
 #include <stdbool.h>
 
+/// @brief Représente un emplacement pour meeple sur une tuile
 struct tile_slot {
   double            x, y;
   tile_part_group_t group;
@@ -26,6 +27,7 @@ struct tile {
   char* texture;
   /// @brief Emplacements possibles pour les meeples
   tile_slot_t  slots[9];
+  /// @brief Nombre effectif de slots
   unsigned int nb_slots;
 };
 
@@ -39,4 +41,10 @@ struct tile {
 tile_part_type_t   tile_get_family_face(const tile_t*      tile,
                                         tile_orientation_t orientation,
                                         tile_orientation_t connexion_face);
+
+/// @brief Retourne l'inverse d'une orientation
+/// Ex: NORTH <=> SOUTH, EAST <=> WEST
+/// @param orientation L'orientation à inverser
+/// @return L'orientation inversée
+/// @related tile_t
 tile_orientation_t tile_orientation_invert(tile_orientation_t orientation);
