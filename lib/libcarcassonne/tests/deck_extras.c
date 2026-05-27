@@ -1,7 +1,6 @@
 #include <libcarcassonne/deck.h>
 #include <libcarcassonne/tests/tests.h>
 
-/// @brief Test que deck_pick retire une tuile du deck
 void deck_pick_removes_tile(void** state) {
   (void)state;
 
@@ -15,25 +14,21 @@ void deck_pick_removes_tile(void** state) {
   free_deck(deck);
 }
 
-/// @brief Test que deck_pick retourne NULL sur un deck vide
 void deck_pick_on_empty_returns_null(void** state) {
   (void)state;
 
   deck_t deck = create_deck(42, &options.extensions);
 
-  // Vider le deck
   while (deck_pick(&deck) != NULL) {
-    // Continue
+    /* continue */
   }
 
-  // Maintenant le deck est vide
   const tile_t* tile = deck_pick(&deck);
   assert_ptr_equal(tile, NULL);
 
   free_deck(deck);
 }
 
-/// @brief Test que deck_defausser ajoute une tuile dans le deck
 void deck_defausser_adds_tile_back(void** state) {
   (void)state;
 
@@ -49,26 +44,22 @@ void deck_defausser_adds_tile_back(void** state) {
   free_deck(deck);
 }
 
-/// @brief Test que deck_defausser place les tuiles à des positions aléatoires
 void deck_defausser_random_position(void** state) {
   (void)state;
 
   deck_t deck = create_deck(42, &options.extensions);
 
-  // Piocher et défausser plusieurs tuiles
   const tile_t* tile1 = deck_pick(&deck);
   const tile_t* tile2 = deck_pick(&deck);
 
   deck_defausser(&deck, tile1);
   deck_defausser(&deck, tile2);
 
-  // Les tuiles doivent être de retour dans le deck
   assert_int_equal(list_size(&deck.list), LIBCARCASSONNE_TILES_COUNT);
 
   free_deck(deck);
 }
 
-/// @brief Test que deck_find_tile trouve et retire une tuile spécifique
 void deck_find_tile_removes_match(void** state) {
   (void)state;
 
@@ -82,7 +73,6 @@ void deck_find_tile_removes_match(void** state) {
   free_deck(deck);
 }
 
-/// @brief Test que deck_find_tile retourne NULL si la tuile n'est pas trouvée
 void deck_find_tile_returns_null_if_not_found(void** state) {
   (void)state;
 
