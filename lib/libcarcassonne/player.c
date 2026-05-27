@@ -1,11 +1,10 @@
 #include <libcarcassonne/libcarcassonne.h>
+#include <libutils/vector.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "libutils/vector.h"
 
 player_t create_player(player_type_t type, meeple_count_vector_t *meeples_count,
                        unsigned int id) {

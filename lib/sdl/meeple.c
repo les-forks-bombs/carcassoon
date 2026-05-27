@@ -2,12 +2,11 @@
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_stdinc.h>
+#include <libcarcassonne/action.h>
 #include <libcarcassonne/libcarcassonne.h>
+#include <sdl/consts.h>
+#include <sdl/forward.h>
 #include <sdl/meeple.h>
-
-#include "libcarcassonne/action.h"
-#include "sdl/consts.h"
-#include "sdl/forward.h"
 
 void render_placed_meeple(placed_tile_t *tile, appstate_t *as,
                           const SDL_FRect *tile_rect, double angle) {

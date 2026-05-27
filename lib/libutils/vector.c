@@ -37,7 +37,8 @@ unsigned int utils_vector_append(vector_t *vector, const void *data,
   return vector->size;
 }
 
-void *utils_vector_nth(const vector_t *vector, unsigned int index, size_t size) {
+void *utils_vector_nth(const vector_t *vector, unsigned int index,
+                       size_t size) {
   if (index >= vector->size) {
     return NULL;
   }
@@ -69,7 +70,8 @@ void utils_vector_remove(vector_t *vector, unsigned int index, size_t size) {
   vector->size--;
 }
 
-void utils_vector_remove_value(vector_t *vector, const void *data, size_t size) {
+void utils_vector_remove_value(vector_t *vector, const void *data,
+                               size_t size) {
   for (unsigned int i = 0; i < vector->size; i++) {
     if (memcmp(data, utils_vector_nth(vector, i, size), size) == 0) {
       utils_vector_remove(vector, i, size);

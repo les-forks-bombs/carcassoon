@@ -1,13 +1,12 @@
 #include <assert.h>
 #include <libcarcassonne/libcarcassonne.h>
+#include <libutils/lc.h>
 #include <libutils/vector.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "libutils/lc.h"
 
 return_code_t create_game(game_t *game, options_t *options) {
   if (game == NULL) {

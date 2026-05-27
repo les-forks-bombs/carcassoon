@@ -45,7 +45,8 @@ void deck_defausser(deck_t* deck, const tile_t* tile);
 /// @relates deck
 void deck_push(deck_t* deck, const tile_t* tile);
 
-/// @brief Permet de récupérer le prototype de tuile en spécifiant sa famille et si elle a un blason
+/// @brief Permet de récupérer le prototype de tuile en spécifiant sa famille et
+/// si elle a un blason
 /// @details Est utilisé dans les tests pour créer des scénarios spécifique
 /// @param deck Le deck ciblé
 /// @param family La famille de la tuile recherché

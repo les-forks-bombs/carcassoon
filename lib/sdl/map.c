@@ -4,16 +4,15 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_surface.h>
 #include <libcarcassonne/libcarcassonne.h>
+#include <libutils/hashmap.h>
+#include <libutils/vector.h>
 #include <sdl/consts.h>
+#include <sdl/forward.h>
 #include <sdl/map.h>
 #include <sdl/meeple.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
-#include "libutils/hashmap.h"
-#include "libutils/vector.h"
-#include "sdl/forward.h"
 
 static double get_tile_angle(int orientation) {
   switch (orientation) {

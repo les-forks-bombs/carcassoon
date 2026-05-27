@@ -1,14 +1,13 @@
 #include <assert.h>
 #include <libcarcassonne/ext_base_game_hooks.h>
 #include <libcarcassonne/libcarcassonne.h>
+#include <libutils/vector.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#include "libutils/vector.h"
 
 LIBCARCASSONNE_HOOK_IMPL(tile_place, 4, LIBCARCASSONNE_ACTION_PLACE_TILE)
 LIBCARCASSONNE_HOOK_IMPL(meeple_place, 5, LIBCARCASSONNE_ACTION_PLACE_MEEPLE)
@@ -253,7 +252,7 @@ static void update_score(engine_t                        *engine,
 
 return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
                                    action_t *action) {
-                                    (void)action;
+  (void)action;
   dispatch_t *dispatch = find_last_place_tile_dispatch(engine);
   if (dispatch == NULL) {
     return NULL_POINTER;
@@ -383,7 +382,7 @@ return_code_t give_back_meeples_free(void **state_store, engine_t *engine) {
 
 return_code_t give_back_meeples_list_actions(action_vector_t *actions,
                                              engine_t        *engine) {
-                                            (void)engine;
+  (void)engine;
   vector_alloc(actions, 1);
 
   action_t action = {0};
