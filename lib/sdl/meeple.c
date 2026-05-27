@@ -120,7 +120,7 @@ static SDL_FRect calc_meeple_rect(tile_slot_t slot, const SDL_FRect *tile_rect,
 void update_possible_meeples(appstate_t *as) {
   bool *possible_meeples = SDL_calloc(10, sizeof(bool));
 
-  for (int i = 0; i < vector_size(&as->all_actions); i++) {
+  for (unsigned int i = 0; i < vector_size(&as->all_actions); i++) {
     action_t *action = vector_nth(&as->all_actions, i);
     if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE &&
         action->order.place_meeple.meeple_type != NONE) {
