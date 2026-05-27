@@ -110,6 +110,7 @@ stages:
   stage: docs
   needs: []
   allow_failure: true
+  pages: true
   script:
     - make docs
   artifacts:

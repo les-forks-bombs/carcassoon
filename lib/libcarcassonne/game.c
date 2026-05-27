@@ -1,21 +1,12 @@
 #include <assert.h>
-#include <libcarcassonne/consts.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/options.h>
-#include <libcarcassonne/placed_tile.h>
-#include <libcarcassonne/tile.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/vector.h>
-#include <memory.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
-#include "libcarcassonne/forward.h"
-#include "libcarcassonne/meeple.h"
-#include "libcarcassonne/player.h"
 #include "libutils/lc.h"
 
 return_code_t create_game(game_t *game, options_t *options) {
@@ -237,8 +228,12 @@ return_code_t game_place_tile(game_t *game, const tile_t *tile, int x, int y,
 return_code_t game_remove_tile(game_t *game, int x, int y) {
   placed_tile_t **tile_ref = game_tile_at(game, x, y);
 
-  if (tile_ref == NULL) return OUT_OF_BOUNDS;
-  if (*tile_ref == NULL) return NO_TILE;
+  if (tile_ref == NULL) {
+    return OUT_OF_BOUNDS;
+  }
+  if (*tile_ref == NULL) {
+    return NO_TILE;
+  }
 
   placed_tile_t *placed_tile = *tile_ref;
 
@@ -359,7 +354,9 @@ return_code_t game_remove_meeple(game_t *game, int x, int y, int part_group) {
 
 bool game_is_tile_placeable(game_t *game, const tile_t *tile, int x, int y,
                             tile_orientation_t orientation) {
-  if (game == NULL || tile == NULL) return false;
+  if (game == NULL || tile == NULL) {
+    return false;
+  }
 
   if (x == 0 && y == 0) {
     return true;

@@ -1,11 +1,7 @@
 #pragma once
 
-#include <libcarcassonne/action.h>
-#include <libcarcassonne/consts.h>
 #include <libcarcassonne/extension.h>
-#include <libcarcassonne/tile.h>
-
-#include "libcarcassonne/forward.h"
+#include <libcarcassonne/libcarcassonne.h>
 
 struct meeple_place_hook_state {
   int               x, y;
@@ -30,10 +26,6 @@ struct removed_meeple {
   player_t*     player;  ///< Joueur propriétaire
 };
 
-/// @brief Vecteur de meeples retirés pour end_game
-ForwardDefinition(struct, removed_meeple);
-typedef Vector(removed_meeple_t) end_game_removed_meeples_vector_t;
-
 struct end_game_hook_state {
   /// @brief Score avant calcul final
   unsigned int saved_scores[LIBCARCASSONNE_MAX_PLAYERS];
@@ -49,36 +41,34 @@ struct give_back_scored_group {
   bool                              player_won[LIBCARCASSONNE_MAX_PLAYERS];
   end_game_removed_meeples_vector_t meeples;
 };
-ForwardDefinition(struct, give_back_scored_group);
-typedef Vector(give_back_scored_group_t) give_back_state_vector_t;
 
 /**
  * @brief Définis le hook pour placer une tile
  *
  */
-LIBCARCASSONNE_HOOK_DEF(tile_place, 4, LIBCARCASSONNE_ACTION_PLACE_TILE)
+LIBCARCASSONNE_HOOK_HEADER(tile_place)
 
 /**
  * @brief Définis le hook pour placer un meeple
  *
  */
-LIBCARCASSONNE_HOOK_DEF(meeple_place, 5, LIBCARCASSONNE_ACTION_PLACE_MEEPLE)
+LIBCARCASSONNE_HOOK_HEADER(meeple_place)
 
 /**
  * @brief Hook de jeu qui restitue les meeples dans des groupes terminés (ex.
  * abbaye, route ou ville)
  *
  */
-LIBCARCASSONNE_HOOK_DEF(give_back_meeples, 6, LIBCARCASSONNE_ACTION_NONE)
+LIBCARCASSONNE_HOOK_HEADER(give_back_meeples)
 
 /**
  * @brief Change le player courrant au prochain
  *
  */
-LIBCARCASSONNE_HOOK_DEF(next_player, 7, LIBCARCASSONNE_ACTION_NONE)
+LIBCARCASSONNE_HOOK_HEADER(next_player)
 
 /**
  * @brief Vérifie si la partie est terminée
  *
  */
-LIBCARCASSONNE_HOOK_DEF(end_game, 10, LIBCARCASSONNE_ACTION_NONE)
+LIBCARCASSONNE_HOOK_HEADER(end_game)

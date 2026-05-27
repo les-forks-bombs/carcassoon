@@ -1,5 +1,8 @@
-#include <libcarcassonne/deck.h>
+
+#include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
+
+#include "libutils/lc.h"
 
 /* Vérifie l'instanciation d'un deck */
 void deck_builds(void** state) {
@@ -30,7 +33,9 @@ void deck_seed_consistent(void** state) {
     assert_ptr_equal(r, deck_pick(&deck2));
 
     // au début, on vérifie que nos générateurs diffèrent bien
-    if (i < 1) assert_ptr_equal(r, deck_pick(&deck3));
+    if (i < 1) {
+      assert_ptr_equal(r, deck_pick(&deck3));
+    }
 
     i++;
   }

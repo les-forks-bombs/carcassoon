@@ -1,10 +1,12 @@
-#include "libcarcassonne/action.h"
+#include <libcarcassonne/libcarcassonne.h>
 #include <sdl/action.h>
 #include <stdio.h>
 
 #include "libcarcassonne/forward.h"
 #include "libutils/vector.h"
+#include "sdl/forward.h"
 #include "sdl/map.h"
+#include "sdl/meeple.h"
 
 void get_current_actions(appstate_t *as) {
   vector_free(&as->all_actions);
@@ -15,30 +17,35 @@ void get_current_actions(appstate_t *as) {
     return;
   }
 
-    put_first_action_in_appstate(as);
-    printf("prochain hook: %s\n",
-          (*vector_nth(&as->engine.hooks, as->engine.current_hook))->label);
-    printf("current_action: %d\n", as->current_action == NULL);
-    bool next_action_is_tile_placement =
-        as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_TILE;
-    if (next_action_is_tile_placement) {
-      update_possible_places(as);
-    } else {
-      update_possible_meeples(as);
-    }
+  put_first_action_in_appstate(as);
+  printf("prochain hook: %s\n",
+         (*vector_nth(&as->engine.hooks, as->engine.current_hook))->label);
+  printf("current_action: %d\n", as->current_action == NULL);
+  bool next_action_is_tile_placement =
+      as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_TILE;
+  if (next_action_is_tile_placement) {
+    update_possible_places(as);
+  } else {
+    update_possible_meeples(as);
+  }
 
-  if (vector_size(&as->all_actions)==1 && as->current_action->type==LIBCARCASSONNE_ACTION_PLACE_MEEPLE) {
+  if (vector_size(&as->all_actions) == 1 &&
+      as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE) {
     printf("Pas possible de placer un meeple, on dispatch\n");
     send_action_to_engine(as);
   }
-  printf("###### nombre d'actions possibles: %d\n",vector_size(&as->all_actions));
-  for (int i=0;i<vector_size(&as->all_actions);i++){
-    action_t *action = vector_nth(&as->all_actions,i);
-    if(action->type==LIBCARCASSONNE_ACTION_PLACE_MEEPLE){
-      printf("[ACTION MEEPLE %d] type = %d, groupe = %d\n",i,action->order.place_meeple.meeple_type,action->order.place_meeple.part_group);
-    }
-    else if(action->type==LIBCARCASSONNE_ACTION_PLACE_TILE){
-      printf("[ACTION TILE %d] x = %d, y = %d, rotation = %d\n",i,action->order.place_tile.x,action->order.place_tile.y,action->order.place_tile.orientation);
+  printf("###### nombre d'actions possibles: %d\n",
+         vector_size(&as->all_actions));
+  for (int i = 0; i < vector_size(&as->all_actions); i++) {
+    action_t *action = vector_nth(&as->all_actions, i);
+    if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE) {
+      printf("[ACTION MEEPLE %d] type = %d, groupe = %d\n", i,
+             action->order.place_meeple.meeple_type,
+             action->order.place_meeple.part_group);
+    } else if (action->type == LIBCARCASSONNE_ACTION_PLACE_TILE) {
+      printf("[ACTION TILE %d] x = %d, y = %d, rotation = %d\n", i,
+             action->order.place_tile.x, action->order.place_tile.y,
+             action->order.place_tile.orientation);
     }
   }
 }
@@ -55,7 +62,7 @@ void pass_to_action(appstate_t *as, int increment) {
   if (total_actions == 0) {
     return;
   }
-  int next_index = (int)as->action_index + increment;
+  int next_index = as->action_index + increment;
 
   if (next_index >= (int)total_actions) {
     put_first_action_in_appstate(as);
@@ -70,7 +77,8 @@ void pass_to_action(appstate_t *as, int increment) {
 }
 
 void send_action_to_engine(appstate_t *as) {
-  // printf("hook actuel: %s\n", (*vector_nth(&as->engine.hooks, as->engine.current_hook))->label);
+  // printf("hook actuel: %s\n", (*vector_nth(&as->engine.hooks,
+  // as->engine.current_hook))->label);
   return_code_t result = dispatch_action(&as->engine, *as->current_action);
   get_current_actions(as);
 }

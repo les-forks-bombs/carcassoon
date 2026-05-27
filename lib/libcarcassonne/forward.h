@@ -1,11 +1,10 @@
 #pragma once
 
-#include <libcarcassonne/consts.h>
+#include <libcarcassonne/enums.h>
+#include <libcarcassonne/macros.h>
 #include <libutils/hashmap.h>
 #include <libutils/lc.h>
 #include <libutils/vector.h>
-
-#define ForwardDefinition(type, name) typedef type name name##_t
 
 ForwardDefinition(struct, engine);
 ForwardDefinition(struct, action);
@@ -20,7 +19,6 @@ ForwardDefinition(struct, options);
 ForwardDefinition(struct, placed_tile_group);
 ForwardDefinition(struct, placed_tile);
 ForwardDefinition(struct, player);
-ForwardDefinition(struct, prng_mersenne_twister_state);
 ForwardDefinition(struct, tile);
 ForwardDefinition(struct, vector2d);
 ForwardDefinition(struct, extension);
@@ -33,6 +31,13 @@ ForwardDefinition(struct, prochain_joueur_state);
 ForwardDefinition(struct, end_game_hook_state);
 ForwardDefinition(struct, placed_tile_group_eval_points);
 ForwardDefinition(struct, tile_slot);
+
+ForwardDefinition(struct, give_back_scored_group);
+/// @brief Vecteur de meeples retirés pour end_game
+ForwardDefinition(struct, removed_meeple);
+
+typedef Vector(removed_meeple_t) end_game_removed_meeples_vector_t;
+typedef Vector(give_back_scored_group_t) give_back_state_vector_t;
 
 typedef List(const tile_t *) deck_list_t;
 typedef List(placed_tile_t *) placed_tile_list_t;
@@ -51,8 +56,6 @@ typedef Vector(placed_tile_group_eval_points_t)
 typedef Vector(vector2d_t) vector2d_vector_t;
 
 typedef HashMap(unsigned int, unsigned int) players_scores_t;
-
-typedef enum return_code return_code_t;
 
 typedef return_code_t (*extension_forward_t)(void    **state, engine_t *,
                                              action_t *action);
