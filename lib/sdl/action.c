@@ -5,13 +5,36 @@
 
 void get_current_actions(AppState *as){
     action_vector_t actions = engine_get_actions(&as->engine);
+    action_t *action_none = NULL;
 
+    if(actions.meta.size == 0){
+        printf("Aucune action possible\n");
+        return;
+    }
     vector_free(&as->all_actions);
 
     for (int i = 0; i < vector_size(&actions); i++) {
         action_t *a = vector_nth(&actions, i);
         if (a->type == LIBCARCASSONNE_ACTION_PLACE_TILE || a->order.place_meeple.tile!=NULL) {
             vector_append(&as->all_actions, a);
+        }
+        else if (a->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE && a->order.place_meeple.tile==NULL) {
+            printf("Meeple none ajouté\n");
+            action_none = a;
+        }
+    }
+    if(vector_size(&as->all_actions)==0){
+        printf("Pas de placement de meeple possible, passer au placement de tile\n");
+        dispatch_action(&as->engine, *action_none);
+        get_current_actions(as);
+        put_first_action_in_appstate(as);
+        printf("prochain hook: %s\n", (*vector_nth(&as->engine.hooks,as->engine.current_hook))->label);
+        printf("current_action: %d\n", as->current_action==NULL);
+        bool next_action_is_tile_placement = as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_TILE;
+        if (next_action_is_tile_placement) {
+            update_possible_places(as);
+        } else {
+            update_possible_meeples(as);
         }
     }
 }
@@ -45,9 +68,12 @@ void pass_to_action(AppState *as, int increment) {
 }
 
 void send_action_to_engine(AppState *as){
+    printf("hook actuel: %s\n", (*vector_nth(&as->engine.hooks,as->engine.current_hook))->label);
     dispatch_action(&as->engine, *as->current_action);
     get_current_actions(as);
     put_first_action_in_appstate(as);
+    printf("prochain hook: %s\n", (*vector_nth(&as->engine.hooks,as->engine.current_hook))->label);
+    printf("current_action: %d\n", as->current_action==NULL);
     bool next_action_is_tile_placement = as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_TILE;
     if (next_action_is_tile_placement) {
         update_possible_places(as);
