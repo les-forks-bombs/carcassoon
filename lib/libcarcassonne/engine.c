@@ -91,7 +91,6 @@ return_code_t start_game(engine_t *engine) {
 }
 
 return_code_t dispatch_action(engine_t *engine, action_t action) {
-  // 👇 Blocage si partie non démarrée ou terminée
   if (engine->game.state == GAME_STATE_NOT_STARTED) {
     return GAME_NOT_STARTED;
   }
