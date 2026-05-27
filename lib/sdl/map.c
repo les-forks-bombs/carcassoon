@@ -26,7 +26,7 @@ static double get_tile_angle(int orientation) {
   }
 }
 
-static SDL_Texture *get_tile_texture(AppState *as, const tile_t *tile) {
+static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
   if (tile == NULL || tile->texture == NULL) return as->temp_tex;
 
   char *texturen = tile->texture;
@@ -46,7 +46,7 @@ static SDL_Texture *get_tile_texture(AppState *as, const tile_t *tile) {
   return as->temp_tex;
 }
 
-static void draw_tile(AppState *as, const tile_t *tile, const SDL_FRect *dest, double angle, Uint8 alpha) {
+static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest, double angle, Uint8 alpha) {
   SDL_Texture *texture = get_tile_texture(as, tile);
   if (texture == NULL) return;
 
@@ -69,7 +69,7 @@ static void draw_selection_border(SDL_Renderer *renderer, const SDL_FRect *dest)
   }
 }
 
-static void render_occupied_cell(AppState *as, placed_tile_t *ptt, const SDL_FRect *dest) {
+static void render_occupied_cell(appstate_t *as, placed_tile_t *ptt, const SDL_FRect *dest) {
   double angle = get_tile_angle(ptt->orientation);
   
   draw_tile(as, ptt->parent, dest, angle, 255);
@@ -81,7 +81,7 @@ static void render_occupied_cell(AppState *as, placed_tile_t *ptt, const SDL_FRe
   render_placed_meeple(ptt, as, dest, angle);
 }
 
-static void render_empty_cell(AppState *as, int table_x, int table_y, const SDL_FRect *dest) {
+static void render_empty_cell(appstate_t *as, int table_x, int table_y, const SDL_FRect *dest) {
   vector2d_t pos = {.x = table_x, .y = table_y};
   if (!vector_contains(&as->possibles_places, &pos)) return;
 
@@ -100,7 +100,7 @@ static void render_empty_cell(AppState *as, int table_x, int table_y, const SDL_
   }
 }
 
-void render_map(AppState *as) {
+void render_map(appstate_t *as) {
   int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
   int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
 
@@ -113,8 +113,8 @@ void render_map(AppState *as) {
       float y_render    = (world_y - as->camera->y) * as->camera->zoom;
       float size_zoomed = (float)MAP_TILE_SIZE * as->camera->zoom;
 
-      if (x_render + size_zoomed > 0 && x_render < WINDOW_WIDTH &&
-          y_render + size_zoomed > 0 && y_render < WINDOW_HEIGHT) {
+      if (x_render + size_zoomed > 0 && x_render < as->window_width &&
+          y_render + size_zoomed > 0 && y_render < as->window_height) {
         
         SDL_FRect dest = {x_render, y_render, size_zoomed, size_zoomed};
         placed_tile_t *ptt = *game_tile_at(&as->engine.game, table_x, table_y);
@@ -131,7 +131,7 @@ void render_map(AppState *as) {
   }
 }
 
-void update_possible_places(AppState *as) {
+void update_possible_places(appstate_t *as) {
   vector_free(&as->possibles_places);
   vector_alloc(&as->possibles_places, 5);
 

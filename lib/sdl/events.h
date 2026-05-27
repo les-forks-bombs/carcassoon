@@ -3,8 +3,9 @@
 
 #include <SDL3/SDL.h>
 #include <sdl/appstate.h>
+#include <sdl/camera.h>
 
-SDL_AppResult handle_mouse_event_(AppState *as, SDL_Event *event);
-SDL_AppResult handle_key_event_(AppState *as, SDL_Keycode key_val);
+SDL_AppResult handle_mouse_event_(appstate_t *as, SDL_Event *event);
+SDL_AppResult handle_key_event_(appstate_t *as, SDL_Keycode key_val);
 
 #endif
