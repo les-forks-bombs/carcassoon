@@ -1,13 +1,13 @@
+#include <sdl/action.h>
 #include <sdl/consts.h>
 #include <sdl/game_test.h>
-#include <sdl/consts.h>
+#include <sdl/meeple.h>
+
 #include "libcarcassonne/engine.h"
 #include "libcarcassonne/ext_base_game.h"
 #include "libcarcassonne/forward.h"
 #include "libutils/vector.h"
 #include "sdl/map.h"
-#include <sdl/action.h>
-#include <sdl/meeple.h>
 
 void init_game(AppState *as) {
   const tile_t *tile;
@@ -63,8 +63,8 @@ void init_game(AppState *as) {
 
     dispatch_action(&as->engine, action);
   }
-  tile = deck_find_tile(&as->engine.game.deck, turns[9].tile_id,
-                          turns[9].blason);
+  tile =
+      deck_find_tile(&as->engine.game.deck, turns[9].tile_id, turns[9].blason);
   action.type                         = LIBCARCASSONNE_ACTION_PLACE_TILE;
   action.order.place_tile.tile        = tile;
   action.order.place_tile.x           = turns[9].x;
@@ -72,6 +72,4 @@ void init_game(AppState *as) {
   action.order.place_tile.orientation = turns[9].orientation;
 
   dispatch_action(&as->engine, action);
-
-
 }
