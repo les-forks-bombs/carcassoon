@@ -26,7 +26,7 @@ ForwardDefinition(struct, extension_process_hook);
 ForwardDefinition(struct, meeple_place_hook_state);
 ForwardDefinition(struct, dispatch);
 ForwardDefinition(struct, tile_place_hook_state);
-ForwardDefinition(struct, rendre_meeple_hook_state);
+ForwardDefinition(struct, give_back_meeple_hook_state);
 ForwardDefinition(struct, prochain_joueur_state);
 ForwardDefinition(struct, end_game_hook_state);
 ForwardDefinition(struct, placed_tile_group_eval_points);
