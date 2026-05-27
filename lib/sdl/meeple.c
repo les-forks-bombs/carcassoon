@@ -5,6 +5,7 @@
 #include <sdl/meeple.h>
 #include <stdio.h>
 
+#include "libcarcassonne/action.h"
 #include "sdl/consts.h"
 
 void render_placed_meeple(placed_tile_t *tile, appstate_t *as,
@@ -62,7 +63,7 @@ void render_possible_meeples(placed_tile_t *tile, appstate_t *as,
 
     placed_tile_group_t *ptg = tile->groups[g];
 
-    if (ptg != NULL && as->possible_meeples[g]) {
+    if (ptg != NULL && as->possible_meeples[g] && as->current_action->order.place_meeple.meeple_type!=NONE) {
       SDL_Color c = players_colors[as->engine.game.current_player];
       SDL_SetTextureColorMod(texture, c.r, c.g, c.b);
 
