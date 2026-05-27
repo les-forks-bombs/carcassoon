@@ -47,6 +47,7 @@ return_code_t meeple_place_bw(void **state_store, engine_t *engine) {
 }
 
 return_code_t meeple_place_free(void **state_store, engine_t *engine) {
+  (void)engine;
   meeple_place_hook_state_t *state = *state_store;
 
   free(state);
@@ -181,6 +182,7 @@ return_code_t tile_place_bw(void **state_store, engine_t *engine) {
 }
 
 return_code_t tile_place_free(void **state_store, engine_t *engine) {
+  (void)engine;
   tile_place_hook_state_t *state = *state_store;
 
   free(state);
@@ -251,6 +253,7 @@ static void update_score(engine_t                        *engine,
 
 return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
                                    action_t *action) {
+                                    (void)action;
   dispatch_t *dispatch = find_last_place_tile_dispatch(engine);
   if (dispatch == NULL) {
     return NULL_POINTER;
@@ -380,6 +383,7 @@ return_code_t give_back_meeples_free(void **state_store, engine_t *engine) {
 
 return_code_t give_back_meeples_list_actions(action_vector_t *actions,
                                              engine_t        *engine) {
+                                            (void)engine;
   vector_alloc(actions, 1);
 
   action_t action = {0};
@@ -423,11 +427,14 @@ return_code_t next_player_bw(void **state_store, engine_t *engine) {
 }
 
 return_code_t next_player_free(void **state_store, engine_t *engine) {
+  (void)state_store;
+  (void)engine;
   return SUCCESS;
 }
 
 return_code_t next_player_list_actions(action_vector_t *actions,
                                        engine_t        *engine) {
+  (void)engine;
   actions = calloc(1, sizeof(action_vector_t));
 
   vector_alloc(actions, 1);

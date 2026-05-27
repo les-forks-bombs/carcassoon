@@ -1,4 +1,3 @@
-#pragma once
 #include <libcarcassonne/ext_base_game.h>
 #include <libcarcassonne/extensions_list.h>
 #include <libcarcassonne/libcarcassonne.h>
