@@ -95,7 +95,7 @@ static void render_empty_cell(AppState *as, int table_x, int table_y, const SDL_
     SDL_RenderFillRect(as->renderer, dest);*/
   } else {
     SDL_SetRenderDrawBlendMode(as->renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(as->renderer, 255, 255, 255, 100);
+    SDL_SetRenderDrawColor(as->renderer, 255, 255, 255, 150);
     SDL_RenderFillRect(as->renderer, dest);
   }
 }
