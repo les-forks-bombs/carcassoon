@@ -123,7 +123,7 @@ placed_tile_t **game_tile_at(game_t *game, int colonne, int ligne) {
   int zero = LIBCARCASSONNE_TILES_COUNT - 1;
   int size = (LIBCARCASSONNE_TILES_COUNT * 2) - 1;
 
-  int index = ((zero - ligne) * size) + (zero - colonne);
+  int index = ((colonne + zero) * size) + (ligne + zero);
 
   return &game->map[index];
 }

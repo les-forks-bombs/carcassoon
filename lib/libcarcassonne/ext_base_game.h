@@ -503,7 +503,7 @@ static const tile_t
              .blason       = false,
              .amount       = 2,
              .texture      = "tile_06.png",
-             .slots        = {{.x = 0.5, .y = 0.5, .group = 0},
+             .slots        = {{.x = 0.5, .y = 0.5, .group = C},
                               {.x = 0.2, .y = 0.2, .group = A},
                               {.x = 0.5, .y = 0.82, .group = B}},
              .nb_slots     = 3},
