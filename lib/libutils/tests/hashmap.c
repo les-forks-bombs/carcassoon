@@ -21,7 +21,7 @@ void utils_hashmap_get_set_test(void** state) {
 
   hashmap_set(&map, key1, sizeof(key1), &val1, sizeof(val1));
 
-  int *res = hashmap_get(&map, key1, sizeof(key1));
+  int* res = hashmap_get(&map, key1, sizeof(key1));
   assert_non_null(res);
   assert_int_equal(*res, val1);
 

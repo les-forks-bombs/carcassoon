@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[]) {
   options_t config = parse_options(argc, argv);
-  char* reason = validate_options(&config);
+  char*     reason = validate_options(&config);
   if (reason != NULL) {
     printf("Configuration invalide: %s\n", reason);
     return 1;

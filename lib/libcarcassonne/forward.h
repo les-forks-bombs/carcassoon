@@ -1,9 +1,9 @@
 #pragma once
 
 #include <libcarcassonne/consts.h>
+#include <libutils/hashmap.h>
 #include <libutils/lc.h>
 #include <libutils/vector.h>
-#include <libutils/hashmap.h>
 
 #define ForwardDefinition(type, name) typedef type name name##_t
 
@@ -50,7 +50,7 @@ typedef Vector(placed_tile_group_eval_points_t)
     placed_tile_group_eval_points_vector_t;
 typedef Vector(vector2d_t) vector2d_vector_t;
 
-typedef HashMap(unsigned int,unsigned int) players_scores_t;
+typedef HashMap(unsigned int, unsigned int) players_scores_t;
 
 typedef enum return_code return_code_t;
 
