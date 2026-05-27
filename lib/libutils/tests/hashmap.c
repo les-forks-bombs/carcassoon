@@ -4,6 +4,7 @@
 #include <string.h>
 
 void utils_hashmap_create_test(void** state) {
+  (void)state;
   char_char_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
@@ -12,6 +13,7 @@ void utils_hashmap_create_test(void** state) {
 }
 
 void utils_hashmap_get_set_test(void** state) {
+  (void)state;
   char_int_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
@@ -30,6 +32,7 @@ void utils_hashmap_get_set_test(void** state) {
 }
 
 void utils_hashmap_string_test(void** state) {
+  (void)state;
   char_char_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
@@ -58,6 +61,7 @@ void utils_hashmap_string_test(void** state) {
 }
 
 void utils_hashmap_pointer_test(void** state) {
+  (void)state;
   char_int_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
@@ -85,6 +89,7 @@ void utils_hashmap_pointer_test(void** state) {
 }
 
 void utils_hashmap_update_test(void** state) {
+  (void)state;
   char_int_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
@@ -111,6 +116,7 @@ void utils_hashmap_update_test(void** state) {
 }
 
 void utils_hashmap_remove_test(void** state) {
+  (void)state;
   char_char_map_t map;
   memset(&map, 0, sizeof(map));
   hashmap_create(&map, 5);
