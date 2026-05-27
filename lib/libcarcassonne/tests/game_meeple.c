@@ -1,8 +1,7 @@
 
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
-
-#include "libutils/vector.h"
+#include <libutils/vector.h>
 
 // FRRR : parts_groups = {A,A,A,B,G,C,E,D,F}
 // Groupe B = ROAD (face OUEST, position 3)

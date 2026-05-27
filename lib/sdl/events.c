@@ -6,8 +6,7 @@
 #include <sdl/action.h>
 #include <sdl/consts.h>
 #include <sdl/events.h>
-
-#include "sdl/forward.h"
+#include <sdl/forward.h>
 
 SDL_AppResult handle_mouse_event_(appstate_t *as, SDL_Event *event) {
   float mouseX;

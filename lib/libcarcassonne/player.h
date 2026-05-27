@@ -1,9 +1,8 @@
 #pragma once
 
+#include <libcarcassonne/enums.h>
+#include <libcarcassonne/forward.h>
 #include <stdbool.h>
-
-#include "libcarcassonne/enums.h"
-#include "libcarcassonne/forward.h"
 
 struct player {
   /// @brief Identifiant unique du joueur
@@ -32,7 +31,7 @@ player_t create_player(player_type_t type, meeple_count_vector_t* meeples_count,
 
 /// @brief Libère la mémoire d'une instance de joueur
 /// @param player Le joueur à libérer
-void     free_player(player_t* player);
+void free_player(player_t* player);
 
 /// @brief Détermine si le joueur a encore des meeples à placer
 /// @param player Le joueur à regarder

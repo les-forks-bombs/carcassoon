@@ -1,8 +1,7 @@
 
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
-
-#include "libutils/lc.h"
+#include <libutils/lc.h>
 
 /* Vérifie l'instanciation d'un deck */
 void deck_builds(void** state) {

@@ -26,7 +26,7 @@ struct tile {
   /// @brief nom de l'image correspondante
   char* texture;
   /// @brief Emplacements possibles pour les meeples
-  tile_slot_t  slots[9];
+  tile_slot_t slots[9];
   /// @brief Nombre effectif de slots
   unsigned int nb_slots;
 };
@@ -38,9 +38,9 @@ struct tile {
 /// @param connexion_face La face de connexion
 /// @return La famille de la face de connexion
 /// @related tile_t
-tile_part_type_t   tile_get_family_face(const tile_t*      tile,
-                                        tile_orientation_t orientation,
-                                        tile_orientation_t connexion_face);
+tile_part_type_t tile_get_family_face(const tile_t*      tile,
+                                      tile_orientation_t orientation,
+                                      tile_orientation_t connexion_face);
 
 /// @brief Retourne l'inverse d'une orientation
 /// Ex: NORTH <=> SOUTH, EAST <=> WEST

@@ -1,5 +1,5 @@
 #ifndef _WIN32
-#define _POSIX_C_SOURCE 200809L // NOLINT(bugprone-reserved-identifier)
+#define _POSIX_C_SOURCE 200809L  // NOLINT(bugprone-reserved-identifier)
 #endif
 
 #ifndef _WIN32

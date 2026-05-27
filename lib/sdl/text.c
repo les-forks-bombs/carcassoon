@@ -3,9 +3,8 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_surface.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <sdl/forward.h>
 #include <sdl/text.h>
-
-#include "sdl/forward.h"
 
 text_object_t *init_text_object(SDL_Renderer *renderer, char *font_path,
                                 float font_size, const char *content,

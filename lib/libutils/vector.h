@@ -12,7 +12,7 @@ typedef struct {
   /// @brief La capacité totale du vecteur
   unsigned int caps;
   /// @brief Pointeur vers les données du vecteur
-  void        *data;
+  void *data;
 } vector_t;
 
 /// @brief Macro définissant un vecteur du type spécifié
@@ -21,7 +21,7 @@ typedef struct {
     vector_t meta;       \
     type    *type_ghost; \
   }  // NOLINT(bugprone-macro-parentheses)
-  
+
 unsigned int utils_vector_alloc(vector_t *vector, size_t capacity,
                                 size_t element);
 unsigned int utils_vector_grow(vector_t *vector, size_t size, size_t element);

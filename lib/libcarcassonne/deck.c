@@ -108,10 +108,9 @@ void deck_defausser(deck_t* deck, const tile_t* tile) {
   list_insert(&deck->list, &tile, index);
 }
 
-void deck_push(deck_t* deck, const tile_t* tile){
+void deck_push(deck_t* deck, const tile_t* tile) {
   list_prepend(&deck->list, &tile);
 }
-
 
 const tile_t* deck_find_tile(deck_t* deck, char* family, bool blason) {
   list_node_t* curr = list_head(&deck->list);

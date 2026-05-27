@@ -6,14 +6,13 @@
 #include <SDL3/SDL_timer.h>
 #include <SDL3/SDL_video.h>
 #include <libcarcassonne/libcarcassonne.h>
+#include <libutils/hashmap.h>
+#include <libutils/path.h>
+#include <libutils/vector.h>
 #include <sdl/forward.h>
+#include <sdl/resolver.h>
 #include <stdbool.h>
 #include <stdio.h>
-
-#include "libutils/hashmap.h"
-#include "libutils/path.h"
-#include "libutils/vector.h"
-#include "sdl/resolver.h"
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
@@ -63,8 +62,8 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   SDL_SetRenderDrawColor(as->renderer, 0, 0, 0, 255);
   SDL_RenderRect(as->renderer, &as->map_viewport);*/
 
-  for (unsigned int nb_players = 0; nb_players < as->engine.game.options->players;
-       nb_players++) {
+  for (unsigned int nb_players = 0;
+       nb_players < as->engine.game.options->players; nb_players++) {
     render_banner(as->banners[nb_players], as->renderer);
   }
   SDL_RenderPresent(as->renderer);
@@ -157,13 +156,15 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
   appstate_t *as = (appstate_t *)appstate;
   switch (event->type) {
-  case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+    case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
       as->window_width   = (float)event->window.data1;
       as->window_height  = (float)event->window.data2;
       as->map_viewport.w = as->window_width;
       as->map_viewport.h = as->window_height;
-      printf("Nouvelle taille de rendu en pixels : %d x %d\n", event->window.data1, event->window.data2);
-      // printf("Viewport size : x = %f, y = %f, w = %f, h = %f\n",as->map_viewport.x,as->map_viewport.y,as->map_viewport.w,as->map_viewport.h);
+      printf("Nouvelle taille de rendu en pixels : %d x %d\n",
+             event->window.data1, event->window.data2);
+      // printf("Viewport size : x = %f, y = %f, w = %f, h =
+      // %f\n",as->map_viewport.x,as->map_viewport.y,as->map_viewport.w,as->map_viewport.h);
       center_camera_on_start(as);
       break;
     case SDL_EVENT_QUIT:
@@ -192,8 +193,8 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
     free_options(&as->engine.config);
     destroy_engine(&as->engine);
     SDL_DestroyTexture(as->temp_tex);
-    for (unsigned int nb_players = 0; nb_players < as->engine.game.options->players;
-         nb_players++) {
+    for (unsigned int nb_players = 0;
+         nb_players < as->engine.game.options->players; nb_players++) {
       destroy_banner(as->banners[nb_players]);
     }
     SDL_free(as->banners);
