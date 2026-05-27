@@ -176,7 +176,7 @@ return_code_t tile_place_bw(void **state_store, engine_t *engine) {
 
   return_code_t code = game_remove_tile(&engine->game, state->x, state->y);
   if (code == SUCCESS) {
-    deck_defausser(&engine->game.deck, original);
+    deck_push(&engine->game.deck, original);
   }
   return code;
 }

@@ -32,10 +32,17 @@ void free_deck(deck_t deck);
 const tile_t* deck_pick(deck_t* deck);
 
 /// @brief Permet de remettre une tile dans le deck
-/// @details Est utilisé dans le cas ou la tile proposée n'est pas utilisable
+/// @details Est utilisé dans le cas où la tile proposée n'est pas utilisable
 /// @param deck Le deck ciblé
 /// @param tile La tile a remettre dans la pile
 /// @relates deck
 void deck_defausser(deck_t* deck, const tile_t* tile);
+
+/// @brief Permet de remettre une tile dans le deck au début
+/// @details Est utilisé dans le cas où on annule une pose de tuile
+/// @param deck Le deck ciblé
+/// @param tile La tile a remettre dans la pile
+/// @relates deck
+void deck_push(deck_t* deck, const tile_t* tile);
 
 const tile_t* deck_find_tile(deck_t* deck, char* family, bool blason);
