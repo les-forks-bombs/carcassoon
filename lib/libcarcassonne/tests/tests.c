@@ -1,5 +1,6 @@
 #include <libcarcassonne/ext_base_game.h>
 #include <libcarcassonne/options.h>
+#include <libcarcassonne/tests/tests.h>
 
 static const extension_t* base_ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
 
