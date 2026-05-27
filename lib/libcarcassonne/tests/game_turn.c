@@ -1,6 +1,6 @@
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/options.h>
-#include <libcarcassonne/tests/tests.h>
+#include <cmocka.h>
+#include <libcarcassonne/ext_base_game.h>
+#include <libcarcassonne/libcarcassonne.h>
 
 // Options locales pour que max_turns soit maîtrisé indépendamment du global
 static const extension_t* local_base_ptr_table[] = {

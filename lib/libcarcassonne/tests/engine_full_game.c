@@ -1,11 +1,9 @@
-#include <libcarcassonne/action.h>
-#include <libcarcassonne/consts.h>
-#include <libcarcassonne/engine.h>
+#include <cmocka.h>
 #include <libcarcassonne/ext_base_game.h>
-#include <libcarcassonne/game.h>
-#include <libcarcassonne/player.h>
-#include <libcarcassonne/tests/tests.h>
+#include <libcarcassonne/libcarcassonne.h>
 #include <stdio.h>
+
+#include "libutils/vector.h"
 
 static options_t full_game_opts(void) {
   static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
@@ -67,7 +65,9 @@ void engine_full_game_with_reverts(void** state) {
   assert_int_equal(start_game(&engine), SUCCESS);
 
   /* ── Phase 1 : 5 tours normaux ─────────────────────────────────────── */
-  for (int i = 0; i < 5; i++) play_turn(&engine, 0, 0);
+  for (int i = 0; i < 5; i++) {
+    play_turn(&engine, 0, 0);
+  }
   unsigned int epoch_r1 = (unsigned int)vector_size(&engine.dispatchs);
 
   /* ── Revert 1 ───────────────────────────────────────────────────────── */
@@ -83,7 +83,9 @@ void engine_full_game_with_reverts(void** state) {
   play_turn(&engine, 2, 1);
 
   /* ── Phase 2 : 5 tours supplémentaires ─────────────────────────────── */
-  for (int i = 0; i < 5; i++) play_turn(&engine, 0, 0);
+  for (int i = 0; i < 5; i++) {
+    play_turn(&engine, 0, 0);
+  }
   unsigned int epoch_r2 = (unsigned int)vector_size(&engine.dispatchs);
 
   /* ── Revert 2 ───────────────────────────────────────────────────────── */

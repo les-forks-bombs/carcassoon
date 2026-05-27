@@ -1,25 +1,10 @@
 #pragma once
 
-#include <libcarcassonne/consts.h>
 #include <libcarcassonne/deck.h>
-#include <libcarcassonne/meeple.h>
-#include <libcarcassonne/options.h>
-#include <libcarcassonne/placed_tile.h>
 #include <libcarcassonne/player.h>
-#include <libcarcassonne/tile.h>
-#include <libcarcassonne/vector2d.h>
 #include <libutils/lc.h>
 #include <libutils/vector.h>
 #include <stdbool.h>
-
-#include "libcarcassonne/forward.h"
-
-/// @brief État de la partie
-typedef enum {
-  GAME_STATE_NOT_STARTED = 0,  // Partie non démarrée
-  GAME_STATE_PLAYING     = 1,  // Partie en cours
-  GAME_STATE_FINISHED    = 2,  // Partie terminée
-} game_state_t;
 
 /// @brief Représente une partie
 struct game {
@@ -62,16 +47,15 @@ return_code_t create_game(game_t *game, options_t *options);
 void destroy_game(game_t *game);
 
 /// @brief Retourne une référence vers l'emplacement ou la tile est enregistrée
-/// @param coordinates_x La cordonnée x
-/// @param coordinates_y La cordonnée y
+/// @param colonne La cordonnée x
+/// @param ligne La cordonnée y
 /// @return Une référence vers l'emplacement dans `map`
 /// @related game_t
-placed_tile_t **game_tile_at(game_t *game, int coordinates_x,
-                             int coordinates_y);
+placed_tile_t **game_tile_at(game_t *game, int colonne, int ligne);
 
-return_code_t game_place_tile(game_t *, const tile_t *tile, int x, int y,
-                              tile_orientation_t orientation);
-return_code_t game_remove_tile(game_t *, int x, int y);
+return_code_t game_place_tile(game_t * /*game*/, const tile_t *tile, int x,
+                              int y, tile_orientation_t orientation);
+return_code_t game_remove_tile(game_t * /*game*/, int x, int y);
 
 /// @brief Détermine si une tuile peut être placé à l'emplacement désigné
 /// @param game Le jeu dans lequel placer la tuile
