@@ -1,5 +1,4 @@
 ---
-Checks: 'clang-analyzer-*,performance-*,misc-*,bugprone-*,portability-*,readability-*'
 WarningsAsErrors: ''
 HeaderFileExtensions:
   - ''
@@ -17,3 +16,14 @@ ExcludeHeaderFilterRegex: ''
 FormatStyle:     none
 CheckOptions:    {}
 SystemHeaders:   false
+Checks: >
+  clang-analyzer-*,
+  performance-*,
+  misc-*,
+  bugprone-*,
+  portability-*,
+  readability-*,
+  -misc-include-cleaner,
+  -google-build-using-namespace,
+  -bugprone-macro-parentheses,
+  -misc-use-internal-linkage
