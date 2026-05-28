@@ -1,7 +1,7 @@
 #pragma once
 
-#include "libcarcassonne/enums.h"
-#include "libcarcassonne/forward.h"
+#include <libcarcassonne/enums.h>
+#include <libcarcassonne/forward.h>
 
 /// @brief Action de placement de tuile
 struct action_place_tile {

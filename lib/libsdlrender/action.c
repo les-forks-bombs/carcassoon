@@ -1,17 +1,17 @@
 #include <assert.h>
+#include <libcarcassonne/forward.h>
 #include <libcarcassonne/libcarcassonne.h>
-#include <sdl/action.h>
+#include <libsdlrender/action.h>
+#include <libsdlrender/banner.h>
+#include <libsdlrender/forward.h>
+#include <libsdlrender/map.h>
+#include <libsdlrender/meeple.h>
+#include <libutils/vector.h>
 #include <stdio.h>
-
-#include "libcarcassonne/forward.h"
-#include "libutils/vector.h"
-#include "sdl/forward.h"
-#include "sdl/map.h"
-#include "sdl/meeple.h"
 
 void get_current_actions(appstate_t *as) {
   vector_free(&as->all_actions);
-  as->all_actions = engine_get_actions(&as->engine);
+  as->all_actions = engine_get_actions(as->engine);
 
   if (as->all_actions.meta.size == 0) {
     printf("Aucune action possible\n");
@@ -20,7 +20,7 @@ void get_current_actions(appstate_t *as) {
 
   put_first_action_in_appstate(as);
   printf("prochain hook: %s\n",
-         (*vector_nth(&as->engine.hooks, as->engine.current_hook))->label);
+         (*vector_nth(&as->engine->hooks, as->engine->current_hook))->label);
   printf("current_action: %d\n", as->current_action == NULL);
   bool next_action_is_tile_placement =
       as->current_action->type == LIBCARCASSONNE_ACTION_PLACE_TILE;
@@ -80,7 +80,8 @@ void pass_to_action(appstate_t *as, int increment) {
 void send_action_to_engine(appstate_t *as) {
   // printf("hook actuel: %s\n", (*vector_nth(&as->engine.hooks,
   // as->engine.current_hook))->label);
-  return_code_t result = dispatch_action(&as->engine, *as->current_action);
-  assert(result == SUCCESS || result == NO_PROGRESS);
+  return_code_t result = dispatch_action(as->engine, *as->current_action);
+  // assert(result == SUCCESS);
   get_current_actions(as);
+  synchronize_banners(as);
 }

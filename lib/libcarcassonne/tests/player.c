@@ -1,9 +1,8 @@
 
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
+#include <libutils/vector.h>
 #include <stdlib.h>
-
-#include "libutils/vector.h"
 
 void player_create_initializes_fields(void** state) {
   (void)state;

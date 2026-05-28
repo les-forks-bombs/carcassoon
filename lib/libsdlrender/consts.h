@@ -1,5 +1,4 @@
-#ifndef H_LIBSDL_CONSTS
-#define H_LIBSDL_CONSTS
+#pragma once
 
 #include <SDL3/SDL_pixels.h>
 #include <libcarcassonne/libcarcassonne.h>
@@ -16,5 +15,3 @@
 
 static SDL_Color players_colors[] = {
     {255, 0, 0, 255}, {0, 0, 255, 255}, {255, 0, 255, 255}, {0, 255, 255, 255}};
-
-#endif

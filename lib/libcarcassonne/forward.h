@@ -26,11 +26,13 @@ ForwardDefinition(struct, extension_process_hook);
 ForwardDefinition(struct, meeple_place_hook_state);
 ForwardDefinition(struct, dispatch);
 ForwardDefinition(struct, tile_place_hook_state);
-ForwardDefinition(struct, rendre_meeple_hook_state);
+ForwardDefinition(struct, give_back_meeple_hook_state);
 ForwardDefinition(struct, prochain_joueur_state);
 ForwardDefinition(struct, end_game_hook_state);
 ForwardDefinition(struct, placed_tile_group_eval_points);
 ForwardDefinition(struct, tile_slot);
+ForwardDefinition(struct, discarded_tile);
+ForwardDefinition(struct, pick_tile_hook_state);
 
 ForwardDefinition(struct, give_back_scored_group);
 /// @brief Vecteur de meeples retirés pour end_game
@@ -42,6 +44,7 @@ typedef Vector(give_back_scored_group_t) give_back_state_vector_t;
 typedef List(const tile_t *) deck_list_t;
 typedef List(placed_tile_t *) placed_tile_list_t;
 typedef List(const extension_process_hook_t *) extension_process_hooks_list_t;
+typedef List(const discarded_tile_t) discarded_tile_list_t;
 typedef Vector(action_t) action_vector_t;
 typedef Vector(const extension_process_hook_t *)
     extension_process_hooks_vector_t;

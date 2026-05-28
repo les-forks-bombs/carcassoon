@@ -1,12 +1,16 @@
+#include "libcarcassonne/engine.h"
+
 #include <libcarcassonne/libcarcassonne.h>
+#include <libutils/lc.h>
+#include <libutils/vector.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "forward.h"
-#include "libutils/lc.h"
-#include "libutils/vector.h"
+#include "libcarcassonne/enums.h"
+#include "libcarcassonne/game.h"
 
 return_code_t create_engine(engine_t *engine, options_t options) {
   if (engine == NULL) {
@@ -87,11 +91,18 @@ return_code_t start_game(engine_t *engine) {
   }
 
   engine->game.state = GAME_STATE_PLAYING;
-  return SUCCESS;
+
+  action_t action_none = {0};
+  code                 = dispatch_action(engine, action_none);
+
+  if (code == NO_PROGRESS) {
+    return SUCCESS;
+  }
+
+  return code;
 }
 
 return_code_t dispatch_action(engine_t *engine, action_t action) {
-  // 👇 Blocage si partie non démarrée ou terminée
   if (engine->game.state == GAME_STATE_NOT_STARTED) {
     return GAME_NOT_STARTED;
   }
@@ -99,18 +110,21 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     return GAME_FINISHED;
   }
 
+  return_code_t code = NO_PROGRESS;
+
   action_t action_none = {0};
 
-  do {
+  while (true) {
     const extension_process_hook_t *current_hook =
         (*vector_nth(&engine->hooks, engine->current_hook));
 
-    if (action.type != current_hook->needed_action &&
-        current_hook->needed_action != LIBCARCASSONNE_ACTION_NONE) {
-      return NO_PROGRESS;
+
+    if ((action.type != current_hook->needed_action &&
+        current_hook->needed_action != LIBCARCASSONNE_ACTION_NONE)) {
+      return code;
     }
 
-    dispatch_t dispatch;
+    dispatch_t dispatch = {0};
     vector_append(&engine->dispatchs, &dispatch);
 
     dispatch_t *store =
@@ -126,10 +140,10 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     // printf("Exécution du hook: %s\n", current_hook->label);
 #endif
 
-    return_code_t code =
+    return_code_t error_code =
         current_hook->fw(&(store->state_store), engine, &action);
-    if (code != SUCCESS) {
-      return code;
+    if (error_code != SUCCESS) {
+      return error_code;
     }
 
     engine->current_hook =
@@ -140,9 +154,14 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     // %s\n",(*vector_nth(&engine->hooks,engine->current_hook))->label);
 #endif
 
-  } while (engine->current_hook != 0);
+    if (engine->current_hook == vector_size(&engine->hooks)-1) {
+      code = SUCCESS;
+    }
 
-  return SUCCESS;
+    if(engine->game.state==GAME_STATE_FINISHED){
+      return code;
+    }
+  }
 }
 
 return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
@@ -164,21 +183,8 @@ return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
     i--;
   } while (i != epoch);
 
-  if (vector_size(&engine->dispatchs) == 0) {
-    engine->current_hook = 0;
-  } else {
-    for (unsigned int i = 0; i < vector_size(&engine->hooks); i++) {
-      if ((*vector_nth(&engine->hooks, i)) ==
-          (vector_nth(&engine->dispatchs, vector_size(&engine->dispatchs) - 1))
-              ->hook) {
-        /* Si le dernier dispatch était le dernier hook du cycle (ex. end_game),
-         * on wrappe à 0 comme le fait dispatch_action en fin de tour. */
-        engine->current_hook =
-            (i + 1 < (unsigned int)vector_size(&engine->hooks)) ? i : 0;
-        break;
-      }
-    }
-  }
+  engine->current_hook =
+      vector_size(&engine->dispatchs) % vector_size(&engine->hooks);
 
   return SUCCESS;
 }
