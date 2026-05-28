@@ -52,9 +52,9 @@ void placed_tile_road_single_not_complete(void** state) {
 
   // Aucun groupe n'est complet
   assert_false(placed_tile_group_complete(
-      (*placed)->groups[LIBCARCASSONNE_TILE_PART_A]));
+      &game, (*placed)->groups[LIBCARCASSONNE_TILE_PART_A]));
   assert_false(placed_tile_group_complete(
-      (*placed)->groups[LIBCARCASSONNE_TILE_PART_B]));
+      &game, (*placed)->groups[LIBCARCASSONNE_TILE_PART_B]));
 
   destroy_game(&game);
 }
@@ -86,10 +86,10 @@ void placed_tile_town_cccc_not_complete(void** state) {
 
   // Le groupe A (ville) n'est PAS complet car il a 4 faces ouvertes
   assert_false(placed_tile_group_complete(
-      (*placed)->groups[LIBCARCASSONNE_TILE_PART_A]));
+      &game, (*placed)->groups[LIBCARCASSONNE_TILE_PART_A]));
   // Le groupe B (centre) est complet car il n'a pas de faces
   assert_true(placed_tile_group_complete(
-      (*placed)->groups[LIBCARCASSONNE_TILE_PART_B]));
+      &game, (*placed)->groups[LIBCARCASSONNE_TILE_PART_B]));
 
   destroy_game(&game);
 }
@@ -116,19 +116,19 @@ void placed_tile_field_fcfc_not_complete(void** state) {
   assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_A]->open_slots,
                    1);
   assert_false(placed_tile_group_complete(
-      (*placed)->groups[LIBCARCASSONNE_TILE_PART_A]));
+      &game, (*placed)->groups[LIBCARCASSONNE_TILE_PART_A]));
 
   // Groupe B (ville): positions 3,5 (bords) = 2 open_slots
   assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_B]->open_slots,
                    2);
   assert_false(placed_tile_group_complete(
-      (*placed)->groups[LIBCARCASSONNE_TILE_PART_B]));
+      &game, (*placed)->groups[LIBCARCASSONNE_TILE_PART_B]));
 
   // Groupe C (champ): position 7 (bord) = 1 open_slot
   assert_int_equal((*placed)->groups[LIBCARCASSONNE_TILE_PART_C]->open_slots,
                    1);
   assert_false(placed_tile_group_complete(
-      (*placed)->groups[LIBCARCASSONNE_TILE_PART_C]));
+      &game, (*placed)->groups[LIBCARCASSONNE_TILE_PART_C]));
 
   destroy_game(&game);
 }
@@ -173,8 +173,8 @@ void placed_tile_road_link_propagates_completeness(void** state) {
 
   // Les open_slots sont mis à jour: 1+1-2 = 0
   // Le groupe combiné a 0 open_slots, donc il EST complet
-  assert_true(placed_tile_group_complete(road1));
-  assert_true(placed_tile_group_complete(road2));
+  assert_true(placed_tile_group_complete(&game, road1));
+  assert_true(placed_tile_group_complete(&game, road2));
 
   destroy_game(&game);
 }

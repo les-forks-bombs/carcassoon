@@ -312,7 +312,6 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
 
       vector_append(&player->meeples, &meeple);
       (vector_nth(&player->meeples_count, meeple->meeple_type))->count--;
-
     } else {
       return ALREADY_ALLOCATED;
     }
