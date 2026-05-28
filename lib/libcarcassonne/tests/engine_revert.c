@@ -3,6 +3,9 @@
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 #include <libutils/vector.h>
+#include "libcarcassonne/enums.h"
+#include "libcarcassonne/ext_base_game_hooks.h"
+#include "libutils/lc.h"
 
 static options_t revert_opts(unsigned int players, unsigned int max_turns) {
   static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
@@ -50,7 +53,7 @@ void engine_revert_after_tile_removes_tile(void** state) {
   assert_int_equal(dispatch_action(&engine, a), NO_PROGRESS);
 
   assert_non_null(*game_tile_at(&engine.game, 1, 0));
-  assert_int_equal(vector_size(&engine.dispatchs), 1);
+  assert_int_equal(vector_size(&engine.dispatchs), 2);
 
   assert_int_equal(engine_revert(&engine, 0), SUCCESS);
 
@@ -78,7 +81,7 @@ void engine_revert_full_turn_clears_board(void** state) {
           tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
-  assert_int_equal(vector_size(&engine.dispatchs), 5);
+  assert_int_equal(vector_size(&engine.dispatchs), 7);
 
   assert_int_equal(engine_revert(&engine, 0), SUCCESS);
 
@@ -109,12 +112,12 @@ void engine_revert_partial_keeps_tile(void** state) {
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
 
   /* Garde le dispatch tile_place uniquement */
-  assert_int_equal(engine_revert(&engine, 1), SUCCESS);
+  assert_int_equal(engine_revert(&engine, 2), SUCCESS);
 
-  assert_int_equal(vector_size(&engine.dispatchs), 1);
+  assert_int_equal(vector_size(&engine.dispatchs), 2);
   assert_non_null(*game_tile_at(&engine.game, 1, 0));
-  /* current_hook pointe sur tile_place (hooks[0]) */
-  assert_int_equal(engine.current_hook, 0);
+  /* current_hook pointe sur meeple_place (hooks[2]) */
+  assert_int_equal(engine.current_hook, 2);
 
   destroy_engine(&engine);
 }
@@ -205,10 +208,10 @@ void engine_revert_dispatch_vector_size(void** state) {
           &engine,
           tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
-  assert_int_equal(vector_size(&engine.dispatchs), 1);
+  assert_int_equal(vector_size(&engine.dispatchs), 2);
 
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
-  assert_int_equal(vector_size(&engine.dispatchs), 5);
+  assert_int_equal(vector_size(&engine.dispatchs), 7);
 
   assert_int_equal(engine_revert(&engine, 3), SUCCESS);
   assert_int_equal(vector_size(&engine.dispatchs), 3);
@@ -235,7 +238,7 @@ void engine_revert_current_hook_zero_on_empty(void** state) {
           tile_action(frfr, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   /* Après dispatch tile : current_hook = 1 (meeple_place) */
-  assert_int_equal(engine.current_hook, 1);
+  assert_int_equal(engine.current_hook, 2);
 
   assert_int_equal(engine_revert(&engine, 0), SUCCESS);
   assert_int_equal(engine.current_hook, 0);
@@ -272,12 +275,12 @@ void engine_revert_two_turns_to_epoch_five(void** state) {
           tile_action(frfr2, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
-  assert_int_equal(vector_size(&engine.dispatchs), 10);
+  assert_int_equal(vector_size(&engine.dispatchs), 13);
 
   /* Retour à l'état après le premier tour */
-  assert_int_equal(engine_revert(&engine, 5), SUCCESS);
+  assert_int_equal(engine_revert(&engine, 6), SUCCESS);
 
-  assert_int_equal(vector_size(&engine.dispatchs), 5);
+  assert_int_equal(vector_size(&engine.dispatchs), 6);
   assert_non_null(*game_tile_at(&engine.game, 1, 0)); /* tour 1 conservé */
   assert_null(*game_tile_at(&engine.game, 0, 1));     /* tour 2 annulé */
   assert_int_equal(engine.game.current_player, 1);    /* joueur 1 attendu */
@@ -447,7 +450,7 @@ void engine_revert_long_play_with_revert(void** state) {
 
   /* --- Sanité post-jeu --------------------------------------------------- */
 
-  assert_int_equal(vector_size(&engine.dispatchs), 15);
+  assert_int_equal(vector_size(&engine.dispatchs), 19);
   assert_int_equal(engine.game.turn, 1);
   assert_int_equal(engine.game.current_player, 0);
   assert_non_null(*game_tile_at(&engine.game, 1, 0));
@@ -489,7 +492,9 @@ void engine_revert_long_play_with_revert(void** state) {
                    init_meeples_p2);
 
   /* Deck */
-  assert_int_equal(engine.game.deck.list.meta.size, init_deck_size);
+  // On ajoute une tuile à init_deck_size
+  // Puisqu'on pioche une tuile dès le démarrage
+  assert_int_equal(list_size(&engine.game.deck.list), init_deck_size+1);
 
   /* Plateau */
   assert_null(*game_tile_at(&engine.game, 1, 0));
@@ -541,7 +546,7 @@ void engine_revert_interleaved_revert_and_play(void** state) {
       NO_PROGRESS);
 
   assert_non_null(*game_tile_at(&engine.game, 1, 0));
-  assert_int_equal(vector_size(&engine.dispatchs), 1);
+  assert_int_equal(vector_size(&engine.dispatchs), 2);
 
   assert_int_equal(engine_revert(&engine, 0), SUCCESS);
 
@@ -563,7 +568,7 @@ void engine_revert_interleaved_revert_and_play(void** state) {
 
   assert_int_equal(dispatch_action(&engine, none_meeple_action()), SUCCESS);
 
-  assert_int_equal(vector_size(&engine.dispatchs), 5);
+  assert_int_equal(vector_size(&engine.dispatchs), 7);
   assert_int_equal(engine.game.current_player, 1);
 
   /* --- 3. Pose tuile C en (0,-1) (début du tour joueur 1) ---------------- */
@@ -577,7 +582,7 @@ void engine_revert_interleaved_revert_and_play(void** state) {
       NO_PROGRESS);
 
   assert_non_null(*game_tile_at(&engine.game, 0, -1));
-  assert_int_equal(vector_size(&engine.dispatchs), 6);
+  assert_int_equal(vector_size(&engine.dispatchs), 8);
 
   /* --- 4. Revert complet -------------------------------------------------- */
 
@@ -612,7 +617,8 @@ void engine_revert_interleaved_revert_and_play(void** state) {
                    init_meeples_p2);
 
   /* Deck */
-  assert_int_equal(engine.game.deck.list.meta.size, init_deck_size);
+  // On ajoute 1 car on retire une tuile au démarrage de la partie
+  assert_int_equal(list_size(&engine.game.deck.list), init_deck_size+1);
 
   /* Plateau */
   assert_null(*game_tile_at(&engine.game, 1, 0));

@@ -3,6 +3,7 @@
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 #include <libutils/vector.h>
+#include "libcarcassonne/enums.h"
 
 // Utilise des options locales pour éviter la pollution de max_turns
 static options_t engine_test_options(void) {
@@ -25,7 +26,8 @@ void engine_wanted_action_is_place_tile_at_start(void** state) {
   assert_int_equal(create_engine(&engine, o), SUCCESS);
   assert_int_equal(start_game(&engine), SUCCESS);
 
-  // Hook 0 = tile_place (priorité 4, PLACE_TILE)
+  // Hook 1 = place_tile (priorité 4)
+  // Puisque le pick_tile a déjà été dispatch
   assert_int_equal(engine_wanted_action(&engine),
                    LIBCARCASSONNE_ACTION_PLACE_TILE);
 
