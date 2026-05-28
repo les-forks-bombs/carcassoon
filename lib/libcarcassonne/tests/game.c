@@ -1,12 +1,11 @@
 
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
+#include <libutils/lc.h>
+#include <libutils/vector.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-
-#include "libutils/lc.h"
-#include "libutils/vector.h"
 
 /** create_game */
 

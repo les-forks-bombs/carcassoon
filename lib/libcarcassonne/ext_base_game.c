@@ -22,6 +22,7 @@
 #define H LIBCARCASSONNE_TILE_PART_H
 #define I LIBCARCASSONNE_TILE_PART_I
 
+/// @brief Ensemble des tuiles présentes dans le jeu de base
 const tile_t
     LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[] =
         {
@@ -612,6 +613,7 @@ const tile_t
              .nb_slots = 8},
 };
 
+/// @brief Vecteur des tuiles du jeu de base
 static const tile_vector_t LIBCARCASSONNE_EXT_BASE_GAME_TILES = {
     .meta = {.size = sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS) /
                      sizeof(LIBCARCASSONNE_EXT_BASE_GAME_TILES_ITEMS[0]),
@@ -646,17 +648,20 @@ const static tile_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[] = {
          },
      .nb_slots = 4}};
 
+/// @brief Vecteur des tuiles de départ du jeu de base
 static const tile_vector_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
     .meta = {
         .size = SIZE(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS),
         .caps = SIZE(LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS),
         .data = (tile_t*)&LIBCARCASSONNE_EXT_BASE_GAME_START_TILES_ITEMS[0]}};
 
+/// @brief Hooks du jeu de base
 static const extension_process_hook_t*
     LIBCARCASSONNE_EXT_BASE_GAME_HOOKS_LIST[] = {
         &hook_meeple_place, &hook_tile_place, &hook_give_back_meeples,
-        &hook_next_player, &hook_end_game};
+        &hook_next_player, &hook_end_game, &hook_pick_tile};
 
+/// @brief Vecteur des hooks du jeu de base
 static const extension_process_hooks_vector_t
     LIBCARCASSONNE_EXT_BASE_GAME_HOOKS = {
         .meta = {
@@ -665,17 +670,23 @@ static const extension_process_hooks_vector_t
             .data = &LIBCARCASSONNE_EXT_BASE_GAME_HOOKS_LIST,
         }};
 
+/// @brief Vecteur des pré-requis du jeu de base
 static const extension_vector_t LIBCARCASSONNE_EXT_BASE_GAME_REQUIREMENTS = {
     .meta = {.size = 0, .caps = 0, .data = NULL}};
 
+/// @brief Nombre de meeple de chaque joueur par type de meeple pour le jeu de
+/// base
 static meeple_count_t LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT[] = {
     {.count = 5, .meeple_type = BASIC}};
 
+/// @brief Vecteur du nombre de meeple de chaque joueur par type de meeple pour
+/// le jeu de base
 static const meeple_count_vector_t meeples_count = {
     .meta = {.size = SIZE(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT),
              .caps = SIZE(LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT),
              .data = &LIBCARCASSONNE_EXT_BASE_GAME_MEEPLE_COUNT}};
 
+/// @brief Définition de l'extension représentant le jeu de base
 const extension_t LIBCARCASSONNE_EXT_BASE_GAME = {
     .name                 = "Base Game",
     .hooks                = &LIBCARCASSONNE_EXT_BASE_GAME_HOOKS,

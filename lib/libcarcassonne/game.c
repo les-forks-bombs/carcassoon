@@ -1,13 +1,13 @@
 #include <assert.h>
 #include <libcarcassonne/libcarcassonne.h>
+#include <libutils/lc.h>
 #include <libutils/vector.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "libutils/lc.h"
+#include "libcarcassonne/enums.h"
 
 return_code_t create_game(game_t *game, options_t *options) {
   if (game == NULL) {
@@ -313,7 +313,6 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
 
       vector_append(&player->meeples, &meeple);
       (vector_nth(&player->meeples_count, meeple->meeple_type))->count--;
-
     } else {
       return ALREADY_ALLOCATED;
     }
@@ -423,7 +422,7 @@ bool game_is_place_open(game_t *game, int x, int y) {
 
 bool is_game_finished(game_t *game) {
   return list_size(&game->deck.list) == 0 ||
-         (game->turns_limit != 0 && game->turn >= game->turns_limit);
+         (game->turns_limit != 0 && game->turn >= game->turns_limit) || game->state==GAME_STATE_FINISHED;
 }
 
 return_code_t game_end_player_turn(game_t *game) {

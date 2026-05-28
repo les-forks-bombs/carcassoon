@@ -35,8 +35,8 @@ ifeq "$(PROFILE)" "debug"
 endif
 
 ifeq "$(PROFILE)" "release"
-	CFLAGS += -O3
-	LFLAGS += -s
+	CFLAGS += -g -O3
+	LFLAGS += -g
 endif
 
 RUNNER := 
@@ -51,7 +51,7 @@ build: clean
 test: clean
 endif
 
-build: $(OUT)/bin/sdl$(EXT) $(OUT)/bin/cli$(EXT) $(OUT)/bin/carcassonne$(EXT)
+build: $(OUT)/bin/carcassonne$(EXT)
 
 cli sdl:
 	$(OUT)/bin/carcassonne -m $@

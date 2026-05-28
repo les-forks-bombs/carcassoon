@@ -1,23 +1,26 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3_image/SDL_image.h>
 #include <dirent.h>
-#include <sdl/appstate.h>
+#include <libsdlrender/appstate.h>
+#include <libsdlrender/forward.h>
+#include <libutils/hashmap.h>
+#include <libutils/path.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 
-#include "libutils/hashmap.h"
-#include "libutils/path.h"
-#include "sdl/forward.h"
-
-void load_texture(appstate_t *state, char *name, char *path) {
+static void load_texture(appstate_t *state, char *name, char *path) {
   SDL_Texture *texture = IMG_LoadTexture(state->renderer, path);
+  if (texture == NULL) {
+    printf("LOAD: Couldn't load the texture at %s\n", path);
+  }
+  printf("Loaded texture %s\n", name);
 
   hashmap_set(&state->textures, name, strlen(name) + 1, &texture,
               sizeof(SDL_Texture *));
 }
 
-void load_textures(appstate_t *appstate, char *directory, char *assets) {
+void load_textures(appstate_t *appstate, char *directory, char *prefix) {
   DIR *dossier = opendir(directory);
   if (dossier == NULL) {
     perror("Erreur lors de l'ouverture du dossier");
@@ -37,13 +40,9 @@ void load_textures(appstate_t *appstate, char *directory, char *assets) {
     struct stat info_chemin;
     if (stat(chemin_complet, &info_chemin) == 0) {
       if (S_ISDIR(info_chemin.st_mode)) {
-        // printf("[DOSSIER] %s\n", chemin_complet);
-        load_textures(appstate, chemin_complet, assets);
+        load_textures(appstate, chemin_complet, prefix);
       } else if (S_ISREG(info_chemin.st_mode)) {
-        // printf("[FICHIER] %s\n", chemin_complet);
-
-        char *start = &chemin_complet[strlen(assets)];
-        // printf("loading texture %s at %s\n", start, chemin_complet);
+        char *start = &chemin_complet[strlen(prefix)];
 
         load_texture(appstate, start, chemin_complet);
       }
