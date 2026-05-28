@@ -80,7 +80,7 @@ void placed_tile_group_cut(placed_tile_group_t *a, placed_tile_group_t *b);
  * @return true Toutes les faces sont remplies (ville fermée ou route completée)
  * @return false Il y a au moins une face ouverte
  */
-bool placed_tile_group_complete(placed_tile_group_t *group);
+bool placed_tile_group_complete(game_t *game, placed_tile_group_t *group);
 
 /**
  * @brief Détermine si deux tiles sont connectées
@@ -94,10 +94,26 @@ bool placed_tile_group_connected(placed_tile_group_t *a,
                                  placed_tile_group_t *b);
 
 /**
- * @brief Evaluer le score d'un groupe
+ * @brief Évalue le score d'un groupe
  *
+ * @param game La partie en cours
  * @param group Le groupe évaluer
+ * @param is_completed Si le groupe est complété ou non
  * @return Les résultats de l'évaluation des points
  */
 placed_tile_group_eval_points_t placed_tile_group_eval_points(
-    placed_tile_group_t *group, bool is_completed);
+    game_t *game, placed_tile_group_t *group, bool is_completed);
+
+/// @brief Cherche et évalue le score des abbaye autour d'une tuile
+/// @param game La partie en cours
+/// @param placed_tile La tuile autour de laquelle on cherche
+/// @return Les résultats de l'évaluation des abbayes
+placed_tile_group_eval_points_vector_t check_for_abbey_completion(
+    game_t *game, placed_tile_t *placed_tile);
+
+/// @brief Évalue le score d'une abbaye
+/// @param game La partie en cours
+/// @param group Le groupe évaluer
+/// @return Les résultats de l'évaluation de l'abbaye
+placed_tile_group_eval_points_t eval_abbey(game_t              *game,
+                                           placed_tile_group_t *group);
