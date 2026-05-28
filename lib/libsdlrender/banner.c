@@ -44,7 +44,8 @@ void render_banner(appstate_t *as, banner_t *banner) {
   char *path =
       (int)banner->is_open ? "/img/banner_tall.png" : "/img/banner.png";
 
-  SDL_Texture *texture = *hashmap_get(&as->textures, path, strlen(path) + 1);
+  SDL_Texture *texture =
+      *(SDL_Texture **)hashmap_get(&as->textures, path, strlen(path) + 1);
   if (texture == NULL) {
     printf("texture not found %s !!!\n", path);
   }
