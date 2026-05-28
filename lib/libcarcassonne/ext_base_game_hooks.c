@@ -8,12 +8,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
+#include "libcarcassonne/deck.h"
 #include "libcarcassonne/enums.h"
 #include "libcarcassonne/forward.h"
 #include "libcarcassonne/game.h"
 #include "libcarcassonne/placed_tile.h"
+#include "libutils/lc.h"
 
+LIBCARCASSONNE_HOOK_IMPL(pick_tile, 3, LIBCARCASSONNE_ACTION_NONE)
 LIBCARCASSONNE_HOOK_IMPL(tile_place, 4, LIBCARCASSONNE_ACTION_PLACE_TILE)
 LIBCARCASSONNE_HOOK_IMPL(meeple_place, 5, LIBCARCASSONNE_ACTION_PLACE_MEEPLE)
 LIBCARCASSONNE_HOOK_IMPL(give_back_meeples, 6, LIBCARCASSONNE_ACTION_NONE)
@@ -59,7 +63,7 @@ return_code_t meeple_place_free(void **state_store, engine_t *engine) {
   return SUCCESS;
 }
 
-static dispatch_t *find_last_place_tile_dispatch(engine_t *engine) {
+static dispatch_t *find_last_dispatch_by_hook(engine_t *engine, const extension_process_hook_t* searched_hook) {
   int index = vector_size(&engine->dispatchs) - 1;
 
   while (index >= 0) {
@@ -69,7 +73,7 @@ static dispatch_t *find_last_place_tile_dispatch(engine_t *engine) {
       return NULL;
     }
 
-    if (dispatch->action->type == LIBCARCASSONNE_ACTION_PLACE_TILE) {
+    if (dispatch->hook == searched_hook) {
       return dispatch;
     }
 
@@ -83,7 +87,7 @@ return_code_t meeple_place_list_actions(action_vector_t *actions,
                                         engine_t        *engine) {
   player_t *player = game_get_current_player(&engine->game);
 
-  dispatch_t *dispatch = find_last_place_tile_dispatch(engine);
+  dispatch_t *dispatch = find_last_dispatch_by_hook(engine, &hook_tile_place);
 
   if (!dispatch) {
     return INVALID_ACTION;
@@ -194,20 +198,16 @@ return_code_t tile_place_free(void **state_store, engine_t *engine) {
   return SUCCESS;
 }
 
-return_code_t tile_place_list_actions(action_vector_t *actions,
-                                      engine_t        *engine) {
-  const tile_t *tile = deck_pick(&engine->game.deck);
-
+return_code_t find_valid_places(game_t *game, const tile_t *tile,
+                                vector2d_vector_t vec,
+                                action_vector_t  *actions) {
   vector_alloc(actions, 5);
-
-  vector2d_vector_t vec = game_get_available_space(&engine->game);
 
   for (unsigned int i = 0; i < vector_size(&vec); i++) {
     vector2d_t spot = *vector_nth(&vec, i);
 
     for (tile_orientation_t orientation = 0; orientation < 4; orientation++) {
-      if (game_is_tile_placeable(&engine->game, tile, spot.x, spot.y,
-                                 orientation)) {
+      if (game_is_tile_placeable(game, tile, spot.x, spot.y, orientation)) {
         action_t action = {.type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
                            .order = {.place_tile = {.orientation = orientation,
                                                     .x           = spot.x,
@@ -217,6 +217,19 @@ return_code_t tile_place_list_actions(action_vector_t *actions,
       }
     }
   }
+
+  return SUCCESS;
+}
+
+return_code_t tile_place_list_actions(action_vector_t *actions,
+                                      engine_t        *engine) {
+  dispatch_t *dispatch = find_last_dispatch_by_hook(engine, &hook_pick_tile);
+
+  pick_tile_hook_state_t *store = dispatch->state_store;
+
+  vector2d_vector_t vec = game_get_available_space(&engine->game);
+
+  find_valid_places(&engine->game, store->tile, vec, actions);
 
   vector_free(&vec);
 
@@ -290,7 +303,7 @@ void compute_abbey_score(engine_t *engine, placed_tile_t *placed_tile,
 return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
                                    action_t *action) {
   (void)action;
-  dispatch_t *dispatch = find_last_place_tile_dispatch(engine);
+  dispatch_t *dispatch = find_last_dispatch_by_hook(engine, &hook_tile_place);
   if (dispatch == NULL) {
     return NULL_POINTER;
   }
@@ -593,5 +606,84 @@ return_code_t end_game_list_actions(action_vector_t *actions,
   vector_alloc(actions, 1);
   action_t action = {.type = LIBCARCASSONNE_ACTION_NONE};
   vector_append(actions, &action);
+  return SUCCESS;
+}
+
+return_code_t pick_tile_fw(void **state_store, engine_t *engine,
+                           action_t *action) {
+  (void)action;
+
+  *state_store = calloc(1, sizeof(pick_tile_hook_state_t));
+  pick_tile_hook_state_t *pick_tile_state = *state_store;
+
+  return_code_t     code    = SUCCESS;
+  vector2d_vector_t vec     = game_get_available_space(&engine->game);
+  action_vector_t   actions = {0};
+
+  const tile_t *tile = NULL;
+  bool placeable = false;
+
+  while (code == SUCCESS && !placeable) {
+    tile = deck_pick(&engine->game.deck);
+
+    code = find_valid_places(&engine->game, tile, vec, &actions);
+
+    if (vector_size(&actions) == 0) {
+      int index = deck_defausser(&engine->game.deck, tile);
+
+      discarded_tile_t discarded_tile = {.tile = &tile, .index = index};
+
+      list_prepend(&pick_tile_state->discarded_tiles, &discarded_tile);
+    }else {
+      placeable = true;
+    }
+
+    vector_free(&actions);
+  }
+
+  pick_tile_state->tile = tile;
+
+  vector_free(&vec);
+
+  return code;
+}
+
+return_code_t pick_tile_bw(void **state_store, engine_t *engine) {
+  pick_tile_hook_state_t *pick_tile_state = *state_store;
+
+  deck_push(&engine->game.deck, pick_tile_state->tile);
+
+  list_node_t *current = list_head(&pick_tile_state->discarded_tiles);
+  while (current != NULL) {
+
+    list_insert(&engine->game.deck.list,
+                list_value(&pick_tile_state->discarded_tiles, current)->tile,
+                list_value(&pick_tile_state->discarded_tiles, current)->index);
+  }
+
+  return SUCCESS;
+}
+
+return_code_t pick_tile_free(void **state_store, engine_t *engine) {
+  (void)engine;
+  discarded_tile_list_t *state = *state_store;
+
+  list_free(state);
+
+  free(state);
+
+  return SUCCESS;
+}
+
+return_code_t pick_tile_list_actions(action_vector_t *actions,
+                                     engine_t        *engine) {
+  (void)engine;
+  vector_alloc(actions, 1);
+
+  action_t action = {0};
+  action.type     = LIBCARCASSONNE_ACTION_NONE;
+
+  vector_append(actions, &action);
+
   return SUCCESS;
 }
