@@ -49,6 +49,8 @@ void engine_builds(void** state);
 void engine_long_play_test(void** state);
 void engine_trigger_end_game(void** state);
 void engine_trigger_give_back_meeple(void** state);
+void engine_abbey_completed(void** state);
+void engine_abbey_incomplete(void** state);
 
 void prng_create_with_seed_initializes_state(void** state);
 void prng_random_consistent_sequence(void** state);
@@ -190,6 +192,9 @@ static const struct CMUnitTest tests[] = {
     cmocka_unit_test(engine_builds),
     cmocka_unit_test(engine_long_play_test),
     cmocka_unit_test(engine_trigger_end_game),
+    cmocka_unit_test(engine_trigger_give_back_meeple),
+    cmocka_unit_test(engine_abbey_completed),
+    cmocka_unit_test(engine_abbey_incomplete),
 
     cmocka_unit_test(placed_tile_open_slots_works),
     cmocka_unit_test(placed_tile_road_single_not_complete),
