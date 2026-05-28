@@ -77,7 +77,7 @@ void  utils_hashmap_remove(hashmap_t *map, const void *key, size_t key_size);
 /// @details Renvoie NULL si l'élément n'est pas trouvé
 /// @return La valeur du couple (clé, valeur)
 #define hashmap_get(map, key, key_size)                                      \
-  (__typeof__(*(map)->value_ghost))utils_hashmap_get(                        \
+  (__typeof__(*(map)->value_ghost))utils_hashmap_get(                      \
       &((map)->meta), (const void *)(1 ? (void *)(key) : *(map)->key_ghost), \
       (key_size))
 

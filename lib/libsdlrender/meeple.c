@@ -4,20 +4,46 @@
 #include <SDL3/SDL_stdinc.h>
 #include <libcarcassonne/action.h>
 #include <libcarcassonne/libcarcassonne.h>
-#include <sdl/consts.h>
-#include <sdl/forward.h>
-#include <sdl/meeple.h>
+#include <libsdlrender/consts.h>
+#include <libsdlrender/forward.h>
+#include <libsdlrender/meeple.h>
+#include <string.h>
+
+static SDL_FRect calc_meeple_rect(tile_slot_t slot, const SDL_FRect *tile_rect,
+                                  double angle) {
+  float cx = (float)slot.x - 0.5F;
+  float cy = (float)slot.y - 0.5F;
+
+  double rad   = angle * (SDL_PI_D / 180.0);
+  float  cos_a = (float)SDL_cos(rad);
+  float  sin_a = (float)SDL_sin(rad);
+
+  float rot_x = (cx * cos_a) - (cy * sin_a);
+  float rot_y = (cx * sin_a) + (cy * cos_a);
+
+  float final_local_x = rot_x + 0.5F;
+  float final_local_y = rot_y + 0.5F;
+
+  float meeple_size = tile_rect->w * 0.25F;
+
+  SDL_FRect meeple_dest = {
+      .x = tile_rect->x + (final_local_x * tile_rect->w) - (meeple_size / 2.0F),
+      .y = tile_rect->y + (final_local_y * tile_rect->w) - (meeple_size / 2.0F),
+      .w = meeple_size,
+      .h = meeple_size};
+  return meeple_dest;
+}
+
+static const char *meeple_texture = "/img/meeple.svg";
 
 void render_placed_meeple(placed_tile_t *tile, appstate_t *as,
                           const SDL_FRect *tile_rect, double angle) {
   SDL_Texture *texture;
 
   SDL_Texture **texture_ptr = (SDL_Texture **)hashmap_get(
-      &as->textures, "/img/meeple.svg", sizeof("/img/meeple.svg"));
+      &as->textures, meeple_texture, strlen(meeple_texture) + 1);
   if (texture_ptr != NULL) {
     texture = *texture_ptr;
-  } else {
-    texture = as->temp_tex;
   }
 
   const tile_t *real_tile = tile->parent;
@@ -54,7 +80,7 @@ void render_possible_meeples(placed_tile_t *tile, appstate_t *as,
   SDL_Texture **texture_ptr = (SDL_Texture **)hashmap_get(
       &as->textures, "/img/meeple.svg", sizeof("/img/meeple.svg"));
 
-  texture = (texture_ptr != NULL) ? *texture_ptr : as->temp_tex;
+  texture = *texture_ptr;
 
   const tile_t *real_tile = tile->parent;
   if (real_tile == NULL || tile_rect == NULL) {
@@ -69,7 +95,7 @@ void render_possible_meeples(placed_tile_t *tile, appstate_t *as,
 
     if (ptg != NULL && as->possible_meeples[g] &&
         as->current_action->order.place_meeple.meeple_type != NONE) {
-      SDL_Color c = players_colors[as->engine.game.current_player];
+      SDL_Color c = players_colors[as->engine->game.current_player];
       SDL_SetTextureColorMod(texture, c.r, c.g, c.b);
 
       int alpha = 100;
@@ -91,41 +117,13 @@ void render_possible_meeples(placed_tile_t *tile, appstate_t *as,
   SDL_SetTextureAlphaMod(texture, 255);
 }
 
-static SDL_FRect calc_meeple_rect(tile_slot_t slot, const SDL_FRect *tile_rect,
-                                  double angle) {
-  float cx = (float)slot.x - 0.5F;
-  float cy = (float)slot.y - 0.5F;
-
-  double rad   = angle * (SDL_PI_D / 180.0);
-  float  cos_a = (float)SDL_cos(rad);
-  float  sin_a = (float)SDL_sin(rad);
-
-  float rot_x = (cx * cos_a) - (cy * sin_a);
-  float rot_y = (cx * sin_a) + (cy * cos_a);
-
-  float final_local_x = rot_x + 0.5F;
-  float final_local_y = rot_y + 0.5F;
-
-  float meeple_size = tile_rect->w * 0.25F;
-
-  SDL_FRect meeple_dest = {
-      .x = tile_rect->x + (final_local_x * tile_rect->w) - (meeple_size / 2.0F),
-      .y = tile_rect->y + (final_local_y * tile_rect->w) - (meeple_size / 2.0F),
-      .w = meeple_size,
-      .h = meeple_size};
-  return meeple_dest;
-}
-
 void update_possible_meeples(appstate_t *as) {
-  bool *possible_meeples = SDL_calloc(10, sizeof(bool));
-
   for (unsigned int i = 0; i < vector_size(&as->all_actions); i++) {
     action_t *action = vector_nth(&as->all_actions, i);
     if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE &&
         action->order.place_meeple.meeple_type != NONE) {
-      int group               = action->order.place_meeple.part_group;
-      possible_meeples[group] = true;
+      int group                   = action->order.place_meeple.part_group;
+      as->possible_meeples[group] = true;
     }
   }
-  as->possible_meeples = possible_meeples;
 }
