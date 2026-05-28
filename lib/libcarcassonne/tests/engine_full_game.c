@@ -2,9 +2,9 @@
 #include <libcarcassonne/ext_base_game.h>
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
+#include <libutils/vector.h>
 #include <stdio.h>
-
-#include "libutils/vector.h"
+#include "libcarcassonne/game.h"
 
 static options_t full_game_opts(void) {
   static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
@@ -40,8 +40,8 @@ static void play_turn(engine_t* engine, unsigned int tile_strat,
   assert_true(vector_size(&actions) > 0);
   idx = meeple_strat % (unsigned int)vector_size(&actions);
   act = *(action_t*)vector_nth(&actions, idx);
-  vector_free(&actions);
   assert_int_equal(dispatch_action(engine, act), SUCCESS);
+  vector_free(&actions);
 }
 
 /*
@@ -110,7 +110,7 @@ void engine_full_game_with_reverts(void** state) {
   }
 
   /* ── Boucle finale ──────────────────────────────────────────────────── */
-  while (engine.game.state != GAME_STATE_FINISHED) {
+  while (!is_game_finished(&engine.game)) {
     play_turn(&engine, 0, 0);
   }
 

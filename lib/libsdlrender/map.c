@@ -4,16 +4,15 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_surface.h>
 #include <libcarcassonne/libcarcassonne.h>
-#include <sdl/consts.h>
-#include <sdl/map.h>
-#include <sdl/meeple.h>
+#include <libsdlrender/consts.h>
+#include <libsdlrender/forward.h>
+#include <libsdlrender/map.h>
+#include <libsdlrender/meeple.h>
+#include <libutils/hashmap.h>
+#include <libutils/vector.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
-#include "libutils/hashmap.h"
-#include "libutils/vector.h"
-#include "sdl/forward.h"
 
 static double get_tile_angle(int orientation) {
   switch (orientation) {
@@ -29,17 +28,13 @@ static double get_tile_angle(int orientation) {
 }
 
 static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
-  if (tile == NULL || tile->texture == NULL) {
-    return as->temp_tex;
-  }
-
-  char *texturen    = tile->texture;
-  char *prefix      = "/img/tiles";
-  int   buffer_size = strlen(texturen) + strlen(prefix) + 2;
-  char  name[buffer_size];
+  char        *texturen    = tile->texture;
+  char        *prefix      = "/img/tiles";
+  unsigned int buffer_size = strlen(texturen) + strlen(prefix) + 2;
+  char         name[buffer_size];
 
   snprintf(name, buffer_size, "%s/%s", prefix, texturen);
-  int key_size = strlen(name) + 1;
+  unsigned int key_size = strlen(name) + 1;
 
   SDL_Texture **texture_ptr =
       (SDL_Texture **)hashmap_get(&as->textures, name, key_size);
@@ -48,7 +43,6 @@ static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
   }
 
   printf("texture existe pas !!! %s \n", name);
-  return as->temp_tex;
 }
 
 static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
@@ -132,14 +126,14 @@ void render_map(appstate_t *as) {
       float world_x = (float)table_y * MAP_TILE_SIZE;
       float world_y = (float)table_x * MAP_TILE_SIZE;
 
-      float x_render    = (world_x - as->camera->x) * as->camera->zoom;
-      float y_render    = (world_y - as->camera->y) * as->camera->zoom;
-      float size_zoomed = (float)MAP_TILE_SIZE * as->camera->zoom;
+      float x_render    = (world_x - as->camera.x) * as->camera.zoom;
+      float y_render    = (world_y - as->camera.y) * as->camera.zoom;
+      float size_zoomed = (float)MAP_TILE_SIZE * as->camera.zoom;
 
       if (x_render + size_zoomed > 0 && x_render < as->window_width &&
           y_render + size_zoomed > 0 && y_render < as->window_height) {
         SDL_FRect      dest = {x_render, y_render, size_zoomed, size_zoomed};
-        placed_tile_t *ptt  = *game_tile_at(&as->engine.game, table_x, table_y);
+        placed_tile_t *ptt = *game_tile_at(&as->engine->game, table_x, table_y);
 
         if (ptt != NULL) {
           render_occupied_cell(as, ptt, &dest);
@@ -180,16 +174,16 @@ void print_grid(appstate_t *as) {
   float world_max_y = (float)(max_coord + 1) * MAP_TILE_SIZE;
 
   // Conversion des limites mondiales en coordonnées écran pour le traçage
-  float screen_min_x = (world_min_x - as->camera->x) * as->camera->zoom;
-  float screen_max_x = (world_max_x - as->camera->x) * as->camera->zoom;
-  float screen_min_y = (world_min_y - as->camera->y) * as->camera->zoom;
-  float screen_max_y = (world_max_y - as->camera->y) * as->camera->zoom;
+  float screen_min_x = (world_min_x - as->camera.x) * as->camera.zoom;
+  float screen_max_x = (world_max_x - as->camera.x) * as->camera.zoom;
+  float screen_min_y = (world_min_y - as->camera.y) * as->camera.zoom;
+  float screen_max_y = (world_max_y - as->camera.y) * as->camera.zoom;
 
   SDL_SetRenderDrawColor(as->renderer, 150, 150, 150, 255);
 
   for (int table_y = min_coord; table_y <= max_coord + 1; table_y++) {
     float world_x  = (float)table_y * MAP_TILE_SIZE;
-    float screen_x = (world_x - as->camera->x) * as->camera->zoom;
+    float screen_x = (world_x - as->camera.x) * as->camera.zoom;
 
     if (screen_x >= 0 && screen_x <= as->window_width) {
       SDL_RenderLine(as->renderer, screen_x, screen_min_y, screen_x,
@@ -199,7 +193,7 @@ void print_grid(appstate_t *as) {
 
   for (int table_x = min_coord; table_x <= max_coord + 1; table_x++) {
     float world_y  = (float)table_x * MAP_TILE_SIZE;
-    float screen_y = (world_y - as->camera->y) * as->camera->zoom;
+    float screen_y = (world_y - as->camera.y) * as->camera.zoom;
 
     if (screen_y >= 0 && screen_y <= as->window_height) {
       SDL_RenderLine(as->renderer, screen_min_x, screen_y, screen_max_x,

@@ -1,7 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <sdl/appstate.h>
+#include <libsdlrender/appstate.h>
 
 void put_first_action_in_appstate(appstate_t *as);
 void get_current_actions(appstate_t *as);

@@ -102,10 +102,16 @@ const tile_t* deck_pick(deck_t* deck) {
   return tile;
 }
 
-void deck_defausser(deck_t* deck, const tile_t* tile) {
+int deck_defausser(deck_t* deck, const tile_t* tile) {
   int index =
       prng_mersenne_twister_random(&deck->state) % list_size(&deck->list);
   list_insert(&deck->list, &tile, index);
+
+  return index;
+}
+
+void deck_push(deck_t* deck, const tile_t* tile) {
+  list_prepend(&deck->list, &tile);
 }
 
 const tile_t* deck_find_tile(deck_t* deck, char* family, bool blason) {

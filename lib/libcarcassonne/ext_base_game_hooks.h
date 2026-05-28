@@ -3,17 +3,28 @@
 #include <libcarcassonne/extension.h>
 #include <libcarcassonne/libcarcassonne.h>
 
+/// @brief Informations pour restaurer la pose d'un meeple
 struct meeple_place_hook_state {
-  int               x, y;
+  /// @brief Composante en x
+  int x;
+  /// @brief Composante en y
+  int y;
+  /// @brief Groupe sur lequel poser le meeple
   tile_part_group_t group;
-  meeple_type_t     meeple_type;
+  /// @brief Type du meeple à poser
+  meeple_type_t meeple_type;
 };
 
+/// @brief Informations pour restaurer la pose d'une tuile
 struct tile_place_hook_state {
-  int x, y;
+  /// @brief Composante en x
+  int x;
+  /// @brief Composante en y
+  int y;
 };
 
-struct rendre_meeple_hook_state {
+/// @brief Informations pour restaurer le rendu de meeple
+struct give_back_meeple_hook_state {
   meeple_vector_t* meeples;
 };
 
@@ -26,6 +37,7 @@ struct removed_meeple {
   player_t*     player;  ///< Joueur propriétaire
 };
 
+/// @brief Informations pour annuler la fin d'une partie
 struct end_game_hook_state {
   /// @brief Score avant calcul final
   unsigned int saved_scores[LIBCARCASSONNE_MAX_PLAYERS];
@@ -34,12 +46,26 @@ struct end_game_hook_state {
   end_game_removed_meeples_vector_t removed_meeples;
 };
 
+/// @brief Informations pour annuler la pioche d'une tuile
+struct pick_tile_hook_state {
+  discarded_tile_list_t discarded_tiles;
+  const tile_t *tile;
+};
+
 /// @brief État sauvegardé pour un groupe complet avec meeples
 /// (give_back_meeples)
 struct give_back_scored_group {
   unsigned int                      points;
   bool                              player_won[LIBCARCASSONNE_MAX_PLAYERS];
   end_game_removed_meeples_vector_t meeples;
+};
+
+/// @brief État sauvegardé pour la défausse d'une tuile impossible à jouer
+struct discarded_tile {
+  /// @brief L'emplacement mémoire de la tuile défaussée
+  const tile_t **tile;
+  /// @brief La position de la tuile défaussée au moment de la remise dans le deck
+  unsigned int index;
 };
 
 /**
@@ -72,3 +98,9 @@ LIBCARCASSONNE_HOOK_HEADER(next_player)
  *
  */
 LIBCARCASSONNE_HOOK_HEADER(end_game)
+
+/**
+ * @brief Pioche une tuile et vérifie qu'elle est plaçable, en pioche une autre sinon
+ *
+ */
+LIBCARCASSONNE_HOOK_HEADER(pick_tile)
