@@ -132,8 +132,7 @@ return_code_t game_remove_meeple(game_t *game, int x, int y, int part_group);
 /// @related game_t
 player_t *game_get_current_player(game_t *game);
 
-/// @brief Génère un vecteur contenant les positions candidats (à valider donc)
-/// pour le placement d'une tuile
+/// @brief Génère un vecteur contenant les positions disponibles sur le plateau
 /// @param game La partie utilisée
 /// @attention Pensez à libérer ce vecteur correctement !!
 /// @return Un vecteur de position déjà alloué
