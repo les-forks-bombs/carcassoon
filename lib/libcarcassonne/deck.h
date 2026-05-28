@@ -35,8 +35,9 @@ const tile_t* deck_pick(deck_t* deck);
 /// @details Est utilisé dans le cas où la tile proposée n'est pas utilisable
 /// @param deck Le deck ciblé
 /// @param tile La tile a remettre dans la pile
+/// @return L'index auquel la tuile a été placé
 /// @relates deck_t
-void deck_defausser(deck_t* deck, const tile_t* tile);
+int deck_defausser(deck_t* deck, const tile_t* tile);
 
 /// @brief Permet de remettre une tile dans le deck au début
 /// @details Est utilisé dans le cas où on annule une pose de tuile

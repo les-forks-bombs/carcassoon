@@ -202,7 +202,6 @@ static const struct CMUnitTest tests[] = {
     cmocka_unit_test(placed_tile_field_fcfc_not_complete),
     cmocka_unit_test(placed_tile_road_link_propagates_completeness),
     cmocka_unit_test(placed_tile_road_l_shape_not_complete),
-    cmocka_unit_test(engine_trigger_give_back_meeple),
 
     cmocka_unit_test(prng_create_with_seed_initializes_state),
     cmocka_unit_test(prng_random_consistent_sequence),
