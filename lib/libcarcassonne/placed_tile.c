@@ -1,10 +1,17 @@
+#include "libcarcassonne/placed_tile.h"
+
 #include <libcarcassonne/libcarcassonne.h>
 #include <libutils/vector.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "libcarcassonne/enums.h"
+#include "libcarcassonne/forward.h"
 
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
@@ -135,7 +142,16 @@ static int placed_tile_group_complete_inner(placed_tile_group_t *a,
   return total;
 }
 
-bool placed_tile_group_complete(placed_tile_group_t *group) {
+bool placed_tile_group_complete(game_t *game, placed_tile_group_t *group) {
+  if (group->type == LIBCARCASSONNE_TILE_PART_ABBEY) {
+    placed_tile_group_eval_points_t eval = eval_abbey(game, group);
+    vector_free(&eval.meeples);
+    if (eval.points == 9) {
+      return true;
+    }
+    return false;
+  }
+
   int search_marker = dfs_counter++;
 
   return placed_tile_group_complete_inner(group, search_marker) == 0;
@@ -196,7 +212,11 @@ static void placed_tile_group_collect_meeples_inner(
  * @param group Un noeud du groupe
  */
 placed_tile_group_eval_points_t placed_tile_group_eval_points(
-    placed_tile_group_t *group, bool is_completed) {
+    game_t *game, placed_tile_group_t *group, bool is_completed) {
+  if (group->type == LIBCARCASSONNE_TILE_PART_ABBEY) {
+    return eval_abbey(game, group);
+  }
+
   int                             search_marker = dfs_counter++;
   placed_tile_group_eval_points_t points        = {0};
 
@@ -204,4 +224,52 @@ placed_tile_group_eval_points_t placed_tile_group_eval_points(
                                           is_completed);
 
   return points;
+}
+
+placed_tile_group_eval_points_vector_t check_for_abbey_completion(
+    game_t *game, placed_tile_t *placed_tile) {
+  placed_tile_group_eval_points_vector_t evals = {0};
+  vector_alloc(&evals, 1);
+
+  for (int i = placed_tile->x - 1; i <= placed_tile->x + 1; i++) {
+    for (int j = placed_tile->y - 1; j <= placed_tile->y + 1; j++) {
+      placed_tile_t **tile = game_tile_at(game, i, j);
+
+      if (tile != NULL && *tile != NULL) {
+        for (unsigned int i = 0; i < 9; i++) {
+          placed_tile_group_t *group = (*tile)->groups[i];
+          if (group != NULL && group->type == LIBCARCASSONNE_TILE_PART_ABBEY) {
+            placed_tile_group_eval_points_t eval = eval_abbey(game, group);
+            vector_append(&evals, &eval);
+          }
+        }
+      }
+    }
+  }
+
+  return evals;
+}
+
+placed_tile_group_eval_points_t eval_abbey(game_t              *game,
+                                           placed_tile_group_t *group) {
+  meeple_vector_t meeples = {0};
+  vector_alloc(&meeples, 1);
+  if (group->meeple != NULL) {
+    vector_append(&meeples, &group->meeple);
+  }
+
+  placed_tile_group_eval_points_t eval = {.points = 0, .meeples = meeples};
+
+  unsigned int present = 0;
+
+  for (int i = group->tile->x - 1; i <= group->tile->x + 1; i++) {
+    for (int j = group->tile->y - 1; j <= group->tile->y + 1; j++) {
+      if (*game_tile_at(game, i, j) != NULL) {
+        present += 1;
+      }
+    }
+  }
+
+  eval.points = present;
+  return eval;
 }

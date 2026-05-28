@@ -69,7 +69,7 @@ void placed_tile_group_eval_points_single_road(void** state) {
   assert_non_null(road_group);
 
   placed_tile_group_eval_points_t eval =
-      placed_tile_group_eval_points(road_group, false);
+      placed_tile_group_eval_points(&game, road_group, false);
 
   assert_int_equal(eval.points, 1);
 
