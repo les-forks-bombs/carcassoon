@@ -201,12 +201,6 @@ return_code_t find_valid_places(game_t *game, const tile_t *tile,
 
   char *family = tile->family;
 
-  printf("family:%s\n", tile->family);
-  printf("NORTH:%d SOUTH:%d\nEAST:%d WEST:%d\n",
-         family[LIBCARCASSONNE_TILE_ORIENTATION_NORTH],
-         family[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH],
-         family[LIBCARCASSONNE_TILE_ORIENTATION_EAST],
-         family[LIBCARCASSONNE_TILE_ORIENTATION_WEST]);
   if (family[LIBCARCASSONNE_TILE_ORIENTATION_NORTH] ==
           family[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH] &&
       family[LIBCARCASSONNE_TILE_ORIENTATION_EAST] ==
