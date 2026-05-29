@@ -12,6 +12,7 @@ EXT :=
 OUT  := $(PWD)/out/$(PROFILE)/$(TARGET)
 
 CFLAGS += --target=$(TARGET)
+LFLAGS += --target=$(TARGET)
 
 CFLAGS += -I$(DIR)/lib
 CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
