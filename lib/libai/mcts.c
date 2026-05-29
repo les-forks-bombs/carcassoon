@@ -94,8 +94,6 @@ static int rollout(engine_t *engine, mcts_node_t *node) {
 
 static void mcts(engine_t *engine, mcts_node_t *node, int total_visits);
 
-
-
 // -----------------------------------------------------------------------
 // expand
 // -----------------------------------------------------------------------
