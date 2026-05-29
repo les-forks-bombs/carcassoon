@@ -66,7 +66,7 @@ return_code_t create_game(game_t *game, options_t *options) {
   // on instancie les joueurs
   for (unsigned int i = 0; i < game->options->players; i++) {
     game->players[i] =
-        create_player(i > game->options->ai ? LIBCARCASSONNE_PLAYER_HUMAN
+        create_player(i < game->options->players-game->options->ai ? LIBCARCASSONNE_PLAYER_HUMAN
                                             : LIBCARCASSONNE_PLAYER_AI,
                       &meeples_count, i);
   }
