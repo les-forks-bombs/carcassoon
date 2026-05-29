@@ -3,6 +3,8 @@
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 #include <libutils/vector.h>
+
+#include "libcarcassonne/deck.h"
 #include "libcarcassonne/enums.h"
 #include "libcarcassonne/ext_base_game_hooks.h"
 #include "libutils/lc.h"
@@ -368,6 +370,17 @@ void engine_revert_long_play_with_revert(void** state) {
   options_t o      = revert_opts(3, 0);
   engine_t  engine = {0};
   assert_int_equal(create_engine(&engine, o), SUCCESS);
+
+  const tile_t* t2 = deck_find_tile(&engine.game.deck, "FRFR", false);
+  assert_non_null(t2);
+  const tile_t* t1 = deck_find_tile(&engine.game.deck, "FRFR", false);
+  assert_non_null(t1);
+  const tile_t* t0 = deck_find_tile(&engine.game.deck, "FRFR", false);
+  assert_non_null(t0);
+  deck_push(&engine.game.deck, t2);
+  deck_push(&engine.game.deck, t1);
+  deck_push(&engine.game.deck, t0);
+
   assert_int_equal(start_game(&engine), SUCCESS);
 
   /* --- Snapshot de l'état initial ---------------------------------------- */
@@ -393,7 +406,6 @@ void engine_revert_long_play_with_revert(void** state) {
 
   /* --- Tour du joueur 0 : FRFR en (1, 0) --------------------------------- */
 
-  const tile_t* t0 = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(t0);
   assert_int_equal(
       dispatch_action(
@@ -412,7 +424,6 @@ void engine_revert_long_play_with_revert(void** state) {
 
   /* --- Tour du joueur 1 : FRFR en (0, 1) --------------------------------- */
 
-  const tile_t* t1 = deck_find_tile(&engine.game.deck, "FRFR", false);
   assert_non_null(t1);
   assert_int_equal(
       dispatch_action(
@@ -431,13 +442,13 @@ void engine_revert_long_play_with_revert(void** state) {
 
   /* --- Tour du joueur 2 : FRFR en (0,-1) --------------------------------- */
 
-  const tile_t* t2 = deck_find_tile(&engine.game.deck, "FRFR", false);
-  assert_non_null(t2);
   assert_int_equal(
       dispatch_action(
           &engine,
           tile_action(t2, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH)),
       NO_PROGRESS);
+
+  assert_non_null(t1);
 
   action_t meeple2 = {.type = LIBCARCASSONNE_ACTION_PLACE_MEEPLE};
   meeple2.order.place_meeple.tile = *game_tile_at(&engine.game, 0, -1);
@@ -494,7 +505,7 @@ void engine_revert_long_play_with_revert(void** state) {
   /* Deck */
   // On ajoute une tuile à init_deck_size
   // Puisqu'on pioche une tuile dès le démarrage
-  assert_int_equal(list_size(&engine.game.deck.list), init_deck_size+1);
+  assert_int_equal(list_size(&engine.game.deck.list), init_deck_size + 1);
 
   /* Plateau */
   assert_null(*game_tile_at(&engine.game, 1, 0));
@@ -518,6 +529,17 @@ void engine_revert_interleaved_revert_and_play(void** state) {
   options_t o      = revert_opts(3, 0);
   engine_t  engine = {0};
   assert_int_equal(create_engine(&engine, o), SUCCESS);
+
+  const tile_t* tile_a = deck_find_tile(&engine.game.deck, "FRFR", false);
+  assert_non_null(tile_a);
+  const tile_t* tile_b = deck_find_tile(&engine.game.deck, "FRFR", false);
+  assert_non_null(tile_b);
+  const tile_t* tile_c = deck_find_tile(&engine.game.deck, "FRFR", false);
+  assert_non_null(tile_c);
+  deck_push(&engine.game.deck, tile_c);
+  deck_push(&engine.game.deck, tile_b);
+  deck_push(&engine.game.deck, tile_a);
+
   assert_int_equal(start_game(&engine), SUCCESS);
 
   /* Snapshot initial */
@@ -537,8 +559,6 @@ void engine_revert_interleaved_revert_and_play(void** state) {
 
   /* --- 1. Pose tuile A en (1,0), puis revert ----------------------------- */
 
-  const tile_t* tile_a = deck_find_tile(&engine.game.deck, "FRFR", false);
-  assert_non_null(tile_a);
   assert_int_equal(
       dispatch_action(
           &engine,
@@ -556,8 +576,6 @@ void engine_revert_interleaved_revert_and_play(void** state) {
 
   /* --- 2. Pose tuile B en (0,1) + meeple NONE (tour complet joueur 0) --- */
 
-  const tile_t* tile_b = deck_find_tile(&engine.game.deck, "FRFR", false);
-  assert_non_null(tile_b);
   assert_int_equal(
       dispatch_action(
           &engine,
@@ -573,8 +591,6 @@ void engine_revert_interleaved_revert_and_play(void** state) {
 
   /* --- 3. Pose tuile C en (0,-1) (début du tour joueur 1) ---------------- */
 
-  const tile_t* tile_c = deck_find_tile(&engine.game.deck, "FRFR", false);
-  assert_non_null(tile_c);
   assert_int_equal(
       dispatch_action(
           &engine,
@@ -618,7 +634,7 @@ void engine_revert_interleaved_revert_and_play(void** state) {
 
   /* Deck */
   // On ajoute 1 car on retire une tuile au démarrage de la partie
-  assert_int_equal(list_size(&engine.game.deck.list), init_deck_size+1);
+  assert_int_equal(list_size(&engine.game.deck.list), init_deck_size + 1);
 
   /* Plateau */
   assert_null(*game_tile_at(&engine.game, 1, 0));
