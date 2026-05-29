@@ -33,7 +33,7 @@ static double evaluate(engine_t *engine, player_t *current) {
     return (double)engine->game.players[current->id].score;
   }
 
-  engine->game.state = GAME_STATE_FINISHED;
+  engine->game.state   = GAME_STATE_FINISHED;
   void    *state_store = NULL;
   action_t dummy       = {0};
   end_game_fw(&state_store, engine, &dummy);
@@ -69,7 +69,7 @@ static void backpropagate(mcts_node_t *node, int score) {
   node->score = score;
   node->visits++;
   while (node->parent != NULL) {
-    node         = node->parent;
+    node = node->parent;
     node->score += score;
     node->visits++;
   }

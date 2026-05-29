@@ -13,19 +13,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
 #include "consts.h"
 #include "forward.h"
 
 static double get_tile_angle(int orientation) {
   switch (orientation) {
-    case LIBCARCASSONNE_TILE_ORIENTATION_WEST:
-      return 90.0;
-    case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH:
-      return 180.0;
-    case LIBCARCASSONNE_TILE_ORIENTATION_EAST:
-      return 270.0;
-    default:
-      return 0.0;
+    case LIBCARCASSONNE_TILE_ORIENTATION_WEST:  return 90.0;
+    case LIBCARCASSONNE_TILE_ORIENTATION_SOUTH: return 180.0;
+    case LIBCARCASSONNE_TILE_ORIENTATION_EAST:  return 270.0;
+    default:                                    return 0.0;
   }
 }
 
@@ -119,43 +116,39 @@ static void render_empty_cell(appstate_t *as, int table_x, int table_y,
   }
 }
 
-void draw_background(appstate_t *as){
+void draw_background(appstate_t *as) {
   SDL_Texture *texture =
-      *(SDL_Texture **)hashmap_get(
-          &as->textures,
-          "/img/flag_of_europe.png",
-          strlen("/img/flag_of_europe.png") + 1
-      );
+      *(SDL_Texture **)hashmap_get(&as->textures, "/img/flag_of_europe.png",
+                                   strlen("/img/flag_of_europe.png") + 1);
 
   if (texture == NULL) {
-      return;
+    return;
   }
 
-  float tex_w = 0.0f;
-  float tex_h = 0.0f;
+  float            tex_w = 0.0f;
+  float            tex_h = 0.0f;
   SDL_PropertiesID props = SDL_GetTextureProperties(texture);
   if (props != 0) {
-      tex_w = (float)SDL_GetNumberProperty(props, SDL_PROP_TEXTURE_WIDTH_NUMBER, 0);
-      tex_h = (float)SDL_GetNumberProperty(props, SDL_PROP_TEXTURE_HEIGHT_NUMBER, 0);
+    tex_w =
+        (float)SDL_GetNumberProperty(props, SDL_PROP_TEXTURE_WIDTH_NUMBER, 0);
+    tex_h =
+        (float)SDL_GetNumberProperty(props, SDL_PROP_TEXTURE_HEIGHT_NUMBER, 0);
   }
 
   if (tex_w == 0.0f || tex_h == 0.0f) {
-      return;
+    return;
   }
 
-  const float SCALE = 0.5f; 
-  float world_w = tex_w * SCALE;
-  float world_h = tex_h * SCALE;
+  const float SCALE   = 0.5f;
+  float       world_w = tex_w * SCALE;
+  float       world_h = tex_h * SCALE;
 
   float world_x = -world_w / 2.0f;
   float world_y = -world_h / 2.0f;
 
-  SDL_FRect bg = {
-      (world_x - as->camera.x) * as->camera.zoom,
-      (world_y - as->camera.y) * as->camera.zoom,
-      world_w * as->camera.zoom,
-      world_h * as->camera.zoom
-  };
+  SDL_FRect bg = {(world_x - as->camera.x) * as->camera.zoom,
+                  (world_y - as->camera.y) * as->camera.zoom,
+                  world_w * as->camera.zoom, world_h * as->camera.zoom};
   SDL_RenderTexture(as->renderer, texture, NULL, &bg);
 }
 
