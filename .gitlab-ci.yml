@@ -33,7 +33,7 @@ stages:
     paths:
       - ./out/$PROFILE/$TARGET
 
-'Appimage':
+'AppImage':
   stage: deploy
   needs:
     - job: 'Build'
@@ -43,7 +43,7 @@ stages:
             PROFILE: ['release']
 
   script:
-    - make appimage -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make appimage -j$(nproc) TARGET=x86_64-redhat-linux-gnu PROFILE=release
 
   artifacts:
     when: always
