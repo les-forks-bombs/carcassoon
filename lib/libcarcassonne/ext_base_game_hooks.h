@@ -49,7 +49,7 @@ struct end_game_hook_state {
 /// @brief Informations pour annuler la pioche d'une tuile
 struct pick_tile_hook_state {
   discarded_tile_list_t discarded_tiles;
-  const tile_t *tile;
+  const tile_t*         tile;
 };
 
 /// @brief État sauvegardé pour un groupe complet avec meeples
@@ -63,8 +63,9 @@ struct give_back_scored_group {
 /// @brief État sauvegardé pour la défausse d'une tuile impossible à jouer
 struct discarded_tile {
   /// @brief L'emplacement mémoire de la tuile défaussée
-  const tile_t **tile;
-  /// @brief La position de la tuile défaussée au moment de la remise dans le deck
+  const tile_t** tile;
+  /// @brief La position de la tuile défaussée au moment de la remise dans le
+  /// deck
   unsigned int index;
 };
 
@@ -100,7 +101,8 @@ LIBCARCASSONNE_HOOK_HEADER(next_player)
 LIBCARCASSONNE_HOOK_HEADER(end_game)
 
 /**
- * @brief Pioche une tuile et vérifie qu'elle est plaçable, en pioche une autre sinon
+ * @brief Pioche une tuile et vérifie qu'elle est plaçable, en pioche une autre
+ * sinon
  *
  */
 LIBCARCASSONNE_HOOK_HEADER(pick_tile)
