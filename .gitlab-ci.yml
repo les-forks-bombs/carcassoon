@@ -33,24 +33,6 @@ stages:
     paths:
       - ./out/$PROFILE/$TARGET
 
-'AppImage':
-  stage: deploy
-  needs:
-    - job: 'Build'
-      parallel:
-        matrix:
-          - TARGET: ['x86_64-redhat-linux-gnu']
-            PROFILE: ['release']
-
-  script:
-    - make appimage -j$(nproc) TARGET=x86_64-redhat-linux-gnu PROFILE=release
-
-  artifacts:
-    when: always
-    expire_in: 1 week
-    paths:
-      - ./out/$PROFILE/$TARGET/bin/*.AppImage
-
 'Tidy':
   stage: test
   parallel:
