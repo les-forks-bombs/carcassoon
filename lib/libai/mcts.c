@@ -1,4 +1,3 @@
-#include <cmocka.h>
 #include <libai/mcts.h>
 #include <libutils/prng_mersenne_twister.h>
 #include <math.h>
