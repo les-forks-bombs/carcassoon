@@ -38,7 +38,7 @@ options_t parse_options(int argc, char* argv[]) {
       .ai         = 0,
       .max_turns  = 0,
       .seed       = time(NULL),
-      .players    = 3,
+      .players    = 5,
       .mode       = CARCASSONNE_MODE_SDL,
       .extensions = {0},
   };
@@ -153,7 +153,7 @@ char* validate_options(options_t* config) {
     return "Le nombre de joueurs doit être au moins égal à 2!";
   }
 
-  if (config->players >= LIBCARCASSONNE_MAX_PLAYERS) {
+  if (config->players > LIBCARCASSONNE_MAX_PLAYERS) {
     return "Le nombre de joueurs doit être inférieur à 5!";
   }
 
