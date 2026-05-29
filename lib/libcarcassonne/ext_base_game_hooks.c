@@ -619,14 +619,14 @@ return_code_t pick_tile_fw(void **state_store, engine_t *engine,
 
   while (code == SUCCESS && !placeable) {
     tile = deck_pick(&engine->game.deck);
-    
+
     code = find_valid_places(&engine->game, tile, vec, &actions);
-    
+
     if (vector_size(&actions) == 0) {
       int index = deck_defausser(&engine->game.deck, tile);
-      
+
       discarded_tile_t discarded_tile = {.tile = &tile, .index = index};
-      
+
       list_prepend(&pick_tile_state->discarded_tiles, &discarded_tile);
     } else {
       placeable = true;
@@ -653,7 +653,6 @@ return_code_t pick_tile_bw(void **state_store, engine_t *engine) {
         list_nth(&engine->game.deck.list,
                  list_value(&pick_tile_state->discarded_tiles, current)->index);
 
-    
     deck_push(&engine->game.deck, *list_value(&engine->game.deck.list, node));
 
     list_remove(&engine->game.deck.list, node);

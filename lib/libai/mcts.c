@@ -45,9 +45,8 @@ static double ucb1(int total_iterations, mcts_node_t *node) {
   if (node->visits == 0) {
     return (double)INFINITY;
   }
-  return (double)node->score / (double)node->visits
-         + 2.0
-               * sqrt(log((double)total_iterations) / (double)node->visits);
+  return (double)node->score / (double)node->visits +
+         2.0 * sqrt(log((double)total_iterations) / (double)node->visits);
 }
 
 // -----------------------------------------------------------------------
@@ -58,7 +57,7 @@ static void backpropagate(mcts_node_t *node, int score) {
   node->score = score;
   node->visits++;
   while (node->parent != NULL) {
-    node = node->parent;
+    node         = node->parent;
     node->score += score;
     node->visits++;
   }
@@ -82,7 +81,7 @@ static int rollout(engine_t *engine, mcts_node_t *node) {
     action_t action = *vector_nth(&actions, idx);
     vector_free(&actions);
     dispatch_action(engine, action);
-    count++;           
+    count++;
   }
   player_t *current = game_get_current_player(&engine->game);
   int       score   = (int)evaluate(engine, current);
@@ -141,8 +140,8 @@ static void mcts(engine_t *engine, mcts_node_t *node, int total_visits) {
   mcts_node_t *best_child = NULL;
   for (unsigned int i = 0; i < vector_size(&node->children); i++) {
     mcts_node_t *child = *vector_nth(&node->children, i);
-    if (best_child == NULL
-        || ucb1(total_visits, child) > ucb1(total_visits, best_child)) {
+    if (best_child == NULL ||
+        ucb1(total_visits, child) > ucb1(total_visits, best_child)) {
       best_child = child;
     }
   }
@@ -190,7 +189,6 @@ void ai_play_turn(engine_t *engine, int max_iterations) {
   action_t     dummy_action = {0};
   mcts_node_t *root         = create_mcts_node(dummy_action, NULL);
 
-
   // Création des enfants immédiats du root (placements de tuile possibles)
   action_vector_t initial_actions = engine_get_actions(engine);
   for (unsigned int i = 0; i < vector_size(&initial_actions); i++) {
@@ -214,8 +212,8 @@ void ai_play_turn(engine_t *engine, int max_iterations) {
       best_child_tile = node;
       continue;
     }
-    if (best_child_tile == NULL
-        || (node->score / node->visits) > best_child_tile->score) {
+    if (best_child_tile == NULL ||
+        (node->score / node->visits) > best_child_tile->score) {
       best_child_tile = node;
     }
   }
@@ -224,14 +222,13 @@ void ai_play_turn(engine_t *engine, int max_iterations) {
   // tile.
   mcts_node_t *best_child_meeple = NULL;
   if (best_child_tile != NULL) {
-    for (unsigned int i = 0; i < vector_size(&best_child_tile->children);
-         i++) {
+    for (unsigned int i = 0; i < vector_size(&best_child_tile->children); i++) {
       mcts_node_t *node = *vector_nth(&best_child_tile->children, i);
       if (node->visits == 0) {
         continue;
       }
-      if (best_child_meeple == NULL
-          || (node->score / node->visits) > best_child_meeple->score) {
+      if (best_child_meeple == NULL ||
+          (node->score / node->visits) > best_child_meeple->score) {
         best_child_meeple = node;
       }
     }
