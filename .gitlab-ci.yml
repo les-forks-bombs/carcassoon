@@ -104,7 +104,7 @@ stages:
   needs: []
   allow_failure: true
   script:
-    - make format
+    - make check
 
 'Docs':
   stage: docs

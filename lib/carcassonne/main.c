@@ -18,17 +18,14 @@ int main(int argc, char* argv[]) {
   start_game(&engine);
 
   switch (engine.config.mode) {
-    case CARCASSONNE_MODE_CLI:
-      printf("Starting using CLI...\n");
-      break;
+    case CARCASSONNE_MODE_CLI: printf("Starting using CLI...\n"); break;
     case CARCASSONNE_MODE_SDL:
       printf("Starting using SDL...\n");
 
       run_sdl(&engine);
 
       break;
-    default:
-      break;
+    default: break;
   }
 
   destroy_engine(&engine);
