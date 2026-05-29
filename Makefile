@@ -78,6 +78,35 @@ $(OUT)/objs/%.o: lib/%.c
 	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 	$(info $(TAB)CC $@)
 
+
+$(OUT)/AppDir: $(OUT)/bin/carcassonne
+	@mkdir -p $(OUT)/AppDir/usr/lib
+	@cp -r $(OUT)/bin $(OUT)/AppDir/usr/
+
+	@cp $(UTIL_DIR)/eu.telecomnancy.pp2i.carcassonne.desktop $(OUT)/AppDir/
+	@cp $(UTIL_DIR)/eu.telecomnancy.pp2i.carcassonne.png $(OUT)/AppDir/
+	@cp $(UTIL_DIR)/AppRun $(OUT)/AppDir/
+
+	@ldd $(OUT)/bin/carcassonne | grep "=> /" | awk '{print $$3}' | while read -r lib_path; do \
+		case "$$lib_path" in \
+			*libc.so* | *libm.so* | *libdl.so* | *libpthread.so* | \
+			*libresolv.so* | *librt.so* | *ld-linux* | *libstdc++* | *libgcc_s*) \				;; \
+			*) \
+				echo "Copying dependency: $$lib_path"; \
+				cp "$$lib_path" $(OUT)/AppDir/usr/lib \
+				;; \
+		esac; \
+	done
+
+APPIMAGE := Carcassonne-x86_64.AppImage
+
+$(OUT)/$(APPIMAGE): $(OUT)/AppDir
+	cd $(OUT); appimagetool $(OUT)/AppDir/
+
+CLEAN += $(OUT)/AppDir $(OUT)/$(APPIMAGE)
+
+appimage: $(OUT)/$(APPIMAGE)
+
 public/:
 	doxygen
 CLEAN += public/
@@ -135,7 +164,6 @@ req:
 	@echo
 	@echo "RHEL/Fedora: dnf install libSDL3-devel libSDL3_ttf-devel libSDL3_image-devel libcmocka-devel"
 	@echo "Debian: apt-get install libsdl3-dev libsdl3-ttf-dev libsdl3-image-dev libcmocka-dev"
-
 
 .PHONY: clean build test docs check format coverage bear tidy req cli sdl coverage-xml
 
