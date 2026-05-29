@@ -303,6 +303,10 @@ return_code_t game_place_meeple(game_t *game, int x, int y, int group,
   if (*tile_ref != NULL) {
     placed_tile_group_t *group_ref = (*tile_ref)->groups[group];
 
+    if (group_ref == NULL) {
+      return INVALID_ACTION;
+    }
+
     if (group_ref->meeple == NULL) {
       meeple_t *meeple    = calloc(1, sizeof(meeple_t));
       meeple->group       = group;
@@ -336,7 +340,7 @@ return_code_t game_remove_meeple(game_t *game, int x, int y, int part_group) {
   if (*tile_ref != NULL) {
     placed_tile_group_t *group_ref = (*tile_ref)->groups[part_group];
 
-    if (group_ref->meeple != NULL) {
+    if (group_ref != NULL && group_ref->meeple != NULL) {
       meeple_t *meeple = group_ref->meeple;
 
       (vector_nth(&meeple->player->meeples_count, meeple->meeple_type))

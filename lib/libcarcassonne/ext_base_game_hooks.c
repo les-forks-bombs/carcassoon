@@ -26,14 +26,14 @@ return_code_t meeple_place_fw(void **state_store, engine_t *engine,
   *state_store                     = malloc(sizeof(meeple_place_hook_state_t));
   meeple_place_hook_state_t *state = *state_store;
 
-  if (action->order.place_meeple.meeple_type == NONE) {
-    return SUCCESS;
-  }
-
   state->x           = action->order.place_meeple.x;
   state->y           = action->order.place_meeple.y;
   state->group       = action->order.place_meeple.part_group;
   state->meeple_type = action->order.place_meeple.meeple_type;
+
+  if (action->order.place_meeple.meeple_type == NONE) {
+    return SUCCESS;
+  }
 
   // on place le meeple
   return game_place_meeple(&engine->game, state->x, state->y, state->group,
