@@ -362,8 +362,7 @@ void game_get_available_space_works(void** state) {
 
   for (unsigned int i = 0; i < vector_size(&vec); i++) {
     vector2d_t spot = *vector_nth(&vec, i);
-    printf("%d - %d, %d\n", i, spot.x, spot.y);
-    assert_int_equal(spot.x, correct_vec[i].x);
+        assert_int_equal(spot.x, correct_vec[i].x);
     assert_int_equal(spot.y, correct_vec[i].y);
   }
 
