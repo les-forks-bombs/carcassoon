@@ -470,9 +470,9 @@ static int compare_vector2d(const void *a, const void *b) {
   const vector2d_t *vb = (const vector2d_t *)b;
 
   if (va->y != vb->y) {
-    return va->y - vb->y; // Tri par y croissant
+    return va->y - vb->y;  // Tri par y croissant
   }
-  return va->x - vb->x; // Si y égaux, tri par x croissant
+  return va->x - vb->x;  // Si y égaux, tri par x croissant
 }
 
 vector2d_vector_t game_get_available_space(game_t *game) {
