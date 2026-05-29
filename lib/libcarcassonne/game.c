@@ -460,6 +460,17 @@ player_t *game_get_current_player(game_t *game) {
   return &game->players[game->current_player];
 }
 
+// Fonction de comparaison pour le tri par y croissant, puis x croissant
+static int compare_vector2d(const void *a, const void *b) {
+  const vector2d_t *va = (const vector2d_t *)a;
+  const vector2d_t *vb = (const vector2d_t *)b;
+
+  if (va->y != vb->y) {
+    return va->y - vb->y; // Tri par y croissant
+  }
+  return va->x - vb->x; // Si y égaux, tri par x croissant
+}
+
 vector2d_vector_t game_get_available_space(game_t *game) {
   vector2d_vector_t vec = {0};
   vector_alloc(&vec, list_size(&game->open_tiles));
@@ -500,6 +511,9 @@ vector2d_vector_t game_get_available_space(game_t *game) {
 
     current = current->next;
   }
+
+  // Tri du vecteur par y croissant, puis x croissant
+  qsort(vec.meta.data, vec.meta.size, sizeof(vector2d_t), compare_vector2d);
 
   return vec;
 }
