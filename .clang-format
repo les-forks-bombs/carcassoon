@@ -8,7 +8,6 @@ AlignConsecutiveAssignments:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   true
-  AlignFunctionDeclarations: true
   AlignFunctionPointers: true
   PadOperators:    true
 AlignConsecutiveBitFields:
@@ -16,7 +15,6 @@ AlignConsecutiveBitFields:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   true
-  AlignFunctionDeclarations: true
   AlignFunctionPointers: true
   PadOperators:    false
 AlignConsecutiveDeclarations:
@@ -24,7 +22,6 @@ AlignConsecutiveDeclarations:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   true
-  AlignFunctionDeclarations: true
   AlignFunctionPointers: true
   PadOperators:    false
 AlignConsecutiveMacros:
@@ -32,21 +29,18 @@ AlignConsecutiveMacros:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   true
-  AlignFunctionDeclarations: true
   AlignFunctionPointers: true
   PadOperators:    false
 AlignConsecutiveShortCaseStatements:
   Enabled:         true
   AcrossEmptyLines: false
   AcrossComments:  false
-  AlignCaseArrows: true
   AlignCaseColons: true
 AlignConsecutiveTableGenBreakingDAGArgColons:
   Enabled:         true
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   true
-  AlignFunctionDeclarations: true
   AlignFunctionPointers: true
   PadOperators:    false
 AlignConsecutiveTableGenCondOperatorColons:
@@ -54,7 +48,6 @@ AlignConsecutiveTableGenCondOperatorColons:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   true
-  AlignFunctionDeclarations: true
   AlignFunctionPointers: true
   PadOperators:    false
 AlignConsecutiveTableGenDefinitionColons:
@@ -62,7 +55,6 @@ AlignConsecutiveTableGenDefinitionColons:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   true
-  AlignFunctionDeclarations: true
   AlignFunctionPointers: true
   PadOperators:    false
 AlignEscapedNewlines: Left
@@ -92,9 +84,9 @@ AttributeMacros:
   - absl_nullability_unknown
 BinPackArguments: true
 BinPackLongBracedList: true
-BinPackParameters: BinPack
+BinPackParameters: true
 BitFieldColonSpacing: Both
-BracedInitializerIndentWidth: -1
+BracedInitializerIndentWidth: 3
 BraceWrapping:
   AfterCaseLabel:  false
   AfterClass:      false
@@ -257,7 +249,7 @@ RawStringFormats:
     CanonicalDelimiter: pb
     BasedOnStyle:    google
 ReferenceAlignment: Pointer
-ReflowComments:  Always
+ReflowComments:  true
 RemoveBracesLLVM: false
 RemoveEmptyLinesInUnwrappedLines: false
 RemoveParentheses: Leave
