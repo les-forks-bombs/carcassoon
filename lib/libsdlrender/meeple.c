@@ -7,6 +7,8 @@
 #include <libsdlrender/consts.h>
 #include <libsdlrender/forward.h>
 #include <libsdlrender/meeple.h>
+#include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 
 static SDL_FRect calc_meeple_rect(tile_slot_t slot, const SDL_FRect *tile_rect,
@@ -118,11 +120,14 @@ void render_possible_meeples(placed_tile_t *tile, appstate_t *as,
 }
 
 void update_possible_meeples(appstate_t *as) {
+  memset(as->possible_meeples, 0, SIZE(as->possible_meeples) * sizeof(bool));
+
   for (unsigned int i = 0; i < vector_size(&as->all_actions); i++) {
     action_t *action = vector_nth(&as->all_actions, i);
+    int       group  = action->order.place_meeple.part_group;
+
     if (action->type == LIBCARCASSONNE_ACTION_PLACE_MEEPLE &&
         action->order.place_meeple.meeple_type != NONE) {
-      int group                   = action->order.place_meeple.part_group;
       as->possible_meeples[group] = true;
     }
   }
