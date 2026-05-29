@@ -26,14 +26,14 @@ return_code_t meeple_place_fw(void **state_store, engine_t *engine,
   *state_store                     = malloc(sizeof(meeple_place_hook_state_t));
   meeple_place_hook_state_t *state = *state_store;
 
-  if (action->order.place_meeple.meeple_type == NONE) {
-    return SUCCESS;
-  }
-
   state->x           = action->order.place_meeple.x;
   state->y           = action->order.place_meeple.y;
   state->group       = action->order.place_meeple.part_group;
   state->meeple_type = action->order.place_meeple.meeple_type;
+
+  if (action->order.place_meeple.meeple_type == NONE) {
+    return SUCCESS;
+  }
 
   // on place le meeple
   return game_place_meeple(&engine->game, state->x, state->y, state->group,
@@ -642,7 +642,6 @@ return_code_t pick_tile_fw(void **state_store, engine_t *engine,
   bool          placeable = false;
 
   while (code == SUCCESS && !placeable) {
-    printf("pick\n");
     tile = deck_pick(&engine->game.deck);
 
     code = find_valid_places(&engine->game, tile, vec, &actions);
@@ -652,7 +651,6 @@ return_code_t pick_tile_fw(void **state_store, engine_t *engine,
 
       discarded_tile_t discarded_tile = {.tile = &tile, .index = index};
 
-      printf("remise\n");
       list_prepend(&pick_tile_state->discarded_tiles, &discarded_tile);
     } else {
       placeable = true;
@@ -671,7 +669,6 @@ return_code_t pick_tile_fw(void **state_store, engine_t *engine,
 return_code_t pick_tile_bw(void **state_store, engine_t *engine) {
   pick_tile_hook_state_t *pick_tile_state = *state_store;
 
-  printf("annule pick\n");
   deck_push(&engine->game.deck, pick_tile_state->tile);
 
   list_node_t *current = list_head(&pick_tile_state->discarded_tiles);
@@ -680,11 +677,10 @@ return_code_t pick_tile_bw(void **state_store, engine_t *engine) {
         list_nth(&engine->game.deck.list,
                  list_value(&pick_tile_state->discarded_tiles, current)->index);
 
-    printf("annule remise\n");
-
     deck_push(&engine->game.deck, *list_value(&engine->game.deck.list, node));
 
     list_remove(&engine->game.deck.list, node);
+    current = current->next;
   }
 
   return SUCCESS;
