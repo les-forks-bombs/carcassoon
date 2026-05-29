@@ -8,8 +8,8 @@
 #define DEFAULT_WINDOW_WIDTH      1000
 #define DEFAULT_WINDOW_HEIGHT     700
 #define WINDOW_RESIZABLE          1
-#define ZOOM_MAX                  10
-#define ZOOM_MIN                  0.1
+#define ZOOM_MAX                  5
+#define ZOOM_MIN                  0.2
 #define STEP_RATE_IN_MILLISECONDS 16
 #define DISPLAY_GRID_BY_DEFAULT   0
 
