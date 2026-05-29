@@ -77,16 +77,16 @@ return_code_t run_sdl(engine_t* engine) {
 
   SDL_Event event;
   while (state.playing) {
-
-    if(game_get_current_player(&engine->game)->player_type==LIBCARCASSONNE_PLAYER_AI && !is_game_finished(&engine->game)){
+    if (game_get_current_player(&engine->game)->player_type ==
+            LIBCARCASSONNE_PLAYER_AI &&
+        !is_game_finished(&engine->game)) {
       ai_play_turn(engine, 20);
       get_current_actions(&state);
-    }else {
+    } else {
       while (SDL_PollEvent(&event)) {
         handle_app_event(&state, &event);
       }
     }
-
 
     SDL_SetRenderDrawColor(state.renderer, 0, 51, 153, 255);
     SDL_RenderClear(state.renderer);
