@@ -18,12 +18,14 @@ CFLAGS += -I$(DIR)/lib
 CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
 LFLAGS += -L$(OUT) -lm
 
-LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --libs)
-CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3 --cflags)
-LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-image --libs)
-CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-image --cflags)
-LFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --libs)
-CFLAGS += $(shell pkg-config --personality=$(TARGET) sdl3-ttf --cflags)
+PKG_CONF := PKG_CONFIG_LIBDIR=/usr/$(TARGET)/lib/pkgconfig pkg-config
+
+LFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3 --libs)
+CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3 --cflags)
+LFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-image --libs)
+CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-image --cflags)
+LFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-ttf --libs)
+CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-ttf --cflags)
 
 ifeq "$(PROFILE)" "debug"
 	CFLAGS += -O0 -g -D DEBUG
