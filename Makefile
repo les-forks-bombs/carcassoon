@@ -18,7 +18,7 @@ CFLAGS += -I$(DIR)/lib
 CFLAGS += -std=c99 -Wall -Wextra -Wpedantic -Wdocumentation  # General building flags
 LFLAGS += -L$(OUT) -lm
 
-PKG_CONF := PKG_CONFIG_LIBDIR=/usr/$(TARGET)/lib/pkgconfig pkg-config
+PKG_CONF := PKG_CONFIG_PATH=/usr/$(TARGET)/lib/pkgconfig pkg-config
 
 LFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3 --libs)
 CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3 --cflags)
