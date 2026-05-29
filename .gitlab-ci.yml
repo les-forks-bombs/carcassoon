@@ -1,9 +1,8 @@
 default:
-  image: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image:latest # Public image with fedora & required build tools
+  image: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
 
 .targets: &targets
-  - x86_64-redhat-linux-gnu
-  - x86_64-w64-mingw64
+  - x86_64-pc-linux-gnu
   - x86_64-w64-mingw32
 
 .profiles: &profiles 
@@ -56,16 +55,16 @@ stages:
     - job: 'Test'
       parallel:
         matrix:
-          - TARGET: ['x86_64-redhat-linux-gnu']
+          - TARGET: ['x86_64-pc-linux-gnu']
             PROFILE: ['debug']
     - job: 'Build'
       parallel:
         matrix:
-          - TARGET: ['x86_64-redhat-linux-gnu']
+          - TARGET: ['x86_64-pc-linux-gnu']
             PROFILE: ['debug']
 
   script:
-    - make coverage-xml -j$(nproc) TARGET=x86_64-redhat-linux-gnu PROFILE=debug
+    - make coverage-xml -j$(nproc) TARGET=x86_64-pc-linux-gnu PROFILE=debug
   
   coverage: '/TOTAL.*\s+(\d+\.\d+)\%/'
   artifacts:
@@ -74,7 +73,7 @@ stages:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: ./out/debug/x86_64-redhat-linux-gnu/coverage.xml
+        path: ./out/debug/x86_64-pc-linux-gnu/coverage.xml
 
 'Test':
   stage: test
