@@ -2,8 +2,7 @@ default:
   image: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
 
 .targets: &targets
-  - x86_64-redhat-linux-gnu
-  - x86_64-w64-mingw64
+  - x86_64-pc-linux-gnu
   - x86_64-w64-mingw32
 
 .profiles: &profiles 
