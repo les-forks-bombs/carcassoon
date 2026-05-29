@@ -1,5 +1,5 @@
 default:
-  image: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image:latest # Public image with debian & required build tools
+  image: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image:latest # Public image with fedora & required build tools
 
 .targets: &targets
   - x86_64-redhat-linux-gnu
@@ -14,6 +14,7 @@ stages:
   - build
   - test
   - docs
+  - deploy
 
 'Build':
   stage: build
@@ -31,6 +32,24 @@ stages:
     expire_in: 1 week
     paths:
       - ./out/$PROFILE/$TARGET
+
+'Appimage':
+  stage: deploy
+  needs:
+    - job: 'Build'
+      parallel:
+        matrix:
+          - TARGET: ['x86_64-redhat-linux-gnu']
+            PROFILE: ['release']
+
+  script:
+    - make appimage -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - ./out/$PROFILE/$TARGET/bin/*.AppImage
 
 'Tidy':
   stage: test
@@ -74,7 +93,7 @@ stages:
       coverage_report:
         coverage_format: cobertura
         path: ./out/debug/x86_64-redhat-linux-gnu/coverage.xml
-  
+
 'Test':
   stage: test
   needs:
