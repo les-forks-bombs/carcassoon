@@ -659,7 +659,7 @@ static const tile_vector_t LIBCARCASSONNE_EXT_BASE_GAME_START_TILES = {
 static const extension_process_hook_t*
     LIBCARCASSONNE_EXT_BASE_GAME_HOOKS_LIST[] = {
         &hook_meeple_place, &hook_tile_place, &hook_give_back_meeples,
-        &hook_next_player, &hook_end_game, &hook_pick_tile};
+        &hook_next_player,  &hook_end_game,   &hook_pick_tile};
 
 /// @brief Vecteur des hooks du jeu de base
 static const extension_process_hooks_vector_t
