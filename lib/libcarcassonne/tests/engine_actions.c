@@ -3,6 +3,7 @@
 #include <libcarcassonne/libcarcassonne.h>
 #include <libcarcassonne/tests/tests.h>
 #include <libutils/vector.h>
+
 #include "libcarcassonne/enums.h"
 
 // Utilise des options locales pour éviter la pollution de max_turns

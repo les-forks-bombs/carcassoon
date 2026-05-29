@@ -4,6 +4,7 @@
 #include <libcarcassonne/tests/tests.h>
 #include <libutils/vector.h>
 #include <stdio.h>
+
 #include "libcarcassonne/game.h"
 
 static options_t full_game_opts(void) {
