@@ -94,18 +94,7 @@ static int rollout(engine_t *engine, mcts_node_t *node) {
 
 static void mcts(engine_t *engine, mcts_node_t *node, int total_visits);
 
-// -----------------------------------------------------------------------
-// safe_revert : n'appelle engine_revert que s'il y a quelque chose à annuler.
-// Nécessaire car mcts peut retourner sans avoir dispatché (best_child == NULL
-// ou partie terminée sans rollout dispatch), auquel cas vector_size == epoch
-// et engine_revert entrerait dans son do-while sans élément à retirer.
-// -----------------------------------------------------------------------
 
-static void safe_revert(engine_t *engine, unsigned int epoch) {
-  if (vector_size(&engine->dispatchs) > epoch) {
-    engine_revert(engine, epoch);
-  }
-}
 
 // -----------------------------------------------------------------------
 // expand
@@ -199,7 +188,7 @@ void ai_play_turn(engine_t *engine, int max_iterations) {
 
   while (root->visits < max_iterations) {
     mcts(engine, root, root->visits);
-    safe_revert(engine, epoch);
+    engine_revert(engine, epoch);
   };
 
   // Sélection du meilleur placement de tuile.
