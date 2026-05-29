@@ -11,7 +11,7 @@ DEST=$(dirname "$(realpath "$EXE")")
 
 # On récupère le sysroot de mingw (le dossier avec les DLLs)
 SYSROOT="/usr/x86_64-w64-mingw32"
-MINGW_BIN="$SYSROOT/mingw/bin"
+MINGW_BIN="$SYSROOT/bin"
 
 BUILTINS="^(kernel32|msvcrt|user32|gdi32|advapi32|shell32|ole32|ws2_32|setupapi|imm32|oleaut32|version|winmm|shlwapi|rpcrt4|comdlg32|ucrtbase)\.dll$"
 
