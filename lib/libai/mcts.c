@@ -121,11 +121,11 @@ static void expand(engine_t *engine, mcts_node_t *node, int total_visits) {
     action_vector_t actions = engine_get_actions(engine);
     for (unsigned int i = 0; i < vector_size(&actions); i++) {
       action_t a = *vector_nth(&actions, i);
-      create_mcts_node(a, node);  // "parent" du pseudo-code = node ici
+      create_mcts_node(a, node);
     }
     vector_free(&actions);
   }
-   mcts(engine, node, total_visits);
+  mcts(engine, node, total_visits);
 }
 
 // -----------------------------------------------------------------------
@@ -162,10 +162,8 @@ static void mcts(engine_t *engine, mcts_node_t *node, int total_visits) {
 
   if (best_child->visits == 0) {
     rollout(engine, best_child);
-    return;
   } else {
     expand(engine, best_child, total_visits);
-    return;
   }
 }
 
