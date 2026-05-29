@@ -355,14 +355,14 @@ void game_get_available_space_works(void** state) {
   vector2d_vector_t vec = game_get_available_space(&game);
 
   vector2d_t correct_vec[12] = {
-      {.x = -1, .y = -2},   {.x = 0, .y = -2},  {.x = 1, .y = -2},
+      {.x = -1, .y = -2}, {.x = 0, .y = -2}, {.x = 1, .y = -2},
       {.x = -2, .y = -1}, {.x = 2, .y = -1}, {.x = -2, .y = 0},
-      {.x = 2, .y = 0},  {.x = -2, .y = 1},  {.x = 2, .y = 1},
-      {.x = -1, .y = 2},   {.x = 1, .y = 2},   {.x = 0, .y = 3}};
+      {.x = 2, .y = 0},   {.x = -2, .y = 1}, {.x = 2, .y = 1},
+      {.x = -1, .y = 2},  {.x = 1, .y = 2},  {.x = 0, .y = 3}};
 
   for (unsigned int i = 0; i < vector_size(&vec); i++) {
     vector2d_t spot = *vector_nth(&vec, i);
-        assert_int_equal(spot.x, correct_vec[i].x);
+    assert_int_equal(spot.x, correct_vec[i].x);
     assert_int_equal(spot.y, correct_vec[i].y);
   }
 
