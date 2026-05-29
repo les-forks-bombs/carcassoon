@@ -121,7 +121,7 @@ void ai_play_turn_full_game_two_players(void** state) {
   assert_int_equal(start_game(&engine), SUCCESS);
 
   int turns_played = 0;
-  while (!is_game_finished(&engine.game)) {
+  while (engine.game.state != GAME_STATE_FINISHED) {
     ai_play_turn(&engine, 100);
     turns_played++;
   }
