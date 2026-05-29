@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "consts.h"
+#include "forward.h"
 
 static double get_tile_angle(int orientation) {
   switch (orientation) {
@@ -117,7 +119,27 @@ static void render_empty_cell(appstate_t *as, int table_x, int table_y,
   }
 }
 
+void draw_background(appstate_t *as){
+  SDL_Texture *texture =
+      *(SDL_Texture **)hashmap_get(
+          &as->textures,
+          "/img/flag_of_europe.png",
+          strlen("/img/flag_of_europe.png") + 1
+      );
+
+  if (texture == NULL) {
+      return;
+  }
+
+  SDL_FRect bg = {
+      0,0,as->window_width,as->window_height
+  };
+
+  SDL_RenderTexture(as->renderer, texture, NULL, &bg);
+}
+
 void render_map(appstate_t *as) {
+  draw_background(as);
   int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
   int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
 
