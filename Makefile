@@ -53,7 +53,7 @@ endif
 
 build: $(OUT)/bin/carcassonne$(EXT)
 
-cli sdl:
+cli sdl: $(OUT)/bin/carcassonne$(EXT)
 	$(OUT)/bin/carcassonne -m $@
 
 include lib/build.mk
