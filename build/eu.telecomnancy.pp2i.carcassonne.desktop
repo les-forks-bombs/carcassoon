@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Carcassonne
+Exec=carcassonne
+Icon=eu.telecomnancy.pp2i.carcassonne
+Type=Application
+Categories=Game;
