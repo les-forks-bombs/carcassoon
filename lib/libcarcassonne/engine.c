@@ -118,9 +118,8 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     const extension_process_hook_t *current_hook =
         (*vector_nth(&engine->hooks, engine->current_hook));
 
-
     if ((action.type != current_hook->needed_action &&
-        current_hook->needed_action != LIBCARCASSONNE_ACTION_NONE)) {
+         current_hook->needed_action != LIBCARCASSONNE_ACTION_NONE)) {
       return code;
     }
 
@@ -154,11 +153,11 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
     // %s\n",(*vector_nth(&engine->hooks,engine->current_hook))->label);
 #endif
 
-    if (engine->current_hook == vector_size(&engine->hooks)-1) {
+    if (engine->current_hook == vector_size(&engine->hooks) - 1) {
       code = SUCCESS;
     }
 
-    if(engine->game.state==GAME_STATE_FINISHED){
+    if (engine->game.state == GAME_STATE_FINISHED) {
       return code;
     }
   }
