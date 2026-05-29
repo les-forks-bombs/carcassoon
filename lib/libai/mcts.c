@@ -246,7 +246,7 @@ void ai_play_turn(engine_t *engine, int max_iterations) {
     action_vector_t meeple_actions = engine_get_actions(engine);
     unsigned int    n              = vector_size(&meeple_actions);
     if (n > 0) {
-      dispatch_action(engine, *vector_nth(&meeple_actions, n - 1));
+      dispatch_action(engine, *vector_nth(&meeple_actions, 0));
     }
     vector_free(&meeple_actions);
   }
