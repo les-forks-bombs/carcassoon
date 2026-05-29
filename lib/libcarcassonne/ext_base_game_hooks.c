@@ -197,11 +197,41 @@ return_code_t find_valid_places(game_t *game, const tile_t *tile,
                                 action_vector_t  *actions) {
   vector_alloc(actions, 5);
 
+  bool ignored[4] = {0};
+
+  char *family = tile->family;
+
+  printf("family:%s\n", tile->family);
+  printf("NORTH:%d SOUTH:%d\nEAST:%d WEST:%d\n",
+         family[LIBCARCASSONNE_TILE_ORIENTATION_NORTH],
+         family[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH],
+         family[LIBCARCASSONNE_TILE_ORIENTATION_EAST],
+         family[LIBCARCASSONNE_TILE_ORIENTATION_WEST]);
+  if (family[LIBCARCASSONNE_TILE_ORIENTATION_NORTH] ==
+          family[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH] &&
+      family[LIBCARCASSONNE_TILE_ORIENTATION_EAST] ==
+          family[LIBCARCASSONNE_TILE_ORIENTATION_WEST]) {
+    ignored[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH] = true;
+    ignored[LIBCARCASSONNE_TILE_ORIENTATION_WEST]  = true;
+  }
+
+  if (family[LIBCARCASSONNE_TILE_ORIENTATION_NORTH] ==
+          family[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH] &&
+      family[LIBCARCASSONNE_TILE_ORIENTATION_NORTH] ==
+          family[LIBCARCASSONNE_TILE_ORIENTATION_EAST] &&
+      family[LIBCARCASSONNE_TILE_ORIENTATION_NORTH] ==
+          family[LIBCARCASSONNE_TILE_ORIENTATION_WEST]) {
+    ignored[LIBCARCASSONNE_TILE_ORIENTATION_EAST]  = true;
+    ignored[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH] = true;
+    ignored[LIBCARCASSONNE_TILE_ORIENTATION_WEST]  = true;
+  }
+
   for (unsigned int i = 0; i < vector_size(&vec); i++) {
     vector2d_t spot = *vector_nth(&vec, i);
 
     for (tile_orientation_t orientation = 0; orientation < 4; orientation++) {
-      if (game_is_tile_placeable(game, tile, spot.x, spot.y, orientation)) {
+      if (game_is_tile_placeable(game, tile, spot.x, spot.y, orientation) &&
+          !ignored[orientation]) {
         action_t action = {.type  = LIBCARCASSONNE_ACTION_PLACE_TILE,
                            .order = {.place_tile = {.orientation = orientation,
                                                     .x           = spot.x,
@@ -620,14 +650,14 @@ return_code_t pick_tile_fw(void **state_store, engine_t *engine,
   while (code == SUCCESS && !placeable) {
     printf("pick\n");
     tile = deck_pick(&engine->game.deck);
-    
+
     code = find_valid_places(&engine->game, tile, vec, &actions);
-    
+
     if (vector_size(&actions) == 0) {
       int index = deck_defausser(&engine->game.deck, tile);
-      
+
       discarded_tile_t discarded_tile = {.tile = &tile, .index = index};
-      
+
       printf("remise\n");
       list_prepend(&pick_tile_state->discarded_tiles, &discarded_tile);
     } else {
@@ -656,8 +686,8 @@ return_code_t pick_tile_bw(void **state_store, engine_t *engine) {
         list_nth(&engine->game.deck.list,
                  list_value(&pick_tile_state->discarded_tiles, current)->index);
 
-  printf("annule remise\n");
-    
+    printf("annule remise\n");
+
     deck_push(&engine->game.deck, *list_value(&engine->game.deck.list, node));
 
     list_remove(&engine->game.deck.list, node);
