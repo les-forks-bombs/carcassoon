@@ -1,4 +1,5 @@
 #include <libai/mcts.h>
+#include <libcarcassonne/ext_base_game_hooks.h>
 #include <libutils/prng_mersenne_twister.h>
 #include <math.h>
 #include <stdio.h>
@@ -28,9 +29,21 @@ static mcts_node_t *create_mcts_node(action_t action, mcts_node_t *parent) {
 // -----------------------------------------------------------------------
 
 static double evaluate(engine_t *engine, player_t *current) {
-  (void)engine;
-  (void)current;
-  return 1.0;  // Evaluation temporaire
+  if (is_game_finished(&engine->game)) {
+    return (double)engine->game.players[current->id].score;
+  }
+
+  engine->game.state = GAME_STATE_FINISHED;
+  void    *state_store = NULL;
+  action_t dummy       = {0};
+  end_game_fw(&state_store, engine, &dummy);
+
+  double score = (double)engine->game.players[current->id].score;
+
+  end_game_bw(&state_store, engine);
+  end_game_free(&state_store, engine);
+
+  return score;
 }
 
 // -----------------------------------------------------------------------
@@ -67,7 +80,8 @@ static void backpropagate(mcts_node_t *node, int score) {
 // -----------------------------------------------------------------------
 
 static int rollout(engine_t *engine, mcts_node_t *node) {
-  int count = 0;
+  player_t *current = game_get_current_player(&engine->game);
+  int       count   = 0;
   while (!is_game_finished(&engine->game) && count < MAX_ROLLOUT_DEPTH) {
     action_vector_t actions = engine_get_actions(engine);
     unsigned int    n       = vector_size(&actions);
@@ -82,8 +96,7 @@ static int rollout(engine_t *engine, mcts_node_t *node) {
     dispatch_action(engine, action);
     count++;
   }
-  player_t *current = game_get_current_player(&engine->game);
-  int       score   = (int)evaluate(engine, current);
+  int score = (int)evaluate(engine, current);
   backpropagate(node, score);
   return score;
 }
@@ -137,10 +150,10 @@ static void mcts(engine_t *engine, mcts_node_t *node, int total_visits) {
     return;
   }
 
+  player_t *current = game_get_current_player(&engine->game);
   dispatch_action(engine, best_child->action);
 
   if (is_game_finished(&engine->game)) {
-    player_t *current = game_get_current_player(&engine->game);
     backpropagate(best_child, (int)evaluate(engine, current));
     return;
   }
