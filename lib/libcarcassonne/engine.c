@@ -164,6 +164,10 @@ return_code_t dispatch_action(engine_t *engine, action_t action) {
 }
 
 return_code_t engine_revert(engine_t *engine, unsigned int epoch) {
+  if (vector_size(&engine->dispatchs) <= epoch) {
+    return ERROR;
+  }
+
   unsigned int i = vector_size(&engine->dispatchs);
 
   do {
