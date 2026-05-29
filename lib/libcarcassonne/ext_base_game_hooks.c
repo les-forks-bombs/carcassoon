@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "libcarcassonne/deck.h"
@@ -256,6 +257,7 @@ return_code_t tile_place_list_actions(action_vector_t *actions,
 
 static void update_score(engine_t                        *engine,
                          placed_tile_group_eval_points_t *evaluation) {
+
   unsigned int player_score[LIBCARCASSONNE_MAX_PLAYERS] = {0};
   unsigned int winner_nb_meeple                         = 0;
 
