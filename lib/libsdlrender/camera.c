@@ -49,3 +49,4 @@ void center_camera_on_start(appstate_t *state) {
   state->camera.y =
       world_center_y - ((state->map_viewport.h / 2.0F) / state->camera.zoom);
 }
+
