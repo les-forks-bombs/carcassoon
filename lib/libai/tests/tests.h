@@ -1,7 +1,7 @@
 #ifndef H_LIBAI_TESTS
 #define H_LIBAI_TESTS
 
-#include <libai/libai.h>
+#include <libai/mcts.h>
 #include <libcarcassonne/libcarcassonne.h>
 #include <libutils/cmocka.h>
 
