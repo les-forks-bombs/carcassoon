@@ -5,9 +5,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include <unistd.h>
 
 #include "libcarcassonne/deck.h"
@@ -63,7 +60,8 @@ return_code_t meeple_place_free(void **state_store, engine_t *engine) {
   return SUCCESS;
 }
 
-static dispatch_t *find_last_dispatch_by_hook(engine_t *engine, const extension_process_hook_t* searched_hook) {
+static dispatch_t *find_last_dispatch_by_hook(
+    engine_t *engine, const extension_process_hook_t *searched_hook) {
   int index = vector_size(&engine->dispatchs) - 1;
 
   while (index >= 0) {
@@ -182,11 +180,7 @@ return_code_t tile_place_bw(void **state_store, engine_t *engine) {
   placed_tile_t **tile_ptr = game_tile_at(&engine->game, state->x, state->y);
   const tile_t   *original = (*tile_ptr)->parent;
 
-  return_code_t code = game_remove_tile(&engine->game, state->x, state->y);
-  if (code == SUCCESS) {
-    deck_push(&engine->game.deck, original);
-  }
-  return code;
+  return game_remove_tile(&engine->game, state->x, state->y);
 }
 
 return_code_t tile_place_free(void **state_store, engine_t *engine) {
@@ -620,21 +614,23 @@ return_code_t pick_tile_fw(void **state_store, engine_t *engine,
   vector2d_vector_t vec     = game_get_available_space(&engine->game);
   action_vector_t   actions = {0};
 
-  const tile_t *tile = NULL;
-  bool placeable = false;
+  const tile_t *tile      = NULL;
+  bool          placeable = false;
 
   while (code == SUCCESS && !placeable) {
+    printf("pick\n");
     tile = deck_pick(&engine->game.deck);
-
+    
     code = find_valid_places(&engine->game, tile, vec, &actions);
-
+    
     if (vector_size(&actions) == 0) {
       int index = deck_defausser(&engine->game.deck, tile);
-
+      
       discarded_tile_t discarded_tile = {.tile = &tile, .index = index};
-
+      
+      printf("remise\n");
       list_prepend(&pick_tile_state->discarded_tiles, &discarded_tile);
-    }else {
+    } else {
       placeable = true;
     }
 
@@ -651,14 +647,20 @@ return_code_t pick_tile_fw(void **state_store, engine_t *engine,
 return_code_t pick_tile_bw(void **state_store, engine_t *engine) {
   pick_tile_hook_state_t *pick_tile_state = *state_store;
 
+  printf("annule pick\n");
   deck_push(&engine->game.deck, pick_tile_state->tile);
 
   list_node_t *current = list_head(&pick_tile_state->discarded_tiles);
   while (current != NULL) {
+    list_node_t *node =
+        list_nth(&engine->game.deck.list,
+                 list_value(&pick_tile_state->discarded_tiles, current)->index);
 
-    list_insert(&engine->game.deck.list,
-                list_value(&pick_tile_state->discarded_tiles, current)->tile,
-                list_value(&pick_tile_state->discarded_tiles, current)->index);
+  printf("annule remise\n");
+    
+    deck_push(&engine->game.deck, *list_value(&engine->game.deck.list, node));
+
+    list_remove(&engine->game.deck.list, node);
   }
 
   return SUCCESS;

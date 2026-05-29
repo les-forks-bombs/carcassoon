@@ -137,7 +137,7 @@ void engine_trigger_end_game(void** state) {
     int           x, y, orientation;
     int           part_group;
     meeple_type_t meeple_type;
-    const tile_t*tile;
+    const tile_t* tile;
   } turns[] = {// Tour 1 - 3 joueurs
                {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
                 LIBCARCASSONNE_TILE_PART_B, BASIC},
@@ -171,7 +171,8 @@ void engine_trigger_end_game(void** state) {
     for (unsigned int k = 0; k < LIBCARCASSONNE_EXTENSIONS[0]->tiles->meta.size;
          k++) {
       const tile_t* tile = vector_nth(LIBCARCASSONNE_EXTENSIONS[0]->tiles, k);
-      if (strcmp(tile->family, turns[i].tile_id) == 0 && tile->blason==turns[i].blason) {
+      if (strcmp(tile->family, turns[i].tile_id) == 0 &&
+          tile->blason == turns[i].blason) {
         list_append(&engine.game.deck.list, &tile);
         turns[i].tile = tile;
       }
@@ -186,11 +187,11 @@ void engine_trigger_end_game(void** state) {
       assert_ptr_equal(last_hook->hook, &hook_pick_tile);
     }
 
-    const tile_t *tile = turns[i].tile;
+    const tile_t* tile = turns[i].tile;
 
     action_vector_t actions = engine_get_actions(&engine);
-    action_t action;
-    
+    action_t        action;
+
     assert_ptr_not_equal(tile, NULL);
 
     // Placement de la tuile
