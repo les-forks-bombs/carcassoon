@@ -1,5 +1,5 @@
 default:
-  image: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image:latest # Public image with fedora & required build tools
+  image: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
 
 .targets: &targets
   - x86_64-redhat-linux-gnu
