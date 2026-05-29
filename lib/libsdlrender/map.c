@@ -131,10 +131,31 @@ void draw_background(appstate_t *as){
       return;
   }
 
-  SDL_FRect bg = {
-      0,0,as->window_width,as->window_height
-  };
+  float tex_w = 0.0f;
+  float tex_h = 0.0f;
+  SDL_PropertiesID props = SDL_GetTextureProperties(texture);
+  if (props != 0) {
+      tex_w = (float)SDL_GetNumberProperty(props, SDL_PROP_TEXTURE_WIDTH_NUMBER, 0);
+      tex_h = (float)SDL_GetNumberProperty(props, SDL_PROP_TEXTURE_HEIGHT_NUMBER, 0);
+  }
 
+  if (tex_w == 0.0f || tex_h == 0.0f) {
+      return;
+  }
+
+  const float SCALE = 0.5f; 
+  float world_w = tex_w * SCALE;
+  float world_h = tex_h * SCALE;
+
+  float world_x = -world_w / 2.0f;
+  float world_y = -world_h / 2.0f;
+
+  SDL_FRect bg = {
+      (world_x - as->camera.x) * as->camera.zoom,
+      (world_y - as->camera.y) * as->camera.zoom,
+      world_w * as->camera.zoom,
+      world_h * as->camera.zoom
+  };
   SDL_RenderTexture(as->renderer, texture, NULL, &bg);
 }
 
