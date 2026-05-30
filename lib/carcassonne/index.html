@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carcassonne | Les Forks Bombs</title>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-color: black;
+        }
+
+        #canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const onResize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const flagMap = {
+            'mode': '-m',
+            'players': '-p',
+            'ai': '-a',
+            'max-turns': '-t',
+            'seed': '-s'
+        };
+        for (const [key, flag] of Object.entries(flagMap)) {
+            if (urlParams.has(key)) {
+                args.push(flag, urlParams.get(key));
+            }
+        }
+
+        onResize();
+        window.addEventListener("resize", onResize);
+        canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+
+        var Module = {
+            canvas: canvas,
+            arguments: args,
+            print: (text) => console.log(text),
+            printErr: (text) => console.error(text)
+        };
+    </script>
+    <script src="carcassonne.js"></script>
+</body>
+
+</html>

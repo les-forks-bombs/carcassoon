@@ -15,7 +15,7 @@
   return_code_t name##_bw(void **state_store, engine_t *engine);   \
   return_code_t name##_free(void **state_store, engine_t *engine); \
   return_code_t name##_list_actions(action_vector_t *actions,      \
-                                    engine_t        *engine);      \
+                                    engine_t        *engine);             \
   extern const extension_process_hook_t hook_##name;
 
 #define LIBCARCASSONNE_HOOK_IMPL(name, pr, naction) \
