@@ -128,7 +128,7 @@ stages:
           - TARGET: ['wasm32-unknown-emscripten']
             PROFILE: ['release']
   script:
-    - cp release/wasm32-unknown-emscripten/bin/* public/
+    - cp out/release/wasm32-unknown-emscripten/bin/* public/
 
   artifacts:
     when: always
@@ -142,6 +142,6 @@ stages:
     path_prefix: "$PAGES_PREFIX"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
       variables:
-        PAGES_PREFIX: 'mr-$CI_MERGE_REQUEST_IID'
+        PAGES_PREFIX: 'br-$CI_DEFAULT_BRANCH'
