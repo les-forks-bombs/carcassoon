@@ -144,4 +144,4 @@ stages:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
       variables:
-        PAGES_PREFIX: 'br-$CI_COMMIT_REF_SLUG'
+        PAGES_PREFIX: 'br-$CI_DEFAULT_BRANCH'
