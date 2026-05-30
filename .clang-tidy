@@ -11,7 +11,7 @@ ImplementationFileExtensions:
   - cc
   - cpp
   - cxx
-HeaderFilterRegex: '.*'
+HeaderFilterRegex: '^.*/lib/(carcassonne|libai|libcarcassonne|libsdlrender|libutils)/.*'
 FormatStyle:     none
 CheckOptions:    {}
 SystemHeaders:   false
