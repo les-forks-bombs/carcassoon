@@ -12,6 +12,12 @@ $(OUT)/bin/assets: $(DIR)/assets
 	@cp -r $< $@
 	$(info $(TAB)CP $<)
 
+OLD_LFLAGS := $(LFLAGS)
+ifeq "$(CC)" "emcc"
+	CLEAN += $(OUT)/bin/carcassonne.{wasm,js,data}
+	LFLAGS += --preload assets
+endif
+
 $(OUT)/bin/carcassonne$(EXT): $(CARCASSONNE_OBJS) $(OUT)/bin/assets $(OUT)/libcarcassonne.a $(OUT)/libutils.a $(OUT)/libai.a  $(OUT)/libsdlrender.a
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -o $@ $< -lsdlrender  -lai -lcarcassonne -lutils $(LFLAGS)
