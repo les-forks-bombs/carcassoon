@@ -137,7 +137,7 @@ stages:
           - TARGET: ['wasm32-unknown-emscripten']
             PROFILE: ['release']
   script:
-    - rm -r out/release/wasm32-unknown-emscripten/assets
+    - rm -r out/release/wasm32-unknown-emscripten/bin/assets
     - cp out/release/wasm32-unknown-emscripten/bin/* public/
 
   artifacts:
