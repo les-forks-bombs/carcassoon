@@ -8,7 +8,12 @@
 	"runArgs": [
 		"--device=/dev/dri",
 		"--userns=keep-id:uid=1001,gid=1001",
-		"--security-opt=label=disable"
+		"--security-opt=label=disable",
+		"--privileged",
+		"--device",
+		"/dev/fuse",
+		"--cap-add",
+		"SYS_ADMIN"
 	],
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/home/coder/.ssh,type=bind,readonly"
