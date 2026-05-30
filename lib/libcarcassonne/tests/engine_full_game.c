@@ -10,7 +10,7 @@
 static options_t full_game_opts(void) {
   static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
   static const extension_vector_t ext         = {
-      .meta = {.size = 1, .caps = 1, .data = &ptr_table}};
+              .meta = {.size = 1, .caps = 1, .data = &ptr_table}};
   options_t o = {.mode       = CARCASSONNE_MODE_CLI,
                  .players    = 3,
                  .seed       = 42,
@@ -28,9 +28,6 @@ static options_t full_game_opts(void) {
 static void play_turn(engine_t* engine, unsigned int tile_strat,
                       unsigned int meeple_strat) {
   action_vector_t actions = engine_get_actions(engine);
-  for (unsigned int i = 0; i < vector_size(&actions); i++) {
-    action_t* a = vector_nth(&actions, i);
-  }
   assert_true(vector_size(&actions) > 0);
   unsigned int idx = tile_strat % (unsigned int)vector_size(&actions);
   action_t     act = *(action_t*)vector_nth(&actions, idx);

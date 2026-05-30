@@ -1,5 +1,6 @@
+#include "libcarcassonne/game.h"
+
 #include <assert.h>
-#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/lc.h>
 #include <libutils/vector.h>
 #include <stdbool.h>
@@ -9,6 +10,11 @@
 #include <string.h>
 
 #include "libcarcassonne/enums.h"
+#include "libcarcassonne/meeple.h"
+#include "libcarcassonne/options.h"
+#include "libcarcassonne/placed_tile.h"
+#include "libcarcassonne/tile.h"
+#include "libcarcassonne/vector2d.h"
 
 return_code_t create_game(game_t *game, options_t *options) {
   if (game == NULL) {
