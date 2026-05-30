@@ -530,11 +530,6 @@ static void compute_unfinished_points(
       meeple_t            *meeple = *vector_nth(&player->meeples, m);
       placed_tile_group_t *group  = meeple->group_node;
 
-      // Seuls les groupes INACHEVÉS comptent
-      if (placed_tile_group_complete(&engine->game, group)) {
-        continue;
-      }
-
       // Stocker les infos du meeple AVANT de le retirer
       removed_meeple_t removed = {.x      = group->tile->x,
                                   .y      = group->tile->y,
