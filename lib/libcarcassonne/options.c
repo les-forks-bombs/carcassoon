@@ -37,7 +37,7 @@ options_t parse_options(int argc, char* argv[]) {
   options_t config = {
       .ai         = 0,
       .max_turns  = 0,
-      .seed       = time(NULL),
+      .seed       = (int)time(NULL),
       .players    = 5,
       .mode       = CARCASSONNE_MODE_SDL,
       .extensions = {0},
@@ -134,9 +134,9 @@ options_t parse_options(int argc, char* argv[]) {
         break;
     }
   }
-  char* message;
+  char* message = validate_options(&config);
 
-  if ((message = validate_options(&config)) != NULL) {
+  if (message != NULL) {
     printf("Les paramètres sont invalide: %s\n\n", message);
     goto print_help;
   }
@@ -145,8 +145,8 @@ options_t parse_options(int argc, char* argv[]) {
 }
 
 char* validate_options(options_t* config) {
-  if (config->ai > LIBCARCASSONNE_MAX_PLAYERS) {
-    return "Le nombre de joueurs IA doit être inférieur ou égal à 5!";
+  if (config->ai > config->players) {
+    return "Le nombre de joueurs IA doit être inférieur au nombre de joueurs !";
   }
 
   if (config->players < 2) {

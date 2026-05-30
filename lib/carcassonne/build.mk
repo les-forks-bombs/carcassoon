@@ -12,9 +12,19 @@ $(OUT)/bin/assets: $(DIR)/assets
 	@cp -r $< $@
 	$(info $(TAB)CP $<)
 
+$(OUT)/bin/index.html: $(DIR)/index.html $(OUT)/bin/carcassonne$(EXT)
+	@mkdir -p $(dir $@)
+	@cp $< $@
+	$(info $(TAB)CP $<)
+
+ifeq "$(TARGET)" "wasm32-unknown-emscripten"
+    CLEAN += $(OUT)/bin/carcassonne.wasm $(OUT)/bin/carcassonne.data $(OUT)/bin/index.html
+    $(OUT)/bin/carcassonne$(EXT): LFLAGS += --preload-file $(OUT)/bin/assets@/assets
+endif
+
 $(OUT)/bin/carcassonne$(EXT): $(CARCASSONNE_OBJS) $(OUT)/bin/assets $(OUT)/libcarcassonne.a $(OUT)/libutils.a $(OUT)/libai.a  $(OUT)/libsdlrender.a
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -o $@ $< -lsdlrender  -lai -lcarcassonne -lutils $(LFLAGS)
+	@$(CC) $(CFLAGS) -o $@ $< -lsdlrender -lai -lcarcassonne -lutils $(LFLAGS)
 	@case "$(TARGET)" in \
 	        (x86_64-w64-mingw64|x86_64-w64-mingw32) \
 	            $(UTIL_DIR)/copy_dlls.sh $@; \

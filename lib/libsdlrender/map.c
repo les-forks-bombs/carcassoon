@@ -42,6 +42,8 @@ static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
   }
 
   printf("texture existe pas !!! %s \n", name);
+
+  return NULL;
 }
 
 static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
@@ -125,8 +127,8 @@ void draw_background(appstate_t *as) {
     return;
   }
 
-  float            tex_w = 0.0f;
-  float            tex_h = 0.0f;
+  float            tex_w = 0.0F;
+  float            tex_h = 0.0F;
   SDL_PropertiesID props = SDL_GetTextureProperties(texture);
   if (props != 0) {
     tex_w =
@@ -135,16 +137,16 @@ void draw_background(appstate_t *as) {
         (float)SDL_GetNumberProperty(props, SDL_PROP_TEXTURE_HEIGHT_NUMBER, 0);
   }
 
-  if (tex_w == 0.0f || tex_h == 0.0f) {
+  if (tex_w == 0.0F || tex_h == 0.0F) {
     return;
   }
 
-  const float SCALE   = 0.2f;
+  const float SCALE   = 0.2F;
   float       world_w = tex_w * SCALE;
   float       world_h = tex_h * SCALE;
 
-  float world_x = -world_w / 2.0f;
-  float world_y = -world_h / 2.0f;
+  float world_x = -world_w / 2.0F;
+  float world_y = -world_h / 2.0F;
 
   SDL_FRect bg = {(world_x - as->camera.x) * as->camera.zoom,
                   (world_y - as->camera.y) * as->camera.zoom,
@@ -181,6 +183,9 @@ void render_map(appstate_t *as) {
       }
     }
   }
+  if (as->display_grid){
+    print_grid(as);
+  }
 }
 
 void update_possible_places(appstate_t *as) {
@@ -203,19 +208,17 @@ void print_grid(appstate_t *as) {
   int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
   int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
 
-  // Détermination des limites géométriques du monde virtuel
   float world_min_x = (float)min_coord * MAP_TILE_SIZE;
   float world_max_x = (float)(max_coord + 1) * MAP_TILE_SIZE;
   float world_min_y = (float)min_coord * MAP_TILE_SIZE;
   float world_max_y = (float)(max_coord + 1) * MAP_TILE_SIZE;
 
-  // Conversion des limites mondiales en coordonnées écran pour le traçage
   float screen_min_x = (world_min_x - as->camera.x) * as->camera.zoom;
   float screen_max_x = (world_max_x - as->camera.x) * as->camera.zoom;
   float screen_min_y = (world_min_y - as->camera.y) * as->camera.zoom;
   float screen_max_y = (world_max_y - as->camera.y) * as->camera.zoom;
 
-  SDL_SetRenderDrawColor(as->renderer, 150, 150, 150, 255);
+  SDL_SetRenderDrawColor(as->renderer, 255, 255, 255, 50);
 
   for (int table_y = min_coord; table_y <= max_coord + 1; table_y++) {
     float world_x  = (float)table_y * MAP_TILE_SIZE;

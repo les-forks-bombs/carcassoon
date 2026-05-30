@@ -57,15 +57,15 @@ void put_first_action_in_appstate(appstate_t *as) {
   as->action_index        = 0;
 }
 
-void pass_to_action(appstate_t *as, int increment) {
+void pass_to_action(appstate_t *as, unsigned int increment) {
   size_t total_actions = vector_size(&as->all_actions);
 
   if (total_actions == 0) {
     return;
   }
-  int next_index = as->action_index + increment;
+  unsigned int next_index = as->action_index + increment;
 
-  if (next_index >= (int)total_actions) {
+  if (next_index >= total_actions) {
     put_first_action_in_appstate(as);
   } else if (next_index < 0) {
     as->action_index   = (int)total_actions - 1;
@@ -81,7 +81,7 @@ void send_action_to_engine(appstate_t *as) {
   // printf("hook actuel: %s\n", (*vector_nth(&as->engine.hooks,
   // as->engine.current_hook))->label);
   return_code_t result = dispatch_action(as->engine, *as->current_action);
-  // assert(result == SUCCESS);
+  assert(result == SUCCESS || result == NO_PROGRESS || result == GAME_FINISHED);
   get_current_actions(as);
   synchronize_banners(as);
 }
