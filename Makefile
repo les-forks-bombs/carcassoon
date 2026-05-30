@@ -35,7 +35,7 @@ CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-ttf --cflags)
 
 ifeq "$(PROFILE)" "debug"
 	CFLAGS += -O0 -g -D DEBUG
-	ifeq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
+	ifneq "$(TARGET)" "x86_64-w64-mingw32"
 	    CFLAGS += -fsanitize=address
 	    LFLAGS += -fsanitize=address
 		CFLAGS  += -fprofile-instr-generate -fcoverage-mapping
@@ -56,7 +56,7 @@ ifeq "$(PROFILE)" "release"
 	LFLAGS += -s
 endif
 
-ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
+ifeq "$(TARGET)" "x86_64-w64-mingw32"
     RUNNER := wine
 	EXT := .exe
 	LFLAGS += -lshlwapi
@@ -80,11 +80,12 @@ TESTS_XMLS := $(addsuffix .xml,$(TESTS))
 TESTS_COVE := $(addsuffix .profraw,$(TESTS))
 
 %.xml %.profraw: %
-	@CMOCKA_XML_FILE='$*.xml' \
-		LLVM_PROFILE_FILE="$*.profraw" \
+	@cd $(dir $<) && \
+		CMOCKA_XML_FILE='$(notdir $*).xml' \
+		LLVM_PROFILE_FILE="$(notdir $*).profraw" \
 		CMOCKA_MESSAGE_OUTPUT=xml,stdout \
 		CMOCKA_ERROR_OUTPUT=stdout \
-		cd $(dir $<) && $(RUNNER) $<
+		$(RUNNER) $<
 
 test: $(TESTS_XMLS) $(TESTS_COVE)
 CLEAN += $(TESTS_XMLS) $(TESTS_COVE)
