@@ -45,49 +45,25 @@ static SDL_AppResult handle_mouse_event(appstate_t *as, SDL_Event *event) {
         as->camera.y -= event->motion.yrel / as->camera.zoom;
       }
       break;
-    default:
-      break;
+    default: break;
   }
   return SDL_APP_CONTINUE;
 }
 
 static SDL_AppResult handle_key_event(appstate_t *as, SDL_Keycode key_val) {
   switch (key_val) {
-    case SDLK_G:
-      as->display_grid = ((!as->display_grid) != 0);
-      break;
-    case SDLK_ESCAPE:
-      as->playing = false;
-      break;
-    case SDLK_LEFT:
-      pass_to_action(as, -1);
-      break;
-    case SDLK_RIGHT:
-      pass_to_action(as, 1);
-      break;
-    case SDLK_KP_PLUS:
-      as->camera.zoom += 0.1F;
-      break;
-    case SDLK_KP_MINUS:
-      as->camera.zoom -= 0.1F;
-      break;
-    case SDLK_Z:
-      as->camera.y += 10.0F;
-      break;
-    case SDLK_Q:
-      as->camera.x += 10.0F;
-      break;
-    case SDLK_S:
-      as->camera.y -= 10.0F;
-      break;
-    case SDLK_D:
-      as->camera.x -= 10.0F;
-      break;
-    case SDLK_RETURN:
-      send_action_to_engine(as);
-      break;
-    default:
-      break;
+    case SDLK_G:        as->display_grid = ((!as->display_grid) != 0); break;
+    case SDLK_ESCAPE:   as->playing = false; break;
+    case SDLK_LEFT:     pass_to_action(as, -1); break;
+    case SDLK_RIGHT:    pass_to_action(as, 1); break;
+    case SDLK_KP_PLUS:  as->camera.zoom += 0.1F; break;
+    case SDLK_KP_MINUS: as->camera.zoom -= 0.1F; break;
+    case SDLK_Z:        as->camera.y += 10.0F; break;
+    case SDLK_Q:        as->camera.x += 10.0F; break;
+    case SDLK_S:        as->camera.y -= 10.0F; break;
+    case SDLK_D:        as->camera.x -= 10.0F; break;
+    case SDLK_RETURN:   send_action_to_engine(as); break;
+    default:            break;
   }
   return SDL_APP_CONTINUE;
 }
@@ -101,17 +77,12 @@ SDL_AppResult handle_app_event(appstate_t *as, SDL_Event *event) {
       as->map_viewport.h = as->window_height;
       center_camera_on_start(as);
       break;
-    case SDL_EVENT_QUIT:
-      as->playing = false;
-      break;
-    case SDL_EVENT_KEY_DOWN:
-      return handle_key_event(as, event->key.key);
+    case SDL_EVENT_QUIT:              as->playing = false; break;
+    case SDL_EVENT_KEY_DOWN:          return handle_key_event(as, event->key.key);
     case SDL_EVENT_MOUSE_WHEEL:
     case SDL_EVENT_MOUSE_MOTION:
-    case SDL_EVENT_MOUSE_BUTTON_DOWN:
-      return handle_mouse_event(as, event);
-    default:
-      break;
+    case SDL_EVENT_MOUSE_BUTTON_DOWN: return handle_mouse_event(as, event);
+    default:                          break;
   }
   return SDL_APP_CONTINUE;
 }
