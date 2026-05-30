@@ -1,5 +1,10 @@
 CC 		:= clang
 TARGET 	:= $(shell $(CC) -dumpmachine)
+
+ifeq "$(TARGET)" "wasm32-unknown-emscripten"
+	CC := emcc
+endif
+
 PROFILE := debug
 CLEAN :=
 NULL :=
@@ -38,7 +43,7 @@ ifeq "$(PROFILE)" "debug"
 endif
 
 RUNNER := 
-ifeq "$(CC)" "emcc"
+ifeq "$(TARGET)" "wasm32-unknown-emscripten"
 	RUNNER := node
 	EXT := .js
 	LFLAGS += -sALLOW_MEMORY_GROWTH -s USE_LIBPNG=1 -s USE_ZLIB=1 -s SHARED_MEMORY=0 -s USE_PTHREADS=0 -s USE_FREETYPE=1 -s USE_HARFBUZZ=1
