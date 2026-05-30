@@ -142,7 +142,7 @@ format:
 	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format -i
 
 tidy: $(OUT)/compile_commands.json
-	@run-clang-tidy -p $(OUT)
+	@run-clang-tidy -quiet -p $(OUT)
 
 check:
 	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format --dry-run --Werror
