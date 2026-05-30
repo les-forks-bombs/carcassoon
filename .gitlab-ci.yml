@@ -4,6 +4,7 @@ default:
 .targets: &targets
   - x86_64-pc-linux-gnu
   - x86_64-w64-mingw32
+  - wasm32-unknown-emscripten
 
 .profiles: &profiles 
   - debug
@@ -24,7 +25,7 @@ stages:
         PROFILE: *profiles
   
   script:
-    - make bear -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make all -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always
