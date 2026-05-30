@@ -196,20 +196,6 @@ action_type_t engine_wanted_action(engine_t *engine) {
   return (*vector_nth(&engine->hooks, engine->current_hook))->needed_action;
 }
 
-static action_vector_t *engine_list_possible_places(engine_t *engine) {
-  action_vector_t *actions = calloc(1, sizeof(action_vector_t));
-
-  vector_alloc(actions, 1);
-
-  // TODO : Check empty valid place, do not iterate through open_tiles its dumb
-  list_node_t *node = list_head(&engine->game.open_tiles);
-  while (node != NULL) {
-    node = node->next;
-  }
-
-  return actions;
-}
-
 action_vector_t engine_get_actions(engine_t *engine) {
   action_vector_t vec = {0};
 

@@ -177,10 +177,6 @@ return_code_t tile_place_fw(void **state_store, engine_t *engine,
 
 return_code_t tile_place_bw(void **state_store, engine_t *engine) {
   tile_place_hook_state_t *state = *state_store;
-
-  placed_tile_t **tile_ptr = game_tile_at(&engine->game, state->x, state->y);
-  const tile_t   *original = (*tile_ptr)->parent;
-
   return game_remove_tile(&engine->game, state->x, state->y);
 }
 
@@ -200,7 +196,7 @@ return_code_t find_valid_places(game_t *game, const tile_t *tile,
 
   bool ignored[4] = {0};
 
-  char *family = tile->family;
+  const char *family = tile->family;
 
   if (family[LIBCARCASSONNE_TILE_ORIENTATION_NORTH] ==
           family[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH] &&

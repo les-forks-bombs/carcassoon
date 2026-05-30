@@ -42,6 +42,8 @@ static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
   }
 
   printf("texture existe pas !!! %s \n", name);
+
+  return NULL;
 }
 
 static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
