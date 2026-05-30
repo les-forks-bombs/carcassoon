@@ -10,7 +10,7 @@
 static options_t engine_test_options(void) {
   static const extension_t*       ptr_table[] = {&LIBCARCASSONNE_EXT_BASE_GAME};
   static const extension_vector_t ext         = {
-              .meta = {.size = 1, .caps = 1, .data = &ptr_table}};
+      .meta = {.size = 1, .caps = 1, .data = &ptr_table}};
   options_t o = {.mode       = CARCASSONNE_MODE_CLI,
                  .players    = 3,
                  .seed       = 500,
