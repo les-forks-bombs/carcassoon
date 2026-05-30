@@ -13,7 +13,7 @@ $(OUT)/bin/assets: $(DIR)/assets
 	$(info $(TAB)CP $<)
 
 OLD_LFLAGS := $(LFLAGS)
-ifeq "$(CC)" "emcc"
+ifeq "$(TARGET)" "wasm32-unknown-emscripten"
 	CLEAN += $(OUT)/bin/carcassonne.{wasm,js,data}
 	LFLAGS += --preload-file $(OUT)/bin/assets@/assets
 endif
