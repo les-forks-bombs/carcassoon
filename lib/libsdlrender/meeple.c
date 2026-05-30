@@ -44,9 +44,10 @@ void render_placed_meeple(placed_tile_t *tile, appstate_t *as,
 
   SDL_Texture **texture_ptr = (SDL_Texture **)hashmap_get(
       &as->textures, meeple_texture, strlen(meeple_texture) + 1);
-  if (texture_ptr != NULL) {
-    texture = *texture_ptr;
+  if (texture_ptr == NULL) {
+    texture_ptr = &DEFAULT_TEXTURE;
   }
+  texture = *texture_ptr;
 
   const tile_t *real_tile = tile->parent;
   if (real_tile == NULL || tile_rect == NULL) {

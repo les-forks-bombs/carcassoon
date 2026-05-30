@@ -1,6 +1,5 @@
 #include "libcarcassonne/placed_tile.h"
 
-#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/vector.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -12,6 +11,8 @@
 
 #include "libcarcassonne/enums.h"
 #include "libcarcassonne/forward.h"
+#include "libcarcassonne/game.h"
+#include "libcarcassonne/tile.h"
 
 return_code_t placed_tile_create(placed_tile_t     *placed_tile,
                                  const tile_t      *parent,
@@ -123,14 +124,14 @@ bool placed_tile_group_link(placed_tile_group_t *a, placed_tile_group_t *b) {
   return true;
 }
 
-static int placed_tile_group_complete_inner(placed_tile_group_t *a,
-                                            int                  marker) {
+static unsigned int placed_tile_group_complete_inner(placed_tile_group_t *a,
+                                                     int marker) {
   // boucle
   if (a->marker == marker) {
     return 0;
   }
 
-  int total = a->open_slots;
+  unsigned int total = a->open_slots;
   // on le marque pour éviter de le re-visiter
   a->marker = marker;
 

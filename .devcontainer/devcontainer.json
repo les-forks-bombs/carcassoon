@@ -7,12 +7,12 @@
 	"updateRemoteUserUID": false,
 	"runArgs": [
 		"--device=/dev/dri",
-		"--userns=keep-id:uid=1000,gid=1000",
+		"--userns=keep-id:uid=1001,gid=1001",
 		"--security-opt=label=disable"
 	],
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/home/coder/.ssh,type=bind,readonly"
-	]
+	],
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -20,5 +20,5 @@
 	// Configure tool-specific properties.
 	// "customizations": {},
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	"remoteUser": "coder"
 }

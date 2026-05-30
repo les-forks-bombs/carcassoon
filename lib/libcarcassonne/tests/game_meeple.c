@@ -17,8 +17,8 @@ void game_place_meeple_success(void** state) {
       game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
       SUCCESS);
 
-  player_t* player = &game.players[0];
-  int       before =
+  player_t*    player = &game.players[0];
+  unsigned int before =
       ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
 
   assert_int_equal(
@@ -26,7 +26,7 @@ void game_place_meeple_success(void** state) {
       SUCCESS);
 
   // Le compteur de meeples doit avoir diminué de 1
-  int after =
+  unsigned int after =
       ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
   assert_int_equal(after, before - 1);
 
@@ -110,8 +110,8 @@ void game_remove_meeple_success(void** state) {
       game_place_tile(&game, tile, 0, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH),
       SUCCESS);
 
-  player_t* player = &game.players[0];
-  int       before =
+  player_t*    player = &game.players[0];
+  unsigned int before =
       ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
 
   assert_int_equal(
@@ -121,7 +121,7 @@ void game_remove_meeple_success(void** state) {
                    SUCCESS);
 
   // Le meeple doit être rendu
-  int after =
+  unsigned int after =
       ((meeple_count_t*)vector_nth(&player->meeples_count, BASIC))->count;
   assert_int_equal(after, before);
 

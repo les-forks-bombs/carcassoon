@@ -20,7 +20,9 @@
 
 banner_t *create_banner(appstate_t *as, banner_t *banner, SDL_Color color,
                         unsigned int nb) {
-  if (!banner) return NULL;
+  if (!banner) {
+    return NULL;
+  }
 
   banner->is_open = false;
   banner->color   = color;
@@ -39,7 +41,9 @@ banner_t *create_banner(appstate_t *as, banner_t *banner, SDL_Color color,
 }
 
 void render_banner(appstate_t *as, banner_t *banner) {
-  if (!banner) return;
+  if (!banner) {
+    return;
+  }
 
   char *path =
       (int)banner->is_open ? "/img/banner_tall.png" : "/img/banner.png";
@@ -77,7 +81,9 @@ void toggle_banner(banner_t *banner) {
 }
 
 void destroy_banner(banner_t *banner) {
-  if (!banner) return;
+  if (!banner) {
+    return;
+  }
   text_object_free(&banner->score_object);
   text_object_free(&banner->meeple_count_object);
 }
@@ -119,9 +125,8 @@ void synchronize_banners(appstate_t *as) {
         update_text_value(as, &banner->meeple_count_object, meeple.count);
       }
     }
-    if (as->engine->game.current_player == i && !banner->is_open) {
-      toggle_banner(banner);
-    } else if (as->engine->game.current_player != i && banner->is_open) {
+
+    if (as->engine->game.current_player == i) {
       toggle_banner(banner);
     }
   }

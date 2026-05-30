@@ -37,7 +37,7 @@ const tile_t* deck_pick(deck_t* deck);
 /// @param tile La tile a remettre dans la pile
 /// @return L'index auquel la tuile a été placé
 /// @relates deck_t
-int deck_defausser(deck_t* deck, const tile_t* tile);
+unsigned int deck_defausser(deck_t* deck, const tile_t* tile);
 
 /// @brief Permet de remettre une tile dans le deck au début
 /// @details Est utilisé dans le cas où on annule une pose de tuile
@@ -55,4 +55,4 @@ void deck_push(deck_t* deck, const tile_t* tile);
 /// @return Un pointeur constant vers le prototype de la tuile
 /// @attention La tuile retournée est retirée du deck
 /// @relates deck_t
-const tile_t* deck_find_tile(deck_t* deck, char* family, bool blason);
+const tile_t* deck_find_tile(deck_t* deck, const char* family, bool blason);
