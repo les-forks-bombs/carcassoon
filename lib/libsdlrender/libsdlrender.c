@@ -82,6 +82,7 @@ return_code_t run_sdl(engine_t* engine) {
         !is_game_finished(&engine->game)) {
       ai_play_turn(engine, 1000);
       get_current_actions(&state);
+      synchronize_banners(&state);
     } else {
       while (SDL_PollEvent(&event)) {
         handle_app_event(&state, &event);

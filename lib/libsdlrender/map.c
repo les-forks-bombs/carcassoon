@@ -139,7 +139,7 @@ void draw_background(appstate_t *as) {
     return;
   }
 
-  const float SCALE   = 0.5f;
+  const float SCALE   = 0.2f;
   float       world_w = tex_w * SCALE;
   float       world_h = tex_h * SCALE;
 
