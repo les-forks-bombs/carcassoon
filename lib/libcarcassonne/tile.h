@@ -1,6 +1,5 @@
 #pragma once
 
-#include <libcarcassonne/libcarcassonne.h>
 #include <libutils/vector.h>
 #include <stdbool.h>
 

@@ -1,5 +1,10 @@
 CC 		:= clang
 TARGET 	:= $(shell $(CC) -dumpmachine)
+
+ifeq "$(TARGET)" "wasm32-unknown-emscripten"
+	CC := emcc
+endif
+
 PROFILE := debug
 CLEAN :=
 NULL :=
@@ -11,6 +16,7 @@ UTIL_DIR := $(DIR)/build
 EXT :=
 OUT  := $(PWD)/out/$(PROFILE)/$(TARGET)
 
+TESTS_LFLAGS := 
 CFLAGS += --target=$(TARGET)
 LFLAGS += --target=$(TARGET)
 
@@ -27,9 +33,13 @@ CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-image --cflags)
 LFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-ttf --libs)
 CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-ttf --cflags)
 
+$(info Using CC: $(CC))
+$(info Using CFLAGS: $(CFLAGS))
+$(info Using LFLAGS: $(LFLAGS))
+
 ifeq "$(PROFILE)" "debug"
 	CFLAGS += -O0 -g -D DEBUG
-	ifeq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
+	ifneq "$(TARGET)" "x86_64-w64-mingw32"
 	    CFLAGS += -fsanitize=address
 	    LFLAGS += -fsanitize=address
 		CFLAGS  += -fprofile-instr-generate -fcoverage-mapping
@@ -37,16 +47,27 @@ ifeq "$(PROFILE)" "debug"
 	endif
 endif
 
-ifeq "$(PROFILE)" "release"
-	CFLAGS += -g -O3
-	LFLAGS += -g
+RUNNER := 
+BINARY := $(OUT)/bin/carcassonne$(EXT)
+
+ifeq "$(TARGET)" "wasm32-unknown-emscripten"
+	RUNNER := node
+	EXT := .js
+	LFLAGS += -sALLOW_MEMORY_GROWTH -s USE_LIBPNG=1 -s USE_ZLIB=1 -s SHARED_MEMORY=0 -s USE_PTHREADS=0 -s USE_FREETYPE=1 -s USE_HARFBUZZ=1
+	TESTS_LFLAGS += -s NODERAWFS=1
+	BINARY := $(OUT)/bin/index.html
 endif
 
-RUNNER := 
-ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
+ifeq "$(PROFILE)" "release"
+	CFLAGS += -O3
+	LFLAGS += -s
+endif
+
+ifeq "$(TARGET)" "x86_64-w64-mingw32"
     RUNNER := wine
 	EXT := .exe
 	LFLAGS += -lshlwapi
+	BINARY := $(OUT)/bin/carcassonne$(EXT)
 endif
 
 ifneq ($(filter clean,$(MAKECMDGOALS)),)
@@ -54,10 +75,9 @@ build: clean
 test: clean
 endif
 
-build: $(OUT)/bin/carcassonne$(EXT)
-
+build: $(BINARY)
 cli sdl: $(OUT)/bin/carcassonne$(EXT)
-	$(OUT)/bin/carcassonne -m $@
+	$(RUNNER) $(BINARY) -m $@
 
 include lib/build.mk
 
@@ -67,8 +87,9 @@ TESTS_XMLS := $(addsuffix .xml,$(TESTS))
 TESTS_COVE := $(addsuffix .profraw,$(TESTS))
 
 %.xml %.profraw: %
-	@CMOCKA_XML_FILE='$*.xml' \
-		LLVM_PROFILE_FILE="$*.profraw" \
+	@cd $(dir $<) && \
+		CMOCKA_XML_FILE='$(notdir $*).xml' \
+		LLVM_PROFILE_FILE="$(notdir $*).profraw" \
 		CMOCKA_MESSAGE_OUTPUT=xml,stdout \
 		CMOCKA_ERROR_OUTPUT=stdout \
 		$(RUNNER) $<
@@ -110,17 +131,18 @@ CLEAN += $(OUT)/AppDir $(OUT)/$(APPIMAGE)
 
 appimage: $(OUT)/$(APPIMAGE)
 
-public/:
+public/docs:
+	mkdir -p $@
 	doxygen
-CLEAN += public/
+CLEAN += public/docs
 
-docs: public/
+docs: public/docs
 
 format:
 	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format -i
 
 tidy: $(OUT)/compile_commands.json
-	@run-clang-tidy -p $(OUT)
+	@run-clang-tidy -quiet -p $(OUT)
 
 check:
 	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format --dry-run --Werror

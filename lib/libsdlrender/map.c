@@ -42,6 +42,8 @@ static SDL_Texture *get_tile_texture(appstate_t *as, const tile_t *tile) {
   }
 
   printf("texture existe pas !!! %s \n", name);
+
+  return NULL;
 }
 
 static void draw_tile(appstate_t *as, const tile_t *tile, const SDL_FRect *dest,
@@ -125,8 +127,8 @@ void draw_background(appstate_t *as) {
     return;
   }
 
-  float            tex_w = 0.0f;
-  float            tex_h = 0.0f;
+  float            tex_w = 0.0F;
+  float            tex_h = 0.0F;
   SDL_PropertiesID props = SDL_GetTextureProperties(texture);
   if (props != 0) {
     tex_w =
@@ -135,16 +137,16 @@ void draw_background(appstate_t *as) {
         (float)SDL_GetNumberProperty(props, SDL_PROP_TEXTURE_HEIGHT_NUMBER, 0);
   }
 
-  if (tex_w == 0.0f || tex_h == 0.0f) {
+  if (tex_w == 0.0F || tex_h == 0.0F) {
     return;
   }
 
-  const float SCALE   = 0.2f;
+  const float SCALE   = 0.2F;
   float       world_w = tex_w * SCALE;
   float       world_h = tex_h * SCALE;
 
-  float world_x = -world_w / 2.0f;
-  float world_y = -world_h / 2.0f;
+  float world_x = -world_w / 2.0F;
+  float world_y = -world_h / 2.0F;
 
   SDL_FRect bg = {(world_x - as->camera.x) * as->camera.zoom,
                   (world_y - as->camera.y) * as->camera.zoom,

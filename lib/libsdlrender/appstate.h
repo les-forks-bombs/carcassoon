@@ -29,7 +29,7 @@ struct appstate {
   action_t          *current_action;
   action_vector_t    all_actions;
   bool               is_waiting_for_tile;
-  int                action_index;
+  unsigned int       action_index;
   bool               display_grid;
 
   bool playing;
