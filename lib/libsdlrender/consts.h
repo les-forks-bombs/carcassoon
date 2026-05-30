@@ -5,7 +5,7 @@
 #include <libcarcassonne/libcarcassonne.h>
 
 #define MAP_TILE_SIZE             64
-#define MAP_TABLE_SIZE            (LIBCARCASSONNE_TILES_COUNT * 2 - 1)
+#define MAP_TABLE_SIZE            ((LIBCARCASSONNE_TILES_COUNT * 2) - 1)
 #define DEFAULT_WINDOW_WIDTH      1000
 #define DEFAULT_WINDOW_HEIGHT     700
 #define WINDOW_RESIZABLE          1

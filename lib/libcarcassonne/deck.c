@@ -4,14 +4,14 @@
 #include <libutils/vector.h>
 #include <unistd.h>
 
-deck_t create_deck(int seed, extension_vector_t* extensions) {
+deck_t create_deck(unsigned int seed, extension_vector_t* extensions) {
   // On initialise la struct, cette dernière sera stoquée dans le stack
   deck_t deck = {.list  = {.meta =
                                {
                                    .head = NULL,
                                    .tail = NULL,
                                    .size = 0,
-                              }},
+                               }},
                  .state = create_prng_mersenne_twister_state(seed)};
 
   // On crée une queue (linked-list) qui sera utilisée pour

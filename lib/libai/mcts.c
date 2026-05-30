@@ -36,7 +36,9 @@ static double evaluate(engine_t *engine, player_t *ai_player) {
   for (unsigned int i = 0; i < nb; i++) {
     if (i != ai_player->id) {
       int s = (int)engine->game.players[i].score;
-      if (s > max_opp) max_opp = s;
+      if (s > max_opp) {
+        max_opp = s;
+      }
     }
   }
 
@@ -48,12 +50,13 @@ static double evaluate(engine_t *engine, player_t *ai_player) {
   return (double)(my_score - max_opp);
 }
 
-static double ucb1(int total_iterations, mcts_node_t *node) {
+static double ucb1(unsigned int total_iterations, mcts_node_t *node) {
   if (node->visits == 0) {
     return (double)INFINITY;
   }
-  return (double)node->score / (double)node->visits +
-         2.0 * sqrt(log((double)total_iterations) / (double)node->visits);
+  return (double)node->score /
+         ((double)node->visits +
+          (2.0 * sqrt(log((double)total_iterations) / (double)node->visits)));
 }
 
 static void backpropagate(mcts_node_t *node, int score) {
@@ -87,11 +90,11 @@ static int rollout(engine_t *engine, mcts_node_t *node, player_t *ai_player) {
   return score;
 }
 
-static void mcts(engine_t *engine, mcts_node_t *node, int total_visits,
+static void mcts(engine_t *engine, mcts_node_t *node, unsigned int total_visits,
                  player_t *ai_player);
 
-static void expand(engine_t *engine, mcts_node_t *node, int total_visits,
-                   player_t *ai_player) {
+static void expand(engine_t *engine, mcts_node_t *node,
+                   unsigned int total_visits, player_t *ai_player) {
   if (is_game_finished(&engine->game)) {
     return;
   }
@@ -106,7 +109,7 @@ static void expand(engine_t *engine, mcts_node_t *node, int total_visits,
   mcts(engine, node, total_visits, ai_player);
 }
 
-static void mcts(engine_t *engine, mcts_node_t *node, int total_visits,
+static void mcts(engine_t *engine, mcts_node_t *node, unsigned int total_visits,
                  player_t *ai_player) {
   if (is_game_finished(&engine->game)) {
     rollout(engine, node, ai_player);
@@ -149,7 +152,7 @@ static void mcts_free_tree(mcts_node_t *node) {
   free(node);
 }
 
-void ai_play_turn(engine_t *engine, int max_iterations) {
+void ai_play_turn(engine_t *engine, unsigned int max_iterations) {
   player_t    *ai_player = game_get_current_player(&engine->game);
   unsigned int epoch     = vector_size(&engine->dispatchs);
 
@@ -172,7 +175,9 @@ void ai_play_turn(engine_t *engine, int max_iterations) {
   double       best_tile_ratio = -INFINITY;
   for (unsigned int i = 0; i < vector_size(&root->children); i++) {
     mcts_node_t *node = *vector_nth(&root->children, i);
-    if (node->visits == 0) continue;
+    if (node->visits == 0) {
+      continue;
+    }
     double ratio = (double)node->score / (double)node->visits;
     if (best_child_tile == NULL || ratio > best_tile_ratio) {
       best_child_tile = node;
@@ -188,7 +193,10 @@ void ai_play_turn(engine_t *engine, int max_iterations) {
   if (best_child_tile != NULL) {
     for (unsigned int i = 0; i < vector_size(&best_child_tile->children); i++) {
       mcts_node_t *node = *vector_nth(&best_child_tile->children, i);
-      if (node->visits == 0) continue;
+      if (node->visits == 0) {
+        continue;
+      }
+
       double ratio = (double)node->score / (double)node->visits;
       if (best_child_meeple == NULL || ratio > best_meeple_ratio) {
         best_child_meeple = node;
