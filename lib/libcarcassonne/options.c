@@ -145,8 +145,8 @@ options_t parse_options(int argc, char* argv[]) {
 }
 
 char* validate_options(options_t* config) {
-  if (config->ai > LIBCARCASSONNE_MAX_PLAYERS) {
-    return "Le nombre de joueurs IA doit être inférieur ou égal à 5!";
+  if (config->ai > config->players) {
+    return "Le nombre de joueurs IA doit être inférieur au nombre de joueurs !";
   }
 
   if (config->players < 2) {
