@@ -15,7 +15,7 @@ $(OUT)/bin/assets: $(DIR)/assets
 OLD_LFLAGS := $(LFLAGS)
 ifeq "$(CC)" "emcc"
 	CLEAN += $(OUT)/bin/carcassonne.{wasm,js,data}
-	LFLAGS += --preload assets
+	LFLAGS += --preload-file $(OUT)/bin/assets@/assets
 endif
 
 $(OUT)/bin/carcassonne$(EXT): $(CARCASSONNE_OBJS) $(OUT)/bin/assets $(OUT)/libcarcassonne.a $(OUT)/libutils.a $(OUT)/libai.a  $(OUT)/libsdlrender.a
