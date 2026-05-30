@@ -2,8 +2,6 @@
 #define _POSIX_C_SOURCE 200809L  // NOLINT(bugprone-reserved-identifier)
 #endif
 
-#ifndef _WIN32
-#endif
 #include <libutils/path.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,8 +20,12 @@
 #endif
 
 return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]) {
+#ifdef __EMSCRIPTEN__
+  ret[0] = '\0';
+  return SUCCESS;
+#elif _WIN32
+
   ssize_t len;
-#ifdef _WIN32
   len = GetModuleFileNameA(NULL, ret, MAX_PATH);
   if (len == 0) {
     printf("GetModuleFileName failed. Error: %lu\n", GetLastError());
@@ -34,6 +36,7 @@ return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]) {
   }
 #else
 
+  ssize_t len;
   len = readlink("/proc/self/exe", ret, LIBUTILS_PATH_BUF - 1);
   if (len == -1) {
     perror("readlink failed");
@@ -50,14 +53,15 @@ return_code_t current_executable_dir(char ret[LIBUTILS_PATH_BUF]) {
   if (current_executable_path(path) != SUCCESS) {
     return ERROR;
   }
-  char* out = path;
+  char* out;
 
 #ifdef _WIN32
+  out = path;
   PathRemoveFileSpecA(out);
 #else
   out = dirname(path);
 #endif
-  strcpy(ret, out);
+  strncpy(ret, out, LIBUTILS_PATH_BUF);
 
   return SUCCESS;
 }

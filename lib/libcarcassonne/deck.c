@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <libcarcassonne/libcarcassonne.h>
 #include <libutils/lc.h>
 #include <libutils/vector.h>
@@ -10,7 +11,7 @@ deck_t create_deck(int seed, extension_vector_t* extensions) {
                                    .head = NULL,
                                    .tail = NULL,
                                    .size = 0,
-                               }},
+                              }},
                  .state = create_prng_mersenne_twister_state(seed)};
 
   // On crée une queue (linked-list) qui sera utilisée pour
@@ -43,6 +44,8 @@ deck_t create_deck(int seed, extension_vector_t* extensions) {
     }
   }
 
+  assert(start_tile != NULL);
+
   deck_list_t start_tiles = {.meta = {
                                  .head = NULL,
                                  .tail = NULL,
@@ -58,7 +61,8 @@ deck_t create_deck(int seed, extension_vector_t* extensions) {
   }
 
   while (list_size(&queue) != 0) {
-    int index = prng_mersenne_twister_random(&deck.state) % list_size(&queue);
+    unsigned int index =
+        prng_mersenne_twister_random(&deck.state) % list_size(&queue);
 
     // Récupérer l'élément a l'index n (O(n))
     list_node_t* element = list_nth(&queue, index);
@@ -71,7 +75,7 @@ deck_t create_deck(int seed, extension_vector_t* extensions) {
   }
 
   while (list_size(&start_tiles) != 0) {
-    int index =
+    unsigned int index =
         prng_mersenne_twister_random(&deck.state) % list_size(&start_tiles);
 
     // Récupérer l'élément a l'index n (O(n))
@@ -102,8 +106,8 @@ const tile_t* deck_pick(deck_t* deck) {
   return tile;
 }
 
-int deck_defausser(deck_t* deck, const tile_t* tile) {
-  int index =
+unsigned int deck_defausser(deck_t* deck, const tile_t* tile) {
+  unsigned int index =
       prng_mersenne_twister_random(&deck->state) % list_size(&deck->list);
   list_insert(&deck->list, &tile, index);
 
@@ -114,7 +118,7 @@ void deck_push(deck_t* deck, const tile_t* tile) {
   list_prepend(&deck->list, &tile);
 }
 
-const tile_t* deck_find_tile(deck_t* deck, char* family, bool blason) {
+const tile_t* deck_find_tile(deck_t* deck, const char* family, bool blason) {
   list_node_t* curr = list_head(&deck->list);
 
   while (curr != NULL &&

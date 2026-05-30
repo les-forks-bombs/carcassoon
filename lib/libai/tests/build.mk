@@ -12,7 +12,7 @@ $(OUT)/bin/libai_test$(EXT): $(LIBAI_TEST_OBJS) \
     $(OUT)/libutils.a \
     $(OUT)/libai.a
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(LFLAGS) -o $@ $^ -lcmocka
+	@$(CC) $(CFLAGS) $(TESTS_LFLAGS) $(LFLAGS) -o $@ $^ -lcmocka
 	@case "$(TARGET)" in \
 	        (x86_64-w64-mingw64|x86_64-w64-mingw32) \
 	            $(UTIL_DIR)/copy_dlls.sh $@; \

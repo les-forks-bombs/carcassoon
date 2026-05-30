@@ -1,6 +1,6 @@
 #pragma once
 
-#include <libcarcassonne/libcarcassonne.h>
+#include <libcarcassonne/player.h>
 
 /// @brief Représente un meeple
 struct meeple {
