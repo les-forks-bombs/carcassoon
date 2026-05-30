@@ -135,6 +135,8 @@ stages:
         matrix:
         - TARGET: *targets
           PROFILE: ['release']
+  script:
+    - echo "Aggregating all build files"
   artifacts:
     when: always
     expire_in: 1 week
