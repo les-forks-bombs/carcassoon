@@ -36,7 +36,7 @@
             canvas.height = window.innerHeight;
         };
 
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(window.location.hash);
         const flagMap = {
             'mode': '-m',
             'players': '-p',
@@ -44,9 +44,12 @@
             'max-turns': '-t',
             'seed': '-s'
         };
+
+        const args = [];
         for (const [key, flag] of Object.entries(flagMap)) {
             if (urlParams.has(key)) {
-                args.push(flag, urlParams.get(key));
+                args.push(flag);
+                args.push(urlParams.get(key));
             }
         }
 
