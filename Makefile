@@ -132,11 +132,12 @@ CLEAN += $(OUT)/AppDir $(OUT)/$(APPIMAGE)
 
 appimage: $(OUT)/$(APPIMAGE)
 
-public/:
+public/docs:
+	mkdir -p $@
 	doxygen
-CLEAN += public/
+CLEAN += public/docs
 
-docs: public/
+docs: public/docs
 
 format:
 	@find . -iname "*.h" -o -iname "*.c" | xargs clang-format -i
