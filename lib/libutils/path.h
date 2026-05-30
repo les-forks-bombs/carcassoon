@@ -11,7 +11,7 @@
 
 #define LIBUTILS_PATH_BUF MAX_PATH
 #else
-#include <limits.h>
+#include <linux/limits.h>
 #include <unistd.h>
 
 #define LIBUTILS_PATH_BUF PATH_MAX
