@@ -1,7 +1,8 @@
 #include <libutils/prng_mersenne_twister.h>
 #include <string.h>
 
-prng_mersenne_twister_state_t create_prng_mersenne_twister_state(int seed) {
+prng_mersenne_twister_state_t create_prng_mersenne_twister_state(
+    unsigned int seed) {
   prng_mersenne_twister_state_t state;
   memset(&state, 0, sizeof(prng_mersenne_twister_state_t));
 
@@ -10,9 +11,9 @@ prng_mersenne_twister_state_t create_prng_mersenne_twister_state(int seed) {
   state_array[0] = seed;  // suggested initial seed = 19650218UL
 
   for (int i = 1; i < LIBCARCASSONNE_PRNG_n; i++) {
-    seed           = (LIBCARCASSONNE_PRNG_f *
-                      (seed ^ (seed >> (LIBCARCASSONNE_PRNG_w - 2)))) +
-                     i;  // Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier.
+    seed = (LIBCARCASSONNE_PRNG_f *
+            (seed ^ (seed >> (LIBCARCASSONNE_PRNG_w - 2)))) +
+           i;  // Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier.
     state_array[i] = seed;
   }
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SDL3/SDL.h>
 #include <SDL3/SDL_pixels.h>
 #include <libcarcassonne/libcarcassonne.h>
 
@@ -18,3 +19,5 @@ static SDL_Color players_colors[] = {{255, 0, 255, 255},
                                      {255, 100, 0, 255},
                                      {0, 0, 0, 255},
                                      {150, 0, 255, 255}};
+
+extern SDL_Texture* DEFAULT_TEXTURE;
