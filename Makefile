@@ -33,6 +33,10 @@ CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-image --cflags)
 LFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-ttf --libs)
 CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-ttf --cflags)
 
+$(info Using CC: $(CC))
+$(info Using CFLAGS: $(CFLAGS))
+$(info Using LFLAGS: $(LFLAGS))
+
 ifeq "$(PROFILE)" "debug"
 	CFLAGS += -O0 -g -D DEBUG
 	ifneq "$(TARGET)" "x86_64-w64-mingw32"
@@ -44,11 +48,14 @@ ifeq "$(PROFILE)" "debug"
 endif
 
 RUNNER := 
+BINARY := $(OUT)/bin/carcassonne$(EXT)
+
 ifeq "$(TARGET)" "wasm32-unknown-emscripten"
 	RUNNER := node
 	EXT := .js
 	LFLAGS += -sALLOW_MEMORY_GROWTH -s USE_LIBPNG=1 -s USE_ZLIB=1 -s SHARED_MEMORY=0 -s USE_PTHREADS=0 -s USE_FREETYPE=1 -s USE_HARFBUZZ=1
 	TESTS_LFLAGS += -s NODERAWFS=1
+	BINARY := $(OUT)/bin/index.html
 endif
 
 ifeq "$(PROFILE)" "release"
@@ -67,7 +74,8 @@ build: clean
 test: clean
 endif
 
-build: $(OUT)/bin/carcassonne$(EXT)
+
+build: $(BINARY)
 
 cli sdl: $(OUT)/bin/carcassonne$(EXT)
 	$(OUT)/bin/carcassonne -m $@

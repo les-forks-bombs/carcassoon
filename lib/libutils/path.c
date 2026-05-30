@@ -23,9 +23,8 @@ return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]) {
   ssize_t len;
 
 #ifdef __EMSCRIPTEN__
-    /* In WebAssembly, our packed assets usually just live at the virtual root */
-    strncpy(ret, "/", LIBUTILS_PATH_BUF);
-    return SUCCESS; // Assuming SUCCESS is defined in libcarcassonne
+  ret[0] = '\0';
+  return SUCCESS;
 #elif _WIN32
   len = GetModuleFileNameA(NULL, ret, MAX_PATH);
   if (len == 0) {
