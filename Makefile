@@ -55,14 +55,15 @@ ifeq "$(TARGET)" "wasm32-unknown-emscripten"
 endif
 
 ifeq "$(PROFILE)" "release"
-	CFLAGS += -O3  -flto=thin
+	CFLAGS += -O3 -flto=thin
 	LFLAGS += -s -flto=thin
+	LFLAGS += -fuse-ld=lld
 endif
 
 ifeq "$(TARGET)" "x86_64-w64-mingw32"
     RUNNER := wine
 	EXT := .exe
-	LFLAGS += -lshlwapi
+	LFLAGS += -lshlwapi -mwindows
 	BINARY := $(OUT)/bin/carcassonne$(EXT)
 endif
 
