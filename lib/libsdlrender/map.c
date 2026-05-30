@@ -183,6 +183,9 @@ void render_map(appstate_t *as) {
       }
     }
   }
+  if (as->display_grid){
+    print_grid(as);
+  }
 }
 
 void update_possible_places(appstate_t *as) {
@@ -205,19 +208,17 @@ void print_grid(appstate_t *as) {
   int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
   int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
 
-  // Détermination des limites géométriques du monde virtuel
   float world_min_x = (float)min_coord * MAP_TILE_SIZE;
   float world_max_x = (float)(max_coord + 1) * MAP_TILE_SIZE;
   float world_min_y = (float)min_coord * MAP_TILE_SIZE;
   float world_max_y = (float)(max_coord + 1) * MAP_TILE_SIZE;
 
-  // Conversion des limites mondiales en coordonnées écran pour le traçage
   float screen_min_x = (world_min_x - as->camera.x) * as->camera.zoom;
   float screen_max_x = (world_max_x - as->camera.x) * as->camera.zoom;
   float screen_min_y = (world_min_y - as->camera.y) * as->camera.zoom;
   float screen_max_y = (world_max_y - as->camera.y) * as->camera.zoom;
 
-  SDL_SetRenderDrawColor(as->renderer, 150, 150, 150, 255);
+  SDL_SetRenderDrawColor(as->renderer, 255, 255, 255, 50);
 
   for (int table_y = min_coord; table_y <= max_coord + 1; table_y++) {
     float world_x  = (float)table_y * MAP_TILE_SIZE;
