@@ -49,15 +49,21 @@ BINARY := $(OUT)/bin/carcassonne$(EXT)
 ifeq "$(TARGET)" "wasm32-unknown-emscripten"
 	RUNNER := node
 	EXT := .js
-	LFLAGS += -sALLOW_MEMORY_GROWTH -s USE_LIBPNG=1 -s USE_ZLIB=1 -s SHARED_MEMORY=0 -s USE_PTHREADS=0 -s USE_FREETYPE=1 -s USE_HARFBUZZ=1
+	LFLAGS += -sEXIT_RUNTIME=1 -sALLOW_MEMORY_GROWTH -s USE_LIBPNG=1 -s USE_ZLIB=1 -s SHARED_MEMORY=0 -s USE_PTHREADS=0 -s USE_FREETYPE=1 -s USE_HARFBUZZ=1 -gsource-map
 	TESTS_LFLAGS += -s NODERAWFS=1
 	BINARY := $(OUT)/bin/index.html
 endif
 
 ifeq "$(PROFILE)" "release"
 	CFLAGS += -O3 -flto=thin
-	LFLAGS += -s -flto=thin
+	LFLAGS += -flto=thin
 	LFLAGS += -fuse-ld=lld
+
+	ifeq "$(TARGET)" "wasm32-unknown-emscripten"
+		LFLAGS += -g
+	else
+		LFLAGS += -s
+	endif
 endif
 
 ifeq "$(TARGET)" "x86_64-w64-mingw32"
