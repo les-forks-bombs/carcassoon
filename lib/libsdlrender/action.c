@@ -81,7 +81,7 @@ void send_action_to_engine(appstate_t *as) {
   // printf("hook actuel: %s\n", (*vector_nth(&as->engine.hooks,
   // as->engine.current_hook))->label);
   return_code_t result = dispatch_action(as->engine, *as->current_action);
-  assert(result == SUCCESS || result == NO_PROGRESS);
+  assert(result == SUCCESS || result == NO_PROGRESS || result == GAME_FINISHED);
   get_current_actions(as);
   synchronize_banners(as);
 }
