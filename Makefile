@@ -67,6 +67,7 @@ ifeq "$(TARGET)" "x86_64-w64-mingw32"
     RUNNER := wine
 	EXT := .exe
 	LFLAGS += -lshlwapi
+	BINARY := $(OUT)/bin/carcassonne$(EXT)
 endif
 
 ifneq ($(filter clean,$(MAKECMDGOALS)),)
@@ -74,11 +75,9 @@ build: clean
 test: clean
 endif
 
-
 build: $(BINARY)
-
 cli sdl: $(OUT)/bin/carcassonne$(EXT)
-	$(OUT)/bin/carcassonne -m $@
+	$(RUNNER) $(BINARY) -m $@
 
 include lib/build.mk
 
