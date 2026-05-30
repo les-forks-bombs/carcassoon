@@ -20,12 +20,12 @@
 #endif
 
 return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]) {
-  ssize_t len;
-
 #ifdef __EMSCRIPTEN__
   ret[0] = '\0';
   return SUCCESS;
 #elif _WIN32
+
+  ssize_t len;
   len = GetModuleFileNameA(NULL, ret, MAX_PATH);
   if (len == 0) {
     printf("GetModuleFileName failed. Error: %lu\n", GetLastError());
@@ -35,6 +35,8 @@ return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]) {
     return ERROR;
   }
 #else
+
+  ssize_t len;
   len = readlink("/proc/self/exe", ret, LIBUTILS_PATH_BUF - 1);
   if (len == -1) {
     perror("readlink failed");
@@ -51,14 +53,15 @@ return_code_t current_executable_dir(char ret[LIBUTILS_PATH_BUF]) {
   if (current_executable_path(path) != SUCCESS) {
     return ERROR;
   }
-  char* out = path;
+  char* out;
 
 #ifdef _WIN32
+  out = path;
   PathRemoveFileSpecA(out);
 #else
   out = dirname(path);
 #endif
-  strcpy(ret, out);
+  strncpy(ret, out, LIBUTILS_PATH_BUF);
 
   return SUCCESS;
 }

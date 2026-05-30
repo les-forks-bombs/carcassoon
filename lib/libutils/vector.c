@@ -9,11 +9,16 @@
 
 unsigned int utils_vector_alloc(vector_t *vector, size_t capacity,
                                 size_t element) {
-  if (vector->caps >= capacity && vector->data != NULL) return vector->caps;
+  if (vector->caps >= capacity && vector->data != NULL) {
+    return vector->caps;
+  }
 
   vector->caps = capacity <= 1 ? 1 : capacity;
+
+  void *old    = vector->data;
   vector->data = realloc(vector->data, vector->caps * element);
   if (vector->data == NULL) {
+    free(old);
     printf("FATAL: Malloc Failure");
     exit(1);
   }

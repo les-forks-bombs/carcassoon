@@ -57,15 +57,15 @@ void put_first_action_in_appstate(appstate_t *as) {
   as->action_index        = 0;
 }
 
-void pass_to_action(appstate_t *as, int increment) {
+void pass_to_action(appstate_t *as, unsigned int increment) {
   size_t total_actions = vector_size(&as->all_actions);
 
   if (total_actions == 0) {
     return;
   }
-  int next_index = as->action_index + increment;
+  unsigned int next_index = as->action_index + increment;
 
-  if (next_index >= (int)total_actions) {
+  if (next_index >= total_actions) {
     put_first_action_in_appstate(as);
   } else if (next_index < 0) {
     as->action_index   = (int)total_actions - 1;

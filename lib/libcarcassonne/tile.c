@@ -7,7 +7,7 @@ tile_part_type_t tile_get_family_face(const tile_t*      tile,
     return 0;
   }
 
-  int              index     = (connexion_face + orientation) % 4;
+  unsigned int     index     = (connexion_face + orientation) % 4;
   static const int values[4] = {1, 5, 7, 3};
 
   return tile->parts[values[index]];

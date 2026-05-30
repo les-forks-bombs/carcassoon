@@ -1,7 +1,8 @@
 #include <libutils/prng_mersenne_twister.h>
 #include <string.h>
 
-prng_mersenne_twister_state_t create_prng_mersenne_twister_state(int seed) {
+prng_mersenne_twister_state_t create_prng_mersenne_twister_state(
+    unsigned int seed) {
   prng_mersenne_twister_state_t state;
   memset(&state, 0, sizeof(prng_mersenne_twister_state_t));
 

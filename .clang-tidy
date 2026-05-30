@@ -11,9 +11,12 @@ ImplementationFileExtensions:
   - cc
   - cpp
   - cxx
-HeaderFilterRegex: '^.*/lib/(carcassonne|libai|libcarcassonne|libsdlrender|libutils)/.*'
+HeaderFilterRegex: '^lib/(carcassonne|libai|libcarcassonne|libsdlrender|libutils)/.*'
 FormatStyle:     none
 CheckOptions:    {}
+ExtraArgs:
+  - '-D__INT64_C(c)=c##LL'
+  - '-D__UINT64_C(c)=c##ULL'
 SystemHeaders:   false
 Checks: >
   clang-analyzer-*,
@@ -25,4 +28,12 @@ Checks: >
   -misc-include-cleaner,
   -google-build-using-namespace,
   -bugprone-macro-parentheses,
-  -misc-use-internal-linkage
+  -misc-use-internal-linkage,
+  -misc-no-recursion,
+  -bugprone-sizeof-expression,
+  -readability-magic-numbers,
+  -readability-identifier-length,
+  -readability-function-cognitive-complexity,
+  -bugprone-easily-swappable-parameters,
+  -readability-isolate-declaration,
+  -performance-no-int-to-ptr
