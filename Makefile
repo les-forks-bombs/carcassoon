@@ -37,10 +37,11 @@ ifeq "$(PROFILE)" "debug"
 	endif
 endif
 
+RUNNER := 
 ifeq "$(CC)" "emcc"
 	RUNNER := node
 	EXT := .js
-	CFLAGS += -sALLOW_MEMORY_GROWTH
+	LFLAGS += -sALLOW_MEMORY_GROWTH -s USE_LIBPNG=1 -s USE_ZLIB=1 -s SHARED_MEMORY=0 -s USE_PTHREADS=0 -s USE_FREETYPE=1 -s USE_HARFBUZZ=1
 endif
 
 ifeq "$(PROFILE)" "release"
@@ -48,7 +49,6 @@ ifeq "$(PROFILE)" "release"
 	LFLAGS += -g
 endif
 
-RUNNER := 
 ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
     RUNNER := wine
 	EXT := .exe
@@ -77,7 +77,7 @@ TESTS_COVE := $(addsuffix .profraw,$(TESTS))
 		LLVM_PROFILE_FILE="$*.profraw" \
 		CMOCKA_MESSAGE_OUTPUT=xml,stdout \
 		CMOCKA_ERROR_OUTPUT=stdout \
-		$(RUNNER) $<
+		cd $(dir $<) && $(RUNNER) $<
 
 test: $(TESTS_XMLS) $(TESTS_COVE)
 CLEAN += $(TESTS_XMLS) $(TESTS_COVE)
