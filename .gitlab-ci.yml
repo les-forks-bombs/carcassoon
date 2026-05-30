@@ -127,10 +127,26 @@ stages:
     paths:
       - ./public/docs
 
+'Aggregate':
+  stage: deploy
+  needs:
+    - job: 'Build'
+      parallel:
+        matrix:
+        - TARGET: *targets
+          PROFILE: ['release']
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - ./out  
+
+
 'Pages':
   stage: deploy
   needs:
     - job: 'Docs'
+    - job: 'Aggregate'
     - job: 'Build'
       parallel:
         matrix:
@@ -139,6 +155,8 @@ stages:
   script:
     - rm -r out/release/wasm32-unknown-emscripten/bin/assets
     - cp out/release/wasm32-unknown-emscripten/bin/* public/
+    - tar czf public/release.tar.gz out/release
+    - sha256sum public/release.tar.gz > public/release.tar.gz.sha256
 
   artifacts:
     when: always
