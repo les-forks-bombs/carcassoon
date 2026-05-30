@@ -8,6 +8,11 @@
 #include <libsdlrender/load.h>
 #include <stdio.h>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
+
 #include "libai/mcts.h"
 #include "libcarcassonne/enums.h"
 #include "libcarcassonne/game.h"
@@ -22,6 +27,46 @@
 #include "libutils/lc.h"
 #include "libutils/path.h"
 #include "libutils/vector.h"
+
+static void render(void* app) {
+  appstate_t* state = app;
+#ifdef __EMSCRIPTEN__
+  if (!state->playing) {
+    printf("Stopping playback\n");
+    emscripten_cancel_main_loop();
+  }
+#endif
+
+  SDL_Event event;
+  if (game_get_current_player(&state->engine->game)->player_type ==
+          LIBCARCASSONNE_PLAYER_AI &&
+      !is_game_finished(&state->engine->game)) {
+    ai_play_turn(state->engine, 1000);
+    get_current_actions(state);
+    synchronize_banners(state);
+  } else {
+    while (SDL_PollEvent(&event)) {
+      handle_app_event(state, &event);
+    }
+  }
+
+  SDL_SetRenderDrawColor(state->renderer, 0, 51, 153, 255);
+  SDL_RenderClear(state->renderer);
+
+  SDL_Rect map_viewport = {
+      (int)state->map_viewport.x, (int)state->map_viewport.y,
+      (int)state->map_viewport.w, (int)state->map_viewport.h};
+
+  SDL_SetRenderViewport(state->renderer, &map_viewport);
+  render_map(state);
+  SDL_SetRenderViewport(state->renderer, NULL);
+
+  for (unsigned int i = 0; i < state->engine->config.players; i++) {
+    render_banner(state, &state->banners[i]);
+  }
+
+  SDL_RenderPresent(state->renderer);
+}
 
 return_code_t run_sdl(engine_t* engine) {
   return_code_t   err;
@@ -75,37 +120,13 @@ return_code_t run_sdl(engine_t* engine) {
 
   state.playing = true;
 
-  SDL_Event event;
+#ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop_arg(render, (void*)&state, 0, 1);
+#else
   while (state.playing) {
-    if (game_get_current_player(&engine->game)->player_type ==
-            LIBCARCASSONNE_PLAYER_AI &&
-        !is_game_finished(&engine->game)) {
-      ai_play_turn(engine, 1000);
-      get_current_actions(&state);
-      synchronize_banners(&state);
-    } else {
-      while (SDL_PollEvent(&event)) {
-        handle_app_event(&state, &event);
-      }
-    }
-
-    SDL_SetRenderDrawColor(state.renderer, 0, 51, 153, 255);
-    SDL_RenderClear(state.renderer);
-
-    SDL_Rect map_viewport = {
-        (int)state.map_viewport.x, (int)state.map_viewport.y,
-        (int)state.map_viewport.w, (int)state.map_viewport.h};
-
-    SDL_SetRenderViewport(state.renderer, &map_viewport);
-    render_map(&state);
-    SDL_SetRenderViewport(state.renderer, NULL);
-
-    for (unsigned int i = 0; i < state.engine->config.players; i++) {
-      render_banner(&state, &state.banners[i]);
-    }
-
-    SDL_RenderPresent(state.renderer);
+    render((void*)&state);
   }
+#endif
 
   SDL_DestroyRenderer(state.renderer);
   SDL_DestroyWindow(state.window);

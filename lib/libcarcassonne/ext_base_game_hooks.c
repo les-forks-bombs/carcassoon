@@ -177,10 +177,6 @@ return_code_t tile_place_fw(void **state_store, engine_t *engine,
 
 return_code_t tile_place_bw(void **state_store, engine_t *engine) {
   tile_place_hook_state_t *state = *state_store;
-
-  placed_tile_t **tile_ptr = game_tile_at(&engine->game, state->x, state->y);
-  const tile_t   *original = (*tile_ptr)->parent;
-
   return game_remove_tile(&engine->game, state->x, state->y);
 }
 
@@ -200,7 +196,7 @@ return_code_t find_valid_places(game_t *game, const tile_t *tile,
 
   bool ignored[4] = {0};
 
-  char *family = tile->family;
+  const char *family = tile->family;
 
   if (family[LIBCARCASSONNE_TILE_ORIENTATION_NORTH] ==
           family[LIBCARCASSONNE_TILE_ORIENTATION_SOUTH] &&
@@ -300,11 +296,11 @@ void compute_abbey_score(engine_t *engine, placed_tile_t *placed_tile,
 
       meeple_t        *meeple = *vector_nth(&evaluation.meeples, 0);
       removed_meeple_t rm     = {
-          .x      = meeple->group_node->tile->x,
-          .y      = meeple->group_node->tile->y,
-          .group  = meeple->group,
-          .type   = meeple->meeple_type,
-          .player = meeple->player,
+              .x      = meeple->group_node->tile->x,
+              .y      = meeple->group_node->tile->y,
+              .group  = meeple->group,
+              .type   = meeple->meeple_type,
+              .player = meeple->player,
       };
       vector_append(&scored.meeples, &rm);
       scored.player_won[meeple->player->id] = true;
@@ -371,11 +367,11 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
           for (size_t j = 0; j < vector_size(&evaluation.meeples); j++) {
             meeple_t        *meeple = *vector_nth(&evaluation.meeples, j);
             removed_meeple_t rm     = {
-                .x      = meeple->group_node->tile->x,
-                .y      = meeple->group_node->tile->y,
-                .group  = meeple->group,
-                .type   = meeple->meeple_type,
-                .player = meeple->player,
+                    .x      = meeple->group_node->tile->x,
+                    .y      = meeple->group_node->tile->y,
+                    .group  = meeple->group,
+                    .type   = meeple->meeple_type,
+                    .player = meeple->player,
             };
             vector_append(&scored.meeples, &rm);
             for (unsigned int p = 0; p < engine->config.players; p++) {
@@ -643,7 +639,7 @@ return_code_t pick_tile_fw(void **state_store, engine_t *engine,
     code = find_valid_places(&engine->game, tile, vec, &actions);
 
     if (vector_size(&actions) == 0) {
-      int index = deck_defausser(&engine->game.deck, tile);
+      unsigned int index = deck_defausser(&engine->game.deck, tile);
 
       discarded_tile_t discarded_tile = {.tile = &tile, .index = index};
 
