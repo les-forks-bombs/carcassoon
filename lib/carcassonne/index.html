@@ -36,7 +36,7 @@
             canvas.height = window.innerHeight;
         };
 
-        const urlParams = new URLSearchParams(window.location.hash);
+        const urlParams = new URLSearchParams(window.location.hash.substring(1));
         const flagMap = {
             'mode': '-m',
             'players': '-p',
