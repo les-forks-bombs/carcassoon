@@ -33,10 +33,6 @@ CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-image --cflags)
 LFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-ttf --libs)
 CFLAGS += $(shell $(PKG_CONF) --personality=$(TARGET) sdl3-ttf --cflags)
 
-$(info Using CC: $(CC))
-$(info Using CFLAGS: $(CFLAGS))
-$(info Using LFLAGS: $(LFLAGS))
-
 ifeq "$(PROFILE)" "debug"
 	CFLAGS += -O0 -g -D DEBUG
 	ifneq "$(TARGET)" "x86_64-w64-mingw32"
@@ -59,16 +55,22 @@ ifeq "$(TARGET)" "wasm32-unknown-emscripten"
 endif
 
 ifeq "$(PROFILE)" "release"
-	CFLAGS += -O3
-	LFLAGS += -s
+	CFLAGS += -O3 -flto=thin
+	LFLAGS += -s -flto=thin
+	LFLAGS += -fuse-ld=lld
 endif
 
 ifeq "$(TARGET)" "x86_64-w64-mingw32"
     RUNNER := wine
 	EXT := .exe
-	LFLAGS += -lshlwapi
+	LFLAGS += -lshlwapi -mwindows
 	BINARY := $(OUT)/bin/carcassonne$(EXT)
 endif
+
+
+$(info Using CC: $(CC))
+$(info Using CFLAGS: $(CFLAGS))
+$(info Using LFLAGS: $(LFLAGS))
 
 ifneq ($(filter clean,$(MAKECMDGOALS)),)
 build: clean
