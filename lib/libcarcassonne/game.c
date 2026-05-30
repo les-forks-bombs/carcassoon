@@ -255,6 +255,7 @@ return_code_t game_remove_tile(game_t *game, int x, int y) {
       for (unsigned int i = 0; i < vector_size(&pgroup->neighbors); i++) {
         placed_tile_group_t *neigh = *vector_nth(&pgroup->neighbors, i);
         vector_remove_value(&neigh->neighbors, &pgroup);
+        neigh->open_slots++;
       }
     }
     visite[group] = true;
