@@ -2,8 +2,6 @@
 #define _POSIX_C_SOURCE 200809L  // NOLINT(bugprone-reserved-identifier)
 #endif
 
-#ifndef _WIN32
-#endif
 #include <libutils/path.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +21,12 @@
 
 return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]) {
   ssize_t len;
-#ifdef _WIN32
+
+#ifdef __EMSCRIPTEN__
+    /* In WebAssembly, our packed assets usually just live at the virtual root */
+    strncpy(ret, "/", LIBUTILS_PATH_BUF);
+    return SUCCESS; // Assuming SUCCESS is defined in libcarcassonne
+#elif _WIN32
   len = GetModuleFileNameA(NULL, ret, MAX_PATH);
   if (len == 0) {
     printf("GetModuleFileName failed. Error: %lu\n", GetLastError());
@@ -33,7 +36,6 @@ return_code_t current_executable_path(char ret[LIBUTILS_PATH_BUF]) {
     return ERROR;
   }
 #else
-
   len = readlink("/proc/self/exe", ret, LIBUTILS_PATH_BUF - 1);
   if (len == -1) {
     perror("readlink failed");
