@@ -28,6 +28,8 @@ $(OUT)/bin/carcassonne$(EXT): $(CARCASSONNE_OBJS) $(OUT)/bin/assets $(OUT)/libca
 	esac
 	$(info $(TAB)LD $@)
 
+LFLAGS := $(OLD_LFLAGS)
+
 CLEAN += $(OUT)/bin/carcassonne$(EXT) $(OUT)/bin/assets
 
 DIR := $(firstword $(DIR_STACK))

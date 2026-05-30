@@ -16,6 +16,7 @@ UTIL_DIR := $(DIR)/build
 EXT :=
 OUT  := $(PWD)/out/$(PROFILE)/$(TARGET)
 
+TESTS_LFLAGS := 
 CFLAGS += --target=$(TARGET)
 LFLAGS += --target=$(TARGET)
 
@@ -47,11 +48,12 @@ ifeq "$(TARGET)" "wasm32-unknown-emscripten"
 	RUNNER := node
 	EXT := .js
 	LFLAGS += -sALLOW_MEMORY_GROWTH -s USE_LIBPNG=1 -s USE_ZLIB=1 -s SHARED_MEMORY=0 -s USE_PTHREADS=0 -s USE_FREETYPE=1 -s USE_HARFBUZZ=1
+	TESTS_LFLAGS += -s NODERAWFS=1
 endif
 
 ifeq "$(PROFILE)" "release"
-	CFLAGS += -g -O3
-	LFLAGS += -g
+	CFLAGS += -O3
+	LFLAGS += -s
 endif
 
 ifneq (,$(filter $(TARGET),x86_64-w64-mingw64 x86_64-w64-mingw32))
