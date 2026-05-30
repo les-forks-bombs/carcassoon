@@ -37,6 +37,12 @@ ifeq "$(PROFILE)" "debug"
 	endif
 endif
 
+ifeq "$(CC)" "emcc"
+	RUNNER := node
+	EXT := .js
+	CFLAGS += -sALLOW_MEMORY_GROWTH
+endif
+
 ifeq "$(PROFILE)" "release"
 	CFLAGS += -g -O3
 	LFLAGS += -g
