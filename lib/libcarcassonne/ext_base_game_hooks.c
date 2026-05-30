@@ -296,11 +296,11 @@ void compute_abbey_score(engine_t *engine, placed_tile_t *placed_tile,
 
       meeple_t        *meeple = *vector_nth(&evaluation.meeples, 0);
       removed_meeple_t rm     = {
-          .x      = meeple->group_node->tile->x,
-          .y      = meeple->group_node->tile->y,
-          .group  = meeple->group,
-          .type   = meeple->meeple_type,
-          .player = meeple->player,
+              .x      = meeple->group_node->tile->x,
+              .y      = meeple->group_node->tile->y,
+              .group  = meeple->group,
+              .type   = meeple->meeple_type,
+              .player = meeple->player,
       };
       vector_append(&scored.meeples, &rm);
       scored.player_won[meeple->player->id] = true;
@@ -367,11 +367,11 @@ return_code_t give_back_meeples_fw(void **state_store, engine_t *engine,
           for (size_t j = 0; j < vector_size(&evaluation.meeples); j++) {
             meeple_t        *meeple = *vector_nth(&evaluation.meeples, j);
             removed_meeple_t rm     = {
-                .x      = meeple->group_node->tile->x,
-                .y      = meeple->group_node->tile->y,
-                .group  = meeple->group,
-                .type   = meeple->meeple_type,
-                .player = meeple->player,
+                    .x      = meeple->group_node->tile->x,
+                    .y      = meeple->group_node->tile->y,
+                    .group  = meeple->group,
+                    .type   = meeple->meeple_type,
+                    .player = meeple->player,
             };
             vector_append(&scored.meeples, &rm);
             for (unsigned int p = 0; p < engine->config.players; p++) {
