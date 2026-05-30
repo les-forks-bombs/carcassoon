@@ -37,7 +37,7 @@ options_t parse_options(int argc, char* argv[]) {
   options_t config = {
       .ai         = 0,
       .max_turns  = 0,
-      .seed       = time(NULL),
+      .seed       = (int)time(NULL),
       .players    = 5,
       .mode       = CARCASSONNE_MODE_SDL,
       .extensions = {0},
@@ -134,9 +134,9 @@ options_t parse_options(int argc, char* argv[]) {
         break;
     }
   }
-  char* message;
+  char* message = validate_options(&config);
 
-  if ((message = validate_options(&config)) != NULL) {
+  if (message != NULL) {
     printf("Les paramètres sont invalide: %s\n\n", message);
     goto print_help;
   }

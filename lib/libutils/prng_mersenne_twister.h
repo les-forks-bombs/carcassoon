@@ -32,7 +32,8 @@ typedef struct prng_mersenne_twister_state {
 /// @param seed La seed pour initialiser le state
 /// @return L'état du générateur
 /// @related prng_mersenne_twister_state
-prng_mersenne_twister_state_t create_prng_mersenne_twister_state(int seed);
+prng_mersenne_twister_state_t create_prng_mersenne_twister_state(
+    unsigned int seed);
 
 /// @brief Choisis un nombre aléatoire non signé
 /// @param state L'état du générateur
