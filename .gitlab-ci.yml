@@ -1,9 +1,19 @@
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+
 default:
   image: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
 
 .targets: &targets
   - x86_64-pc-linux-gnu
   - x86_64-w64-mingw32
+  - wasm32-unknown-emscripten
 
 .profiles: &profiles 
   - debug
@@ -24,7 +34,7 @@ stages:
         PROFILE: *profiles
   
   script:
-    - make bear -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
+    - make all -j$(nproc) TARGET=$TARGET PROFILE=$PROFILE
 
   artifacts:
     when: always
@@ -107,14 +117,45 @@ stages:
     - make check
 
 'Docs':
-  stage: docs
+  stage: build
   needs: []
-  allow_failure: true
-  pages: true
   script:
     - make docs
   artifacts:
     when: always
     expire_in: 1 week
     paths:
+      - ./public/docs
+
+'Pages':
+  stage: deploy
+  needs:
+    - job: 'Docs'
+    - job: 'Build'
+      parallel:
+        matrix:
+          - TARGET: ['wasm32-unknown-emscripten']
+            PROFILE: ['release']
+  script:
+    - rm -r out/release/wasm32-unknown-emscripten/bin/assets
+    - cp out/release/wasm32-unknown-emscripten/bin/* public/
+
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
       - ./public
+
+  environment:
+    name: "Pages ${PAGES_PREFIX}"
+    url: $CI_PAGES_URL
+
+  variables:
+    PAGES_PREFIX: ""
+  pages:
+    path_prefix: "$PAGES_PREFIX"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+      variables:
+        PAGES_PREFIX: 'br-$CI_COMMIT_REF_SLUG'

@@ -122,9 +122,6 @@ void engine_trigger_end_game(void** state) {
 
   assert_int_equal(start_game(&engine), SUCCESS);
 
-  const tile_t* tile;
-  action_t      action = {0};
-
   free_deck(engine.game.deck);
 
   memset(&engine.game.deck.list.meta, 0, sizeof(list_t));
@@ -140,32 +137,32 @@ void engine_trigger_end_game(void** state) {
     const tile_t* tile;
   } turns[] = {// Tour 1 - 3 joueurs
                {"FCFC", true, -1, 0, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
-                LIBCARCASSONNE_TILE_PART_B, BASIC},
+                LIBCARCASSONNE_TILE_PART_B, BASIC, NULL},
                {"FRRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
-                LIBCARCASSONNE_TILE_PART_C, BASIC},
+                LIBCARCASSONNE_TILE_PART_C, BASIC, NULL},
                {"FFRR", false, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
-                LIBCARCASSONNE_TILE_PART_A, BASIC},
+                LIBCARCASSONNE_TILE_PART_A, BASIC, NULL},
                // Tour 2
                {"FRFR", false, 1, 0, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
-                LIBCARCASSONNE_TILE_PART_A, BASIC},
+                LIBCARCASSONNE_TILE_PART_A, BASIC, NULL},
                {"CRFR", false, -1, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
-                LIBCARCASSONNE_TILE_PART_A, BASIC},
+                LIBCARCASSONNE_TILE_PART_A, BASIC, NULL},
                {"CCRR", false, 0, 1, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
-                LIBCARCASSONNE_TILE_PART_B, BASIC},
+                LIBCARCASSONNE_TILE_PART_B, BASIC, NULL},
                // Tour 3
                {"RRRR", false, -2, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
-                LIBCARCASSONNE_TILE_PART_C, BASIC},
+                LIBCARCASSONNE_TILE_PART_C, BASIC, NULL},
                {"CCRR", false, 1, 1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH,
-                LIBCARCASSONNE_TILE_PART_C, BASIC},
+                LIBCARCASSONNE_TILE_PART_C, BASIC, NULL},
                {"CFRR", false, 1, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
-                LIBCARCASSONNE_TILE_PART_C, BASIC},
+                LIBCARCASSONNE_TILE_PART_C, BASIC, NULL},
                // Tour 4
                {"CRRR", false, -2, 2, LIBCARCASSONNE_TILE_ORIENTATION_WEST,
-                LIBCARCASSONNE_TILE_PART_A, BASIC},
+                LIBCARCASSONNE_TILE_PART_A, BASIC, NULL},
                {"CCRR", true, -1, 2, LIBCARCASSONNE_TILE_ORIENTATION_SOUTH,
-                LIBCARCASSONNE_TILE_PART_B, BASIC},
+                LIBCARCASSONNE_TILE_PART_B, BASIC, NULL},
                {"CCFF", true, 0, 2, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
-                LIBCARCASSONNE_TILE_PART_B, NONE}};
+                LIBCARCASSONNE_TILE_PART_B, NONE, NULL}};
 
   for (unsigned int i = 0; i < SIZE(turns); i++) {
     for (unsigned int k = 0; k < LIBCARCASSONNE_EXTENSIONS[0]->tiles->meta.size;
@@ -179,9 +176,9 @@ void engine_trigger_end_game(void** state) {
     }
   }
 
-  for (int i = 0; i < SIZE(turns); i++) {
+  for (unsigned int i = 0; i < SIZE(turns); i++) {
     if (i != 0) {
-      int size = vector_size(&engine.dispatchs);
+      unsigned int size = vector_size(&engine.dispatchs);
       assert_true(size > 0);
       dispatch_t* last_hook = vector_nth(&engine.dispatchs, size - 1);
       assert_ptr_equal(last_hook->hook, &hook_pick_tile);
@@ -280,9 +277,9 @@ void engine_trigger_give_back_meeple(void** state) {
       {"CCRR", true, 1, -1, LIBCARCASSONNE_TILE_ORIENTATION_NORTH, 0, NONE},
   };
 
-  for (int i = 0; i < SIZE(turns); i++) {
+  for (unsigned int i = 0; i < SIZE(turns); i++) {
     if (i != 0) {
-      int size = vector_size(&engine.dispatchs);
+      unsigned int size = vector_size(&engine.dispatchs);
       assert_true(size > 0);
       dispatch_t* last_hook = vector_nth(&engine.dispatchs, size - 1);
       assert_ptr_equal(last_hook->hook, &hook_pick_tile);
@@ -384,9 +381,9 @@ void engine_abbey_completed(void** state) {
                {"CCRR", false, 0, -1, LIBCARCASSONNE_TILE_ORIENTATION_EAST,
                 LIBCARCASSONNE_TILE_PART_A, NONE}};
 
-  for (int i = 0; i < SIZE(turns); i++) {
+  for (unsigned int i = 0; i < SIZE(turns); i++) {
     if (i != 0) {
-      int size = vector_size(&engine.dispatchs);
+      unsigned int size = vector_size(&engine.dispatchs);
       assert_true(size > 0);
       dispatch_t* last_hook = vector_nth(&engine.dispatchs, size - 1);
       assert_ptr_equal(last_hook->hook, &hook_pick_tile);

@@ -32,6 +32,6 @@ options_t parse_options(int argc, char* argv[]);
 void free_options(options_t* options);
 
 /// @brief Vérifie la validité des options fournies
-/// @param options L'instance d'option à vérifier
+/// @param config L'instance d'option à vérifier
 /// @return NULL si les options sont valides, un message d'erreur sinon
-char* validate_options(options_t* options);
+char* validate_options(options_t* config);

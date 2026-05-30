@@ -10,7 +10,7 @@ CLEAN += $(LIBUTILS_TEST_OBJS) $(LIBUTILS_TEST_OBJS:.o=.d)
 $(OUT)/bin/libutils_test$(EXT): $(LIBUTILS_TEST_OBJS) \
     $(OUT)/libutils.a 
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(LFLAGS) -o $@ $^ -lcmocka
+	@$(CC) $(CFLAGS) $(TESTS_LFLAGS) $(LFLAGS) -o $@ $^ -lcmocka
 	@case "$(TARGET)" in \
 	        (x86_64-w64-mingw64|x86_64-w64-mingw32) \
 	            $(UTIL_DIR)/copy_dlls.sh $@; \
