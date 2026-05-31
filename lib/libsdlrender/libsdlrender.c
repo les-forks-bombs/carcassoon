@@ -92,8 +92,8 @@ return_code_t run_sdl(engine_t* engine) {
   appstate_t state = {0};
   appstate_create(&state, engine);
 
-  char* font =
-      path_resolver_resolve(&state.resolver, "assets/fonts/KGPerfectPenmanship.ttf");
+  char* font = path_resolver_resolve(&state.resolver,
+                                     "assets/fonts/KGPerfectPenmanship.ttf");
   state.font = TTF_OpenFont(font, 24);
   free(font);
 
