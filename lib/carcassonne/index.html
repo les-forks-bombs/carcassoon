@@ -23,14 +23,68 @@
             height: 100%;
             border: none;
         }
+
+        #log-dialog {
+            border: none;
+            border-radius: 8px;
+            padding: 0;
+            width: 80%;
+            max-width: 800px;
+            background: #1e1e1e;
+            color: #fff;
+            font-family: sans-serif;
+        }
+
+        .dialog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #2d2d2d;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            border-bottom: 1px solid #444;
+
+
+            margin: 0;
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+
+        .log-container {
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #log-output {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
     </style>
 </head>
 
 <body>
     <canvas id="canvas"></canvas>
+    <dialog id="log-dialog">
+        <div class="dialog-header">
+            Logs
+        </div>
+        <div class="log-container">
+            <pre id="log-output"></pre>
+        </div>
+    </dialog>
+
 
     <script>
         const canvas = document.getElementById('canvas');
+        const dialog = document.getElementById("log-dialog");
+        const dialogText = document.getElementById("log-output");
+
         const onResize = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -42,7 +96,8 @@
             'players': '-p',
             'ai': '-a',
             'max-turns': '-t',
-            'seed': '-s'
+            'seed': '-s',
+            'ai-iterations': '-i'
         };
 
         const args = [];
@@ -57,11 +112,27 @@
         window.addEventListener("resize", onResize);
         canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 
+        const logs = [];
+        const logHandlerFactory = (name, handler) => {
+            console.log(`Build handler ${name}`);
+            return (
+                text,
+            ) => {
+                handler(text);
+                logs.push(text);
+            };
+        };
+
         var Module = {
             canvas: canvas,
             arguments: args,
-            print: (text) => console.log(text),
-            printErr: (text) => console.error(text)
+            print: logHandlerFactory("stdout", console.log),
+            printErr: logHandlerFactory("stderr", console.error),
+            onExit: () => {
+                console.log("Execution finished");
+                dialogText.textContent = logs.join("\n");
+                dialog.showModal();
+            }
         };
     </script>
     <script src="carcassonne.js"></script>

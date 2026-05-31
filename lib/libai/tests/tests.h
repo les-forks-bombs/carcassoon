@@ -5,7 +5,6 @@
 #include <libcarcassonne/libcarcassonne.h>
 #include <libutils/cmocka.h>
 
-/* ai_play_turn */
 void ai_play_turn_does_not_crash(void** state);
 void ai_play_turn_completes_full_turn(void** state);
 void ai_play_turn_advances_current_player(void** state);
