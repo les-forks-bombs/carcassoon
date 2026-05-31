@@ -21,6 +21,7 @@ static const char* help_string =
     "  -s, --seed=NUM           Set the random seed\n"
     "  -e, --extensions=A       Set of extensions to enable (use this option "
     "multiple times to enable many extensions)\n"
+    "  -i, --ai-iterations=NUM  Set the number of iterations for mcts "
     "\n"
     "Example:\n"
     "  %1$s -m sdl -p 4 -a 2 -t 100 -s 12345\n"
@@ -34,14 +35,13 @@ options_t parse_options(int argc, char* argv[]) {
   int  c;
   char arg[25] = "";
 
-  options_t config = {
-      .ai         = 0,
-      .max_turns  = 0,
-      .seed       = (int)time(NULL),
-      .players    = 5,
-      .mode       = CARCASSONNE_MODE_SDL,
-      .extensions = {0},
-  };
+  options_t config = {.ai            = 0,
+                      .max_turns     = 0,
+                      .seed          = (int)time(NULL),
+                      .players       = 5,
+                      .mode          = CARCASSONNE_MODE_SDL,
+                      .extensions    = {0},
+                      .ai_iterations = 1000};
 
   memset(&config.extensions, 0, sizeof(extension_vector_t));
 
@@ -51,16 +51,18 @@ options_t parse_options(int argc, char* argv[]) {
   while (1) {
     int           option_index = 0;
     char*         endPtr;
-    struct option long_options[] = {{"mode", required_argument, 0, 'm'},
-                                    {"players", required_argument, 0, 'p'},
-                                    {"ai", required_argument, 0, 'a'},
-                                    {"max-turns", required_argument, 0, 't'},
-                                    {"seed", required_argument, 0, 's'},
-                                    {"help", no_argument, 0, 'h'},
-                                    {"extension", required_argument, 0, 'e'},
-                                    {0, 0, 0, 0}};
+    struct option long_options[] = {
+        {"mode", required_argument, 0, 'm'},
+        {"players", required_argument, 0, 'p'},
+        {"ai", required_argument, 0, 'a'},
+        {"max-turns", required_argument, 0, 't'},
+        {"seed", required_argument, 0, 's'},
+        {"help", no_argument, 0, 'h'},
+        {"extension", required_argument, 0, 'e'},
+        {"ai-iterations", required_argument, 0, 'i'},
+        {0, 0, 0, 0}};
 
-    c = getopt_long(argc, argv, "m:p:a:t:s:he:", long_options, &option_index);
+    c = getopt_long(argc, argv, "m:p:a:t:s:he:i:", long_options, &option_index);
 
     if (c == -1) {
       break;
@@ -78,30 +80,38 @@ options_t parse_options(int argc, char* argv[]) {
 
         break;
       case 'p':
-        config.players = strtod(optarg, &endPtr);
+        config.players = strtoul(optarg, &endPtr, 10);
         if (endPtr == optarg) {
           goto bad_value;
         }
 
         break;
       case 'a':
-        config.ai = strtod(optarg, &endPtr);
+        config.ai = strtoul(optarg, &endPtr, 10);
         if (endPtr == optarg) {
           goto bad_value;
         }
         break;
       case 't':
-        config.max_turns = strtod(optarg, &endPtr);
+        config.max_turns = strtoul(optarg, &endPtr, 10);
         if (endPtr == optarg) {
           goto bad_value;
         }
         break;
       case 's':
-        config.seed = strtod(optarg, &endPtr);
+        config.seed = strtoul(optarg, &endPtr, 10);
         if (endPtr == optarg) {
           goto bad_value;
         }
         break;
+
+      case 'i':
+        config.ai_iterations = strtoul(optarg, &endPtr, 10);
+        if (endPtr == optarg) {
+          goto bad_value;
+        }
+        break;
+
       case 'e':
         // trouver l'extension
         for (unsigned int i = 0; i < LIBCARCASSONNE_EXTENSIONS_SIZE; i++) {
@@ -128,6 +138,7 @@ options_t parse_options(int argc, char* argv[]) {
                optarg);
       case 'h':
       print_help:
+
       default:
         printf(help_string, argv[0]);
         exit(0);

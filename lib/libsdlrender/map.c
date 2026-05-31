@@ -183,7 +183,7 @@ void render_map(appstate_t *as) {
       }
     }
   }
-  if (as->display_grid){
+  if (as->display_grid) {
     print_grid(as);
   }
 }

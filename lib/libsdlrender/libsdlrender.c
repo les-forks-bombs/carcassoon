@@ -8,6 +8,8 @@
 #include <libsdlrender/load.h>
 #include <stdio.h>
 
+#include "libcarcassonne/forward.h"
+
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include <emscripten/html5.h>
@@ -40,11 +42,11 @@ static void render(void* app) {
   SDL_Event event;
   if (game_get_current_player(&state->engine->game)->player_type ==
           LIBCARCASSONNE_PLAYER_AI &&
-      !is_game_finished(&state->engine->game)) {
-    ai_play_turn(state->engine, 1000);
+      state->engine->game.state!=GAME_STATE_FINISHED) {
+    ai_play_turn(state->engine, state->engine->config.ai_iterations);
     get_current_actions(state);
     synchronize_banners(state);
-  } else {
+  } else{
     while (SDL_PollEvent(&event)) {
       handle_app_event(state, &event);
     }

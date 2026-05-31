@@ -36,4 +36,5 @@ Checks: >
   -readability-function-cognitive-complexity,
   -bugprone-easily-swappable-parameters,
   -readability-isolate-declaration,
-  -performance-no-int-to-ptr
+  -performance-no-int-to-ptr,
+  -clang-diagnostic-macro-redefined

@@ -11,7 +11,7 @@ struct options {
   /// @brief Le nombre total de joueurs
   unsigned int players;
   /// @brief La graine aléatoire de la partie
-  int seed;
+  unsigned int seed;
   /// @brief Le nombre total d'IA dans la partie
   unsigned int ai;
   /// @brief Le nombre maximal de tour de la partie
@@ -19,6 +19,8 @@ struct options {
   unsigned int max_turns;
   /// @brief Les extensions utilisés pour la partie
   extension_vector_t extensions;
+  /// @brief Le nombre d'itérations de l'algo mcts
+  unsigned int ai_iterations;
 };
 
 /// @brief Lis les options depuis l'entrée standard
