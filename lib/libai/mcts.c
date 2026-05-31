@@ -118,7 +118,7 @@ static int rollout(engine_t *engine, mcts_node_t *node, player_t *ai_player) {
   return score;
 }
 
-static void mcts(engine_t *engine, mcts_node_t *node, unsigned int total_visits,
+static void mcts(engine_t *engine, mcts_node_t *node, int total_visits,
                  player_t *ai_player);
 
 /// @brief Développe un nœud en créant ses enfants puis poursuit la recherche
