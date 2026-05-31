@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Carcassonne",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "make",
+            "runtimeArgs": [
+                "sdl",
+                "PROFILE=${input:pickProfile}"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        },
+        {
+            "name": "(gdb) Launch Carcassonne",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/out/${input:pickProfile}/x86_64-pc-linux-gnu/bin/carcassonne",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+        }
+    ],
+    "inputs": [
+        {
+            "id": "pickProfile",
+            "type": "pickString",
+            "description": "Sélectionnez le profil de build à utiliser:",
+            "options": [
+                "debug",
+                "release"
+            ],
+            "default": "debug"
+        }
+    ]
+}
