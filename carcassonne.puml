@@ -1,26 +1,131 @@
-@startuml carcassonne
+@startuml carcassonne_analysis
 
 skinparam style strictuml
 skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 hide empty members
 
-class carcassonne.Vector2D {
+package libutils{
+  class Vector2D {
     - x : int
     - y : int
+  }
+
+  class MersenneTwisterState{
+    - state_array : unsigned int[]
+    - state_index : int
+  }
+
+  class PathResolver{
+    - base : char[]
+    - size : unsigned int
+  }
 }
 
-class carcassonne.Meeple {
 
-}
+package libcarcassonne {
+  class Tile {
+    - family : char[5]
+    - blason : bool
+    - texture : char*
+    - nb_slots : unsigned int
+  }
 
-class carcassonne.Player {
-    - id : int
-    - name : char*
-    - score : int
-}
+  class TileSlot {
+    - x : double
+    - y : double
+  }
 
-enum carcassonne.Type <<enum>>{
+  class PlacedTile {
+    - x : int
+    - y : int
+  }
+
+  class PlacedTileGroup {
+    - open_slots : unsigned int
+    - marker : int
+  }
+
+  class Meeple {
+  }
+
+  class MeepleCount {
+    - count : unsigned int
+  }
+
+  class Player {
+    - id : unsigned int
+    - score : unsigned int
+  }
+
+  class Deck {
+  }
+
+  class Game {
+    - current_player : unsigned int
+    - turn : unsigned int
+    - turns_limit : unsigned int
+  }
+
+  class Options {
+    - players : unsigned int
+    - seed : unsigned int
+    - ai : unsigned int
+    - max_turns : unsigned int
+    - ai_iterations : unsigned int
+  }
+
+  class Extension {
+    - name : const char*
+    - start_tiles_priority : unsigned int
+  }
+
+  class ExtensionProcessHook {
+    - priority : unsigned int
+    - label : char[50]
+    + fw(state_store, engine, action)
+    + bw(state_store, engine)
+    + free(state_store, engine)
+    + list_actions(actions, engine)
+  }
+
+  class Dispatch {
+    - state_store : void*
+  }
+
+  class Engine {
+    - current_hook : unsigned int
+    + create_engine()
+    + destroy_engine()
+    + start_game()
+    + dispatch_action(action : Action)
+    + engine_revert(epoch)
+    + engine_wanted_action()
+    + engine_get_actions()
+  }
+
+  class Action {
+  }
+
+  class ActionOrder {
+  }
+
+  class ActionPlaceTile {
+    - x : int
+    - y : int
+    - tile : const tile_t*
+    - orientation : tile_orientation_t
+  }
+
+  class ActionPlaceMeeple {
+    - x : int
+    - y : int
+    - tile : placed_tile_t*
+    - part_group : int
+    - meeple_type : meeple_type_t
+  }
+
+  enum TilePartType <<enum>> {
     VILLAGE
     TOWN
     TOWNWITHSHIELD
@@ -28,102 +133,215 @@ enum carcassonne.Type <<enum>>{
     ROAD
     FIELD
     WALL
-}
+  }
+  
+  enum TilePartGroup <<enum>> {
+    LIBCARCASSONNE_TILE_PART_A
+    LIBCARCASSONNE_TILE_PART_B
+    LIBCARCASSONNE_TILE_PART_C
+    LIBCARCASSONNE_TILE_PART_D
+    LIBCARCASSONNE_TILE_PART_E
+    LIBCARCASSONNE_TILE_PART_F
+    LIBCARCASSONNE_TILE_PART_G
+    LIBCARCASSONNE_TILE_PART_H
+    LIBCARCASSONNE_TILE_PART_I  
+  }
 
-enum carcassonne.PlayerType <<enum>>{
+  enum PlayerType <<enum>> {
     IA
     HUMAN
+  }
+
+  enum TileOrientation <<enum>> {
+    NORTH
+    EAST
+    SOUTH
+    WEST
+  }
+
+  enum MeepleType <<enum>> {
+    NONE
+    BASIC
+    LARGE
+    ABBOT
+  }
+
+  enum ActionType <<enum>> {
+    NONE
+    PLACE_TILE
+    PLACE_MEEPLE
+  }
+
+  enum GameState <<enum>> {
+    NOT_STARTED
+    PLAYING
+    FINISHED
+  }
+
+  enum OptionsMode <<enum>> {
+    SDL
+    CLI
+  }
 }
 
-class carcassonne.Tile {
-    - type : int
-    - group_id : int
+package libai {
+  class MCTSNode {
+    - visits : int
+    - score : int
+  }
+
+  class MCTS {
+    + ai_play_turn(engine : Engine*, max_iterations : int)
+  }
 }
 
-class carcassonne.Group {
-    - group_id : int
+package libsdlrender {
+  class AppState {
+    - window : SDL_Window*
+    - renderer : SDL_Renderer*
+    - map_viewport : SDL_FRect
+    - textures : textures_hashmap_t
+    - possible_meeples : bool[9]
+    - window_width : float
+    - window_height : float
+    - font : TTF_Font*
+    - current_action : action_t*
+    - is_waiting_for_tile : bool
+    - action_index : unsigned int
+    - display_grid : bool
+    - playing : bool
+    - resolver : path_resolver_t
+    + appstate_create()
+  }
+
+  class Camera {
+    - x : float
+    - y : float
+    - zoom : float
+    + create_camera()
+    + update_camera()
+    + center_camera_on_start()
+  }
+
+  class Banner {
+    - is_open : bool
+    - color : SDL_Color
+    - area : SDL_FRect
+    - score_object : text_object_t
+    - meeple_count_object : text_object_t
+    + create_banner()
+    + render_banner()
+    + toggle_banner()
+    + destroy_banner()
+    + synchronize_banners()
+  }
+
+  class TextObject {
+    - texture : SDL_Texture*
+    - font_size : float
+    - color : SDL_Color
+    - content : char*
+    - w : float
+    - h : float
+    + text_object_create()
+    + text_object_update()
+    + text_object_free()
+  }
+
+  class SDLFrontEnd {
+    + run_sdl(engine : Engine*)
+    + render()
+    + get_current_actions()
+    + send_action_to_engine()
+  }
 }
 
-class carcassonne.Game {
-    - current_player_id : int
-    - max_turns : int
-    - turns_count : int
-    - human_player_count : int
-    - total_player_count : int
-    - map : int**
-    + make_turn()
-    + place_tile()
-    + place_meeple()
-    + get_current_player() : Player*
+package carcassonne {
+  class Main {
+    + main(argc : int, argv : char**)
+  }
 }
 
-class carcassonne.Engine{
-    + apply_action(action : Action)
-}
 
-class carcassonne.Action {
-    place_meeple : bool
-}
+Meeple o--> "1" Player : "appartient à" >
+Meeple o--> "1" PlacedTileGroup : "positionné sur" >
+Meeple o--> "1" MeepleType : "type" >
+Meeple o--> "1" TilePartGroup : "contenu dans" >
 
-class gui.SDLFrontEnd {
-    create_game(max_turns : int, turns_count : int, seed : int, human_player_count : int, total_player_count : int) : Game*
-    start_game(game : Game*) : void
-    destroy_game(game : Game*) : void
-}
+Player "1" *-u-> "0..8" Meeple : "possède" >
+Player o--> "1" PlayerType : "type" >
+Player o--> "n" MeepleCount : "possède" >
 
-class cli.CLIFrontEnd {
-    create_game(max_turns : int, turns_count : int, seed : int, human_player_count : int, total_player_count : int) : Game*
-    start_game(game : Game*) : void
-    destroy_game(game : Game*) : void
-}
+MeepleCount o--> "1" MeepleType : "type" >
 
-class ai.AIEngine {
-    + makeDecision(game : Game*)
-}
+Tile o--> "9" TilePartType : "parts" >
+Tile o--> "9" TileSlot : "contient" >
+Tile o-d-> "9" TilePartGroup : "contient" >
+TileSlot o-d-> "1" TilePartGroup : "contient" >
 
-class carcassonne.AIState {}
+Game *--> "2..5" Player : "joueurs" >
+Game *--> "1" Deck : "utilise" >
+Game *--> "n" PlacedTile : "map" >
+Game *--> "n" PlacedTile : "groupes ouverts" >
+Game o-u-> "1" Options : "configuré avec" >
+Game o-r> "1" GameState : "état" >
 
-class carcassonne.Deck {
-    - seed : int
-}
+Deck o--> "n" Tile : "contient" >
+Deck o--> "1" MersenneTwisterState : "contient" >
 
-class MainCLI {}
-class MainSDL {}
+PlacedTile o-> "1" TileOrientation : "orientation" >
+PlacedTile o--> "1" Tile : "parent" >
+PlacedTile *--> "0..9" PlacedTileGroup : "est contenu par" >
 
-Tile o--> "1 \n -position" Vector2D
-Meeple o--> "1 \n -position" Vector2D
+PlacedTileGroup o--> "0..1" Meeple : "contient" >
+PlacedTileGroup o-> "n" PlacedTileGroup : "est voisin de" >
+PlacedTileGroup o--r> "1" TilePartType : "est du type" >
+PlacedTileGroup o--> "1" PlacedTile : "représenté par" >
 
-Player "1 \n -player" o-d-> "8 \n -meeples**" Meeple : Possède >
-Player  o-d-> "1 \n -type" PlayerType : Est un >
+Engine *--> "1" Game : "gère" >
+Engine *--> "n" Dispatch : "historique" >
+Engine *--> "n" ExtensionProcessHook : "hooks" >
+Engine *--> "1" Options : "créé et transmet" >
 
-Game *--> "2..5 \n -players**" Player : Contient >
-Game *--> "n \n -groups**" Group : Contient >
-Game o--> "n \n map**" Tile : Contient >
-Game *--> "1\n-deck" Deck : Utilise >
-Group o--> "n \n Tiles**" Tile : Contient >
+Dispatch *--> "1" Action : "action" >
+Dispatch *--> "1" ExtensionProcessHook : "hook" >
 
-Tile o--> "1 \n -type" Type
-Tile o--> "1 \n -meeple" Meeple
+ActionOrder <|-- ActionPlaceTile
+ActionOrder <|-- ActionPlaceMeeple
 
-Engine *--> AIEngine : "Fait jouer" >
-Engine *--> "1\n-game*" Game : Joue >
+Action o-d-> "1" ActionType : "est du type" >
+Action o-r-> "1" ActionOrder : "contient" >
 
-MainSDL ..> SDLFrontEnd  : "<<uses>>"
+Options o--> "1..n" Extension : "active" >
+Options o-l> "1..n" OptionsMode : "est de type" >
 
-SDLFrontEnd *--> "1 \n -engine*" Engine : commande >
-CLIFrontEnd *--> "1 \n -engine*" Engine : commande >
+Extension *--> "n" ExtensionProcessHook : "définit" >
+Extension *--> "n" Tile : "contient \ntuiles de jeu" >
+Extension *--> "n" Tile : "contient \ntuiles de départ" >
+Extension *--> "n" Extension : "requis" >
+Extension *--> "n" MeepleCount : "contient" >
 
-SDLFrontEnd *--> "1 \n -action*" Action : commande >
-CLIFrontEnd *--> "1 \n -action*" Action : commande >
+ExtensionProcessHook *-r> "1" ActionType : "type de l'action requise" >
 
+MCTS ..> Engine : "utilise (via ai_play_turn)" 
+MCTS *-d-> "1..*" MCTSNode : "contient" >
+MCTSNode "1" *--> "0..*" MCTSNode : "children" >
+MCTSNode "0..*" *--> "1" MCTSNode : "parent" >
+MCTSNode o--> "1" Action : "action" >
 
-MainCLI ..> CLIFrontEnd  : "<<uses>>
+AppState *--> "1" Engine : "utilise" >
+AppState *--u> "1" Camera : "contient" >
+AppState *--u> "0..5" Banner : "bannières" >
+AppState *-> "n" TextObject : "textes" >
+AppState o--> "n" Action : "actions possibles" >
+AppState o--> "n" Vector2D : "positions possibles" >
+AppState *--> "1" PathResolver : "utilise" >
 
-Player *--> AIState : Utilise >
-AIEngine o--> AIState : Utilise >
+SDLFrontEnd *--> "1" AppState : "utilise" >
+SDLFrontEnd ..l> MCTS : "appelle ai_play_turn()"
 
-Action *--> "1\n-position" Vector2D : >
-
-Deck *--> "1\n-tiles" Tile : Gère >
+Main *--> "1" Engine : "crée et utilise" >
+Main ..> SDLFrontEnd : "lance (SDL)"
+Main ..> Engine : "utilise (CLI)"
 
 @enduml
