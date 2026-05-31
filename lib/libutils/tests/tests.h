@@ -1,5 +1,5 @@
 #pragma once
-#include <libutils/cmocka.h>
+#include <cmocka.h>
 #include <libutils/hashmap.h>
 #include <libutils/lc.h>
 

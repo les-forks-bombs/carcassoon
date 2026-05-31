@@ -45,6 +45,3 @@ struct extension {
   /// @details Les comptes de meeples de toutes les extensions sont additionnés
   const meeple_count_vector_t meeples_count;
 };
-
-return_code_t create_extension_list(extension_vector_t *);
-void          destroy_extension_list(extension_vector_t *);

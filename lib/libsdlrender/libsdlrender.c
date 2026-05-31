@@ -42,11 +42,11 @@ static void render(void* app) {
   SDL_Event event;
   if (game_get_current_player(&state->engine->game)->player_type ==
           LIBCARCASSONNE_PLAYER_AI &&
-      state->engine->game.state!=GAME_STATE_FINISHED) {
+      state->engine->game.state != GAME_STATE_FINISHED) {
     ai_play_turn(state->engine, state->engine->config.ai_iterations);
     get_current_actions(state);
     synchronize_banners(state);
-  } else{
+  } else {
     while (SDL_PollEvent(&event)) {
       handle_app_event(state, &event);
     }
@@ -92,8 +92,8 @@ return_code_t run_sdl(engine_t* engine) {
   appstate_t state = {0};
   appstate_create(&state, engine);
 
-  char* font =
-      path_resolver_resolve(&state.resolver, "assets/fonts/Orange.ttf");
+  char* font = path_resolver_resolve(&state.resolver,
+                                     "assets/fonts/KGPerfectPenmanship.ttf");
   state.font = TTF_OpenFont(font, 24);
   free(font);
 

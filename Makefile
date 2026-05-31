@@ -189,14 +189,6 @@ clean:
 	@rm -rf $(CLEAN)
 
 req:
-	@echo "/!\ Attention !"
-	@echo ""
-	@echo "Ce projet utilise les libraries système pour compiler avec sdl et cmocka"
-	@echo "Merci de l'installer pour le target $(TARGET) afin que pkg-config"
-	@echo "Puisse trouver la librarie !"
-	@echo
-	@echo "RHEL/Fedora: dnf install libSDL3-devel libSDL3_ttf-devel libSDL3_image-devel libcmocka-devel"
-	@echo "Debian: apt-get install libsdl3-dev libsdl3-ttf-dev libsdl3-image-dev libcmocka-dev"
+	sudo $(UTIL_DIR)/install_dependencies.sh
 
-.PHONY: clean build test docs check format coverage bear tidy req cli sdl coverage-xml
-
+.PHONY: appimage clean build test docs check format coverage bear tidy req cli sdl coverage-xml

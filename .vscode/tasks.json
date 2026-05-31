@@ -1,0 +1,91 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Make: Build",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "sdl",
+                "PROFILE=${input:pickProfile}",
+                "TARGET=${input:pickTarget}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Make: Clean",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "clean",
+                "PROFILE=${input:pickProfile}",
+                "TARGET=${input:pickTarget}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Make: Bear",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "bear",
+                "PROFILE=${input:pickProfile}",
+                "TARGET=${input:pickTarget}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+    ],
+    "inputs": [
+        {
+            "id": "pickProfile",
+            "type": "pickString",
+            "description": "Sélectionnez le profil de build à utiliser:",
+            "options": [
+                "debug",
+                "release"
+            ],
+            "default": "debug"
+        },
+        {
+            "id": "pickTarget",
+            "type": "pickString",
+            "description": "Sélectionnez le target que vous visez:",
+            "options": [
+                "x86_64-pc-linux-gnu",
+                "x86_64-w64-mingw32",
+                "wasm32-unknown-emscripten"
+            ],
+            "default": "x86_64-pc-linux-gnu"
+        }
+    ]
+}

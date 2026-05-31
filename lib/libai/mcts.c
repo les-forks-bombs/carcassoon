@@ -12,7 +12,8 @@
 /// @param action L'action associée à ce nœud
 /// @param parent Le nœud parent, ou NULL si c'est la racine
 /// @return Un pointeur vers le nœud créé
-/// @details Le nœud est automatiquement ajouté aux enfants du parent si celui-ci n'est pas NULL
+/// @details Le nœud est automatiquement ajouté aux enfants du parent si
+/// celui-ci n'est pas NULL
 static mcts_node_t *create_mcts_node(action_t action, mcts_node_t *parent) {
   mcts_node_t *node = calloc(1, sizeof(mcts_node_t));
   node->visits      = 0;
@@ -28,13 +29,17 @@ static mcts_node_t *create_mcts_node(action_t action, mcts_node_t *parent) {
 /// @brief Évalue l'état courant du jeu du point de vue de l'IA
 /// @param engine Le moteur de jeu
 /// @param ai_player Le joueur IA dont on évalue la position
-/// @return La différence entre le score de l'IA et le meilleur score adverse - cela permet de maximiser l'écart plutôt que le score brut, car il peut être plus intéressant de réduire le score d'un adversaire que d'augmenter le sien
-/// @details Si la partie n'est pas encore terminée, simule la fin de partie pour
+/// @return La différence entre le score de l'IA et le meilleur score adverse -
+/// cela permet de maximiser l'écart plutôt que le score brut, car il peut être
+/// plus intéressant de réduire le score d'un adversaire que d'augmenter le sien
+/// @details Si la partie n'est pas encore terminée, simule la fin de partie
+/// pour
 ///          calculer les scores finaux, puis annule cette simulation
 static double evaluate(engine_t *engine, player_t *ai_player) {
-  void    *state_store  = NULL;
-  action_t dummy        = {0};
-  bool     did_simulate = false; // Indique si on a dû simuler la fin de partie pour évaluer les scores
+  void    *state_store = NULL;
+  action_t dummy       = {0};
+  bool did_simulate    = false;  // Indique si on a dû simuler la fin de partie
+                                 // pour évaluer les scores
 
   if (!is_game_finished(&engine->game)) {
     engine->game.state = GAME_STATE_FINISHED;
@@ -54,7 +59,8 @@ static double evaluate(engine_t *engine, player_t *ai_player) {
     }
   }
 
-  if (did_simulate) { // Si on a simulé la fin de partie, il faut annuler cette simulation pour restaurer l'état du jeu
+  if (did_simulate) {  // Si on a simulé la fin de partie, il faut annuler cette
+                       // simulation pour restaurer l'état du jeu
     end_game_bw(&state_store, engine);
     end_game_free(&state_store, engine);
   }
@@ -65,9 +71,12 @@ static double evaluate(engine_t *engine, player_t *ai_player) {
 /// @brief Calcule la valeur UCB1 d'un nœud pour guider la sélection
 /// @param total_iterations Le nombre total de visites depuis la racine
 /// @param node Le nœud dont on calcule la valeur UCB1
-/// @return La valeur UCB1 du nœud (INFINITY si jamais visité, qui est un nombre réel plus grand que tous les autres, garantissant que les nœuds non visités seront explorés en priorité)
+/// @return La valeur UCB1 du nœud (INFINITY si jamais visité, qui est un nombre
+/// réel plus grand que tous les autres, garantissant que les nœuds non visités
+/// seront explorés en priorité)
 /// @details UCB1 = score/visites + 2 * sqrt(ln(total) / visites).
-///          Un nœud non visité reçoit une priorité infinie pour garantir son exploration.
+///          Un nœud non visité reçoit une priorité infinie pour garantir son
+///          exploration.
 static double ucb1(int total_iterations, mcts_node_t *node) {
   if (node->visits == 0) {
     return (double)INFINITY;
@@ -77,7 +86,8 @@ static double ucb1(int total_iterations, mcts_node_t *node) {
           (2.0 * sqrt(log((double)total_iterations) / (double)node->visits)));
 }
 
-/// @brief Propage un score vers le haut dans l'arbre depuis un nœud jusqu'à la racine
+/// @brief Propage un score vers le haut dans l'arbre depuis un nœud jusqu'à la
+/// racine
 /// @param node Le nœud de départ de la rétropropagation
 /// @param score Le score à propager
 static void backpropagate(mcts_node_t *node, int score) {
@@ -90,12 +100,15 @@ static void backpropagate(mcts_node_t *node, int score) {
   }
 }
 
-/// @brief Effectue un rollout aléatoire depuis l'état courant, c'est à dire une simulation aléatoire de la partie jusqu'à une profondeur maximale ou la fin de partie, puis évalue la position obtenue et propage le score dans l'arbre
+/// @brief Effectue un rollout aléatoire depuis l'état courant, c'est à dire une
+/// simulation aléatoire de la partie jusqu'à une profondeur maximale ou la fin
+/// de partie, puis évalue la position obtenue et propage le score dans l'arbre
 /// @param engine Le moteur de jeu (modifié puis restauré par l'appelant)
 /// @param node Le nœud depuis lequel débute le rollout
 /// @param ai_player Le joueur IA dont on évalue la position en fin de rollout
 /// @return Le score obtenu à l'issue du rollout
-/// @details Joue au plus MAX_ROLLOUT_DEPTH actions aléatoires, évalue la position
+/// @details Joue au plus MAX_ROLLOUT_DEPTH actions aléatoires, évalue la
+/// position
 ///          obtenue, puis appelle backpropagate pour mettre à jour l'arbre
 static int rollout(engine_t *engine, mcts_node_t *node, player_t *ai_player) {
   int count = 0;
@@ -126,7 +139,8 @@ static void mcts(engine_t *engine, mcts_node_t *node, int total_visits,
 /// @param node Le nœud à développer
 /// @param total_visits Le nombre total de visites depuis la racine
 /// @param ai_player Le joueur IA
-/// @details Les enfants ne sont créés qu'au deuxième passage sur ce nœud (visits == 1), il faut d'abord au moins un rollout sur le noeud.
+/// @details Les enfants ne sont créés qu'au deuxième passage sur ce nœud
+/// (visits == 1), il faut d'abord au moins un rollout sur le noeud.
 ///          Si la partie est terminée, la fonction retourne sans rien faire.
 static void expand(engine_t *engine, mcts_node_t *node, int total_visits,
                    player_t *ai_player) {
@@ -150,8 +164,10 @@ static void expand(engine_t *engine, mcts_node_t *node, int total_visits,
 /// @param total_visits Le nombre total de visites depuis la racine (pour UCB1)
 /// @param ai_player Le joueur IA
 /// @details Sélectionne le meilleur enfant selon UCB1, applique son action,
-///          puis effectue un rollout ou développe l'enfant selon son nombre de visites.
-///          Si le nœud n'a pas d'enfants (s'il n'a pas encore été développé ou si c'est un noeud termnial de la partie), effectue un rollout directement.
+///          puis effectue un rollout ou développe l'enfant selon son nombre de
+///          visites. Si le nœud n'a pas d'enfants (s'il n'a pas encore été
+///          développé ou si c'est un noeud termnial de la partie), effectue un
+///          rollout directement.
 static void mcts(engine_t *engine, mcts_node_t *node, int total_visits,
                  player_t *ai_player) {
   if (is_game_finished(&engine->game)) {
@@ -199,10 +215,12 @@ static void mcts_free_tree(mcts_node_t *node) {
 
 /// @brief Fait jouer l'IA pour le tour courant en utilisant l'algorithme MCTS
 /// @param engine Le moteur de jeu représentant l'état courant de la partie
-/// @param max_iterations Le nombre maximal d'itérations de simulation à effectuer
+/// @param max_iterations Le nombre maximal d'itérations de simulation à
+/// effectuer
 /// @details Construit un arbre MCTS en simulant max_iterations parties depuis
 ///          l'état courant, sélectionne le meilleur placement de tuile puis le
-///          meilleur placement de meeple selon le ratio score/visites, et les joue.
+///          meilleur placement de meeple selon le ratio score/visites, et les
+///          joue.
 
 void ai_play_turn(engine_t *engine, int max_iterations) {
   player_t    *ai_player = game_get_current_player(&engine->game);

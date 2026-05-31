@@ -1,8 +1,8 @@
 #ifndef H_TESTS
 #define H_TESTS
 
+#include <cmocka.h>
 #include <libcarcassonne/libcarcassonne.h>
-#include <libutils/cmocka.h>
 
 extern options_t options;
 

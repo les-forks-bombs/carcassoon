@@ -3,7 +3,8 @@
 
 #include <libsdlrender/appstate.h>
 
-/// @brief Met la première action de la liste dans l'appstate en tant qu'action courante
+/// @brief Met la première action de la liste dans l'appstate en tant qu'action
+/// courante
 /// @param as l'appstate du rendu
 void put_first_action_in_appstate(appstate_t *as);
 
@@ -11,7 +12,7 @@ void put_first_action_in_appstate(appstate_t *as);
 /// @param as l'appstate du rendu
 void get_current_actions(appstate_t *as);
 
-/// @brief Change l'action courante 
+/// @brief Change l'action courante
 /// @param as l'appstate du rendu
 /// @param increment le sens du changement
 /// @details -1 pour passer à l'action précédente, 1 pour passer à la suivante
