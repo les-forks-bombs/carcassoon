@@ -61,7 +61,7 @@ void render_banner(appstate_t *as, banner_t *banner) {
 
   SDL_FRect score_position = {
       .x = banner->area.x + ((banner->area.w - banner->score_object.w) / 2.0F),
-      .y = banner->area.y + 20.0F,
+      .y = banner->area.y + 5.0F,
       .w = banner->score_object.w,
       .h = banner->score_object.h};
   SDL_RenderTexture(as->renderer, banner->score_object.texture, NULL,
@@ -70,7 +70,7 @@ void render_banner(appstate_t *as, banner_t *banner) {
   SDL_FRect meeples_position = {
       banner->area.x +
           ((banner->area.w - banner->meeple_count_object.w) / 2.0F),
-      banner->area.y + 50.0F, banner->meeple_count_object.w,
+      banner->area.y + 40.0F, banner->meeple_count_object.w,
       banner->meeple_count_object.h};
   SDL_RenderTexture(as->renderer, banner->meeple_count_object.texture, NULL,
                     &meeples_position);
