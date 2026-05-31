@@ -14,14 +14,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <libcarcassonne/enums.h>
 #include "libsdlrender/text.h"
 #include "libutils/hashmap.h"
 #include "libutils/vector.h"
 
-banner_t *create_banner(appstate_t *as, banner_t *banner, SDL_Color color,
+return_code_t create_banner(appstate_t *as, banner_t *banner, SDL_Color color,
                         unsigned int nb) {
   if (!banner) {
-    return NULL;
+    return ERROR;
   }
 
   banner->is_open = false;
@@ -37,7 +38,7 @@ banner_t *create_banner(appstate_t *as, banner_t *banner, SDL_Color color,
   text_object_create(as, &banner->score_object, "0", white, 24.0F);
   text_object_create(as, &banner->meeple_count_object, "5", white, 20.0F);
 
-  return banner;
+  return SUCCESS;
 }
 
 void render_banner(appstate_t *as, banner_t *banner) {
