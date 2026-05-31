@@ -20,11 +20,13 @@ struct mcts_node {
   action_t action;
   /// @brief Pointeur vers le nœud parent (NULL pour la racine)
   mcts_node_t *parent;
-  /// @brief Enfants du nœud, correspondant aux actions possibles depuis cet état
+  /// @brief Enfants du nœud, correspondant aux actions possibles depuis cet
+  /// état
   mcts_node_children_t children;
 };
 
 /// @brief Fait jouer l'IA pour le tour courant en utilisant l'algorithme MCTS
 /// @param engine Le moteur de jeu représentant l'état courant de la partie
-/// @param max_iterations Le nombre maximal d'itérations de simulation à effectuer
+/// @param max_iterations Le nombre maximal d'itérations de simulation à
+/// effectuer
 void ai_play_turn(engine_t *engine, int max_iterations);

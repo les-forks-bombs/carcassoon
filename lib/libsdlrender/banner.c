@@ -4,6 +4,7 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3_image/SDL_image.h>
+#include <libcarcassonne/enums.h>
 #include <libcarcassonne/forward.h>
 #include <libsdlrender/appstate.h>
 #include <libsdlrender/consts.h>
@@ -14,13 +15,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <libcarcassonne/enums.h>
 #include "libsdlrender/text.h"
 #include "libutils/hashmap.h"
 #include "libutils/vector.h"
 
 return_code_t create_banner(appstate_t *as, banner_t *banner, SDL_Color color,
-                        unsigned int nb) {
+                            unsigned int nb) {
   if (!banner) {
     return ERROR;
   }

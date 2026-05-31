@@ -9,13 +9,13 @@ struct text_object {
   /// @brief La texture associée à l'objet
   SDL_Texture *texture;
   /// @brief La taille de la police
-  float        font_size;
+  float font_size;
   /// @brief La couleur du texte
-  SDL_Color    color;
+  SDL_Color color;
   /// @brief Le texte affiché
-  char        *content;
+  char *content;
   /// @brief La position du texte
-  float        w, h;
+  float w, h;
 };
 
 /// @brief Permet de créer une instance d'objet texte
