@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "cschlosser.doxdocgen",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.makefile-tools",
+        "markis.code-coverage",
+        "adamvoss.vscode-languagetool-fr",
+        "adamvoss.vscode-languagetool"
+    ]
+}
