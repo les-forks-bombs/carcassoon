@@ -118,7 +118,7 @@ static void render_empty_cell(appstate_t *as, int table_x, int table_y,
   }
 }
 
-void draw_background(appstate_t *as) {
+static void draw_background(appstate_t *as) {
   SDL_Texture *texture =
       *(SDL_Texture **)hashmap_get(&as->textures, "/img/flag_of_europe.png",
                                    strlen("/img/flag_of_europe.png") + 1);
@@ -152,6 +152,43 @@ void draw_background(appstate_t *as) {
                   (world_y - as->camera.y) * as->camera.zoom,
                   world_w * as->camera.zoom, world_h * as->camera.zoom};
   SDL_RenderTexture(as->renderer, texture, NULL, &bg);
+}
+
+static void print_grid(appstate_t *as) {
+  int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
+  int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
+
+  float world_min_x = (float)min_coord * MAP_TILE_SIZE;
+  float world_max_x = (float)(max_coord + 1) * MAP_TILE_SIZE;
+  float world_min_y = (float)min_coord * MAP_TILE_SIZE;
+  float world_max_y = (float)(max_coord + 1) * MAP_TILE_SIZE;
+
+  float screen_min_x = (world_min_x - as->camera.x) * as->camera.zoom;
+  float screen_max_x = (world_max_x - as->camera.x) * as->camera.zoom;
+  float screen_min_y = (world_min_y - as->camera.y) * as->camera.zoom;
+  float screen_max_y = (world_max_y - as->camera.y) * as->camera.zoom;
+
+  SDL_SetRenderDrawColor(as->renderer, 255, 255, 255, 50);
+
+  for (int table_y = min_coord; table_y <= max_coord + 1; table_y++) {
+    float world_x  = (float)table_y * MAP_TILE_SIZE;
+    float screen_x = (world_x - as->camera.x) * as->camera.zoom;
+
+    if (screen_x >= 0 && screen_x <= as->window_width) {
+      SDL_RenderLine(as->renderer, screen_x, screen_min_y, screen_x,
+                     screen_max_y);
+    }
+  }
+
+  for (int table_x = min_coord; table_x <= max_coord + 1; table_x++) {
+    float world_y  = (float)table_x * MAP_TILE_SIZE;
+    float screen_y = (world_y - as->camera.y) * as->camera.zoom;
+
+    if (screen_y >= 0 && screen_y <= as->window_height) {
+      SDL_RenderLine(as->renderer, screen_min_x, screen_y, screen_max_x,
+                     screen_y);
+    }
+  }
 }
 
 void render_map(appstate_t *as) {
@@ -200,43 +237,6 @@ void update_possible_places(appstate_t *as) {
       if (!vector_contains(&as->possibles_places, &pos)) {
         vector_append(&as->possibles_places, &pos);
       }
-    }
-  }
-}
-
-void print_grid(appstate_t *as) {
-  int min_coord = -LIBCARCASSONNE_TILES_COUNT + 1;
-  int max_coord = LIBCARCASSONNE_TILES_COUNT - 1;
-
-  float world_min_x = (float)min_coord * MAP_TILE_SIZE;
-  float world_max_x = (float)(max_coord + 1) * MAP_TILE_SIZE;
-  float world_min_y = (float)min_coord * MAP_TILE_SIZE;
-  float world_max_y = (float)(max_coord + 1) * MAP_TILE_SIZE;
-
-  float screen_min_x = (world_min_x - as->camera.x) * as->camera.zoom;
-  float screen_max_x = (world_max_x - as->camera.x) * as->camera.zoom;
-  float screen_min_y = (world_min_y - as->camera.y) * as->camera.zoom;
-  float screen_max_y = (world_max_y - as->camera.y) * as->camera.zoom;
-
-  SDL_SetRenderDrawColor(as->renderer, 255, 255, 255, 50);
-
-  for (int table_y = min_coord; table_y <= max_coord + 1; table_y++) {
-    float world_x  = (float)table_y * MAP_TILE_SIZE;
-    float screen_x = (world_x - as->camera.x) * as->camera.zoom;
-
-    if (screen_x >= 0 && screen_x <= as->window_width) {
-      SDL_RenderLine(as->renderer, screen_x, screen_min_y, screen_x,
-                     screen_max_y);
-    }
-  }
-
-  for (int table_x = min_coord; table_x <= max_coord + 1; table_x++) {
-    float world_y  = (float)table_x * MAP_TILE_SIZE;
-    float screen_y = (world_y - as->camera.y) * as->camera.zoom;
-
-    if (screen_y >= 0 && screen_y <= as->window_height) {
-      SDL_RenderLine(as->renderer, screen_min_x, screen_y, screen_max_x,
-                     screen_y);
     }
   }
 }
