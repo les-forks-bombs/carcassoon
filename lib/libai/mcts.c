@@ -48,7 +48,9 @@ static double evaluate(engine_t *engine, player_t *ai_player) {
   for (unsigned int i = 0; i < nb; i++) {
     if (i != ai_player->id) {
       int s = (int)engine->game.players[i].score;
-      if (s > max_opp) max_opp = s;
+      if (s > max_opp) {
+        max_opp = s;
+      }
     }
   }
 
@@ -70,8 +72,9 @@ static double ucb1(int total_iterations, mcts_node_t *node) {
   if (node->visits == 0) {
     return (double)INFINITY;
   }
-  return (double)node->score / (double)node->visits +
-         2.0 * sqrt(log((double)total_iterations) / (double)node->visits);
+  return (double)node->score /
+         ((double)node->visits +
+          (2.0 * sqrt(log((double)total_iterations) / (double)node->visits)));
 }
 
 /// @brief Propage un score vers le haut dans l'arbre depuis un nœud jusqu'à la racine
@@ -115,7 +118,7 @@ static int rollout(engine_t *engine, mcts_node_t *node, player_t *ai_player) {
   return score;
 }
 
-static void mcts(engine_t *engine, mcts_node_t *node, int total_visits,
+static void mcts(engine_t *engine, mcts_node_t *node, unsigned int total_visits,
                  player_t *ai_player);
 
 /// @brief Développe un nœud en créant ses enfants puis poursuit la recherche
@@ -224,7 +227,9 @@ void ai_play_turn(engine_t *engine, int max_iterations) {
   double       best_tile_ratio = -INFINITY;
   for (unsigned int i = 0; i < vector_size(&root->children); i++) {
     mcts_node_t *node = *vector_nth(&root->children, i);
-    if (node->visits == 0) continue;
+    if (node->visits == 0) {
+      continue;
+    }
     double ratio = (double)node->score / (double)node->visits;
     if (best_child_tile == NULL || ratio > best_tile_ratio) {
       best_child_tile = node;
@@ -240,7 +245,10 @@ void ai_play_turn(engine_t *engine, int max_iterations) {
   if (best_child_tile != NULL) {
     for (unsigned int i = 0; i < vector_size(&best_child_tile->children); i++) {
       mcts_node_t *node = *vector_nth(&best_child_tile->children, i);
-      if (node->visits == 0) continue;
+      if (node->visits == 0) {
+        continue;
+      }
+
       double ratio = (double)node->score / (double)node->visits;
       if (best_child_meeple == NULL || ratio > best_meeple_ratio) {
         best_child_meeple = node;

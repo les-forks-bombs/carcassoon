@@ -18,7 +18,7 @@ $(OUT)/bin/index.html: $(DIR)/index.html $(OUT)/bin/carcassonne$(EXT)
 	$(info $(TAB)CP $<)
 
 ifeq "$(TARGET)" "wasm32-unknown-emscripten"
-    CLEAN += $(OUT)/bin/carcassonne.wasm $(OUT)/bin/carcassonne.data $(OUT)/bin/index.html
+    CLEAN += $(OUT)/bin/carcassonne.wasm $(OUT)/bin/carcassonne.data $(OUT)/bin/index.html $(OUT)/bin/carcassonne.wasm.map
     $(OUT)/bin/carcassonne$(EXT): LFLAGS += --preload-file $(OUT)/bin/assets@/assets
 endif
 
