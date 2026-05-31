@@ -194,7 +194,7 @@ return_code_t find_valid_places(game_t *game, const tile_t *tile,
                                 action_vector_t  *actions) {
   vector_alloc(actions, 5);
 
-  bool ignored[4] = {0};
+  bool ignored[4] = {false};
 
   const char *family = tile->family;
 

@@ -15,7 +15,7 @@ void get_current_actions(appstate_t *as);
 /// @param as l'appstate du rendu
 /// @param increment le sens du changement
 /// @details -1 pour passer à l'action précédente, 1 pour passer à la suivante
-void pass_to_action(appstate_t *as, unsigned int increment);
+void pass_to_action(appstate_t *as, int increment);
 
 /// @brief Dispatch l'action au moteur et met à jour l'état de jeu
 /// @param as l'appstate du rendu

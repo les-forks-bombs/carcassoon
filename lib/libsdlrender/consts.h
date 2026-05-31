@@ -6,7 +6,7 @@
 
 /// @brief La taille d'une tuile en px
 #define MAP_TILE_SIZE             64
-#define MAP_TABLE_SIZE            (LIBCARCASSONNE_TILES_COUNT * 2 - 1)
+#define MAP_TABLE_SIZE            ((LIBCARCASSONNE_TILES_COUNT * 2) - 1)
 /// @brief La taille de la fenêtre en largeur au lancement en px
 #define DEFAULT_WINDOW_WIDTH      1000
 /// @brief La taille de la fenêtre en hauteur au lancement en px
