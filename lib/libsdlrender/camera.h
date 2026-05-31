@@ -17,7 +17,7 @@ struct camera {
 return_code_t create_camera(camera_t *camera);
 /// @brief Met à jour l'affichage en fonction de la position de la caméra
 /// @param state L'affichage de la partie en cours
-void          update_camera(appstate_t *state);
+void update_camera(appstate_t *state);
 /// @brief Centre la caméra autour de la tuile de départ
 /// @param state L'affichage de la partie en cours
-void          center_camera_on_start(appstate_t *state);
+void center_camera_on_start(appstate_t *state);

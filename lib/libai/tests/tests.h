@@ -1,9 +1,9 @@
 #ifndef H_LIBAI_TESTS
 #define H_LIBAI_TESTS
 
+#include <cmocka.h>
 #include <libai/mcts.h>
 #include <libcarcassonne/libcarcassonne.h>
-#include <libutils/cmocka.h>
 
 void ai_play_turn_does_not_crash(void** state);
 void ai_play_turn_completes_full_turn(void** state);
