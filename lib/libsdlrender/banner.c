@@ -127,7 +127,9 @@ void synchronize_banners(appstate_t *as) {
       }
     }
 
-    if (as->engine->game.current_player == i) {
+    if (as->engine->game.current_player == i && !banner->is_open) {
+      toggle_banner(banner);
+    } else if (as->engine->game.current_player != i && banner->is_open) {
       toggle_banner(banner);
     }
   }
