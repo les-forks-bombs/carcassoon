@@ -95,7 +95,10 @@ jobs:
           # Add logic to download necessary artifacts and prepare output
           tar czf public/release.tar.gz out/release
           sha256sum public/release.tar.gz > public/release.tar.gz.sha256
-      - uses: forgejo/upload-artifact@v4
+
+      - uses: actions/git-pages@v2
         with:
-          name: github-pages
-          path: ./public
+          site: https://mpgn.pages.puffer.fish/matthieu/tn-ppii
+          server: pages.puffer.fish
+          token: ${{ forge.token }}
+          source: public/
