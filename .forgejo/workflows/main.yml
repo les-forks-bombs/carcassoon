@@ -13,7 +13,7 @@ jobs:
       matrix:
         target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, wasm32-unknown-emscripten]
         profile: [debug, release]
-    runs-on: docker
+    runs-on: mpgn
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
           path: ./out/${{ matrix.profile }}/${{ matrix.target }}
 
   format:
-    runs-on: docker
+    runs-on: mpgn
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     continue-on-error: true
     steps:
@@ -34,7 +34,7 @@ jobs:
         run: make check
 
   docs:
-    runs-on: docker
+    runs-on: mpgn
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
       matrix:
         target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, wasm32-unknown-emscripten]
         profile: [debug, release]
-    runs-on: docker
+    runs-on: mpgn
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
       - uses: actions/checkout@v4
@@ -67,7 +67,7 @@ jobs:
 
   coverage:
     needs: build
-    runs-on: docker
+    runs-on: mpgn
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
       - uses: actions/checkout@v4
@@ -85,7 +85,7 @@ jobs:
 
   deploy:
     needs: [build, docs]
-    runs-on: docker
+    runs-on: mpgn
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
       - uses: actions/checkout@v4
