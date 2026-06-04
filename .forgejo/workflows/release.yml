@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build
-        run: make all -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
+        run: make bear -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
       - uses: forgejo/upload-artifact@v4
         with:
           name: build-${{ matrix.target }}-${{ matrix.profile }}
