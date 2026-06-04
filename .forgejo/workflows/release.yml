@@ -1,24 +1,26 @@
-name: CI Pipeline
+name: Release pipeline
+
+concurrency:
+  group: ${{ forgejo.workflow }}-${{ forgejo.ref }}
+  cancel-in-progress: true
+
+env:
+  CI_CONTAINER: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
 
 on:
   push:
-    branches: ['**']
-    tags: ['*']
-  pull_request:
-    types: [opened, synchronize, reopened]
-
-env:
-  ci-container: &ci-container forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    tags: ['v*']
+  workflow_dispatch:
 
 jobs:
   build:
     strategy:
       fail-fast: false
-      matrix: &build-matrix
+      matrix:
         target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, wasm32-unknown-emscripten]
         profile: [debug, release]
     runs-on: mpgn
-    container: *ci-container
+    container: ${{ env.CI_CONTAINER }}
     steps:
       - uses: actions/checkout@v4
       - name: Build
@@ -30,7 +32,7 @@ jobs:
 
   format:
     runs-on: mpgn
-    container: *ci-container
+    container: ${{ env.CI_CONTAINER }}
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +41,7 @@ jobs:
 
   docs:
     runs-on: mpgn
-    container: *ci-container
+    container: ${{ env.CI_CONTAINER }}
     steps:
       - uses: actions/checkout@v4
       - name: Build Docs
@@ -53,9 +55,11 @@ jobs:
     needs: build
     strategy:
       fail-fast: false
-      matrix: *build-matrix
+      matrix:
+        target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, wasm32-unknown-emscripten]
+        profile: [debug, release]
     runs-on: mpgn
-    container: *ci-container
+    container: ${{ env.CI_CONTAINER }}
     steps:
       - uses: actions/checkout@v4
       - name: Download Build Artifacts
@@ -75,22 +79,19 @@ jobs:
   coverage:
     needs: test
     runs-on: mpgn
-    container: *ci-container
+    container: ${{ env.CI_CONTAINER }}
     steps:
       - uses: actions/checkout@v4
-
       - name: Download test results
         uses: forgejo/download-artifact@v4
         with:
           name: test-x86_64-pc-linux-gnu-debug
           path: ./out/debug/x86_64-pc-linux-gnu
-
       - name: Download build artifacts
         uses: forgejo/download-artifact@v4
         with:
           name: build-x86_64-pc-linux-gnu-debug
           path: ./out/debug/x86_64-pc-linux-gnu
-
       - name: Generate Coverage
         run: make coverage-xml -j$(nproc) TARGET=x86_64-pc-linux-gnu PROFILE=debug
       - uses: forgejo/upload-artifact@v4
@@ -101,7 +102,7 @@ jobs:
   deploy:
     needs: [build, docs]
     runs-on: mpgn
-    container: *ci-container
+    container: ${{ env.CI_CONTAINER }}
     steps:
       - uses: actions/checkout@v4
 
@@ -109,27 +110,21 @@ jobs:
         with:
           pattern: build-*
           path: ./out/
-
+        
       - uses: forgejo/download-artifact@v4
         with:
           name: docs
           path: ./public/docs
-
+        
       - name: Aggregate and Prepare Pages
         run: |
-          # Note: Adjust paths based on how the recursive download structures the folder
-          # Assuming ./out/ contains the build-* folders
-          cd out/release/wasm32-unknown-emscripten
-          rm -r bin/assets
-          cp bin/* ../../../public/
-          cd ../../..
-          
+          rm -rf out/release/wasm32-unknown-emscripten/bin/assets
+          cp out/release/wasm32-unknown-emscripten/bin/* public/
           tar czf public/release.tar.gz out/release
           sha256sum public/release.tar.gz > public/release.tar.gz.sha256
-
       - uses: actions/git-pages@v2
         with:
           site: https://mpgn.pufferfish.page/tn-ppii
           server: pufferfish.page
-          token: ${{ forge.token }}
+          token: ${{ secrets.FORGEJO_TOKEN }}
           source: public/
