@@ -122,8 +122,8 @@ jobs:
 
       - name: Aggregate and Prepare Pages
         run: |
-          mkdir -p public
-          # Your aggregation logic here
+          rm -r out/release/wasm32-unknown-emscripten/bin/assets
+          cp out/release/wasm32-unknown-emscripten/bin/* public/
           tar czf public/release.tar.gz out/release
           sha256sum public/release.tar.gz > public/release.tar.gz.sha256
 
