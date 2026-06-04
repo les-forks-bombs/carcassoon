@@ -16,10 +16,10 @@ jobs:
     runs-on: docker
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: forgejo/checkout@v4
       - name: Build
         run: make all -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
-      - uses: actions/upload-artifact@v4
+      - uses: forgejo/upload-artifact@v4
         with:
           name: build-${{ matrix.target }}-${{ matrix.profile }}
           path: ./out/${{ matrix.profile }}/${{ matrix.target }}
@@ -29,7 +29,7 @@ jobs:
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: forgejo/checkout@v4
       - name: Format Check
         run: make check
 
@@ -37,10 +37,10 @@ jobs:
     runs-on: docker
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: forgejo/checkout@v4
       - name: Build Docs
         run: make docs
-      - uses: actions/upload-artifact@v4
+      - uses: forgejo/upload-artifact@v4
         with:
           name: docs
           path: ./public/docs
@@ -54,9 +54,9 @@ jobs:
     runs-on: docker
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: forgejo/checkout@v4
       - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
+        uses: forgejo/download-artifact@v4
         with:
           name: build-${{ matrix.target }}-${{ matrix.profile }}
           path: ./out/${{ matrix.profile }}/${{ matrix.target }}
@@ -70,15 +70,15 @@ jobs:
     runs-on: docker
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: forgejo/checkout@v4
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: forgejo/download-artifact@v4
         with:
           name: build-x86_64-pc-linux-gnu-debug
           path: ./out/debug/x86_64-pc-linux-gnu
       - name: Generate Coverage
         run: make coverage-xml -j$(nproc) TARGET=x86_64-pc-linux-gnu PROFILE=debug
-      - uses: actions/upload-artifact@v4
+      - uses: forgejo/upload-artifact@v4
         with:
           name: coverage-report
           path: ./out/debug/x86_64-pc-linux-gnu/coverage.xml
@@ -88,14 +88,14 @@ jobs:
     runs-on: docker
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: forgejo/checkout@v4
       - name: Aggregate and Prepare Pages
         run: |
           mkdir -p public
           # Add logic to download necessary artifacts and prepare output
           tar czf public/release.tar.gz out/release
           sha256sum public/release.tar.gz > public/release.tar.gz.sha256
-      - uses: actions/upload-artifact@v4
+      - uses: forgejo/upload-artifact@v4
         with:
           name: github-pages
           path: ./public
