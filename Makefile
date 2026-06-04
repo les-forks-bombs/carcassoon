@@ -158,7 +158,7 @@ check:
 $(OUT)/compile_commands.json:
 	@mkdir -p $(OUT)
 	+$(MAKE) clean
-	+@bear --output $(OUT)/compile_commands.json -- $(MAKE) all -j$(shell nproc)
+	+@bear --output $(OUT)/compile_commands.json -- $(MAKE) all
 
 bear: $(OUT)/compile_commands.json
 
