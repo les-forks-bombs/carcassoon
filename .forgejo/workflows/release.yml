@@ -103,7 +103,9 @@ jobs:
     needs: build
     runs-on: mpgn
     container: ${{ env.CI_CONTAINER }}
-    matrix:
+    strategy:
+      fail-fast: false
+      matrix:
         target: [x86_64-pc-linux-gnu]
         profile: [debug, release]
     steps:
