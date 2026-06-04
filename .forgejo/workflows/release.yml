@@ -10,11 +10,12 @@ on:
 jobs:
   build:
     strategy:
-      matrix:
+      fail-fast: false
+      matrix: &build-matrix
         target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, wasm32-unknown-emscripten]
         profile: [debug, release]
     runs-on: mpgn
-    container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    container: &ci-container forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
       - uses: actions/checkout@v4
       - name: Build
@@ -26,7 +27,7 @@ jobs:
 
   format:
     runs-on: mpgn
-    container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    container: *ci-container
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +36,7 @@ jobs:
 
   docs:
     runs-on: mpgn
-    container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    container: *ci-container
     steps:
       - uses: actions/checkout@v4
       - name: Build Docs
@@ -48,11 +49,10 @@ jobs:
   test:
     needs: build
     strategy:
-      matrix:
-        target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, wasm32-unknown-emscripten]
-        profile: [debug, release]
+      fail-fast: false
+      matrix: *build-matrix
     runs-on: mpgn
-    container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    container: *ci-container
     steps:
       - uses: actions/checkout@v4
       - name: Download Build Artifacts
@@ -64,18 +64,30 @@ jobs:
         run: make tidy -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
       - name: Test
         run: make test -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
+      - uses: forgejo/upload-artifact@v4
+        with:
+          name: test-${{ matrix.target }}-${{ matrix.profile }}
+          path: ./out/${{ matrix.profile }}/${{ matrix.target }}
 
   coverage:
-    needs: build
+    needs: test
     runs-on: mpgn
-    container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    container: *ci-container
     steps:
       - uses: actions/checkout@v4
-      - name: Download Artifacts
+
+      - name: Download test results
+        uses: forgejo/download-artifact@v4
+        with:
+          name: test-x86_64-pc-linux-gnu-debug
+          path: ./out/debug/x86_64-pc-linux-gnu
+
+      - name: Download build artifacts
         uses: forgejo/download-artifact@v4
         with:
           name: build-x86_64-pc-linux-gnu-debug
           path: ./out/debug/x86_64-pc-linux-gnu
+
       - name: Generate Coverage
         run: make coverage-xml -j$(nproc) TARGET=x86_64-pc-linux-gnu PROFILE=debug
       - uses: forgejo/upload-artifact@v4
@@ -86,7 +98,7 @@ jobs:
   deploy:
     needs: [build, docs]
     runs-on: mpgn
-    container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    container: *ci-container
     steps:
       - uses: actions/checkout@v4
 
