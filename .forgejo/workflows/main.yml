@@ -131,5 +131,5 @@ jobs:
         with:
           site: https://mpgn.pufferfish.page/tn-ppii
           server: pufferfish.page
-          token: ${{ secrets.PAGES_TOKEN }}
+          token: ${{ forge.token }}
           source: public/
