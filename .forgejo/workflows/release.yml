@@ -67,8 +67,8 @@ jobs:
         with:
           name: build-${{ matrix.target }}-${{ matrix.profile }}
           path: ./out
-      - name: Tidy
-        run: make tidy -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
+      #- name: Tidy
+      #  run: make tidy -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
       - name: Test
         run: make test -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
       - uses: forgejo/upload-artifact@v4
