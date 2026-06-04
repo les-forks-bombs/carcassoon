@@ -5,7 +5,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CI_CONTAINER: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+  CI_CONTAINER: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-coder:latest
 
 on:
   push:
@@ -127,7 +127,7 @@ jobs:
           path: ./appimages
 
   deploy:
-    needs: [build, docs]
+    needs: [build, docs, appimage]
     runs-on: mpgn
     container: ${{ env.CI_CONTAINER }}
     steps:
