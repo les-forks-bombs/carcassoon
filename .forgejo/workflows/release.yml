@@ -99,6 +99,31 @@ jobs:
           name: coverage-report
           path: ./out/debug/x86_64-pc-linux-gnu/coverage.xml
 
+  appimage:
+    needs: build
+    runs-on: mpgn
+    container: ${{ env.CI_CONTAINER }}
+    matrix:
+        target: [x86_64-pc-linux-gnu]
+        profile: [debug, release]
+    steps:
+      - uses: actions/checkout@v4
+
+        uses: forgejo/download-artifact@v4
+        with:
+          name: build-${{ matrix.target }}-${{ matrix.profile }}
+          path: ./out
+      - name: Generate Coverage
+        run: make appimage -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
+      - run: |
+          mkdir -p appimages
+          cp ./out/${{ matrix.profile }}/${{ matrix.target }}/*.AppImage \
+            appimages/Carcassonne-${{ matrix.target }}-${{ matrix.profile }}.AppImage
+      - uses: forgejo/upload-artifact@v4
+        with:
+          name: appimage-${{ matrix.target }}-${{ matrix.profile }}
+          path: ./appimages
+
   deploy:
     needs: [build, docs]
     runs-on: mpgn
@@ -111,6 +136,11 @@ jobs:
           pattern: build-*
           path: ./out/
           merge-multiple: true
+      - uses: forgejo/download-artifact@v4
+        with:
+          pattern: appimage-*
+          path: ./appimages/
+          merge-multiple: true
         
       - uses: forgejo/download-artifact@v4
         with:
@@ -121,6 +151,7 @@ jobs:
         run: |
           rm -rf out/release/wasm32-unknown-emscripten/bin/assets
           cp out/release/wasm32-unknown-emscripten/bin/* public/
+          cp appimages/* public/
           tar czf public/release.tar.gz out/release
           sha256sum public/release.tar.gz > public/release.tar.gz.sha256
       - uses: actions/git-pages@v2
