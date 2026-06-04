@@ -7,6 +7,9 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+env:
+  ci-container: &ci-container forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+
 jobs:
   build:
     strategy:
@@ -15,7 +18,7 @@ jobs:
         target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, wasm32-unknown-emscripten]
         profile: [debug, release]
     runs-on: mpgn
-    container: &ci-container forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    container: *ci-container
     steps:
       - uses: actions/checkout@v4
       - name: Build
