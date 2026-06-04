@@ -110,6 +110,7 @@ jobs:
         with:
           pattern: build-*
           path: ./out/
+          merge-multiple: true
         
       - uses: forgejo/download-artifact@v4
         with:
