@@ -104,28 +104,8 @@ jobs:
 
       - uses: forgejo/download-artifact@v4
         with:
-          name: build-x86_64-pc-linux-gnu-debug
-          path: ./out/debug/x86_64-pc-linux-gnu
-      - uses: forgejo/download-artifact@v4
-        with:
-          name: build-x86_64-pc-linux-gnu-release
-          path: ./out/release/x86_64-pc-linux-gnu
-      - uses: forgejo/download-artifact@v4
-        with:
-          name: build-x86_64-w64-mingw32-debug
-          path: ./out/debug/x86_64-w64-mingw32
-      - uses: forgejo/download-artifact@v4
-        with:
-          name: build-x86_64-w64-mingw32-release
-          path: ./out/release/x86_64-w64-mingw32
-      - uses: forgejo/download-artifact@v4
-        with:
-          name: build-wasm32-unknown-emscripten-debug
-          path: ./out/debug/wasm32-unknown-emscripten
-      - uses: forgejo/download-artifact@v4
-        with:
-          name: build-wasm32-unknown-emscripten-release
-          path: ./out/release/wasm32-unknown-emscripten
+          pattern: build-*
+          path: ./out/
 
       - uses: forgejo/download-artifact@v4
         with:
@@ -134,8 +114,13 @@ jobs:
 
       - name: Aggregate and Prepare Pages
         run: |
-          rm -r out/release/wasm32-unknown-emscripten/bin/assets
-          cp out/release/wasm32-unknown-emscripten/bin/* public/
+          # Note: Adjust paths based on how the recursive download structures the folder
+          # Assuming ./out/ contains the build-* folders
+          cd out/release/wasm32-unknown-emscripten
+          rm -r bin/assets
+          cp bin/* ../../../public/
+          cd ../../..
+          
           tar czf public/release.tar.gz out/release
           sha256sum public/release.tar.gz > public/release.tar.gz.sha256
 
