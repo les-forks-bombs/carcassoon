@@ -129,7 +129,7 @@ jobs:
 
       - uses: actions/git-pages@v2
         with:
-          site: https://mpgn.pufferfish.pages/tn-ppii
-          server: pufferfish.pages
+          site: https://mpgn.pufferfish.page/tn-ppii
+          server: pufferfish.page
           token: ${{ secrets.PAGES_TOKEN }}
           source: public/
