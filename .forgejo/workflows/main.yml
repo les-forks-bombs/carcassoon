@@ -83,7 +83,7 @@ jobs:
           name: coverage-report
           path: ./out/debug/x86_64-pc-linux-gnu/coverage.xml
 
-deploy:
+  deploy:
     needs: [build, docs]
     runs-on: docker
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
@@ -129,7 +129,7 @@ deploy:
 
       - uses: actions/git-pages@v2
         with:
-          site: https://mpgn.pages.puffer.fish/matthieu/tn-ppii
+          site: https://mpgn.pages.puffer.fish/tn-ppii
           server: pages.puffer.fish
           token: ${{ forgejo.token }}
           source: public/
