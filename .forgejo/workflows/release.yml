@@ -111,7 +111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-        uses: forgejo/download-artifact@v4
+      - uses: forgejo/download-artifact@v4
         with:
           name: build-${{ matrix.target }}-${{ matrix.profile }}
           path: ./out
