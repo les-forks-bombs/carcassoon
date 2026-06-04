@@ -5,7 +5,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CI_CONTAINER: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest@sha256:6b17b382fab704709a773b97d244894a4b34a678836c4bbe9895347b3286d32c
+  CI_CONTAINER: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest@sha256:c3d7cc5e0257e9b61f494f4033996ee811ab7dd68bb88b501ea210ccf110e261
 
 on:
   push:
