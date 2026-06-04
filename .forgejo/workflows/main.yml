@@ -83,16 +83,47 @@ jobs:
           name: coverage-report
           path: ./out/debug/x86_64-pc-linux-gnu/coverage.xml
 
-  deploy:
+deploy:
     needs: [build, docs]
     runs-on: docker
     container: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: forgejo/download-artifact@v4
+        with:
+          name: build-x86_64-pc-linux-gnu-debug
+          path: ./out/debug/x86_64-pc-linux-gnu
+      - uses: forgejo/download-artifact@v4
+        with:
+          name: build-x86_64-pc-linux-gnu-release
+          path: ./out/release/x86_64-pc-linux-gnu
+      - uses: forgejo/download-artifact@v4
+        with:
+          name: build-x86_64-w64-mingw32-debug
+          path: ./out/debug/x86_64-w64-mingw32
+      - uses: forgejo/download-artifact@v4
+        with:
+          name: build-x86_64-w64-mingw32-release
+          path: ./out/release/x86_64-w64-mingw32
+      - uses: forgejo/download-artifact@v4
+        with:
+          name: build-wasm32-unknown-emscripten-debug
+          path: ./out/debug/wasm32-unknown-emscripten
+      - uses: forgejo/download-artifact@v4
+        with:
+          name: build-wasm32-unknown-emscripten-release
+          path: ./out/release/wasm32-unknown-emscripten
+
+      - uses: forgejo/download-artifact@v4
+        with:
+          name: docs
+          path: ./public/docs
+
       - name: Aggregate and Prepare Pages
         run: |
           mkdir -p public
-          # Add logic to download necessary artifacts and prepare output
+          # Your aggregation logic here
           tar czf public/release.tar.gz out/release
           sha256sum public/release.tar.gz > public/release.tar.gz.sha256
 
@@ -100,5 +131,5 @@ jobs:
         with:
           site: https://mpgn.pages.puffer.fish/matthieu/tn-ppii
           server: pages.puffer.fish
-          token: ${{ forge.token }}
+          token: ${{ forgejo.token }}
           source: public/
