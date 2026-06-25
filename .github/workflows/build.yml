@@ -97,7 +97,9 @@ jobs:
   appimage:
     needs: build
     runs-on: ubuntu-latest
-    container:  forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    container:
+      image: forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+      options: --privileged
     strategy:
       fail-fast: false
       matrix:
