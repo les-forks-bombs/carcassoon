@@ -1,0 +1,154 @@
+name: Release pipeline
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, wasm32-unknown-emscripten]
+        profile: [debug, release]
+    runs-on: ubuntu-latest
+    container:  forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: make bear -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.target }}-${{ matrix.profile }}
+          path: ./out
+
+  format:
+    runs-on: ubuntu-latest
+    container:  forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Format Check
+        run: make check
+
+  docs:
+    runs-on: ubuntu-latest
+    container:  forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docs
+        run: make docs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: ./public/docs
+
+  test:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [x86_64-pc-linux-gnu, x86_64-w64-mingw32, wasm32-unknown-emscripten]
+        profile: [debug, release]
+    runs-on: ubuntu-latest
+    container:  forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-${{ matrix.target }}-${{ matrix.profile }}
+          path: ./out
+      - name: Test
+        run: make test -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-${{ matrix.target }}-${{ matrix.profile }}
+          path: ./out
+
+  coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    container:  forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-x86_64-pc-linux-gnu-debug
+          path: ./out
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-x86_64-pc-linux-gnu-debug
+          path: ./out
+      - name: Generate Coverage
+        run: make coverage-xml -j$(nproc) TARGET=x86_64-pc-linux-gnu PROFILE=debug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./out/debug/x86_64-pc-linux-gnu/coverage.xml
+
+  appimage:
+    needs: build
+    runs-on: ubuntu-latest
+    container:  forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [x86_64-pc-linux-gnu]
+        profile: [debug, release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-${{ matrix.target }}-${{ matrix.profile }}
+          path: ./out
+      - name: Generate AppImage
+        run: make appimage -j$(nproc) TARGET=${{ matrix.target }} PROFILE=${{ matrix.profile }}
+      - run: |
+          mkdir -p appimages
+          cp ./out/${{ matrix.profile }}/${{ matrix.target }}/*.AppImage \
+            appimages/Carcassonne-${{ matrix.target }}-${{ matrix.profile }}.AppImage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: appimage-${{ matrix.target }}-${{ matrix.profile }}
+          path: ./appimages
+
+  deploy:
+    needs: [build, docs, appimage]
+    runs-on: ubuntu-latest
+    container:  forgejo.puffer.fish/matthieu/base-images/tn-pp2i-ci-image-ubuntu:latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: build-*
+          path: ./out/
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: appimage-*
+          path: ./appimages/
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: docs
+          path: ./public/docs
+      - name: Aggregate and Prepare Pages
+        run: |
+          rm -rf out/release/wasm32-unknown-emscripten/bin/assets
+          cp out/release/wasm32-unknown-emscripten/bin/* public/
+          cp appimages/* public/
+          tar czf public/release.tar.gz out/release
+          sha256sum public/release.tar.gz > public/release.tar.gz.sha256
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
