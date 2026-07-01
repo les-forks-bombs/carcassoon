@@ -89,7 +89,7 @@ cli sdl: $(OUT)/bin/carcassonne$(EXT)
 
 include lib/build.mk
 
-all: build $(addsuffix $(EXT),$(TESTS))
+all: build $(TESTS)
 
 TESTS_XMLS := $(addsuffix .xml,$(TESTS))
 TESTS_COVE := $(addsuffix .profraw,$(TESTS))
